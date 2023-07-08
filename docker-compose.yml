@@ -1,0 +1,57 @@
+version: "3.9"
+
+networks:
+    default:
+        name: ft_transcendence
+services:
+  postgres:
+      image: postgres:latest
+      env_file:
+        - ./docker/postgres.env
+      volumes:
+        - /goinfre/eabdelha/docker/Volumes/db/data:/var/lib/postgresql/data
+      ports:
+        - 5432:5432
+      restart: unless-stopped
+
+  # server:
+  #     build:
+  #       context: ./docker
+  #       dockerfile: ./server.dockerfile
+  #     ports:
+  #       - 3000:3000
+  #     volumes:
+  #       - server_data:/app
+  #     # env_file:
+  #     #   - ./docker/server.env
+  #     depends_on:
+  #       - postgres
+  #     restart: unless-stopped
+
+  # client:
+  #     build:
+  #       context: ./docker
+  #       dockerfile: ./client.dockerfile
+  #     ports:
+  #       - 8080:8080
+  #     volumes:
+  #       - client_data:/app
+  #     env_file:
+  #       - ./docker/client.env
+  #     depends_on:
+  #       - server
+  #     restart: unless-stopped
+
+
+    # server_data:
+    #     driver: local
+    #     driver_opts:
+    #         o: "bind"
+    #         type: "none"
+    #         device: "/Users/eabdelha/Desktop/web/ft_transcendence/server"
+    # client_data:
+    #     driver: local
+    #     driver_opts:
+    #         o: "bind"
+    #         type: "none"
+    #         device: "./client"

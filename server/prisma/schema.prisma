@@ -1,0 +1,197 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// costume datatypes
+//********************************************************************//
+enum Status {
+  ONLINE
+  OFFLINE
+}
+enum FriendshipStatus {
+  WAITING
+  REFUSED
+  ACCEPTED
+  
+}
+enum MatchStatus {
+  PLAING
+  WAITING
+  ENDED
+}
+enum ChannelTypes {
+  MONO
+  MULTI
+}
+enum AccessTypes {
+  PUBLIC
+  PRIVATE
+  PROTECTED
+}
+enum AccessLevels {
+  NORMAL
+  BANNED
+  MUTED
+}
+
+// database models
+//********************************************************************//
+model UserAccount {
+  id                  Int         @id @default(autoincrement())
+  ft_id               Int         @unique
+  username            String      @unique
+  email               String      @unique
+  tfa_secret          String?
+  is_tfa_enabled      Boolean?     @default(false)
+  avatar              String
+  status              Status       @default(OFFLINE)
+
+  created_at          DateTime    @default(now())
+  updated_at          DateTime    @updatedAt
+
+  leaderboard         Leaderboard?
+  friendship_from     Friendship[]        @relation("friendship_from")
+  friendship_to       Friendship[]        @relation("friendship_to")
+  blocking_user       BlockedUsers[]      @relation("blocking_user")
+  blocked_user        BlockedUsers[]      @relation("blocked_user")
+  match_player1       Matches[]           @relation("player1")
+  match_player2       Matches[]           @relation("player2")
+  message_sender      Message[]           @relation("sender")
+  message_receiver    Message[]           @relation("receiver")
+  channel             Channel[]           @relation()
+  channel_admins      ChannelAdmins[]     @relation()
+  channel_members     ChannelMembers[]    @relation()
+  restricted_members  RestrictedMembers[] @relation()
+}
+
+model Leaderboard {
+  user_id             Int         @unique
+  total_matches       Int
+  wins_count          Int
+  losses_count        Int
+  level               Int         @default(0)
+
+  user                UserAccount         @relation(fields: [user_id], references: [id])
+}
+
+// model UserAchievements {
+//   level               Int           @unique
+//   achievement         String
+// } 
+
+model Friendship {
+  id                  Int  @id @default(autoincrement())
+  user_id             Int
+  friend_id           Int
+  friendship_status   FriendshipStatus
+  created_at          DateTime    @default(now())
+
+  user                UserAccount         @relation("friendship_from", fields: [user_id], references: [id])
+  friend              UserAccount         @relation("friendship_to", fields: [friend_id], references: [id])
+
+}
+model BlockedUsers {
+  id                  Int  @id @default(autoincrement())
+  blocking_user_id    Int
+  blocked_user_id     Int
+  created_at          DateTime    @default(now())
+
+  blocking_user       UserAccount         @relation("blocking_user", fields: [blocking_user_id], references: [id])
+  blocked_user        UserAccount         @relation("blocked_user", fields: [blocked_user_id], references: [id])
+}
+
+model Matches { 
+  id                  Int  @id @default(autoincrement())
+  player1_id          Int
+  player2_id          Int
+  game_id             Int
+  match_status        MatchStatus
+  created_at          DateTime    @default(now())
+
+  game                Game?
+  player1             UserAccount         @relation("player1", fields: [player1_id], references: [id])
+  player2             UserAccount         @relation("player2", fields: [player2_id], references: [id])
+} 
+
+model Game {  
+  id                  Int @id @default(autoincrement())
+  match_id            Int @unique
+  player1_score       Int
+  player2_score       Int
+  start_time          DateTime    @default(now())
+  end_time            DateTime    @updatedAt
+
+  match               Matches             @relation(fields: [match_id], references: [id])
+} 
+
+
+model Message { 
+  id                  Int     @id @default(autoincrement())
+  channel_id          Int
+  sender_id           Int
+  receiver_id         Int
+  text_message        String
+  sent_at             DateTime    @default(now())
+
+  sender              UserAccount         @relation("sender", fields: [sender_id], references: [id])
+  receiver            UserAccount         @relation("receiver", fields: [receiver_id], references: [id])
+} 
+
+model Channel { 
+  id                  Int     @id @default(autoincrement())
+  owner_id            Int
+  name                String
+  channel_type        ChannelTypes        
+  access_type         AccessTypes
+
+  created_at          DateTime    @default(now())
+  updated_at          DateTime    @updatedAt
+
+  owner               UserAccount @relation(fields: [owner_id], references: [id])
+  
+  channel_access      ChannelAccess?
+  channel_admins      ChannelAdmins[]     @relation()
+  channel_members     ChannelMembers[]    @relation()
+  restricted_members  RestrictedMembers[] @relation()
+}
+
+model ChannelAccess {
+  channel_id          Int     @unique
+  password            String
+
+  channel             Channel             @relation(fields: [channel_id], references: [id])
+}
+
+model ChannelAdmins {
+  channel_id          Int     @unique
+  user_id             Int     @unique
+
+  channel             Channel             @relation(fields: [channel_id], references: [id])
+  channel_admins      UserAccount         @relation(fields: [user_id], references: [id])
+}
+
+model ChannelMembers {
+  channel_id          Int     @unique
+  user_id             Int     @unique
+  access_level        AccessLevels
+
+  channel             Channel             @relation(fields: [channel_id], references: [id])
+  channel_members     UserAccount         @relation(fields: [user_id], references: [id])
+}
+
+model RestrictedMembers {
+  channel_id          Int     @unique
+  user_id             Int     @unique
+  time_limit          DateTime    @default(now())
+
+  channel             Channel             @relation(fields: [channel_id], references: [id])
+  restricted_members  UserAccount         @relation(fields: [user_id], references: [id])
+}
