@@ -9,7 +9,7 @@ services:
       env_file:
         - ./docker/postgres.env
       volumes:
-        - /goinfre/eabdelha/docker/Volumes/db/data:/var/lib/postgresql/data
+        - /goinfre/$USER/docker/Volumes/db/data:/var/lib/postgresql/data
       ports:
         - 5432:5432
       restart: unless-stopped
