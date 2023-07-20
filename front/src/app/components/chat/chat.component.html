@@ -16,7 +16,7 @@
     <span class="fa fa-search"></span>
 </div>
 
-<app-conversations></app-conversations>
-<app-direct *ngIf="directClicked"></app-direct>
+<app-conversations [nameEmitted]="nameEvent"></app-conversations>
+<app-direct *ngIf="directClicked" (customEvent)="onCustomEvent($event)"></app-direct>
 <app-rooms *ngIf="roomsClicked"></app-rooms>
 <app-online></app-online>

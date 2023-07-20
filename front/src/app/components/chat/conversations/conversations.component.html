@@ -1,7 +1,7 @@
-<div class="body">
+<div class="body" *ngIf="nameEmitted">
     <div class="header">
         <img src="../../../../assets/sghajdao.jpg" alt="avatar">
-        <span id="conv">Conversation with <span style="font-weight: bolder;">oussama</span></span>
+        <span id="conv">Conversation with <span style="font-weight: bolder;">{{nameEmitted}}</span></span>
     </div>
     <input type="text" id="typing" placeholder="write a message">
     <div class="send">

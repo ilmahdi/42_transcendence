@@ -9,6 +9,7 @@ export class ChatComponent implements OnInit {
 
   directClicked: boolean = true
   roomsClicked: boolean = false
+  nameEvent?:string
   constructor() { }
 
   ngOnInit(): void {
@@ -22,6 +23,10 @@ export class ChatComponent implements OnInit {
   onRooms() {
     this.roomsClicked = true;
     this.directClicked = false;
+  }
+
+  onCustomEvent(name:string) {
+    this.nameEvent = name;
   }
 
 }
