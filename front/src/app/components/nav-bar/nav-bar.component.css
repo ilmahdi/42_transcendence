@@ -1,0 +1,126 @@
+/*------------------------------------------SEARCH BAR--------------------------------------------*/
+
+.search {
+  position: absolute;
+  left: 18%;
+  height: 75px;
+  width: 64%;
+  background-color: #1E1212;
+}
+
+.input {
+  background-color: #1E1212;
+  color: white;
+  margin-left: 25px;
+  height: 80%;
+  width: 40rem;
+  border: none;
+  border-radius: 15px;
+  outline: none;
+  border-color: #1E1212;
+}
+
+.fa-search {
+  position: relative;
+  margin-left: 14px;
+  margin-top: 20px;
+  font-size: 25px;
+  color: white;
+  cursor: pointer;
+}
+
+.fa-commenting {
+  position: relative;
+  color: white;
+  font-size: 28px;
+  margin-left: 30px;
+  cursor: pointer;
+}
+
+.fa-bell {
+  position: relative;
+  color: white;
+  font-size: 25px;
+  margin-left: 50px;
+  cursor: pointer;
+}
+
+/*----------------------------------------------LEFT BAR----------------------------------------------*/
+
+.left {
+  height: 100%;
+  width: 18%;
+  position: absolute;
+  background-color: #231C1C;
+}
+
+.fa-eercast {
+  font-size:40px;
+  margin-left: 20px;
+  margin-top: 18px;
+  margin-bottom: 50px;
+  color: white;
+}
+
+.fa-home, .fa-user-circle, .fa-gamepad, .fa-comments, .fa-address-card, .fa-list-ol {
+  font-size: 24px;
+  margin-left: 8px;
+  margin-right: 8px;
+  /* margin-bottom: 30px; */
+  color: white;
+  cursor: pointer;
+  /* background-color: rgb(133, 87, 2); */
+  border-radius: 6px;
+  padding:9px 10px;
+  display:block;
+
+  transition: 0.5s;
+  overflow: hidden;
+  letter-spacing: 0.1em;
+}
+
+#menu {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.fa-home:hover, .fa-user-circle:hover, .fa-gamepad:hover, .fa-comments:hover, .fa-address-card:hover, .fa-list-ol:hover {
+  background-color: #D38146;
+}
+
+.fa-gear {
+  font-size: 24px;
+  margin-left: 8px;
+  margin-right: 8px;
+  margin-bottom: 55px;
+  bottom: 0px;
+  position: fixed;
+  color: white;
+  padding:8px 10px;
+  height: 40px;
+  width: 17%;
+  /* display: block; */
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.5s;
+}
+
+.fa-sign-out {
+  font-size: 24px;
+  margin-left: 8px;
+  margin-right: 8px;
+  margin-bottom: 10px;
+  bottom: 0px;
+  position: fixed;
+  color: white;
+  padding:8px 10px;
+  height: 40px;
+  width: 17%;
+  /* display:block; */
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.5s;
+}
+
+.fa-sign-out:hover, .fa-gear:hover {
+  background-color: #D38146;
+}

@@ -1,0 +1,73 @@
+.direct {
+    position: absolute;
+    margin-left: 20%;
+    margin-top: 80px;
+    width: 8%;
+    height: 44px;
+    /* background-color: #231C1C; */
+    border-radius: 10px 10px 0px 0px;
+    cursor: pointer;
+}
+
+.rooms {
+    position: absolute;
+    margin-left: 30%;
+    margin-top: 80px;
+    width: 8%;
+    height: 44px;
+    /* background-color: #231C1C; */
+    border-radius: 10px 10px 0px 0px;
+    cursor: pointer;
+}
+
+#line {
+    position: absolute;
+    margin-top: 41px;
+    width: 100%;
+    height: 2px;
+    background-color: #D38146;
+    transition: 0.3s;
+}
+
+.headerPart {
+    display: flex;
+    position: absolute;
+    margin-left: 20%;
+    margin-top: 123px;
+    width: 18%;
+    height: 67px;
+    background-color: #231C1C;
+}
+
+.search {
+    position: absolute;
+    margin-top: 18px;
+    margin-left: 7%;
+    width: 66%;
+    height: 40px;
+    border: none;
+    border-radius: 10px 0px 0px 10px;
+    text-indent: 20px;
+    outline: none;
+    background-color: #5e4a4a;
+    color: #DEC8C8;
+}
+
+#rightSerch {
+    position: absolute;
+    margin-top: 18px;
+    margin-left: 73%;
+    height: 40px;
+    width: 19%;
+    background-color: #5e4a4a;
+    border-radius: 0px 10px 10px 0px;
+}
+
+.fa-search {
+    position: absolute;
+    margin-top: 25px;
+    margin-left: 78%;
+    font-size: 25px;
+    color: #DEC8C8;
+    cursor: pointer;
+}

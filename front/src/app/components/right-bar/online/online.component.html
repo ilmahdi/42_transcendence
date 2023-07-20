@@ -1,0 +1,16 @@
+<div class="rightBar">
+    <div class="porfile">
+        <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="profileImg">
+        <span id="username">ilmahdi</span>
+        <span id="line"></span>
+    </div>
+    <span id="txt">Online friends</span>
+    <span id="line2"></span>
+    <div class="onlinePart">
+        <div class="users" *ngFor="let i of users">
+            <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="profileImg2">
+            <span id="names">{{i.name}}</span>
+            <span id="line2"></span>
+        </div>
+    </div>
+</div>
