@@ -2,7 +2,6 @@ import { ConflictException, HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 // import * as bcrypt from "bcryptjs"
 import * as jwt from "jsonwebtoken"
-import { UserAccount } from '@prisma/client';
 import { retry } from 'rxjs';
 import { brotliCompress } from 'zlib';
 import { Profile } from './utils/interfaces'

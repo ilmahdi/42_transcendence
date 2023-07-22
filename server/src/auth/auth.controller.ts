@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Param, ParseEnumPipe, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UserAccount } from '@prisma/client';
 // import * as bcrypt from "bcryptjs"
 import { FtLoginGuard } from './utils/guards/ft-login.guard';
 import { AuthGuard } from '@nestjs/passport';
