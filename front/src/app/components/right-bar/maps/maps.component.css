@@ -1,7 +1,8 @@
 .rightBar {
     position: absolute;
     margin-left: 82%;
-    width: 18%;
+    /* width: 18%; */
+    width: 243px;
     height: 100%;
     background-color: #231C1C;
 }

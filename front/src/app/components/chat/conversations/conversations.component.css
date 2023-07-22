@@ -84,3 +84,10 @@ img {
 .fa-send:active {
     margin-left: 15px;
 }
+
+@media (max-width: 1234px) {
+    .body {
+        margin-left: 50%;
+        width: 43%;
+    }
+}

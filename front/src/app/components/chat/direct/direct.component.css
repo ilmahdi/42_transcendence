@@ -73,3 +73,9 @@
     margin-top: 35px;
     margin-left: 49px;
 }
+
+@media (max-width: 1234px) {
+    .convers {
+        margin-left: 23%;
+    }
+}

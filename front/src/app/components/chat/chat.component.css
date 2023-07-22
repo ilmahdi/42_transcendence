@@ -71,3 +71,12 @@
     color: #DEC8C8;
     cursor: pointer;
 }
+
+@media (max-width: 1234px) {
+    .direct, .headerPart {
+        margin-left: 23%;
+    }
+    .rooms {
+        margin-left: 33%;
+    }
+}
