@@ -1,21 +1,19 @@
 .direct {
     position: absolute;
-    margin-left: 20%;
+    left: 270px;
     margin-top: 80px;
-    width: 8%;
+    width: 144px;
     height: 44px;
-    /* background-color: #231C1C; */
     border-radius: 10px 10px 0px 0px;
     cursor: pointer;
 }
 
 .rooms {
     position: absolute;
-    margin-left: 30%;
+    left: 416px;
     margin-top: 80px;
-    width: 8%;
+    width: 144px;
     height: 44px;
-    /* background-color: #231C1C; */
     border-radius: 10px 10px 0px 0px;
     cursor: pointer;
 }
@@ -32,9 +30,9 @@
 .headerPart {
     display: flex;
     position: absolute;
-    margin-left: 20%;
+    left: 270px;
     margin-top: 123px;
-    width: 18%;
+    width: 290px;
     height: 67px;
     background-color: #231C1C;
 }
@@ -70,13 +68,4 @@
     font-size: 25px;
     color: #DEC8C8;
     cursor: pointer;
-}
-
-@media (max-width: 1234px) {
-    .direct, .headerPart {
-        margin-left: 23%;
-    }
-    .rooms {
-        margin-left: 33%;
-    }
 }

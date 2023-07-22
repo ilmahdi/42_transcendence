@@ -2,11 +2,12 @@
     display: flex;
     position: absolute;
     flex-direction: column;
-    margin-left: 82%;
+    /* margin-left: 82%; */
     width: 243px;
     /* width: 18%; */
     height: 100%;
     background-color: #231C1C;
+    right: 0;
 }
 
 .porfile {
@@ -73,7 +74,6 @@
 
 .onlinePart {
     position: relative;
-    /* margin-top: 132px; */
 }
 
 .users {
@@ -87,7 +87,7 @@
     background-color: #D38146;
 }
 
-@media (max-width: 1320px) {
+/* @media (max-width: 1320px) {
     .rightBar {
         width: 200px;
         margin-left: 85%;
@@ -127,4 +127,4 @@
         width: 0px;
         height: 0px;
     }
-}
+} */

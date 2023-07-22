@@ -1,9 +1,9 @@
 .body {
     position: absolute;
     margin-top: 90px;
-    margin-left: 40%;
+    right: 270px;
     height: 80%;
-    width: 40%;
+    width: 572px;
     background-color: #231C1C;
     border-radius: 15px 15px 15px 15px;
 }
@@ -60,7 +60,7 @@ img {
 .disk {
     position: absolute;
     margin-top: 6px;
-    margin-left: 17px;
+    right: 5px;
     width: 33px;
     height: 33px;
     border-radius: 20px;
@@ -85,9 +85,8 @@ img {
     margin-left: 15px;
 }
 
-@media (max-width: 1234px) {
+@media (max-width: 1366px) {
     .body {
-        margin-left: 50%;
-        width: 43%;
+        width: 490px;
     }
 }

@@ -2,9 +2,9 @@
     display: flex;
     position: absolute;
     flex-direction: column;
-    margin-left: 20%;
+    left: 270px;
     margin-top: 186px;
-    width: 18%;
+    width: 290px;
     height: 65%;
     background-color: #231C1C;
     border-radius: 0px 0px 15px 15px;
