@@ -4,7 +4,6 @@
     flex-direction: column;
     left: 270px;
     margin-top: 186px;
-    /* width: 18%; */
     width: 290px;
     height: 65%;
     background-color: #231C1C;
@@ -73,4 +72,11 @@
     border-radius: 10px;
     margin-top: 35px;
     margin-left: 49px;
+}
+
+@media (min-width: 2000px) {
+    .convers {
+        left: 470px;
+        width: 320px;
+    }
 }

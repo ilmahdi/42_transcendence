@@ -2,7 +2,7 @@
     position: absolute;
     margin-top: 90px;
     right: 270px;
-    height: 80%;
+    height: calc(100px + 65%);
     width: 572px;
     background-color: #231C1C;
     border-radius: 15px 15px 15px 15px;
@@ -88,5 +88,12 @@ img {
 @media (max-width: 1366px) {
     .body {
         width: 490px;
+    }
+}
+
+@media (min-width: 2000px) {
+    .body {
+        right: 470px;
+        width: 672px;
     }
 }

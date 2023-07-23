@@ -69,3 +69,20 @@
     color: #DEC8C8;
     cursor: pointer;
 }
+
+@media (min-width: 2000px) {
+    .direct {
+        left: 470px;
+        width: 159px;
+    }
+
+    .rooms {
+        left: 631px;
+        width: 159px;
+    }
+
+    .headerPart {
+        left: 470px;
+        width: 320px;
+    }
+}
