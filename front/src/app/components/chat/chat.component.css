@@ -86,3 +86,39 @@
         width: 320px;
     }
 }
+
+@media (max-width: 1092px) {
+    .direct {
+        left: 110px;
+    }
+    .rooms {
+        left: 256px;
+    }
+    .headerPart {
+        left: 110px;
+    }
+}
+
+.small-screen {
+    display: none;
+}
+
+@media (max-width: 934px) {
+    .direct {
+        /* left: 300px; */
+        left: 35%;
+        width: 159px;
+    }
+
+    .rooms {
+        /* left: 461px; */
+        left: calc(35% + 161px);
+        width: 159px;
+    }
+
+    .headerPart {
+        /* left: 300px; */
+        left: 35%;
+        width: 320px;
+    }
+}

@@ -9,10 +9,21 @@ export class ChatComponent implements OnInit {
 
   directClicked: boolean = true
   roomsClicked: boolean = false
-  nameEvent?:string
-  constructor() { }
+  nameEvent?:any[]
+  screenWidth: number = 1000;
+  smallScreen:boolean = false;
+  displayConvers:boolean = false;
+
+  constructor() {
+    this.screenWidth = window.innerWidth;
+    window.addEventListener('resize', this.onResize.bind(this));
+  }
 
   ngOnInit(): void {
+  }
+
+  onResize() {
+    this.screenWidth = window.innerWidth;
   }
 
   onDirect() {
@@ -25,8 +36,14 @@ export class ChatComponent implements OnInit {
     this.directClicked = false;
   }
 
+  conversEvent(convers:boolean) {
+    this.displayConvers = convers
+  }
+
   onCustomEvent(name:string) {
-    this.nameEvent = name;
+    this.smallScreen = true
+    this.nameEvent = [name, true]
+    this.displayConvers = false
   }
 
 }

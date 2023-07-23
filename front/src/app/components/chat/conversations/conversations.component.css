@@ -15,6 +15,16 @@
     border-radius: 15px 15px 0px 0px;
 }
 
+.fa-angle-double-left {
+    position: absolute;
+    color: white;
+    font-size: 40px;
+    left: 10px;
+    top: 2px;
+    cursor: pointer;
+    display: none;
+}
+
 img {
     position: absolute;
     height: 33px;
@@ -85,15 +95,31 @@ img {
     margin-left: 15px;
 }
 
+@media (min-width: 2000px) {
+    .body {
+        right: 470px;
+        width: 672px;
+    }
+}
+
 @media (max-width: 1366px) {
     .body {
         width: 490px;
     }
 }
 
-@media (min-width: 2000px) {
+@media (max-width: 1324px) {
     .body {
-        right: 470px;
-        width: 672px;
+        right: 40px;
+    }
+}
+
+@media (max-width: 934px) {
+    .body {
+        right: 80px;
+        width: 70%;
+    }
+    .fa-angle-double-left {
+        display: block;
     }
 }

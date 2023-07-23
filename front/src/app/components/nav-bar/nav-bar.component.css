@@ -35,7 +35,7 @@
   position: absolute;
   color: white;
   font-size: 35px;
-  top: 12px;
+  top: 17px;
   right: 130px;
   cursor: pointer;
 }
@@ -44,7 +44,7 @@
   position: absolute;
   color: white;
   font-size: 35px;
-  top: 12px;
+  top: 17px;
   right: 50px;
   cursor: pointer;
 }
@@ -126,4 +126,40 @@
 
 .fa-sign-out:hover, .fa-gear:hover {
   background-color: #D38146;
+}
+
+@media (max-width: 1324px) {
+  .search {
+    right: 0;
+  }
+  .input {
+    width: 65%;
+  }
+  .fa-commenting {
+    right: 200px;
+  }
+  .fa-bell {
+    right: 135px;
+  }
+}
+
+@media (max-width: 1092px) {
+  .search {
+    left: 85px;
+  }
+  .left {
+    width: 85px;
+  }
+  #menu {
+    font-size: 0;
+  }
+  .fa-home, .fa-user-circle, .fa-gamepad, .fa-comments, .fa-address-card, .fa-list-ol {
+    display: flex;
+    padding-left: 20px;
+  }
+  .fa-gear, .fa-sign-out {
+    display: flex;
+    padding-left: 20px;
+    width: 70px;
+  }
 }

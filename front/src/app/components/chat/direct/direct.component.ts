@@ -13,9 +13,19 @@ export class DirectComponent implements OnInit {
     {id:2, name:'ismail', message:'lets play a game', readed: false, date: '03/02/2022'},
     {id:3, name:'omar', message:'lets play a game', readed: true, date: '03/02/2022'}
   ];
-  constructor() { }
+  screenWidth: number = 1000;
+  smallScreen:boolean = false;
+
+  constructor() {
+    this.screenWidth = window.innerWidth;
+    window.addEventListener('resize', this.onResize.bind(this));
+  }
 
   ngOnInit(): void {
+  }
+
+  onResize() {
+    this.screenWidth = window.innerWidth;
   }
 
   emitEvent(name:string) {

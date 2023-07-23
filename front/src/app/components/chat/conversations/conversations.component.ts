@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { ChatService } from 'src/app/services/chat.service';
@@ -10,7 +10,9 @@ import { ChatService } from 'src/app/services/chat.service';
 })
 export class ConversationsComponent implements OnInit {
 
-  @Input() nameEmitted?:string
+  @Input() nameEmitted:any = {name:'', displayConv: true}
+  @Output() getconvers = new EventEmitter<boolean>()
+  displayConv:boolean = true
 
   newMessage$?: Observable<string>
   messages: string[] = []
@@ -21,6 +23,11 @@ export class ConversationsComponent implements OnInit {
     return this.chatService.getNewMessage().subscribe((message:string)=>{
       this.messages.push(message);
     })
+  }
+
+  getConversEvent() {
+    this.getconvers.emit(true);
+    this.nameEmitted[1] = false
   }
 
   onSubmit() {
