@@ -5,6 +5,7 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from '../home.component';
 import { NavBarModule } from '../../nav-bar/nav-bar.module';
 import { OnlineModule } from '../../right-bar/online/online.module';
+import { LeftBarModule } from '../../left-bar/left-bar.module';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { OnlineModule } from '../../right-bar/online/online.module';
     CommonModule,
     HomeRoutingModule,
     NavBarModule,
+    LeftBarModule,
     OnlineModule
   ]
 })
