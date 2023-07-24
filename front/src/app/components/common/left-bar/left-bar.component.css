@@ -1,0 +1,268 @@
+:host {
+    --second-background-color: #231C1C;
+    --primary-text-color: #DEC8C8;
+    --primary-hover-background-color: #62402B;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+    color: var(--primary-text-color);
+}
+/**/
+/******/
+/* left bar  */
+/******/
+
+.left-bar {
+    position: fixed;
+    background-color: var(--second-background-color);
+    height: 100%;
+    width: 240px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    list-style-type: none;
+
+    transition: all 0.4s ease;
+
+}
+
+/**/
+/******/
+/* left bar section */
+/******/
+
+.lb-sec-one {
+    height: 100px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    
+}
+
+.lb-sec-two {
+    flex-shrink: 0;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 440px;
+
+
+}
+
+.lb-sec-three {
+    height: 120px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+/**/
+/* effect */
+
+.lb-sec-two :hover , 
+.lb-sec-three :hover {
+    background-color: var(--primary-hover-background-color);
+    border-radius: 11px;
+    transition: all 0.3s ease;
+
+}
+
+/**/
+/******/
+/* left bar section item */
+/******/
+
+.lb-sec-item {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: 200px;
+    height: 50px;
+    padding-left: 16px;
+
+}
+
+/**/
+/******/
+/* left bar section item specific */
+/******/
+
+.lb-sec-one
+.lb-sec-item {
+    /* justify-content: center; */
+    gap: 10px;
+}
+
+.lb-sec-three
+.lb-sec-item {
+    gap: 12px;
+}
+
+/**/
+/******/
+/* left bar section item icon */
+/******/
+
+.lb-sec-item-icon {
+    width: 30px;
+    height: 30px;
+}
+
+#icon-menu {
+    display: none;
+}
+
+/**/
+/******/
+/* left bar section item icon specific */
+/******/
+.lb-sec-one
+.lb-sec-item-icon {
+    width: 38px;
+    height: 38px;
+}
+
+/**/
+/******/
+/* left bar section item text */
+/******/
+.lb-sec-item-text {
+    font-size: 18px;
+}
+
+/**/
+/******/
+/* left bar section item text specific */
+/******/
+
+.lb-sec-one
+.lb-sec-item-text {
+    font-size: 22px;
+}
+
+
+/***********************************************/
+/*                Media Queries                */
+/***********************************************/
+
+@media (max-width: 850px) {
+
+/**/
+/******/
+/* left bar  */
+/******/
+
+.left-bar {
+    width: 100px;
+}
+
+/**/
+/******/
+/* left bar section */
+/******/
+
+
+
+
+/**/
+/******/
+/* left bar section item */
+/******/
+
+.lb-sec-item {
+    width: 50px;
+    padding-left: 0;
+    justify-content: center;
+    
+}
+/**/
+/******/
+/* left bar section item specific */
+/******/
+
+
+
+
+
+/**/
+/******/
+/* left bar section item icon */
+/******/
+
+
+
+/**/
+/******/
+/* left bar section item text */
+/******/
+.lb-sec-item-text {
+    display: none;
+}
+
+
+}
+/*****************************************************/
+@media (max-width: 450px) {
+
+/**/
+/******/
+/* left bar  */
+/******/
+
+.left-bar {
+    width: 0;
+    
+}
+
+/**/
+/******/
+/* left bar section */
+/******/
+.lb-sec-one {    
+    height: 76px;
+
+}
+
+
+
+
+/**/
+/******/
+/* left bar section item */
+/******/
+
+
+/**/
+/******/
+/* left bar section item specific */
+/******/
+
+.lb-sec-item {
+    display: none;
+
+}
+
+/**/
+/******/
+/* left bar section item icon */
+/******/
+
+/* #icon-menu {
+    width: 30px;
+    height: 30px;
+    display: block;
+} */
+
+
+/**/
+/******/
+/* left bar section item text */
+/******/
+
+}

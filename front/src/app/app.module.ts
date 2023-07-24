@@ -14,7 +14,8 @@ import { MapsModule } from './components/right-bar/maps/maps.module';
 import { FriendsModule } from './components/friends/friends.module';
 import { LeaderboardModule } from './components/leaderboard/leaderboard.module';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
-import { LeftBarModule } from './components/left-bar/left-bar.module';
+import { MenuBarModule} from './components/common/menu-bar.module';
+import { TopBarComponent } from './components/common/top-bar/top-bar.component';
 
 const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
 
@@ -29,7 +30,6 @@ const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
     HomeModule,
     LoginModule,
     NavBarModule,
-    LeftBarModule,
     VisitorsModule,
     ChatModule,
     OnlineModule,
