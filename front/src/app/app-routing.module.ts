@@ -3,9 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {path: "", loadChildren:()=>import("./components/visitors/visitors.module").then(m=>m.VisitorsModule)},
-  {path: "home", loadChildren:()=>import("./components/home/home/home.module").then(m=>m.HomeModule)},
+  {path: "home", loadChildren:()=>import("./components/home/home.module").then(m=>m.HomeModule)},
   {path: "profile", loadChildren:()=>import("./components/profile/profile.module").then(m=>m.ProfileModule)},
-  {path: "game", loadChildren:()=>import("./components/game/game/game.module").then(m=>m.GameModule)},
+  {path: "game", loadChildren:()=>import("./components/game/game.module").then(m=>m.GameModule)},
   {path: "login", loadChildren:()=>import("./components/login/login.module").then(m=>m.LoginModule)},
   {path: "chat", loadChildren:()=>import("./components/chat/chat.module").then(m=>m.ChatModule)},
   {path: "friends", loadChildren:()=>import("./components/friends/friends.module").then(m=>m.FriendsModule)},
