@@ -6,9 +6,11 @@
     box-sizing: border-box;
     color: var(--primary-text-color);
 }
+
 li {
     user-select: none;
 }
+
 
 /* left bar  */
 /******/
@@ -22,7 +24,7 @@ li {
     align-items: center;
     flex-direction: column;
     list-style-type: none;
-
+    
     transition: all 0.4s ease;
 
 }
@@ -103,6 +105,10 @@ li {
     fill: var(--primary-text-color);
 }
 
+#icon-back {
+    fill: var(--second-hover-background-color);
+    cursor: pointer;
+}
 
 /* left bar section item icon specific */
 /******/
@@ -126,106 +132,4 @@ li {
 .lb-sec-one
 .lb-sec-item-text {
     font-size: 1.5rem;
-}
-
-
-/***********************************************/
-/*                Media Queries                */
-/***********************************************/
-
-@media (max-width: 850px) {
-
-
-/* left bar  */
-/******/
-
-.left-bar {
-    width: 4.4rem;
-}
-
-
-/* left bar section */
-/******/
-
-
-
-
-
-/* left bar section item */
-/******/
-
-.lb-sec-item {
-    width: 3rem;
-    padding-left: 0;
-    justify-content: center;
-    
-}
-
-/* left bar section item specific */
-/******/
-
-
-
-
-/* left bar section item icon */
-/******/
-
-
-
-
-/* left bar section item text */
-/******/
-.lb-sec-item-text {
-    display: none;
-}
-
-
-}
-/*****************************************************/
-@media (max-width: 450px) {
-
-
-/* left bar  */
-/******/
-
-.left-bar {
-    width: 0;
-    
-}
-
-
-/* left bar section */
-/******/
-
-
-
-
-/* left bar section item */
-/******/
-
-
-
-/* left bar section item specific */
-/******/
-
-.lb-sec-item {
-    display: none;
-
-}
-
-
-/* left bar section item icon */
-/******/
-
-/* #icon-menu {
-    width: 30px;
-    height: 30px;
-    display: block;
-} */
-
-
-
-/* left bar section item text */
-/******/
-
 }

@@ -2,6 +2,16 @@
 @import "~font-awesome/css/font-awesome.min.css";
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
+
+:root {
+    --second-background-color: #231C1C;
+    --top-bar-background-color: #1E1212;
+    --primary-text-color: #DEC8C8;
+    --primary-hover-background-color: #62402B;
+    --second-hover-background-color: #D38146;
+
+}
+
 body {
     overflow:auto;
 

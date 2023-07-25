@@ -16,6 +16,8 @@ import { LeaderboardModule } from './components/leaderboard/leaderboard.module';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { MenuBarModule} from './components/common/menu-bar.module';
 import { TopBarComponent } from './components/common/top-bar/top-bar.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
 
@@ -37,6 +39,7 @@ const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
     FriendsModule,
     LeaderboardModule,
     SocketIoModule.forRoot(config),
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
