@@ -105,20 +105,29 @@
 
 @media (max-width: 934px) {
     .direct {
-        /* left: 300px; */
         left: 35%;
         width: 159px;
     }
 
     .rooms {
-        /* left: 461px; */
         left: calc(35% + 161px);
         width: 159px;
     }
 
     .headerPart {
-        /* left: 300px; */
         left: 35%;
         width: 320px;
+    }
+}
+
+@media (max-width: 660px) {
+    .direct {
+        left: 22%;
+    }
+    .rooms {
+        left: calc(22% + 161px)
+    }
+    .headerPart {
+        left: 22%;
     }
 }

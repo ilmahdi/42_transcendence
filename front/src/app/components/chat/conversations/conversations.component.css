@@ -123,3 +123,17 @@ img {
         display: block;
     }
 }
+
+@media (max-width: 660px) {
+    .body {
+        width: 65%;
+        right: 50px;
+    }
+    img {
+        margin-left: 50px;
+    }
+    #conv {
+        font-size: 14px;
+        margin-left: 98px;
+    }
+}

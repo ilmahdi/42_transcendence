@@ -163,3 +163,46 @@
     width: 70px;
   }
 }
+
+@media (max-width: 934px) {
+  .input {
+    width: 50%;
+  }
+}
+
+@media (max-width: 660px) {
+  .search {
+    position: absolute;
+    left: 60px;
+    height: 60px;
+  }
+  .fa-search {
+    bottom: 20px;
+  }
+  .left {
+    width: 60px;
+  }
+  .input {
+    width: 49%;
+  }
+  .fa-commenting {
+    font-size: 27px;
+    right: 105px;
+  }
+  .fa-bell {
+    font-size: 27px;
+    right: 65px;
+  }
+  .fa-eercast {
+    margin-left: 10px;
+  }
+  .fa-home, .fa-user-circle, .fa-gamepad, .fa-comments, .fa-address-card, .fa-list-ol {
+    display: flex;
+    padding-left: 8px;
+  }
+  .fa-gear, .fa-sign-out {
+    display: flex;
+    padding-left: 8px;
+    width: 46px;
+  }
+}

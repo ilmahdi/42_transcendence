@@ -92,3 +92,11 @@
         right: 50px;
     }
 }
+
+@media (max-width: 660px) {
+    #profileImg {
+        height: 35px;
+        width: 35px;
+        right: 20px;
+    }
+}

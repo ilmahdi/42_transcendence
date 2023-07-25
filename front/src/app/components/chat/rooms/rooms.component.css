@@ -29,8 +29,13 @@
 
 @media (max-width: 934px) {
     .convers {
-        /* left: 300px; */
         left: 35%;
         width: 320px;
+    }
+}
+
+@media (max-width: 660px) {
+    .convers {
+        left: 22%;
     }
 }
