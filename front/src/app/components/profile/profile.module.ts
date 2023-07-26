@@ -8,6 +8,7 @@ import { OwnedComponent } from './owned/owned.component';
 import { VisitedComponent } from './visited/visited.component';
 import { MapsModule } from '../right-bar/maps/maps.module';
 import { OnlineModule } from '../right-bar/online/online.module';
+import { MenuBarModule } from '../common/menu-bar.module';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { OnlineModule } from '../right-bar/online/online.module';
     CommonModule,
     ProfileRoutingModule,
     NavBarModule,
-    OnlineModule
+    OnlineModule,
+    MenuBarModule,
   ]
 })
 export class ProfileModule { }

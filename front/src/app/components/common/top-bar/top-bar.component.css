@@ -1,0 +1,135 @@
+
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+    color: var(--primary-text-color);
+}
+
+/* top bar  */
+/******/
+.top-bar {
+    position: fixed;
+    height: var(--top-bar-hieght);
+    width: calc(100% - var(--right-bar-width));
+    background-color: var(--top-bar-background-color);
+    display: flex;
+    list-style-type: none;
+    justify-content: space-around;
+    align-items: center;
+    /* margin-right: 14rem; */
+}
+
+
+/* top bar section */
+/******/
+.tb-sec-one {
+    width: var(--primary-left-bar-width);
+    /* padding-left: 1.5rem; */
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tb-sec-two {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    min-width: max-content;
+    margin-left: 1rem;
+}
+.tb-sec-three {
+    display: flex;
+    justify-content: space-evenly;
+    width: 7rem;
+    gap: 1rem;
+}
+
+
+/* effect */
+
+
+
+/* top bar section item */
+/******/
+
+
+
+/* top bar section item specific */
+/******/
+
+
+/* top bar section item icon */
+/******/
+.tb-sec-item-icon 
+{
+    width: 1.8rem;
+    height: 1.8rem;
+    fill: var(--primary-text-color);
+}
+
+/**/
+/* effect */
+.tb-sec-one :hover
+.tb-sec-item-icon , 
+.tb-sec-three :hover
+.tb-sec-item-icon {
+    fill: var(--second-hover-background-color);
+    transition: all 0.1s ease;
+    cursor: pointer;
+
+}
+
+/* top bar section item icon specific */
+/******/
+
+
+/* top bar section item text */
+/******/
+
+.tb-sec-item-text
+{
+    background: none;
+    border: none;
+    outline: none;
+    margin-left: 0.6rem;
+    font-size: 0.9rem;
+    width: 10rem;
+}
+
+.tb-sec-item-text[type="search"]::-webkit-search-cancel-button{
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+
+/* top bar section item text specific */
+/******/
+
+
+
+/***********************************************/
+/*                Media Queries                */
+/***********************************************/
+
+@media (max-width: 1200px) {
+    
+    /* top bar  */
+    /******/
+    .top-bar {
+        width: 100%;
+    }
+    
+}
+
+@media (max-width: 950px) {
+
+/* top bar section */
+/******/
+.tb-sec-one {
+    width: var(--second-left-bar-width);
+    /* padding-left: 1.5rem; */
+}
+}

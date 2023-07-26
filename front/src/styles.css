@@ -1,2 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~font-awesome/css/font-awesome.min.css";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+
+:root {
+    --primary-background-color: #201717;
+    --second-background-color: #231C1C;
+    --top-bar-background-color: #1E1212;
+    --primary-text-color: #DEC8C8;
+    --primary-hover-background-color: #62402B;
+    --second-hover-background-color: #D38146;
+    --primary-left-bar-width: 14rem;
+    --second-left-bar-width: 4.4rem;
+    --right-bar-width: 14rem;
+    --top-bar-hieght: 4rem;
+    
+}   
+
+body {
+    overflow:auto;
+
+}

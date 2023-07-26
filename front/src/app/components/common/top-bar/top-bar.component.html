@@ -1,0 +1,36 @@
+<app-left-bar-second *ngIf="this.menuBarService.iShowLeftBar"></app-left-bar-second>
+
+<ul  class="top-bar">
+    <div class="tb-sec-all tb-sec-one">
+        <li (click)="toggleLeftBar()" class="tb-sec-item">
+            <svg id="icon-menu" class="tb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="./assets/icons/menu.svg#icon-menu"></use>
+            </svg>
+        </li>
+    </div>
+    <div class="tb-sec-two">
+
+        <li class="tb-sec-item">
+            <svg class="tb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="./assets/icons/search.svg#icon-search"></use>
+            </svg>
+            <input class="tb-sec-item-text" type="search" placeholder="search...">
+        </li>
+
+    </div>
+    <div class="tb-sec-three">
+
+        <li class="tb-sec-item">
+            <svg class="tb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="./assets/icons/message.svg#icon-message"></use>
+            </svg>
+        </li>
+        <li class="tb-sec-item">
+            <svg class="tb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="./assets/icons/notif.svg#icon-notif"></use>
+            </svg>
+        </li>
+    </div>
+</ul>
+    
+    

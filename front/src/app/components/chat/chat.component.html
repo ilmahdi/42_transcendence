@@ -1,4 +1,6 @@
-<app-nav-bar></app-nav-bar>
+<app-left-bar></app-left-bar>
+<app-top-bar></app-top-bar>
+<app-online-friends></app-online-friends>
 
 <div class="direct" [style.background-color]="directClicked? '#231C1C' : '#201717'" (click)="onDirect()">
     <p style="color: white; position: absolute;margin-left: 25%;margin-top: 7px;">DIRECT</p>
@@ -19,4 +21,3 @@
 <app-conversations [nameEmitted]="nameEvent"></app-conversations>
 <app-direct *ngIf="directClicked" (customEvent)="onCustomEvent($event)"></app-direct>
 <app-rooms *ngIf="roomsClicked"></app-rooms>
-<app-online></app-online>

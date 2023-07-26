@@ -9,6 +9,7 @@ import { DirectComponent } from './direct/direct.component';
 import { RoomsComponent } from './rooms/rooms.component';
 import { OnlineModule } from '../right-bar/online/online.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MenuBarModule } from '../common/menu-bar.module';
 
 
 @NgModule({
@@ -25,7 +26,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ChatRoutingModule,
     NavBarModule,
     OnlineModule,
-    FormsModule, ReactiveFormsModule
+    FormsModule, 
+    ReactiveFormsModule,
+    MenuBarModule,
   ]
 })
 export class ChatModule { }
