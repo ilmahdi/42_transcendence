@@ -17,6 +17,7 @@ import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { MenuBarModule} from './components/common/menu-bar.module';
 import { TopBarComponent } from './components/common/top-bar/top-bar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ProfileModule } from './components/profile/profile.module';
 
 
 const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
@@ -30,6 +31,7 @@ const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
     AppRoutingModule,
     GameModule,
     HomeModule,
+    ProfileModule,
     LoginModule,
     NavBarModule,
     VisitorsModule,

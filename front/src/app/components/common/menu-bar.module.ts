@@ -6,6 +6,7 @@ import { LeftBarRoutingModule } from './left-bar/left-bar-routing.module';
 import { TopBarRoutingModule } from './top-bar/top-bar-routing.module';
 import { LeftBarSecondComponent } from './left-bar-second/left-bar-second.component';
 import { LeftBarSecondRoutingModule } from './left-bar-second/left-bar-second-routing.module';
+import { OnlineFriendsComponent } from './right-bar/online-friends/online-friends.component';
 
 
 
@@ -14,6 +15,7 @@ import { LeftBarSecondRoutingModule } from './left-bar-second/left-bar-second-ro
     LeftBarComponent,
     LeftBarSecondComponent,
     TopBarComponent,
+    OnlineFriendsComponent,
   ],
   imports: [
     CommonModule,
@@ -24,7 +26,8 @@ import { LeftBarSecondRoutingModule } from './left-bar-second/left-bar-second-ro
   exports: [ 
     LeftBarComponent,
     LeftBarSecondComponent,
-    TopBarComponent
+    TopBarComponent,
+    OnlineFriendsComponent,
    ]
 })
 export class MenuBarModule { 

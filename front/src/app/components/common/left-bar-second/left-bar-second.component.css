@@ -19,13 +19,14 @@ li {
     position: fixed;
     background-color: var(--second-background-color);
     height: 100%;
-    width: 14rem;
+    width: var(--primary-left-bar-width);
     display: flex;
     align-items: center;
     flex-direction: column;
     list-style-type: none;
     
     transition: all 0.4s ease;
+    z-index: 10;
 
 }
 
@@ -34,7 +35,7 @@ li {
 /******/
 
 .lb-sec-one {
-    height: 4rem;
+    height: var(--top-bar-hieght);
     flex-shrink: 0;
     display: flex;
     align-items: center;

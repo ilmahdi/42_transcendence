@@ -25,10 +25,11 @@ export class TopBarComponent implements OnInit {
     private elementRef: ElementRef,
     ) {
     }
+    isSidebarOpen: boolean = false;
 
 
   toggleLeftBar() {
-    this.menuBarService.iShowLeftBar = true;
+    this.menuBarService.iShowLeftBar = !this.menuBarService.iShowLeftBar;
   }
 
   @HostListener('document:click', ['$event'])

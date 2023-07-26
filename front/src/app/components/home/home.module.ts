@@ -6,6 +6,7 @@ import { HomeComponent } from './home.component';
 import { NavBarModule } from '../nav-bar/nav-bar.module';
 import { OnlineModule } from '../right-bar/online/online.module';
 import { MenuBarModule} from '../common/menu-bar.module';
+import { OnlineFriendsComponent } from '../common/right-bar/online-friends/online-friends.component';
 
 
 @NgModule({
@@ -17,7 +18,7 @@ import { MenuBarModule} from '../common/menu-bar.module';
     HomeRoutingModule,
     NavBarModule,
     MenuBarModule,
-    OnlineModule
+    OnlineModule,
   ]
 })
 export class HomeModule { }
