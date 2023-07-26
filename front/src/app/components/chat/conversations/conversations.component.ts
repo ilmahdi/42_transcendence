@@ -15,13 +15,13 @@ export class ConversationsComponent implements OnInit {
   displayConv:boolean = true
 
   newMessage$?: Observable<string>
-  messages: string[] = []
+  messages: any[] = []
   msg = new FormGroup({message: new FormControl})
   constructor(private chatService: ChatService) { }
 
   ngOnInit() {
-    return this.chatService.getNewMessage().subscribe((message:string)=>{
-      this.messages.push(message);
+    return this.chatService.getNewMessage().subscribe((message)=>{
+      this.messages.push(message.text_message);
     })
   }
 
@@ -31,7 +31,8 @@ export class ConversationsComponent implements OnInit {
   }
 
   onSubmit() {
-    let message = this.msg.value.message
+    // let message = this.msg.value.message
+    let message = {channel_id:1, text_message:this.msg.value.message, sent_at: new Date(), author:1}
     if (!message) return;
     this.chatService.sendMessage(message)
     this.msg.reset();

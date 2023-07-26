@@ -4,9 +4,12 @@ import { AuthService } from '../auth/auth.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [
+    PrismaModule,
+  ],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService]

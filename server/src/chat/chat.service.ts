@@ -1,11 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { CreateChatDto } from './utils/dtos/create-chat.dto';
 import { UpdateChatDto } from './utils/dtos/update-chat.dto';
+import { MessageEntity } from './utils/models/message.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ChatService {
-  create(createChatDto: CreateChatDto) {
-    return 'This action adds a new chat';
+
+  constructor(@InjectRepository(MessageEntity) private readonly messageRepository:Repository<MessageEntity>) {}
+
+  async create(message: MessageEntity) {
+    return await this.messageRepository.save(message);
+  }
+
+  async getMessages(): Promise<MessageEntity[]> {
+    return await this.messageRepository.find();
   }
 
   findAll() {
