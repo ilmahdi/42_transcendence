@@ -14,12 +14,13 @@ import { MapsModule } from './components/right-bar/maps/maps.module';
 import { FriendsModule } from './components/friends/friends.module';
 import { LeaderboardModule } from './components/leaderboard/leaderboard.module';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { HttpClientModule } from '@angular/common/http';
 
 const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -34,6 +35,7 @@ const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
     MapsModule,
     FriendsModule,
     LeaderboardModule,
+    HttpClientModule,
     SocketIoModule.forRoot(config),
   ],
   providers: [],

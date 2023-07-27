@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
   selector: 'app-direct',
@@ -14,9 +15,9 @@ export class DirectComponent implements OnInit {
     {id:3, name:'omar', message:'lets play a game', readed: true, date: '03/02/2022'}
   ];
   screenWidth: number = 1000;
-  smallScreen:boolean = false;
+  color:any = {color:'', name:''}
 
-  constructor() {
+  constructor(private chatService:ChatService) {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
   }
@@ -29,6 +30,11 @@ export class DirectComponent implements OnInit {
   }
 
   emitEvent(name:string) {
+    if (this.screenWidth > 934) {
+      this.color = {color:'#D38146', name:name}
+    }
+    else
+      this.color = {color:'', name:''}
     this.customEvent.emit(name)
   }
 

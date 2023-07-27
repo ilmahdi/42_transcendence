@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
 import { MessageEntity } from '../../../../server/src/chat/utils/models/message.entity';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'

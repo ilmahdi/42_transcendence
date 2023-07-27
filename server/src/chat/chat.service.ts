@@ -13,8 +13,13 @@ export class ChatService {
     return await this.messageRepository.save(message);
   }
 
-  async getMessages(): Promise<MessageEntity[]> {
-    return await this.messageRepository.find();
+  async getMessages(authorId: number, receiverId: number): Promise<MessageEntity[]> {
+    return this.messageRepository.find({
+      where: [
+        { authorId, receiverId },
+        { authorId: receiverId, receiverId: authorId },
+      ],
+    });
   }
 
   findAll() {

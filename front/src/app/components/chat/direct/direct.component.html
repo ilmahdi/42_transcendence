@@ -1,5 +1,5 @@
 <div class="convers">
-    <div *ngFor="let i of n" class="conver" (click)="emitEvent(i.name)">
+    <div *ngFor="let i of n" class="conver" (click)="emitEvent(i.name)" [style.backgroundColor]="(color.name === i.name)? color.color : ''">
         <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="img">
         <p id="name">{{i.name}}</p>
         <p id="date">{{i.date}}</p>

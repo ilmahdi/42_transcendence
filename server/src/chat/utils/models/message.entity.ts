@@ -6,9 +6,6 @@ export class MessageEntity {
     @PrimaryGeneratedColumn()
     id?:number
 
-    @PrimaryGeneratedColumn()
-    channel_id?:number
-
     @Column({default: ""})
     text_message?:string
 
@@ -16,7 +13,10 @@ export class MessageEntity {
     sent_at?:Date
 
     @Column()
-    author?:number
+    authorId?:number
+
+    @Column()
+    receiverId?:number
 
     // @ManyToOne(() => User, (userEntity) => userEntity.message)
     // author:User;

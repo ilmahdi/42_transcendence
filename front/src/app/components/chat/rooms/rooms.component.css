@@ -23,10 +23,6 @@
     }
 }
 
-.small-screen {
-    width: 0;
-}
-
 @media (max-width: 934px) {
     .convers {
         left: 35%;

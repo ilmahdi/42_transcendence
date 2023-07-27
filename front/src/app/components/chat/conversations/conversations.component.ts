@@ -32,7 +32,7 @@ export class ConversationsComponent implements OnInit {
 
   onSubmit() {
     // let message = this.msg.value.message
-    let message = {channel_id:1, text_message:this.msg.value.message, sent_at: new Date(), author:1}
+    let message = {channel_id:1, text_message:this.msg.value.message, sent_at: new Date(), authorId:1, receiverId:1}
     if (!message) return;
     this.chatService.sendMessage(message)
     this.msg.reset();
