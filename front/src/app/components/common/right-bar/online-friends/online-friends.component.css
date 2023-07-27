@@ -18,24 +18,22 @@
     display: flex;
     flex-direction: column;
     left: calc(100% - var(--right-bar-width));
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow: hidden;
 
     /* for firfox */
     scrollbar-color: #5e6147 var(--second-background-color);
-    scrollbar-width: 0.4rem;
-
+    scrollbar-width: thin;
 }
 /**/
 /* effect */
 
 .right-bar::-webkit-scrollbar
  {
-    width: 0.4rem;
+    width: 0.3rem;
     background-color: var(--second-background-color);
 } 
 .right-bar::-webkit-scrollbar-thumb  {
-    border-radius: 0.4rem;
+    border-radius: 0.3rem;
     background-color: #5e6147;
 }
 .right-bar::-webkit-scrollbar-thumb:hover  {
@@ -188,7 +186,7 @@
 /*                Media Queries                */
 /***********************************************/
 
-@media (max-width: 1200px) {
+@media (max-width: 1000px) {
 
 
     /* right bar  */

@@ -4,12 +4,13 @@
 
 
 :root {
-    --primary-background-color: #201717;
-    --second-background-color: #231C1C;
-    --top-bar-background-color: #1E1212;
     --primary-text-color: #DEC8C8;
+    --primary-background-color: #201717;
     --primary-hover-background-color: #62402B;
+    --second-text-color: #D38146;
+    --second-background-color: #231C1C;
     --second-hover-background-color: #D38146;
+    --top-bar-background-color: #1E1212;
     --primary-left-bar-width: 14rem;
     --second-left-bar-width: 4.4rem;
     --right-bar-width: 14rem;
