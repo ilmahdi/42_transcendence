@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component,  OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-leaderboard',
@@ -7,31 +7,13 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 })
 export class LeaderboardComponent implements OnInit {
 
-  constructor() { }
+  constructor() { 
+    
+  }
+  private timout :any
 
   ngOnInit(): void {
   }
-
-  @ViewChild('ldSecTable', { static: true }) ldSecTable!: ElementRef;
-
-  private scrollTimeout: any;
-
-  startScroll(event: any) {
-    if (event.touches.length > 1)
-      clearInterval(this.scrollTimeout);
-
-      const container = this.ldSecTable.nativeElement as HTMLElement;
-      container.style.overflowY='scroll';
-  }
-
-  stopScroll() {
-    // clearTimeout(this.scrollTimeout);
-    // this.scrollTimeout = setTimeout(() => {
-      const container = this.ldSecTable.nativeElement as HTMLElement;
-      container.style.overflowY='hidden';
-    // }, 200); 
-  }
-
   users:any[] = [
     {
       name: 'ossama',

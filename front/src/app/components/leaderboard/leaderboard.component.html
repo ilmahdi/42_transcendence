@@ -19,11 +19,10 @@
             <div class="ld-sec-table"
                 onmouseover="this.style.overflowY='scroll'" 
                 onmouseout="this.style.overflowY='hidden'"
-                ontouchstart="this.style.overflowY='scroll'" 
-                ontouchend="this.style.overflowY='hidden'"
-                (ontouchstart)="startScroll($event)" 
-                (ontouchend)="stopScroll()">
-                <div class="ld-sec-tb-row" *ngFor="let user of users; let i = index">
+                >
+                <div class="ld-sec-tb-row" *ngFor="let user of users; let i = index" 
+                [style.background-color]=" i < 3 ? '#2A1E17': 'var(--primary-background-color)'"
+                >
                     <div class="ld-sec-tb-data">
                         <span class="ld-sec-tb-data-item">{{i + 1}}</span>
                         <span class="ld-sec-tb-data-item">{{user.name}}</span>
