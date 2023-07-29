@@ -36,7 +36,7 @@
   /* justify-content: center; */
 
   
-  background-image: url("../../../assets/icons/login_bg.png");
+  background-image: url("../../../assets/icons/login_bg.svg");
   background-size: cover; 
   background-repeat: no-repeat; 
   background-position: center;
@@ -153,8 +153,12 @@
   border: solid 0.12rem var(--primary-border-color);
   border-radius: 1rem;
 
-  
   background-color: var(--primary-text-color);
+}
+
+.lp-sec-login-button:hover {
+  cursor: pointer;
+  background-color: var(--second-hover-background-color);
 }
 
 
