@@ -1,0 +1,246 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+    color: var(--primary-text-color);
+}
+
+
+.wrap-component {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding-left: calc(var(--primary-left-bar-width));
+    padding-right: calc(var(--primary-left-bar-width));
+
+    padding-top: calc(var(--top-bar-hieght));
+    padding-bottom: calc(var(--top-bar-hieght) / 2);
+    
+
+}
+
+
+/* leaderboard  */
+/******/
+
+.leaderboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-right: 3rem;
+    padding-left: 3rem;
+    width: 100%;
+    max-width: 56rem;
+    min-width: 30rem;
+}
+
+/* leaderboard section */
+/******/
+
+.ld-sec-one {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    gap: 0.8rem;
+    padding-top: 1.2rem;
+}
+
+.ld-sec-two {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--second-background-color);
+    width: 100%;
+    height:max-content;
+    padding-bottom: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+
+
+/* leaderboard section title */
+/******/
+.ld-sec-title-text {
+    font-size: 1.4rem;
+}
+
+
+
+/* leaderboard section header */
+/******/
+
+.ld-sec-header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: calc(100% - 1rem);
+    height: 3rem;
+}
+
+
+
+/* leaderboard section table */
+/******/
+.ld-sec-table-wrap {
+    display: flex;
+    width: 100%;
+    height: 80vh;
+
+    overflow-y: auto;
+    scrollbar-gutter: stable both-edges;
+
+    /* for firfox */
+    scrollbar-color: #7b4425 transparent;
+    scrollbar-width: thin;
+
+}
+.ld-sec-table {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-background-color);
+    border-radius: 0.5rem;
+    /* margin-left: 0.6rem; */
+    
+}
+
+ 
+.ld-sec-table-wrap::-webkit-scrollbar
+{
+    width: 0.4rem;
+    background-color: transparent;
+} 
+.ld-sec-table-wrap::-webkit-scrollbar-thumb  {
+    /* border-radius: 0.2rem; */
+    background-color: #7b4425;
+}
+.ld-sec-table-wrap::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  }
+.ld-sec-table-wrap::-webkit-scrollbar-thumb:hover  {
+    background-color: var(--second-text-color);
+}
+
+.ld-sec-table-scroll {
+    width: 0rem;
+    height: 100%;
+}
+
+
+/* leaderboard section table content */
+/******/
+.ld-sec-tb-data {
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 3rem;
+}
+
+
+
+/* leaderboard section table content item */
+/******/
+.ld-sec-head-item {
+    color: var(--second-text-color);
+}
+
+
+.ld-sec-head-item,
+.ld-sec-tb-data-item {
+    display: flex;
+    width: 25%;
+    justify-content: center;
+}
+
+
+
+.ld-sec-tb-data-item img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+}
+
+.ld-sec-tb-data-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+    fill: var(--primary-text-color);
+}
+
+.ld-sec-tb-data-icon:hover {
+    cursor: pointer;
+    fill: var(--second-hover-background-color);
+    padding-left: 0.08rem;
+}
+
+.entry:hover  {
+    cursor: pointer;
+    background-color: var(--primary-hover-background-color);
+    border-radius: 0.4rem;
+}
+
+
+
+
+/* leaderboard section table content hr */
+/******/
+
+.ld-sec-tb-hr {
+    display: block;
+    height: 0.14rem;
+    background-color:var(--top-bar-background-color);
+    pointer-events: none;
+
+}
+
+
+/***********************************************/
+/*                Media Queries                */
+/***********************************************/
+
+@media (max-width: 1000px) {
+
+    .wrap-component {
+        padding-right: 0;
+        padding-left: calc(var(--second-left-bar-width));
+    
+        padding-top: calc(var(--top-bar-hieght));
+    
+    }
+    
+
+}
+
+@media (max-width: 450px) {
+
+    .wrap-component {
+        padding-right: 0;
+        padding-left: 0;
+    
+        padding-top: calc(var(--top-bar-hieght));
+    
+    }
+    .leaderboard {
+        padding-right: 1.4rem;
+        padding-left: 1.4rem;
+        min-width: 24rem;
+        
+    }   
+
+    .ld-sec-table-wrap {
+        overflow: auto;
+    }
+    .ld-sec-table-wrap::-webkit-scrollbar
+    {
+       width: 0.32rem ;
+    } 
+
+}

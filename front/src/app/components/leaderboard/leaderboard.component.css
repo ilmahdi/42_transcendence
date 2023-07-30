@@ -169,7 +169,6 @@
     border-radius: 50%;
 }
 
-
 .entry:hover  {
     cursor: pointer;
     background-color: var(--primary-hover-background-color);
