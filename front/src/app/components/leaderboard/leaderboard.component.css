@@ -16,6 +16,7 @@
     padding-right: calc(var(--primary-left-bar-width));
 
     padding-top: calc(var(--top-bar-hieght));
+    padding-bottom: calc(var(--top-bar-hieght) / 2);
     
 
 }

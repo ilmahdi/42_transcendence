@@ -1,10 +1,10 @@
 <div class="convers">
     <div *ngFor="let i of n" class="conver" (click)="emitEvent(i.name)">
-        <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="img">
+        <img src="../../../../assets/imgs/sghajdao.jpg" alt="avatar" id="img">
         <p id="name">{{i.name}}</p>
         <p id="date">{{i.date}}</p>
         <span *ngIf="!i.readed" class="fa fa-check-circle-o"></span>
-        <img *ngIf="i.readed" src="../../../../assets/sghajdao.jpg" id="readedMsg">
+        <img *ngIf="i.readed" src="../../../../assets/imgs/sghajdao.jpg" id="readedMsg">
         <p id="message">{{i.message}}</p>
     </div>
 </div>
