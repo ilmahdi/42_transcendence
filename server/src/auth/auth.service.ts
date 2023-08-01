@@ -28,7 +28,7 @@ export class AuthService {
                 username: user.username,
             }
         )
-        return { user, token }
+        return {token }
     }
 
 

@@ -111,6 +111,9 @@
     
 }
 
+.ld-sec-tb-row {
+    background-color: var(--primary-background-color);
+}
  
 .ld-sec-table-wrap::-webkit-scrollbar
 {

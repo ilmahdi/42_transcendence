@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-home',
@@ -7,11 +9,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    private apiService: ApiService,
+  ) { }
 
   ngOnInit(): void {
+    const accessToken = this.route.snapshot.queryParamMap.get('access_token');
+    if (accessToken) {
+      localStorage.setItem('access_token', accessToken);
+      this.fetchData(accessToken);
+    }
   }
 
+  fetchData (accessToken :string) {
+     this.apiService.getUserHomeData().subscribe((data: any) => {
+      console.log(data);
+    });
+
+  }
+  
   user :any = {
     name: "ilmahdi",
     wins: 10,

@@ -32,5 +32,8 @@ export class UserService {
         })
         return user;
     }
+    async getUserInfo () {
+        
+    }
 
 }

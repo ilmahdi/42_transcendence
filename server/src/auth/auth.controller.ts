@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseEnumPipe, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseEnumPipe, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 // import * as bcrypt from "bcryptjs"
 import { FtLoginGuard } from './utils/guards/ft-login.guard';
@@ -12,6 +12,13 @@ import { JwtGuard } from './utils/guards/jwt.guard';
 export class AuthController {
     constructor(private readonly authServie: AuthService){
     }
+    @Get("hello") 
+    testLink() {
+        return { 
+            msg: "hello form nest",
+        }
+
+    }
     @Get("login/42")
     @UseGuards(FtLoginGuard)
     ftLogin(){
@@ -19,9 +26,10 @@ export class AuthController {
     
     @Get("callback/42")
     @UseGuards(FtLoginGuard)
-    ftCallback(@Req() req){
+    ftCallback(@Req() req, @Res() res){
         console.log(req.user)
-        return req.user;
+        res.status(302).redirect(`${process.env.FONTEND_URL}?access_token=${req.user.token}`);
+        return req.token;
     }
     @Get("logout/42")
     @UseGuards(JwtGuard)

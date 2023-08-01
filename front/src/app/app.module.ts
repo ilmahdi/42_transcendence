@@ -18,6 +18,7 @@ import { MenuBarModule} from './components/common/menu-bar.module';
 import { TopBarComponent } from './components/common/top-bar/top-bar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProfileModule } from './components/profile/profile.module';
+import { HttpClientModule } from '@angular/common/http';
 
 
 const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
@@ -41,7 +42,8 @@ const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
     FriendsModule,
     LeaderboardModule,
     SocketIoModule.forRoot(config),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
