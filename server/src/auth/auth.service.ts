@@ -24,7 +24,7 @@ export class AuthService {
             user = await this.userService.addUser(profile);
         const token = await this.generateJwt(
             {
-                id: user.id,
+                sub: user.id,
                 username: user.username,
             }
         )

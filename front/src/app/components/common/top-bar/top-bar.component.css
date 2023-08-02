@@ -114,22 +114,24 @@
 /*                Media Queries                */
 /***********************************************/
 
-@media (max-width: 1200px) {
+/* @media (max-width: 1200px) {
+    
+
+    
+} */
+
+@media (max-width: 1000px) {
     
     /* top bar  */
     /******/
     .top-bar {
         width: 100%;
     }
-    
-}
-
-@media (max-width: 1000px) {
-
-/* top bar section */
-/******/
-.tb-sec-one {
-    width: var(--second-left-bar-width);
-    /* padding-left: 1.5rem; */
+    /* top bar section */
+    /******/
+    .tb-sec-one {
+        /* width: 100%; */
+        width: var(--second-left-bar-width);
+        /* padding-left: 1.5rem; */
 }
 }

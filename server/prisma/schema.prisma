@@ -53,6 +53,9 @@ model UserAccount {
   is_tfa_enabled      Boolean?     @default(false)
   avatar              String
   status              Status       @default(OFFLINE)
+  wins                Int           @default(0)          
+  losses              Int           @default(0)
+  draws               Int           @default(0)
 
   created_at          DateTime    @default(now())
   updated_at          DateTime    @updatedAt
