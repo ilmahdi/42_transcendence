@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { Conversation } from 'src/app/models/Conversation';
+import { User } from 'src/app/models/user.model';
 import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
@@ -17,24 +19,41 @@ export class ConversationsComponent implements OnInit {
   newMessage$?: Observable<string>
   messages: any[] = []
   msg = new FormGroup({message: new FormControl})
+
+  conversations$?: Observable<Conversation[]>;
+  conversations: Conversation[] = [];
+  conversation?: Conversation;
+  userId?: number;
+  
   constructor(private chatService: ChatService) { }
 
   ngOnInit() {
     return this.chatService.getNewMessage().subscribe((message)=>{
-      this.messages.push(message.text_message);
+      this.messages.push(message.message);
     })
   }
 
   getConversEvent() {
     this.getconvers.emit(true);
-    this.nameEmitted[1] = false
+    this.nameEmitted[1] = false;
   }
 
   onSubmit() {
-    // let message = this.msg.value.message
-    let message = {channel_id:1, text_message:this.msg.value.message, sent_at: new Date(), authorId:1, receiverId:1}
+    const { message } = this.msg.value;
     if (!message) return;
-    this.chatService.sendMessage(message)
+    
+    let conversationUserIds = [this.userId, this.chatService.friend?.id].sort();
+
+    this.conversations.forEach((conversation: Conversation) => {
+      let userIds = conversation.users?.map((user: User) => user.id).sort();
+
+      if (JSON.stringify(conversationUserIds) === JSON.stringify(userIds)) {
+        this.conversation = conversation;
+      }
+    });
+    console.log(this.conversation);
+    
+    this.chatService.sendMessage(message, this.conversation!);
     this.msg.reset();
   }
 }

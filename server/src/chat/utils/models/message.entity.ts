@@ -1,23 +1,31 @@
 
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { ConversationEntity } from './conversation.entity';
+import { UserEntity } from '../../../user/utils/models/user.entity';
 
-@Entity('Message')
+@Entity('message')
 export class MessageEntity {
-    @PrimaryGeneratedColumn()
-    id?:number
+  @PrimaryGeneratedColumn()
+  id?: number;
 
-    @Column({default: ""})
-    text_message?:string
+  @Column()
+  message?: string;
 
-    @CreateDateColumn()
-    sent_at?:Date
+  @ManyToOne(() => UserEntity, (userEntity) => userEntity.messages)
+  user?: UserEntity;
 
-    @Column()
-    authorId?:number
+  @ManyToOne(
+    () => ConversationEntity,
+    (conversationEntity) => conversationEntity.messages,
+  )
+  conversation?: ConversationEntity;
 
-    @Column()
-    receiverId?:number
-
-    // @ManyToOne(() => User, (userEntity) => userEntity.message)
-    // author:User;
+  @CreateDateColumn()
+  createdAt?: Date;
 }

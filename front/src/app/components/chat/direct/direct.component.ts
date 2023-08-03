@@ -1,5 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ChatService } from 'src/app/services/chat.service';
+import { BehaviorSubject } from 'rxjs';
+import { Message } from 'src/app/models/message.model';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-direct',
@@ -15,7 +18,7 @@ export class DirectComponent implements OnInit {
     {id:3, name:'omar', message:'lets play a game', readed: true, date: '03/02/2022'}
   ];
   screenWidth: number = 1000;
-  color:any = {color:'', name:''}
+  color:any = {color:'', name:''} 
 
   constructor(private chatService:ChatService) {
     this.screenWidth = window.innerWidth;
@@ -36,6 +39,23 @@ export class DirectComponent implements OnInit {
     else
       this.color = {color:'', name:''}
     this.customEvent.emit(name)
+  }
+
+  openConversation(name:string, friend: User, index: number): void {
+    if (this.screenWidth > 934) {
+      this.color = {color:'#D38146', name:name}
+    }
+    else
+      this.color = {color:'', name:''}
+    this.customEvent.emit(name)
+    
+    this.chatService.selectedConversationIndex = index;
+
+
+    this.chatService.friend = friend;
+    this.chatService.friend$?.next(this.chatService.friend);
+
+    this.chatService.messages = [];
   }
 
 }

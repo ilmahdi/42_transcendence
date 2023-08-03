@@ -1,7 +1,10 @@
+import { UserEntity } from '../../../../server/src/user/utils/models/user.entity';
+import { Conversation } from './Conversation';
+
 export interface Message {
-    id:number,
-    text_message:string,
-    sent_at:Date,
-    authorId:number
-    receiverId:number
+    id?: number;
+    message?: string;
+    user?: UserEntity;
+    conversation?: Conversation;
+    createdAt?: Date;
 }

@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { Profile } from "src/auth/utils/interfaces";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -20,15 +19,6 @@ export class UserService {
             where: {
                 username,
             },
-        })
-        return user;
-    }
-    async addUser(profile: Profile) {
-        const user = await this.prismaService.userAccount.create({
-            data: {
-                ...profile,
-            }
-
         })
         return user;
     }

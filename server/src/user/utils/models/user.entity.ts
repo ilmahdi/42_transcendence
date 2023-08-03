@@ -1,35 +1,35 @@
-import { MessageEntity } from "src/chat/utils/models/message.entity"
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+
+
+import { Column, CreateDateColumn, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import { ConversationEntity } from '../../../chat/utils/models/conversation.entity';
+import { MessageEntity } from '../../../chat/utils/models/message.entity';
 
 @Entity('User')
 export class UserEntity {
-    @PrimaryGeneratedColumn()
-    id:number
+  @PrimaryGeneratedColumn()
+  id?: number;
 
-    @Column()
-    ft_id:number
+  @Column()
+  firstName?: string;
 
-    @Column()
-    username:string
+  @Column()
+  lastName?: string;
 
-    @Column()
-    email:string
+  @Column({ unique: true })
+  email?: string;
 
-    @Column()
-    tfa_secret:string
+  @Column({ select: false })
+  password?: string;
 
-    @Column()
-    is_tfa_enable:boolean
+  @Column({ nullable: true })
+  imagePath?: string;
 
-    @Column()
-    avatar:string
+  @ManyToMany(
+    () => ConversationEntity,
+    (conversationEntity) => conversationEntity.users,
+  )
+  conversations?: ConversationEntity[];
 
-    @Column()
-    status:string
-
-    @CreateDateColumn()
-    created_at:Date
-
-    @CreateDateColumn()
-    updated_at:Date
+  @OneToMany(() => MessageEntity, (messageEntity) => messageEntity.user)
+  messages?: MessageEntity[];
 }

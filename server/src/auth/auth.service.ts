@@ -2,72 +2,57 @@ import { ConflictException, HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 // import * as bcrypt from "bcryptjs"
 import * as jwt from "jsonwebtoken"
-import { retry } from 'rxjs';
+import { Observable, from, map, retry, switchMap } from 'rxjs';
 import { brotliCompress } from 'zlib';
-import { Profile } from './utils/interfaces'
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'src/common/interfaces';
+import { UserEntity } from 'src/user/utils/models/user.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt'
+import { User } from 'src/user/utils/models/user.interface';
 
 
 @Injectable()
 export class AuthService {
-    constructor(
-            private readonly userService: UserService,
-            private jwtService: JwtService,
-        ){
+    constructor(@InjectRepository(UserEntity) private readonly userRepository:Repository<UserEntity>, private jwtService: JwtService){
     }
 
-    async validateUser(profile: Profile){
-        let user = await this.userService.findUserByUsername(profile.username);
-        if (!user)
-            user = await this.userService.addUser(profile);
-        const token = await this.generateJwt(
-            {
-                id: user.id,
-                username: user.username,
-            }
-        )
-        return { user, token }
+    getAllUsers() {
+        return from(this.userRepository.find())
     }
-
-
-    // utility functions: 
-    /*************************************************************************/
-    async generateJwt(payload: JwtPayload) {
-        return await this.jwtService.signAsync(payload, {
-            secret: process.env.JWT_SECRET,
-          })
-      }
-}
     
+    hashPassword(password: string): Observable<string> {
+        return from(bcrypt.hash(password, 12));
+    }
 
+    registerAccount(user: User): Observable<User> {
+        const {firstName, lastName, email, password} = user;
+        return this.hashPassword(password).pipe(
+            switchMap((hashedPassword: string) => {
+                return from(this.userRepository.save({firstName, lastName, email, password: hashedPassword}))
+                .pipe(map((user:User) => {delete user.password; return user}))
+            })
+        )
+    }
 
+    validaorUser(email:string, password:string):Observable<User> {
+        return from(this.userRepository
+            .createQueryBuilder('user')
+            .where('user.email = :email', { email })
+            .getOne());
+    }
 
+    login(user:User):Observable<string> {
+        const {email, password} = user;
+        return this.validaorUser(email, password).pipe(
+            switchMap((user: User) => {
+                if (user) {
+                    return from(this.jwtService.signAsync({user}))
+                }
+            })
+        )
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-    // async ftLogout () {
-    //     const endpoint = 'https://api.intra.42.fr/oauth/revoke';
-  
-    //     try {
-    //         await axios.delete(endpoint, {
-    //         headers: {
-    //             Authorization: `Bearer ${accessToken}`,
-    //         },
-    //         });
-    //     } catch (error) {
-    //         // Handle error if necessary
-    //         console.error('Failed to revoke 42 token:', error.message);
-    //         throw error;
-    //     }
-    // }
+}

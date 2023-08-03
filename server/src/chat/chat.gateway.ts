@@ -2,17 +2,70 @@ import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayConnection, O
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './utils/dtos/create-chat.dto';
 import { UpdateChatDto } from './utils/dtos/update-chat.dto';
-import { Server } from 'http';
-import { Socket } from 'dgram';
+import { Server, Socket } from 'socket.io';
 import { MessageEntity } from './utils/models/message.entity';
 import { UserEntity } from '../user/utils/models/user.entity';
+import { Subscription, of, take, tap } from 'rxjs';
+import { ActiveConversation } from './utils/models/active-conversation.interface';
 
 @WebSocketGateway({cors: {origin: ['http://localhost:4200']}})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   constructor(private readonly chatService: ChatService) {}
 
+  onModuleInit() {
+  }
+
   @WebSocketServer()
   server: Server
+
+  getConversations(socket: Socket, userId: number): Subscription {
+    return this.chatService
+      .getConversationsWithUsers(userId)
+      .subscribe((conversations) => {
+        this.server.on('connection', (socket) => {}).emit('conversations', conversations);
+      });
+  }
+
+  @SubscribeMessage('createConversation')
+  createConversation(socket: Socket, friend: UserEntity) {
+    this.chatService
+      .createConversation(socket.data.user, friend)
+      .pipe(take(1))
+      .subscribe(() => {
+        this.getConversations(socket, socket.data.user.id);
+      });
+  }
+
+  @SubscribeMessage('sendMessage')
+  handleMessage(socket: Socket, newMessage: MessageEntity) {
+    if (!newMessage.conversation) return of(null);
+    
+    const { user } = socket.data;
+    newMessage.user = user;
+
+    if (newMessage.conversation.id) {
+      this.chatService
+        .createMessage(newMessage)
+        .pipe(take(1))
+        .subscribe((message: MessageEntity) => {
+          newMessage.id = message.id;
+
+          this.chatService
+            .getActiveUsers(newMessage.conversation.id)
+            .pipe(take(1))
+            .subscribe((activeConversations: ActiveConversation[]) => {
+              activeConversations.forEach(
+                (activeConversation: ActiveConversation) => {
+                  this.server
+                    .to(activeConversation.socketId)
+                    .emit('newMessage', newMessage);
+                },
+              );
+            });
+        });
+    }
+    
+  }
 
   handleConnection(client: any, ...args: any[]) {
       console.log('connection');
@@ -21,37 +74,4 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   handleDisconnect(client: any) {
       console.log('disconnected');
   }
-
-  @SubscribeMessage('sendMessage')
-  async handleMessage(socket: Socket, message:MessageEntity): Promise<void> {
-    await this.chatService.create(message);
-    this.server.emit('newMessage', message);
-    // console.log(message);
-    
-  }
-
-  @SubscribeMessage('createChat')
-  create(@MessageBody() message: MessageEntity) {
-    return this.chatService.create(message);
-  }
-
-  // @SubscribeMessage('findAllChat')
-  // findAll() {
-  //   return this.chatService.findAll();
-  // }
-
-  // @SubscribeMessage('findOneChat')
-  // findOne(@MessageBody() id: number) {
-  //   return this.chatService.findOne(id);
-  // }
-
-  // @SubscribeMessage('updateChat')
-  // update(@MessageBody() updateChatDto: UpdateChatDto) {
-  //   return this.chatService.update(updateChatDto.id, updateChatDto);
-  // }
-
-  // @SubscribeMessage('removeChat')
-  // remove(@MessageBody() id: number) {
-  //   return this.chatService.remove(id);
-  // }
 }
