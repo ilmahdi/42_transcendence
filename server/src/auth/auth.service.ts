@@ -2,7 +2,7 @@ import { ConflictException, HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 // import * as bcrypt from "bcryptjs"
 import * as jwt from "jsonwebtoken"
-import { Observable, from, map, retry, switchMap } from 'rxjs';
+import { Observable, catchError, from, map, of, retry, switchMap } from 'rxjs';
 import { brotliCompress } from 'zlib';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
@@ -54,5 +54,16 @@ export class AuthService {
             })
         )
     }
+
+    getJwtUser(jwt: string): Observable<User | null> {
+        return from(this.jwtService.verifyAsync(jwt)).pipe(
+          map(({ user }: { user: User }) => {
+            return user;
+          }),
+          catchError(() => {
+            return of(null);
+          }),
+        );
+      }
 
 }

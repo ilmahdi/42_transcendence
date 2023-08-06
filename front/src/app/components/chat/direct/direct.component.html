@@ -1,7 +1,7 @@
 <div class="convers">
-    <div *ngFor="let f of n; let i = index" class="conver" (click)="openConversation(f.name, f, i)" [style.backgroundColor]="(color.name === f.name)? color.color : ''">
+    <div *ngFor="let f of n; let i = index" class="conver" (click)="openConversation(f.firstName, f, i)" [style.backgroundColor]="(color.name === f.name)? color.color : ''">
         <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="img">
-        <p id="name">{{f.name}}</p>
+        <p id="name">{{f.firstName}}</p>
         <p id="date">{{f.date}}</p>
         <span *ngIf="!f.readed" class="fa fa-check-circle-o"></span>
         <img *ngIf="f.readed" src="../../../../assets/sghajdao.jpg" id="readedMsg">

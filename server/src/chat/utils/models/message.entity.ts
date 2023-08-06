@@ -6,8 +6,6 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ConversationEntity } from './conversation.entity';
-import { UserEntity } from '../../../user/utils/models/user.entity';
 
 @Entity('message')
 export class MessageEntity {
@@ -15,17 +13,9 @@ export class MessageEntity {
   id?: number;
 
   @Column()
+  username?:string;
+
+  @Column()
   message?: string;
 
-  @ManyToOne(() => UserEntity, (userEntity) => userEntity.messages)
-  user?: UserEntity;
-
-  @ManyToOne(
-    () => ConversationEntity,
-    (conversationEntity) => conversationEntity.messages,
-  )
-  conversation?: ConversationEntity;
-
-  @CreateDateColumn()
-  createdAt?: Date;
 }

@@ -1,45 +1,34 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, Subscription, take } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Conversation } from '../models/Conversation';
 import { Message } from '../models/message.model';
 import { User } from '../models/user.model';
+import { ChatSocketService } from '../components/chat/core/chat-socket.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
 
-  messages: Message[] = [];
-  selectedConversationIndex: number = 0;
-  friends: User[] = [];
-  friend?: User;
-  friend$: BehaviorSubject<User> | undefined
+  constructor(private http:HttpClient) { }
 
-  constructor(private socket: Socket) { }
+  token:string|null = localStorage.getItem('token');
+  
+  private httpOptions: { headers: HttpHeaders } = {
+    headers: new HttpHeaders({ 'Authorization': `Bearer ${this.token}` }),
+  };
 
-  sendMessage(message: string, conversation: Conversation): void {
-    const newMessage: Message = {
-      message,
-      conversation,
-    };
-    this.socket.emit('sendMessage', newMessage);
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>('http://localhost:3000/api/auth/allUsers', this.httpOptions).pipe(take(1));
   }
 
-  getNewMessage(): Observable<Message> {
-    return this.socket.fromEvent<Message>('newMessage');
+  sendMessage(message:Message) {
+    return this.http.post('http://localhost:3000/api/chat/messages', message);
   }
 
-  createConversation(friend: User): void {
-    this.socket.emit('createConversation', friend);
-  }
-
-  getConversationMessages(): Observable<Message[]> {
-    return this.socket.fromEvent<Message[]>('messages');
-  }
-
-  getConversations(): Observable<Conversation[]> {
-    return this.socket.fromEvent<Conversation[]>('conversations');
+  getMessages(): Observable<Message[]> {
+    return this.http.get<Message[]>('http://localhost:3000/api/chat/getMessages')
   }
 }

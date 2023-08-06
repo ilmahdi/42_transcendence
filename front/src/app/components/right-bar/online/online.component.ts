@@ -22,7 +22,6 @@ export class OnlineComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginService.username.pipe(take(1)).subscribe((username?:string) => {
-      console.log(username)
       this.username = username
     })
   }

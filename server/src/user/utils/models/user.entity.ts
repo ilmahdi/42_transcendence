@@ -1,7 +1,6 @@
 
 
 import { Column, CreateDateColumn, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm"
-import { ConversationEntity } from '../../../chat/utils/models/conversation.entity';
 import { MessageEntity } from '../../../chat/utils/models/message.entity';
 
 @Entity('User')
@@ -23,13 +22,4 @@ export class UserEntity {
 
   @Column({ nullable: true })
   imagePath?: string;
-
-  @ManyToMany(
-    () => ConversationEntity,
-    (conversationEntity) => conversationEntity.users,
-  )
-  conversations?: ConversationEntity[];
-
-  @OneToMany(() => MessageEntity, (messageEntity) => messageEntity.user)
-  messages?: MessageEntity[];
 }

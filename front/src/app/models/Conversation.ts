@@ -1,7 +1,8 @@
-import { UserEntity } from "../../../../server/src/user/utils/models/user.entity";
+import { User } from "./user.model";
+
 
 export interface Conversation {
   id?: number;
-  users?: UserEntity[];
+  users?: User[];
   lastUpdated?: Date;
 }

@@ -12,11 +12,11 @@ import { User } from 'src/app/models/user.model';
 export class DirectComponent implements OnInit {
 
   @Output() customEvent = new EventEmitter<string>();
-  n:any[] = [
+  n?:any[] /* = [
     {id:1, name:'saad', message: 'lets play a game', readed: true, date: '03/02/2022'},
     {id:2, name:'ismail', message:'lets play a game', readed: false, date: '03/02/2022'},
     {id:3, name:'omar', message:'lets play a game', readed: true, date: '03/02/2022'}
-  ];
+  ]; */
   screenWidth: number = 1000;
   color:any = {color:'', name:''} 
 
@@ -26,6 +26,9 @@ export class DirectComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.chatService.getUsers().subscribe((data) => {
+      this.n = data;
+    });
   }
 
   onResize() {
@@ -48,14 +51,6 @@ export class DirectComponent implements OnInit {
     else
       this.color = {color:'', name:''}
     this.customEvent.emit(name)
-    
-    this.chatService.selectedConversationIndex = index;
-
-
-    this.chatService.friend = friend;
-    this.chatService.friend$?.next(this.chatService.friend);
-
-    this.chatService.messages = [];
   }
 
 }

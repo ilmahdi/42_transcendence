@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { Conversation } from 'src/app/models/Conversation';
-import { User } from 'src/app/models/user.model';
+import Pusher from 'pusher-js';
+import { Observable, take } from 'rxjs';
+import { Message } from 'src/app/models/message.model';
 import { ChatService } from 'src/app/services/chat.service';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-conversations',
@@ -15,21 +16,33 @@ export class ConversationsComponent implements OnInit {
   @Input() nameEmitted:any = {name:'', displayConv: true}
   @Output() getconvers = new EventEmitter<boolean>()
   displayConv:boolean = true
+  username?:string
 
-  newMessage$?: Observable<string>
-  messages: any[] = []
   msg = new FormGroup({message: new FormControl})
 
-  conversations$?: Observable<Conversation[]>;
-  conversations: Conversation[] = [];
-  conversation?: Conversation;
-  userId?: number;
+  recipientUserId: string = ''; // Set the recipient user ID
+  messages: any[] = [];
   
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService, private loginService:LoginService) {
+    this.loginService.username.pipe(take(1)).subscribe((username?:any) => {
+      this.username = username
+    })
+  }
 
   ngOnInit() {
-    return this.chatService.getNewMessage().subscribe((message)=>{
-      this.messages.push(message.message);
+    Pusher.logToConsole = true;
+
+    const pusher = new Pusher('a7ecfcc0f67ed4def5ba', {
+      cluster: 'eu'
+    });
+
+    const channel = pusher.subscribe('chat');
+    channel.bind('message', (data: Message) => {
+      this.messages.push(data);
+    });
+    
+    this.chatService.getMessages().subscribe((data) => {
+      this.messages = data;
     })
   }
 
@@ -39,21 +52,10 @@ export class ConversationsComponent implements OnInit {
   }
 
   onSubmit() {
-    const { message } = this.msg.value;
-    if (!message) return;
-    
-    let conversationUserIds = [this.userId, this.chatService.friend?.id].sort();
-
-    this.conversations.forEach((conversation: Conversation) => {
-      let userIds = conversation.users?.map((user: User) => user.id).sort();
-
-      if (JSON.stringify(conversationUserIds) === JSON.stringify(userIds)) {
-        this.conversation = conversation;
-      }
-    });
-    console.log(this.conversation);
-    
-    this.chatService.sendMessage(message, this.conversation!);
+    let message = this.msg.value.message
+    let username = this.username
+    const mmm = {username, message}
+    this.chatService.sendMessage(mmm).subscribe()
     this.msg.reset();
   }
 }
