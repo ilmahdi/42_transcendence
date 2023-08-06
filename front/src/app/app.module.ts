@@ -19,6 +19,7 @@ import { TopBarComponent } from './components/common/top-bar/top-bar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProfileModule } from './components/profile/profile.module';
 import { HttpClientModule } from '@angular/common/http';
+import { JwtModule } from '@auth0/angular-jwt';
 
 
 const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
@@ -44,6 +45,10 @@ const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
     SocketIoModule.forRoot(config),
     BrowserAnimationsModule,
     HttpClientModule,
+    JwtModule.forRoot({
+      config: {
+      }
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]

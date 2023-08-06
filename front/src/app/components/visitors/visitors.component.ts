@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ApiService } from 'src/app/services/api.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 import { environment } from '../../../environments/environment';
+import { JWT_TOKEN } from '../utils/constants';
 
 @Component({
   selector: 'app-visitors',
@@ -11,15 +12,19 @@ import { environment } from '../../../environments/environment';
 export class VisitorsComponent implements OnInit {
 
   constructor(
-    private apiService: ApiService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService,
     ) { }
 
     private apiUrlAuth = environment.apiUrlAuth;
 
   ngOnInit(): void {
-    // this.apiService.getHelloFromBackend().subscribe((data: any) => {
-    //   console.log(data);
-    // });
+    const accessToken = this.route.snapshot.queryParamMap.get('access_token');
+    if (accessToken) {
+      localStorage.setItem(JWT_TOKEN, accessToken);
+      this.router.navigate(["/home"])
+    }
   }
 
   redirectToLogin() {
