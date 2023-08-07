@@ -1,8 +1,8 @@
-<div class="body" *ngIf="nameEmitted" [style.display]="nameEmitted[1]? 'block': 'none'">
+<div class="body" *ngIf="userEmitted" [style.display]="userEmitted[1]? 'block': 'none'">
     <div class="header">
         <span class="fa fa-angle-double-left" (click)="getConversEvent()"></span>
         <img src="../../../../assets/sghajdao.jpg" alt="avatar">
-        <span id="conv">Conversation with <span style="font-weight: bolder;">{{nameEmitted[0]}}</span></span>
+        <span id="conv">Conversation with <span style="font-weight: bolder;">{{userEmitted[0].firstName}}</span></span>
     </div>
 
     <p *ngFor="let message of messages" style="color: white;">{{message.message}}</p>

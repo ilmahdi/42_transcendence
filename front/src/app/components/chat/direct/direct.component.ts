@@ -3,6 +3,7 @@ import { ChatService } from 'src/app/services/chat.service';
 import { BehaviorSubject } from 'rxjs';
 import { Message } from 'src/app/models/message.model';
 import { User } from 'src/app/models/user.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-direct',
@@ -11,37 +12,28 @@ import { User } from 'src/app/models/user.model';
 })
 export class DirectComponent implements OnInit {
 
-  @Output() customEvent = new EventEmitter<string>();
-  n?:any[] /* = [
-    {id:1, name:'saad', message: 'lets play a game', readed: true, date: '03/02/2022'},
-    {id:2, name:'ismail', message:'lets play a game', readed: false, date: '03/02/2022'},
-    {id:3, name:'omar', message:'lets play a game', readed: true, date: '03/02/2022'}
-  ]; */
-  screenWidth: number = 1000;
-  color:any = {color:'', name:''} 
+  @Output() customEvent = new EventEmitter<User>();
+  // @Output() conversation= new EventEmitter<any>();
 
-  constructor(private chatService:ChatService) {
+  users?:any[];
+  screenWidth: number = 1000;
+  color:any = {color:'', name:''}
+
+  // userId?:number
+
+  constructor(private chatService:ChatService, private router:Router) {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
   }
 
   ngOnInit(): void {
     this.chatService.getUsers().subscribe((data) => {
-      this.n = data;
+      this.users = data;
     });
   }
 
   onResize() {
     this.screenWidth = window.innerWidth;
-  }
-
-  emitEvent(name:string) {
-    if (this.screenWidth > 934) {
-      this.color = {color:'#D38146', name:name}
-    }
-    else
-      this.color = {color:'', name:''}
-    this.customEvent.emit(name)
   }
 
   openConversation(name:string, friend: User, index: number): void {
@@ -50,7 +42,7 @@ export class DirectComponent implements OnInit {
     }
     else
       this.color = {color:'', name:''}
-    this.customEvent.emit(name)
+    this.customEvent.emit(friend)
   }
 
 }

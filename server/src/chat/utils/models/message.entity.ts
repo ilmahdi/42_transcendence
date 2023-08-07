@@ -13,7 +13,10 @@ export class MessageEntity {
   id?: number;
 
   @Column()
-  username?:string;
+  senderId?:number;
+
+  @Column()
+  receiverId?:number
 
   @Column()
   message?: string;

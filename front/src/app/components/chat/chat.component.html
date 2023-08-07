@@ -21,5 +21,5 @@
     <app-rooms *ngIf="roomsClicked"></app-rooms>
 </div>
 
-<app-conversations [nameEmitted]="nameEvent" (getconvers)="conversEvent($event)"></app-conversations>
+<app-conversations *ngIf="smallScreen" [userEmitted]="userEvent" (getconvers)="conversEvent($event)"></app-conversations>
 <app-online></app-online>

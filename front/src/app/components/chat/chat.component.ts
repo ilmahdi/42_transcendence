@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-chat',
@@ -9,7 +10,7 @@ export class ChatComponent implements OnInit {
 
   directClicked: boolean = true
   roomsClicked: boolean = false
-  nameEvent?:any[]
+  userEvent?:any[]
   screenWidth: number = 1000;
   smallScreen:boolean = false;
   displayConvers:boolean = false;
@@ -40,9 +41,9 @@ export class ChatComponent implements OnInit {
     this.displayConvers = convers
   }
 
-  onCustomEvent(name:string) {
+  onCustomEvent(user:User) {
     this.smallScreen = true
-    this.nameEvent = [name, true]
+    this.userEvent = [user, true]
     this.displayConvers = false
   }
 
