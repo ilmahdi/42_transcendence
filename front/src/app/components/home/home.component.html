@@ -6,35 +6,35 @@
   <div class="home-page">
     <div class="hp-sec-one">
       <div class="hb-s-one-profile">
-        <img class="hb-profile-img" [src]="user.imgUrl" />
-        <span class="hb-profile-text"> {{ user.name }} </span>
+        <img class="hb-profile-img" [src]="userData.avatar" />
+        <span class="hb-profile-text"> {{ userData.username }} </span>
       </div>
       <div class="hb-s-one-overview">
         <div class="hb-overview-hello">
           <div class="hb-hello-text">
-            <h2 class="hb-hello-t1">Hello {{ user.name }}</h2>
+            <h2 class="hb-hello-t1">Hello {{ userData.username }}</h2>
             <h3 class="hb-hello-t2">Are you ready to Ping Pong</h3>
           </div>
           <img class="hb-hello-img" src="./assets/icons/ihello.svg" />
         </div>
         <div class="hb-overview-stats">
           <div class="hb-stats-item">
-            <span class="hb-stats-item-nb"> {{ user.wins }} </span>
+            <span class="hb-stats-item-nb"> {{ userData.wins }} </span>
             <img class="hb-stats-item-icon" src="./assets/icons/iwin.svg" />
             <span class="hb-stats-item-title"> wins </span>
           </div>
           <div class="hb-stats-item">
-            <span class="hb-stats-item-nb"> {{ user.losses }} </span>
+            <span class="hb-stats-item-nb"> {{ userData.losses }} </span>
             <img class="hb-stats-item-icon" src="./assets/icons/ilose.svg" />
             <span class="hb-stats-item-title"> losses </span>
           </div>
           <div class="hb-stats-item">
-            <span class="hb-stats-item-nb"> {{ user.draws }} </span>
+            <span class="hb-stats-item-nb"> {{ userData.draws }} </span>
             <img class="hb-stats-item-icon" src="./assets/icons/idraw.svg" />
             <span class="hb-stats-item-title"> draws </span>
           </div>
           <div class="hb-stats-item">
-            <span class="hb-stats-item-nb"> {{ user.games }} </span>
+            <span class="hb-stats-item-nb"> {{ userData.wins + userData.losses + userData.draws }} </span>
             <img class="hb-stats-item-icon" src="./assets/icons/igames.svg" />
             <span class="hb-stats-item-title"> games </span>
           </div>
@@ -42,7 +42,7 @@
         <div class="hb-overview-rate">
           <img class="hb-rate-icon" src="./assets/icons/irate.svg" />
           <span class="hb-rate-text"> Elo Rating: </span>
-          <span class="hb-rate-nb"> {{ user.rating }} </span>
+          <span class="hb-rate-nb"> {{ userData.rating }} </span>
         </div>
       </div>
     </div>

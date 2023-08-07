@@ -21,11 +21,6 @@ export class AuthService {
 	  return !this.jwtHelper.isTokenExpired(accessToken);
 	}
 
-  getUserHomeData () {
-    const accessToken = localStorage.getItem(JWT_TOKEN);
-    const headers = { Authorization: `Bearer ${accessToken}` };
-
-    return this.http.get(`${this.apiUrl}/user/me` ,{ headers });
-  }
+ 
 
 }

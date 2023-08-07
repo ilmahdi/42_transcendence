@@ -1,6 +1,7 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
+import { Controller, Get, Req, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { JwtGuard } from "src/auth/utils/guards/jwt.guard";
+import { UserData } from "./utils/interfaces/user-data.interface";
 
 @Controller('user')
 export class UserController {
@@ -10,8 +11,9 @@ export class UserController {
     }
     @Get("me")
     @UseGuards(JwtGuard)
-    getUser() {
-        return this.userService.getUserInfo()
+    getUser(@Req() req) : UserData {
+        console.log(req.user)
+        return req.user;
     }
     
 }
