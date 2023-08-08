@@ -14,6 +14,7 @@ import { LoginService } from 'src/app/services/login.service';
 export class ConversationsComponent implements OnInit {
 
   @Input() userEmitted:any
+  @Input() conversationEmitted:Message[] = [];
   @Output() getconvers = new EventEmitter<boolean>()
   displayConv:boolean = true
   userId?:number
@@ -39,9 +40,7 @@ export class ConversationsComponent implements OnInit {
     channel.bind('message', (data: Message) => {
       this.messages.push(data);
     });
-    this.chatService.getConversation(this.userId!, this.userEmitted[0].id).subscribe((data) => {
-      this.messages = data;
-    })
+    this.messages = this.conversationEmitted
   }
 
   getConversEvent() {

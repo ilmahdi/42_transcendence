@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from 'src/app/models/message.model';
 import { User } from 'src/app/models/user.model';
 
 @Component({
@@ -8,9 +9,11 @@ import { User } from 'src/app/models/user.model';
 })
 export class ChatComponent implements OnInit {
 
+  userEvent?:any[]
+  conversationEvent!:Message[];
+
   directClicked: boolean = true
   roomsClicked: boolean = false
-  userEvent?:any[]
   screenWidth: number = 1000;
   smallScreen:boolean = false;
   displayConvers:boolean = false;
@@ -45,6 +48,10 @@ export class ChatComponent implements OnInit {
     this.smallScreen = true
     this.userEvent = [user, true]
     this.displayConvers = false
+  }
+
+  getConversation(data:Message[]) {
+    this.conversationEvent = data;
   }
 
 }

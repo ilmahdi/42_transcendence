@@ -32,8 +32,6 @@ export class ChatService {
 
   getConversation(senderId:number, receiverId:number): Observable<Message[]> {
     const data = {senderId, receiverId}
-    console.log(data);
-    
     return this.http.post<Message[]>('http://localhost:3000/api/chat/getConversation', data)
   }
 }
