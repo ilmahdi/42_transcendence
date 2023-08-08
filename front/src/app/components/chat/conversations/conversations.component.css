@@ -6,6 +6,7 @@
     width: 572px;
     background-color: #231C1C;
     border-radius: 15px 15px 15px 15px;
+    /* overflow: auto; */
 }
 
 .header {
@@ -93,6 +94,39 @@ img {
 
 .fa-send:active {
     margin-left: 15px;
+}
+
+/***************************** MESSAGES DESIGN *******************************/
+#sentMessage {
+    color: white;
+    position: absolute;
+    left: 10px;
+    border-radius: 0px 20px 20px 20px;
+    height: 40px;
+    background-color: #D38146;
+    max-width: 60%;
+}
+
+#receivedMessage {
+    color: white;
+    right: 10px;
+    position: absolute;
+    border-radius: 20px 0px 20px 20px;
+    height: 40px;
+    background-color: #D38146;
+    max-width: 60%;
+}
+
+p {
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 35px;
+}
+
+.messages {
+    position: relative;
+    overflow: auto;
 }
 
 @media (min-width: 2000px) {

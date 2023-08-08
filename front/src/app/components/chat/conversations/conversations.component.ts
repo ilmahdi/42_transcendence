@@ -49,10 +49,9 @@ export class ConversationsComponent implements OnInit {
   }
 
   onSubmit() {
-    let rec = this.userEmitted[0]
     let message = this.msg.value.message
     let senderId = this.userId
-    let receiverId = rec.id
+    let receiverId = this.userEmitted[0].id
     
     const msg = {senderId, receiverId, message}
     this.chatService.sendMessage(msg).subscribe()
