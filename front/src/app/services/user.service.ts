@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { JWT_TOKEN } from '../components/utils/constants';
-import { UserData } from '../components/utils/interfaces/user-data.interface';
+import { JWT_TOKEN } from '../utils/constants';
+import { IUserData } from '../utils/interfaces/user-data.interface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -17,11 +17,11 @@ export class UserService {
   private apiUrl = environment.apiUrl;
 
 
-  getUserData () : Observable<UserData> {
+  getUserData () : Observable<IUserData> {
     const accessToken = localStorage.getItem(JWT_TOKEN);
     const headers = { Authorization: `Bearer ${accessToken}` };
 
-    return this.http.get<UserData>(`${this.apiUrl}/user/me` ,{ headers });
+    return this.http.get<IUserData>(`${this.apiUrl}/user/me` ,{ headers });
   }
 
 

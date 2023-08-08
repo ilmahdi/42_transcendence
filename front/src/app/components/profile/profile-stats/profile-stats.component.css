@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+    color: var(--second-text-color);
+}
+
+
+.wrap-component {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding-left: calc(var(--primary-left-bar-width));
+    padding-right: calc(var(--primary-left-bar-width));
+
+    padding-top: calc(var(--top-bar-hieght));
+    padding-bottom: calc(var(--top-bar-hieght) / 2);
+    
+}
+
+app-profile-id {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+}
+
+/* profile stats */
+/******/
+
+.profile-stats {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 50rem;
+    overflow: hidden;
+    position: relative;
+}
+
+
+
+.ps-sec-one-img {
+    
+    height: 18rem;
+    border-radius: 1rem 1rem 0 0;
+    width: 100%;
+    max-width: 50rem;
+    object-fit: cover;
+}
+.ps-sec-one {
+    height: 18rem;
+    border-radius: 1rem 1rem 0 0;
+    width: 100%;
+    max-width: 50rem;
+    background-color: #966868;
+    
+    position: relative;
+    
+}
+.ps-sec-two {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: rgb(var(--primary-transparent-color-background));
+    position: absolute;
+    bottom: 0rem;
+    width: 100%;
+    height: 2rem;
+}
+.ps-sec-two-item {
+    font-size:medium;
+    font-weight: 300;
+    padding: 0 0.6rem;
+}
+
+.ps-sec-two-item:nth-last-child(2) {
+    flex-grow: 1;
+}
+
+
+
+/***********************************************/
+/*                Media Queries                */
+/***********************************************/
+
+@media (max-width: 1000px) {
+
+    .wrap-component {
+        padding-right: 0;
+        margin-left: calc(var(--second-left-bar-width));
+
+        padding-right: 0.6rem;
+        padding-left: 0.6rem;
+    
+        padding-top: calc(var(--top-bar-hieght));
+    
+    }
+    
+
+}
+@media (max-width: 630px) {
+    
+    app-profile-id {
+        position: absolute;
+        top: 0.8rem;
+        left: calc(50% - 5rem);
+    }
+    
+    .profile-stats {
+        align-items: center;
+        min-width: 10rem;
+        padding-right: 0.6rem;
+        padding-left: 0.6rem;
+        margin-left: 0;
+    }
+    .ps-sec-two {
+        flex-direction: column;
+        height: max-content;
+        width: 100%;
+    }
+    .ps-sec-two-item {
+        /* width: 50%; */
+    }
+    .ps-sec-one-img {
+        display: none;
+    }
+    
+    
+}
+
+@media (max-width: 450px) {
+    .wrap-component {
+        padding-right: 0;
+        padding-left: 0;
+        
+        padding-top: calc(var(--top-bar-hieght));
+        margin-left: 0;
+    
+    }
+    .profile-stats {
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+}
+

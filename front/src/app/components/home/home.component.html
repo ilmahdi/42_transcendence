@@ -6,8 +6,8 @@
   <div class="home-page">
     <div class="hp-sec-one">
       <div class="hb-s-one-profile">
-        <img class="hb-profile-img" [src]="userData.avatar" />
-        <span class="hb-profile-text"> {{ userData.username }} </span>
+        <img class="hb-profile-img" routerLink="/profile" [src]="userData.avatar" />
+        <span class="hb-profile-text" routerLink="/profile"> {{ userData.username }} </span>
       </div>
       <div class="hb-s-one-overview">
         <div class="hb-overview-hello">

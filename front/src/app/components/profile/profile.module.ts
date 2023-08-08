@@ -4,18 +4,17 @@ import { CommonModule } from '@angular/common';
 import { ProfileRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { NavBarModule } from '../nav-bar/nav-bar.module';
-import { OwnedComponent } from './owned/owned.component';
-import { VisitedComponent } from './visited/visited.component';
-import { MapsModule } from '../right-bar/maps/maps.module';
 import { OnlineModule } from '../right-bar/online/online.module';
 import { MenuBarModule } from '../common/menu-bar.module';
+import { ProfileStatsComponent } from './profile-stats/profile-stats.component';
+import { ProfileIdComponent } from './profile-id/profile-id.component';
 
 
 @NgModule({
   declarations: [
     ProfileComponent,
-    OwnedComponent,
-    VisitedComponent
+    ProfileStatsComponent,
+    ProfileIdComponent,
   ],
   exports: [ProfileComponent],
   imports: [

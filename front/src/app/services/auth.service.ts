@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { JWT_TOKEN } from '../components/utils/constants';
+import { JWT_TOKEN } from '../utils/constants';
 
 @Injectable({
   providedIn: 'root'

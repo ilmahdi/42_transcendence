@@ -19,6 +19,7 @@
     list-style-type: none;
     justify-content: space-around;
     align-items: center;
+    z-index: 5;
     /* margin-right: 14rem; */
 }
 

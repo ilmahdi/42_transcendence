@@ -23,6 +23,7 @@
     /* for firfox */
     scrollbar-color: #5e6147 var(--second-background-color);
     scrollbar-width: thin;
+    z-index: 10;
 }
 /**/
 /* effect */
