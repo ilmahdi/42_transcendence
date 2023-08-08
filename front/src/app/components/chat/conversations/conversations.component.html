@@ -5,6 +5,9 @@
         <span id="conv">Conversation with <span style="font-weight: bolder;">{{userEmitted[0].firstName}}</span></span>
     </div>
 
+    <!-- <div *ngFor="let message of messages">
+        <span style="color: white;">{{message.message}}</span>
+    </div> -->
     <p *ngFor="let message of messages" style="color: white;">{{message.message}}</p>
 
     <form [formGroup]="msg">

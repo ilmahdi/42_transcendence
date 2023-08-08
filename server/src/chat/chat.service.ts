@@ -4,7 +4,7 @@ import { from } from 'rxjs';
 import { Message } from './utils/models/message.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MessageEntity } from './utils/models/message.entity';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { ChatGateway } from './chat.gateway';
 
 @Injectable()
@@ -38,21 +38,12 @@ export class ChatService {
     async getConversation(senderId:number, receiverId:number) {
         try {
             const messages = await this.messageRepository.find({
-              where: {
-                senderId: senderId,
-                receiverId: receiverId,
-              },
+              where: [
+                {senderId: senderId, receiverId: receiverId},
+                {senderId: receiverId, receiverId: senderId}
+              ],
             });
 
-            const message2 = await this.messageRepository.find({
-                where: {
-                  senderId: receiverId,
-                  receiverId: senderId,
-                },
-              });
-
-            messages.push(...message2)
-            
             return messages;
         } catch (error) {
             // Handle errors (e.g., database connection errors)
