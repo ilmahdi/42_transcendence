@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
+import { Socket } from 'ngx-socket-io';
 import Pusher from 'pusher-js';
 import { Observable, take } from 'rxjs';
 import { Message } from 'src/app/models/message.model';
@@ -21,7 +22,8 @@ export class ConversationsComponent implements OnInit {
 
   msg = new FormGroup({message: new FormControl})
 
-  messages: any[] = [];
+  messages: Message[] = [];
+  // messages:string[] = []
   
   constructor(private chatService: ChatService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
@@ -30,17 +32,8 @@ export class ConversationsComponent implements OnInit {
   }
 
   ngOnInit() {
-    Pusher.logToConsole = true;
-
-    const pusher = new Pusher('a7ecfcc0f67ed4def5ba', {
-      cluster: 'eu'
-    });
-
-    const channel = pusher.subscribe('chat');
-    channel.bind('message', (data: Message) => {
-      this.messages.push(data);
-    });
     this.messages = this.conversationEmitted
+    return this.chatService.getNewMessage().subscribe(data=>this.messages.push(data))
   }
 
   getConversEvent() {
@@ -54,7 +47,9 @@ export class ConversationsComponent implements OnInit {
     let receiverId = this.userEmitted[0].id
     
     const msg = {senderId, receiverId, message}
-    this.chatService.sendMessage(msg).subscribe()
+    if (!message) return;
+    this.chatService.sendNewMessage(msg)
+    // this.chatService.sendMessage(msg).subscribe()
     this.msg.reset();
   }
 }

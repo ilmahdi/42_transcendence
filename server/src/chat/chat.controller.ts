@@ -10,7 +10,7 @@ export class ChatController {
   @Post('messages')
   async messages(@Body() msg:Message) {
       this.chatService.saveMessage(msg)
-      await this.chatService.trigger('chat', 'message', msg);
+      // await this.chatService.trigger('chat', 'message', msg);
       return [];
   }
 

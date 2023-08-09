@@ -9,7 +9,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  providers: [ChatService, AuthService, JwtService],
+  providers: [ChatService, AuthService, JwtService, ChatGateway],
   controllers: [ChatController],
   imports: [
     TypeOrmModule.forFeature([MessageEntity, UserEntity])

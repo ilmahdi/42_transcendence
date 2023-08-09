@@ -21,7 +21,7 @@ export class DirectComponent implements OnInit {
   color:any = {color:'', name:''}
 
   userId?:number;
-  messages: any[] = [];
+  messages: Message[] = [];
 
   constructor(private chatService:ChatService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
@@ -51,14 +51,15 @@ export class DirectComponent implements OnInit {
       this.color = {color:'', name:''}
 
     //  GET THE CONVERSATION FROM SERVER
-    this.chatService.getConversation(this.userId!, friend.id!).
+
+    this.chatService.sendToGetConversation(this.userId!, friend.id!)
+    this.chatService.getConversation().
     subscribe((data) => {
       this.messages.splice(0, this.messages.length);
       data.forEach((item)=>{
           this.messages.push(item)
       })
     })
-    
     this.conversation.emit(this.messages);
     this.customEvent.emit(friend)
   }
