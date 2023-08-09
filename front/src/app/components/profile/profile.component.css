@@ -1,0 +1,118 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+    color: var(--second-text-color);
+}
+
+
+.wrap-component {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding-left: calc(var(--primary-left-bar-width));
+    padding-right: calc(var(--primary-left-bar-width));
+
+    padding-top: calc(var(--top-bar-hieght));
+    padding-bottom: calc(var(--top-bar-hieght) / 2);
+    
+}
+
+
+app-profile-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+app-match-history {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.profile-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    height: 4.6rem;
+    width: 100%;
+    max-width: 50rem;
+}
+.pb-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    border: 0.08rem solid var(--primary-text-color);
+    border-radius: 1.6rem;
+    height: 2rem;
+    width: 12rem;
+}
+
+.pb-button:hover {
+    cursor: pointer;
+    border: 0.08rem solid var(--second-hover-background-color) ;
+    background-color: rgba(160, 100, 100, 0.5);   
+}
+
+.active-btn {
+    background-color: var(--primary-text-color);
+}
+.active-btn:hover {
+    background-color: var(--primary-text-color);   
+
+}
+
+.pb-btn-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+    fill: var(--second-text-color);
+}
+
+
+/***********************************************/
+/*                Media Queries                */
+/***********************************************/
+
+@media (max-width: 1000px) {
+
+    .wrap-component {
+        padding-right: 0;
+        margin-left: calc(var(--second-left-bar-width));
+
+        padding-right: 0.6rem;
+        padding-left: 0.6rem;
+    
+        padding-top: calc(var(--top-bar-hieght));
+    
+    }
+    
+}
+
+@media (max-width: 530px) {
+    .pb-btn-text {
+        display: none;
+    }
+    .pb-button {
+        width: 3.6rem;
+    }
+}
+    
+
+
+@media (max-width: 450px) {
+    .wrap-component {
+        padding-right: 0;
+        padding-left: 0;
+        
+        padding-top: calc(var(--top-bar-hieght));
+        margin-left: 0;
+    
+    }
+}

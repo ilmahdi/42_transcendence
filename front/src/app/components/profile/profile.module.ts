@@ -8,6 +8,7 @@ import { OnlineModule } from '../right-bar/online/online.module';
 import { MenuBarModule } from '../common/menu-bar.module';
 import { ProfileStatsComponent } from './profile-stats/profile-stats.component';
 import { ProfileIdComponent } from './profile-id/profile-id.component';
+import { MatchHistoryComponent } from './match-history/match-history.component';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { ProfileIdComponent } from './profile-id/profile-id.component';
     ProfileComponent,
     ProfileStatsComponent,
     ProfileIdComponent,
+    MatchHistoryComponent,
   ],
   exports: [ProfileComponent],
   imports: [

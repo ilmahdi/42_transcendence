@@ -11,5 +11,10 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  isClicked = true;
+
+  toggleActive() {
+    this.isClicked = !this.isClicked;
+  }
 
 }

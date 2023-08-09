@@ -1,20 +1,13 @@
-<div class="wrap-component">
 
-    <div class="profile-stats">
-        <div class="ps-sec-one">
-            <img class="ps-sec-one-img" src="./assets/imgs/cover.png" alt="avatar">
-            <app-profile-id></app-profile-id> 
-        </div>
-
-        <div class="ps-sec-two">
-            <span class="ps-sec-two-item"> {{ userData.wins + userData.losses + userData.draws }} game played  </span>
-            <span class="ps-sec-two-item"> {{ userData.wins  }} wins  </span>
-            <span class="ps-sec-two-item"> {{ userData.losses  }}  lesses </span>
-            <span class="ps-sec-two-item"> {{ userData.draws  }} draws  </span>
-            <span class="ps-sec-two-item"> {{ userData.rating  }} elo rating  </span>
-        </div>
-
+<div class="profile-stats">
+    <div class="ps-sec-one">
+        <app-profile-id></app-profile-id> 
     </div>
-
+    <div class="ps-sec-two">
+        <span class="ps-sec-two-item"> <span class="ps-sec-two-item-nb"> {{ userData.wins + userData.losses + userData.draws }} </span> games played  </span>
+        <span class="ps-sec-two-item"> <span class="ps-sec-two-item-nb"> {{ userData.wins }} </span> wins  </span>
+        <span class="ps-sec-two-item"> <span class="ps-sec-two-item-nb"> {{ userData.losses }} </span>  lesses </span>
+        <span class="ps-sec-two-item"> <span class="ps-sec-two-item-nb"> {{ userData.draws }} </span> draws  </span>
+        <span class="ps-sec-two-item"> <span class="ps-sec-two-item-nb"> {{ userData.rating }} </span> elo rating  </span>
+    </div>
 </div>
-

@@ -1,0 +1,26 @@
+<div class="match-history">
+        <div class="mh-sec-header">
+            <span class="mh-sec-head-item">Opponent</span>
+            <span class="mh-sec-head-item">Result</span>
+            <span class="mh-sec-head-item">Date</span>
+            <span class="mh-sec-head-item">Duration</span>
+        </div>
+        
+        <div class="mh-sec-table-wrap">
+            <div class="mh-sec-table">
+                <div class="mh-sec-tb-row" *ngFor="let match of matchs; let last = last">
+                    <div class="mh-sec-tb-data">
+                        <span class="mh-sec-tb-data-item wrap">
+                            <span class="mh-sec-tb-data-item-img"> <img [src]="match.avatar" /> </span>
+                            <span class="mh-sec-tb-data-item-text">{{match.username}}</span>
+                        </span>
+                        <span class="mh-sec-tb-data-item">{{match.result}}</span>
+                        <span class="mh-sec-tb-data-item">  {{match.date}} </span>
+                        <span class="mh-sec-tb-data-item">{{match.duration}}</span>
+                    </div>
+                    <span *ngIf="!last" class="mh-sec-tb-hr"></span>
+                </div>
+            </div>
+        </div>
+        
+</div>

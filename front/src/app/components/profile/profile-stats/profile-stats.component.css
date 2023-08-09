@@ -1,24 +1,4 @@
-* {
-    margin: 0;
-    padding: 0;
-    font-family: 'Poppins', sans-serif;
-    box-sizing: border-box;
-    color: var(--second-text-color);
-}
 
-
-.wrap-component {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    padding-left: calc(var(--primary-left-bar-width));
-    padding-right: calc(var(--primary-left-bar-width));
-
-    padding-top: calc(var(--top-bar-hieght));
-    padding-bottom: calc(var(--top-bar-hieght) / 2);
-    
-}
 
 app-profile-id {
     position: absolute;
@@ -33,6 +13,7 @@ app-profile-id {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     margin-top: 1rem;
     width: 100%;
     max-width: 50rem;
@@ -55,7 +36,7 @@ app-profile-id {
     border-radius: 1rem 1rem 0 0;
     width: 100%;
     max-width: 50rem;
-    background-color: #966868;
+    background-image: url(../../../../assets/imgs/cover.png);
     
     position: relative;
     
@@ -86,21 +67,6 @@ app-profile-id {
 /*                Media Queries                */
 /***********************************************/
 
-@media (max-width: 1000px) {
-
-    .wrap-component {
-        padding-right: 0;
-        margin-left: calc(var(--second-left-bar-width));
-
-        padding-right: 0.6rem;
-        padding-left: 0.6rem;
-    
-        padding-top: calc(var(--top-bar-hieght));
-    
-    }
-    
-
-}
 @media (max-width: 630px) {
     
     app-profile-id {
@@ -116,30 +82,43 @@ app-profile-id {
         padding-left: 0.6rem;
         margin-left: 0;
     }
+    .ps-sec-one {
+        background-color: var(--second-background-color);
+        background-image: none;
+        
+    }
     .ps-sec-two {
         flex-direction: column;
         height: max-content;
-        width: 100%;
+        width: max-content;
+        padding-left: 10%;
+        padding-right: 10%;
+        background-color: rgba(0,0,0,0%);
+        border-top: 0.06rem  solid var(--second-text-color);
     }
     .ps-sec-two-item {
-        /* width: 50%; */
+        display: flex;
+        width: 100%;
+        gap: 0.6rem
+    }
+    .ps-sec-two-item-nb {
+        display: flex;
+        width: 3rem;
+        font-weight: 500;
+        justify-content: center;
+        align-items: center;
     }
     .ps-sec-one-img {
         display: none;
     }
-    
+    .ps-sec-one {
+        height: 20rem;
+    }
     
 }
 
 @media (max-width: 450px) {
-    .wrap-component {
-        padding-right: 0;
-        padding-left: 0;
-        
-        padding-top: calc(var(--top-bar-hieght));
-        margin-left: 0;
-    
-    }
+
     .profile-stats {
         padding-right: 1rem;
         padding-left: 1rem;

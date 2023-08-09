@@ -49,7 +49,7 @@
     align-items: center;
     justify-content: center;
     width: 10rem;
-    height: 2.6rem;
+    height: 2.4rem;
     border-radius: 0.6rem;
     border: 0.08rem solid var(--primary-border-color);
     background-color: rgba(160, 100, 100, 0.25);
@@ -74,10 +74,14 @@
 .profile-id {
     width: 10rem;
     padding: 0.8rem;
+    background-color: rgba(0,0,0, 0%);
 }
 
 .pi-sec-three {
-    display: none;
+    /* display: none; */
+    width: 8rem;
+    height: 1.8rem;
+    border-radius: 0.4rem;
 }
 
 .pi-sec-one-img {
@@ -90,6 +94,8 @@
 .pi-sec-one-icon {
     left: 7.4rem;
     top: 0.9rem;
+    width: 1.6rem;
+    height: 1.6rem;
 }
     
 
