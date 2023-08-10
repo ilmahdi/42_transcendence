@@ -1,26 +1,63 @@
 <div class="match-history">
-        <div class="mh-sec-header">
-            <span class="mh-sec-head-item">Opponent</span>
-            <span class="mh-sec-head-item">Result</span>
-            <span class="mh-sec-head-item">Date</span>
-            <span class="mh-sec-head-item">Duration</span>
-        </div>
-        
-        <div class="mh-sec-table-wrap">
-            <div class="mh-sec-table">
-                <div class="mh-sec-tb-row" *ngFor="let match of matchs; let last = last">
-                    <div class="mh-sec-tb-data">
-                        <span class="mh-sec-tb-data-item wrap">
-                            <span class="mh-sec-tb-data-item-img"> <img [src]="match.avatar" /> </span>
-                            <span class="mh-sec-tb-data-item-text">{{match.username}}</span>
+       <div class="mh-section" *ngFor="let match of matchs">
+        <div class="mh-sec-main">
+            <div class="mh-sec-main-user u1">
+
+                <img class="mh-sec-img" src="{{match.avatar1}}" alt="avatar" 
+                    [ngStyle]="match.score1 >= 0 ? {'color': '#67E306'} : {'color': '#F35352'}"
+                />
+                <div class="mh-sec-info">
+                    <span class="mh-sec-info-name"> {{ match.username1 }} </span>
+                    <div class="mh-sec-info-rate"> 
+                        <span class="mh-sec-info-rate-score"> {{match.rating1}} </span>
+                        <span class="mh-sec-info-rate-res" 
+                            [ngStyle]="match.score1 >= 0 ? {'color': '#67E306'} : {'color': '#F35352'}"> 
+                            {{match.score1 | positiveNumber}}  
                         </span>
-                        <span class="mh-sec-tb-data-item">{{match.result}}</span>
-                        <span class="mh-sec-tb-data-item">  {{match.date}} </span>
-                        <span class="mh-sec-tb-data-item">{{match.duration}}</span>
                     </div>
-                    <span *ngIf="!last" class="mh-sec-tb-hr"></span>
                 </div>
+
             </div>
+            <div class="mh-sec-main-nb">
+                <span> {{match.score1}}{{match.score2}} </span>
+            </div>
+            <div class="mh-sec-main-user u2">
+
+                <div class="mh-sec-info">
+                    <span class="mh-sec-info-name"> {{ match.username2 }} </span>
+                    <div class="mh-sec-info-rate">
+                        <span class="mh-sec-info-rate-score"> {{match.rating2}} </span>
+                        <span class="mh-sec-info-rate-res" 
+                            [ngStyle]="match.score2 >= 0 ? {'color': '#67E306'} : {'color': '#F35352'}"> 
+                            {{match.score2 | positiveNumber}}  
+                        </span>
+                    </div>
+                    
+                </div>
+                <img class="mh-sec-img" src="{{match.avatar2}}" alt="avatar" 
+                    [ngStyle]="match.score2 >= 0 ? {'color': '#67E306'} : {'color': '#F35352'}"
+                />
+
+            </div>
+            
         </div>
+        <div class="mh-sec-second">
+            <div class="mh-sec-second-item">
+                <svg class="mh-sec-icon" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="./assets/icons/timer.svg#icon-timer"></use>
+                </svg>
+                <span class="mh-sec-text"> {{ match.duration }} </span>
+
+            </div>
+            <div class="mh-sec-second-item">
+                <svg class="mh-sec-icon" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="./assets/icons/clock.svg#icon-clock"></use>
+                </svg>
+                <span class="mh-sec-text"> {{ match.date | date }} </span>
+
+            </div>
+
+        </div>
+       </div>
         
 </div>

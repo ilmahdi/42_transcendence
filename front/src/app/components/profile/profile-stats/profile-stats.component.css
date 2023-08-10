@@ -37,8 +37,7 @@ app-profile-id {
     width: 100%;
     max-width: 50rem;
     background-image: url(../../../../assets/imgs/cover.png);
-    
-    position: relative;
+    object-fit: cover;
     
 }
 .ps-sec-two {
@@ -83,8 +82,10 @@ app-profile-id {
         margin-left: 0;
     }
     .ps-sec-one {
-        background-color: var(--second-background-color);
-        background-image: none;
+        /* background-color: var(--second-background-color);
+        background-image: none; */
+
+        background: url(../../../../assets/imgs/cover_mini.png);
         
     }
     .ps-sec-two {

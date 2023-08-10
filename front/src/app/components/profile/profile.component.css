@@ -115,4 +115,8 @@ app-match-history {
         margin-left: 0;
     
     }
+    app-match-history {
+        margin-right: 1rem;
+        margin-left: 1rem;
+    }
 }
