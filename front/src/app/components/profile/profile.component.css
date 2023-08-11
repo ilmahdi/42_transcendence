@@ -34,6 +34,12 @@ app-match-history {
     justify-content: center;
     width: 100%;
 }
+app-achievements {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
 
 .profile-buttons {
     display: flex;

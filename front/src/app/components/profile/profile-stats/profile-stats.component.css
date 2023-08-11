@@ -96,6 +96,7 @@ app-profile-id {
         padding-right: 10%;
         background-color: rgba(0,0,0,0%);
         border-top: 0.06rem  solid var(--second-text-color);
+        padding-bottom: 0.3rem;
     }
     .ps-sec-two-item {
         display: flex;

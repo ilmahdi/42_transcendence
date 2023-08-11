@@ -21,7 +21,7 @@
         </div>
 
     </div>
-    <!-- <app-match-history></app-match-history> -->
-    <app-achievements></app-achievements>
+    <app-match-history *ngIf="isClicked"></app-match-history>
+    <app-achievements *ngIf="!isClicked"></app-achievements>
     
 </div>
