@@ -8,6 +8,9 @@ export class UserEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
+  @Column({default: null})
+  socketId?:string;
+
   @Column()
   firstName?: string;
 

@@ -11,7 +11,7 @@ import { UserEntity } from 'src/user/utils/models/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt'
-import { User } from 'src/user/utils/models/user.interface';
+import { User } from 'src/user/utils/models/user.class';
 
 
 @Injectable()

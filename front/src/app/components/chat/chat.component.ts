@@ -11,6 +11,7 @@ export class ChatComponent implements OnInit {
 
   userEvent?:any[]
   conversationEvent!:Message[];
+  lastMessage!:Message
 
   directClicked: boolean = true
   roomsClicked: boolean = false

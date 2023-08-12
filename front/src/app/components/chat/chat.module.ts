@@ -10,6 +10,7 @@ import { RoomsComponent } from './rooms/rooms.component';
 import { OnlineModule } from '../right-bar/online/online.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { ChatService } from 'src/app/services/chat.service';
 
 const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
 

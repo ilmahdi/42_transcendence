@@ -1,10 +1,12 @@
 <div class="convers">
-    <div *ngFor="let f of users; let i = index" class="conver" (click)="openConversation(f.firstName, f, i)" [style.backgroundColor]="(color.name === f.firstName)? color.color : ''">
+    <div *ngFor="let f of users" class="conver" (click)="openConversation(f.firstName!, f)" [style.backgroundColor]="(color.name === f.firstName)? color.color : ''">
         <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="img">
         <p id="name">{{f.firstName}}</p>
-        <p id="date">{{f.date}}</p>
-        <span *ngIf="!f.readed" class="fa fa-check-circle-o"></span>
-        <img *ngIf="f.readed" src="../../../../assets/sghajdao.jpg" id="readedMsg">
-        <p id="message">{{f.message}}</p>
+        <!-- <p id="date">{{f.date}}</p> -->
+        <!-- <span *ngIf="!f.readed" class="fa fa-check-circle-o"></span> -->
+        <!-- <img *ngIf="f.readed" src="../../../../assets/sghajdao.jpg" id="readedMsg"> -->
+        <span *ngFor="let item of lastMessage" id="message">
+            <p  *ngIf="item.user.id == f.id">{{item.message.message}}</p>
+        </span>
     </div>
 </div>

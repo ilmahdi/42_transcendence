@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MessageEntity } from './utils/models/message.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { ChatGateway } from './chat.gateway';
+import { User } from 'src/user/utils/models/user.class';
 
 @Injectable()
 export class ChatService {
@@ -31,6 +32,22 @@ export class ChatService {
             });
 
             return from(messages);
+        } catch (error) {
+            // Handle errors (e.g., database connection errors)
+            throw new Error('Could not retrieve messages');
+        }
+    }
+
+    getLastMessage(id1:number, id2:number) {
+        try {
+            const messages = this.messageRepository.find({
+              where: [
+                {senderId: id1, receiverId: id2},
+                {senderId: id2, receiverId: id1}
+              ],
+            });
+            const last = messages
+            return from(last);
         } catch (error) {
             // Handle errors (e.g., database connection errors)
             throw new Error('Could not retrieve messages');

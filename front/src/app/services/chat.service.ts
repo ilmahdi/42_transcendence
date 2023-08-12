@@ -1,21 +1,38 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Input } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription, fromEvent, take } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Message } from '../models/message.model';
 import { User } from '../models/user.model';
 import { Socket } from 'ngx-socket-io';
+import { ChatSocketService } from './core/chat-socket.service';
+import { LoginService } from './login.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
 
-  constructor(private http:HttpClient, private socket:Socket) {
-    this.socket.connect();
+  userId?:number;
+
+  constructor(private http:HttpClient, private socket:ChatSocketService, private loginService:LoginService) {
+    this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
+      this.userId = id
+    })
+    this.socket.connect()
+    this.updateSocketId(this.userId!)
+    // this.socket.fromEvent<string>('updated')
   }
 
-  sendNewMessage(message:Message){
-    this.socket.emit('privateMessage', message);
+  updateSocketId(userId:number) {
+    this.socket.emit('updateSocketId', userId);
+  }
+
+  getUpdatedSocketId() {
+    this.socket.fromEvent<string>('updated');
+  }
+
+  sendNewMessage(message:Message, user:any){
+    this.socket.emit('privateMessage', {user, message});
   }
 
   getNewMessage(): Observable<Message> {
@@ -29,6 +46,14 @@ export class ChatService {
 
   getConversation() {
     return this.socket.fromEvent<Message[]>('getConversation')
+  }
+
+  sendToGetLastMessage(id1:number, id2:number) {
+    this.socket.emit('getLastMessage', {id1, id2});
+  }
+
+  getLastMessage() {
+    return this.socket.fromEvent<Message[]>('recLastMessage');
   }
 
   token:string|null = localStorage.getItem('token');
