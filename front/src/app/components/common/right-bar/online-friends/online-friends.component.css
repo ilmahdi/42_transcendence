@@ -145,7 +145,7 @@
 .rb-sec-three-text,
 .rb-sec-one-text {
     font-size: 0.9rem;
-    font-weight: lighter;
+    font-weight: 300;
     display: block;
     text-overflow: ellipsis;
     overflow: hidden;

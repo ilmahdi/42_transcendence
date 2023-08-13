@@ -21,6 +21,13 @@ export class AuthService {
 	  return !this.jwtHelper.isTokenExpired(accessToken);
 	}
 
+  clearToken(): void {
+    localStorage.removeItem(JWT_TOKEN);
+  }
+
+  logout(): void {
+    this.clearToken();
+  }
  
 
 }

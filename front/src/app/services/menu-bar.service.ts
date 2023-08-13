@@ -6,7 +6,5 @@ import { Injectable } from '@angular/core';
 export class MenuBarService {
 
   iShowLeftBar :boolean = false;
-  constructor() {
-  }
-
+  constructor() { }
 }

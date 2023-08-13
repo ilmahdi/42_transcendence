@@ -1,3 +1,4 @@
+<div #confirmModal></div>
 
 <ul class="left-bar">
     <div class="lb-sec-all lb-sec-one">
@@ -48,13 +49,13 @@
     </div>
     <div class="lb-sec-all lb-sec-three">
         
-        <li class="lb-sec-item">
+        <li class="lb-sec-item" routerLink="/settings" routerLinkActive="active">
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/setting.svg#icon-setting"></use>
             </svg>
             <span class="lb-sec-item-text"> Settings </span>
         </li>
-        <li class="lb-sec-item">
+        <li class="lb-sec-item" (click)="openModal()">
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/signout.svg#icon-signout"></use>
             </svg>

@@ -28,7 +28,7 @@ export class AuthController {
     @UseGuards(FtLoginGuard)
     ftCallback(@Req() req, @Res() res){
         console.log(req.user)
-        res.status(302).redirect(`${process.env.FONTEND_URL}?access_token=${req.user.token}`);
+        res.status(302).redirect(`${process.env.FONTEND_URL}?access_token=${req.user.token}&first_login=${req.user.firstLogin}`);
         return req.token;
     }
     @Get("logout/42")

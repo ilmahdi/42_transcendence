@@ -50,6 +50,12 @@ const routes: Routes = [
     import('./components/leaderboard/leaderboard.module').then((m) => m.LeaderboardModule),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'settings',
+    loadChildren: () =>
+    import('./components/settings/settings.module').then((m) => m.SettingsModule),
+    canActivate: [AuthGuard],
+  },
 ];
 
 @NgModule({

@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
-import { MenuBarService } from '../menu-bar.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { MenuBarService } from 'src/app/services/menu-bar.service';
 
 @Component({
   selector: 'app-top-bar',

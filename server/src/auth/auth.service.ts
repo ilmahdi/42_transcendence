@@ -19,16 +19,20 @@ export class AuthService {
     }
 
     async validateUser(profile: Profile){
+        let firstLogin :string = "false";
         let user = await this.userService.findUserByUsername(profile.username);
         if (!user)
+        {
             user = await this.userService.addUser(profile);
+            firstLogin = "true";
+        }
         const token = await this.generateJwt(
             {
                 sub: user.id,
                 username: user.username,
             }
         )
-        return {token }
+        return {token, firstLogin }
     }
 
 

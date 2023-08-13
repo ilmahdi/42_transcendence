@@ -1,4 +1,6 @@
-<div class="login-page">
+<div #firstLoginModal *ngIf="firstLogin"></div>
+
+<div class="login-page" *ngIf="!firstLogin">
 
     <div class="lp-sec-one">
         <div class="lp-sec-logo">
@@ -25,6 +27,7 @@
     </div>
     
     <div class="lp-sec-two">
+        <div class="lp-sec-two-cover"></div>
         <img id="icon-42-logo" class="lp-sec-gif"  src="./assets/gifs/pong_game.gif" />
     </div>
     
