@@ -17,8 +17,10 @@
     padding-right: calc(var(--primary-left-bar-width));
 
     padding-top: calc(var(--top-bar-hieght));
-    padding-bottom: calc(var(--top-bar-hieght) / 2);
+
+    height: 100vh;
     
+    overflow: none;
 }
 
 
@@ -27,24 +29,50 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    background-color: var(--second-background-color);
+    background-color: var(--fourth-backgroud-color);
     padding: 1rem;
     border-radius: 1.4rem 1.4rem 0 0;
-    height: 100vh;
+    height: 100%;
     gap: 1.6rem;
     width: min(80vw, 30rem);
+    min-width: 16rem;
 }
 
 .cf-sec-one {
+    display: flex;
+    width: 8rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     position: relative;
 }
 
+.cf-sec-one-input {
+    height: 0;
+}
+::file-selector-button {
+    display: none;
+  }
+
+.cf-sec-one-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 8rem;
+    height: 8rem;
+    border: 0.08rem solid var(--primary-text-color);
+    border-radius: 50%;
+}
 .cf-sec-one-img {
     width: 8rem;
     height: 8rem;
     padding: 0.1rem;
-    border: 0.16rem solid var(--primary-border-color);
+    object-fit: cover;
     border-radius: 50%;
+}
+.cf-sec-one-label:hover {
+    cursor: pointer;
+    border: 0.08rem solid var(--second-text-color);
 }
 
 .cf-sec-one-icon {
@@ -128,4 +156,36 @@
     border-radius: 0.2rem;
     height: 2rem;
     width: 13.8rem;
+}
+
+
+
+/***********************************************/
+/*                Media Queries                */
+/***********************************************/
+
+@media (max-width: 1000px) {
+
+    .wrap-component {
+        padding-right: 0;
+
+        padding-right: 0.6rem;
+        padding-left: 0.6rem;
+    
+        padding-top: calc(var(--top-bar-hieght));
+    
+    }
+    
+}
+    
+
+@media (max-width: 450px) {
+    .wrap-component {
+        padding-right: 0;
+        padding-left: 0;
+        
+        padding-top: calc(var(--top-bar-hieght));
+        margin-left: 0;
+    
+    }
 }

@@ -13,11 +13,12 @@ import { Observable } from 'rxjs';
 export class HomeComponent implements OnInit {
 
   constructor(
-    private authService: UserService,
+    private userService: UserService,
   ) { 
 
   }
   public userData: IUserData = { 
+    id:0,
     username: '',
     avatar: '',
     wins: 0,
@@ -30,9 +31,9 @@ export class HomeComponent implements OnInit {
     this.getUserData()
   }
   getUserData() {
-     this.authService.getUserData().subscribe((data: IUserData) => {
+     this.userService.getUserData().subscribe((data: IUserData) => {
        this.userData = data;
-       console.log(this.userData);
+      //  console.log(this.userData);
     });
 
   }

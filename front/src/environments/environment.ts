@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   apiUrl: 'http://localhost:3000/api',
   apiUrlAuth: 'http://localhost:3000/api/auth/login/42',
+  uploadUrl: 'http://localhost:3000/api/user/avatar/',
 };
 
 /*
