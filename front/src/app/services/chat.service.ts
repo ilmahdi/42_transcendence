@@ -14,6 +14,13 @@ export class ChatService {
 
   userId?:number;
 
+  private stringSource = new BehaviorSubject<any>({}); // Initial value is an empty string
+  string$ = this.stringSource.asObservable();
+
+  users:User[] = [];
+  lastMessage = new BehaviorSubject<any[]>([])
+  saad$ = this.lastMessage.asObservable()
+
   constructor(private http:HttpClient, private socket:ChatSocketService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id
@@ -21,6 +28,10 @@ export class ChatService {
     this.socket.connect()
     this.updateSocketId(this.userId!)
     // this.socket.fromEvent<string>('updated')
+  }
+
+  updateLastMessage(friend:User, message: string) {
+    this.stringSource.next({friend:friend, message:message});
   }
 
   updateSocketId(userId:number) {
@@ -53,7 +64,7 @@ export class ChatService {
   }
 
   getLastMessage() {
-    return this.socket.fromEvent<Message[]>('recLastMessage');
+    return this.socket.fromEvent<Message>('recLastMessage');
   }
 
   token:string|null = localStorage.getItem('token');
@@ -74,8 +85,8 @@ export class ChatService {
     return this.http.get<Message[]>('http://localhost:3000/api/chat/getMessages')
   }
 
-  // getConversation(senderId:number, receiverId:number): Observable<Message[]> {
-  //   const data = {senderId, receiverId}
-  //   return this.http.post<Message[]>('http://localhost:3000/api/chat/getConversation', data)
-  // }
+  getLast(senderId:number, receiverId:number): Observable<Message[]> {
+    const data = {senderId, receiverId}
+    return this.http.post<Message[]>('http://localhost:3000/api/chat/getLastMessage', data)
+  }
 }

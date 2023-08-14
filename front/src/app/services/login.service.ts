@@ -46,6 +46,14 @@ export class LoginService {
     );
   }
 
+  get user(): Observable<User | undefined> {
+    return this.user$.asObservable().pipe(
+      switchMap((user: User | null) => {
+        return of(user!);
+      })
+    );
+  }
+
   register(newUser: NewUser): Observable<User> {
     return this.http
       .post<User>(

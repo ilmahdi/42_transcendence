@@ -7,6 +7,7 @@ import { MessageEntity } from './utils/models/message.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { ChatGateway } from './chat.gateway';
 import { User } from 'src/user/utils/models/user.class';
+import { GameGateway } from 'src/game/game.gateway';
 
 @Injectable()
 export class ChatService {
@@ -46,8 +47,8 @@ export class ChatService {
                 {senderId: id2, receiverId: id1}
               ],
             });
-            const last = messages
-            return from(last);
+            // from(messages).subscribe(data=>console.log(data))
+            return from(messages);
         } catch (error) {
             // Handle errors (e.g., database connection errors)
             throw new Error('Could not retrieve messages');

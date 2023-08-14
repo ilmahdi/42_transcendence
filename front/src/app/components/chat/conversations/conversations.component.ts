@@ -18,33 +18,33 @@ export class ConversationsComponent implements OnInit {
   @Input() userEmitted:any
   @Input() conversationEmitted:Message[] = [];
   @Output() getconvers = new EventEmitter<boolean>()
-  @Output() lastMessage = new EventEmitter<Message>()
   displayConv:boolean = true
   userId?:number
+  user?:User
 
   msg = new FormGroup({message: new FormControl})
 
   messages: Message[] = [];
   
+  users:User[] = [];
+  lastMessage:any[] = []
   constructor(private chatService: ChatService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
-      this.userId = id
+      this.userId = id;
+    })
+
+    loginService.user.pipe(take(1)).subscribe((data?:any) => {
+      this.user = data;
     })
   }
 
   ngOnInit() {
-    // this.chatService.sendToGetConversation(this.userId!, this.userEmitted.id!)
-    // this.chatService.getConversation().
-    // subscribe((data) => {
-    //   this.messages.splice(0, this.messages.length);
-    //   data.forEach((item)=>{
-    //       this.messages.push(item)
-    //   })
-    // })
-
-
     this.messages = this.conversationEmitted
     return this.chatService.getNewMessage().subscribe(data=>{
+      // if (data.receiverId === this.userId)
+      //   this.chatService.updateLastMessage(this.user!, data.message!);
+      // else
+        this.chatService.updateLastMessage(this.userEmitted[0], data.message!);
        this.messages.push(data)})
   }
 
@@ -57,14 +57,13 @@ export class ConversationsComponent implements OnInit {
     let message = this.msg.value.message
     let senderId = this.userId
     let receiverId = this.userEmitted[0].id
+    let date = new Date()
     
-    const msg = {senderId, receiverId, message}
+    const msg = {senderId, receiverId, message, date}
     if (!message) return;
-    // this.userEmitted[0].socketId = this.chatService.getUpdatedSocketId();
     this.chatService.updateSocketId(this.userId!)
     this.chatService.sendNewMessage(msg, this.userEmitted[0])
-    this.lastMessage.emit(msg);
-    // this.chatService.sendMessage(msg).subscribe()
+    this.chatService.updateLastMessage(this.userEmitted[0], msg.message);
     this.msg.reset();
   }
 }

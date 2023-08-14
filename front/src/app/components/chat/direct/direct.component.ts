@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ChatService } from 'src/app/services/chat.service';
-import { BehaviorSubject, finalize, flatMap, map, take, tap } from 'rxjs';
+import { BehaviorSubject, finalize, flatMap, last, map, take, tap } from 'rxjs';
 import { Message } from 'src/app/models/message.model';
 import { User } from 'src/app/models/user.model';
 import { Router } from '@angular/router';
@@ -22,30 +22,44 @@ export class DirectComponent implements OnInit {
 
   userId?:number;
   messages: Message[] = [];
-  lastMessage:any[] = []
+
+  receivedString: any[] = [];
+  user?:User
 
   constructor(private chatService:ChatService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
     })
-    
+
+    loginService.user.pipe(take(1)).subscribe((data?:any) => {
+      this.user = data;
+    })
+
+    this.chatService.string$.subscribe(newString => {
+      this.receivedString = this.receivedString.filter(item => (item.friend !== newString.friend && item.friend.id !== this.userId));
+      this.receivedString = this.receivedString.filter(item => item.friend !== this.user);
+      this.receivedString.push(newString);
+    });
+
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
   }
 
   ngOnInit(): void {
+    console.log(this.receivedString);
+    
+    this.receivedString = []
     this.chatService.getUsers().subscribe((data) => {
       data.forEach((user)=>{
         if (user.id != this.userId) {
           this.users?.push(user)
-          // GET LAST MESSAGE IN THE CONVERSATION
-          this.chatService.sendToGetLastMessage(this.userId!, user.id!);
-          this.chatService.getLastMessage().subscribe(data=>{
-              if (data[0] && (data[0].receiverId == user.id || data[0].senderId == user.id))
-                this.lastMessage.push({user:user, message:data[data.length - 1]})
-              else if (!data[0]) {
-                this.lastMessage.push({user:user, message:{}})
-              }
+
+        this.chatService.getLast(this.userId!, user.id!).subscribe(data=>{
+          if (data.length && (data[data.length - 1].receiverId == user.id || data[data.length - 1].senderId == user.id)) {
+            this.receivedString = this.receivedString.filter(message => message.friend !== user);
+            this.receivedString = this.receivedString.filter(item => item.friend !== this.user);
+            this.receivedString.push({friend:user, message:data[data.length - 1].message})
+          }
         })
       }
     })

@@ -21,4 +21,7 @@ export class MessageEntity {
   @Column()
   message?: string;
 
+  @Column()
+  date?:Date;
+
 }

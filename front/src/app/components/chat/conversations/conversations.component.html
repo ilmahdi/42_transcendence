@@ -23,7 +23,7 @@
     <form [formGroup]="msg">
         <input type="text" id="typing" placeholder="write a message" formControlName="message">
     </form>
-    <div class="send">
+    <div class="send" (click)="onSubmit()">
         <div class="disk">
             <span class="fa fa-send" (click)="onSubmit()"></span>
         </div>

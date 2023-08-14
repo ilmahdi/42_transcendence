@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'src/app/models/message.model';
 import { User } from 'src/app/models/user.model';
+import { ChatService } from 'src/app/services/chat.service';
+import { LoginComponent } from '../login/login.component';
+import { LoginService } from 'src/app/services/login.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -11,7 +15,6 @@ export class ChatComponent implements OnInit {
 
   userEvent?:any[]
   conversationEvent!:Message[];
-  lastMessage!:Message
 
   directClicked: boolean = true
   roomsClicked: boolean = false
@@ -19,7 +22,7 @@ export class ChatComponent implements OnInit {
   smallScreen:boolean = false;
   displayConvers:boolean = false;
 
-  constructor() {
+  constructor(private chatService:ChatService, private loginService:LoginService) {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
   }
