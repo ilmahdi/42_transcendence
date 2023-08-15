@@ -17,7 +17,7 @@
         <span class="fa fa-search"></span>
     </div>
 
-    <app-direct *ngIf="directClicked" (customEvent)="onCustomEvent($event)" (conversation)="getConversation($event)"></app-direct>
+    <app-direct *ngIf="directClicked" (customEvent)="onCustomEvent($event)" (conversation)="getConversation($event)"  [latest]="lastMessage"></app-direct>
     <app-rooms *ngIf="roomsClicked"></app-rooms>
 </div>
 

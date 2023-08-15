@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ChatService } from 'src/app/services/chat.service';
-import { BehaviorSubject, finalize, flatMap, last, map, take, tap } from 'rxjs';
+import { BehaviorSubject, Subscription, finalize, flatMap, last, map, take, tap } from 'rxjs';
 import { Message } from 'src/app/models/message.model';
 import { User } from 'src/app/models/user.model';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { LoginService } from 'src/app/services/login.service';
   templateUrl: './direct.component.html',
   styleUrls: ['./direct.component.css']
 })
-export class DirectComponent implements OnInit {
+export class DirectComponent implements OnInit, OnDestroy {
 
   @Output() customEvent = new EventEmitter<User>();
   @Output() conversation= new EventEmitter<Message[]>();
@@ -26,6 +26,8 @@ export class DirectComponent implements OnInit {
   receivedString: any[] = [];
   user?:User
 
+  @Input() latest:Message[] = []
+  saad:any[] = []
   constructor(private chatService:ChatService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
@@ -36,9 +38,22 @@ export class DirectComponent implements OnInit {
     })
 
     this.chatService.string$.subscribe(newString => {
-      this.receivedString = this.receivedString.filter(item => (item.friend !== newString.friend && item.friend.id !== this.userId));
+      this.receivedString = this.receivedString.filter(item => item.friend !== newString.friend);
       this.receivedString = this.receivedString.filter(item => item.friend !== this.user);
+      //////////////////////////////////////////////THE PROBLEM HERE: receivedString MUST HAVE JUST ONE MESSAGE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+      console.log(this.receivedString)
+      let copy: any[] = []
+      this.receivedString.forEach(item=>{
+        if (item.friend !== newString.friend)
+          copy.push(item)
+      })
+      this.receivedString = []
+      this.receivedString = copy
       this.receivedString.push(newString);
+      if (newString.friend) {
+        this.saad = this.saad.filter(item => item.friend !== newString.friend);
+        this.openConversation(newString.friend.firstName, newString.friend)
+      }
     });
 
     this.screenWidth = window.innerWidth;
@@ -46,24 +61,22 @@ export class DirectComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.receivedString);
-    
-    this.receivedString = []
+    this.saad = []
     this.chatService.getUsers().subscribe((data) => {
       data.forEach((user)=>{
         if (user.id != this.userId) {
           this.users?.push(user)
-
         this.chatService.getLast(this.userId!, user.id!).subscribe(data=>{
           if (data.length && (data[data.length - 1].receiverId == user.id || data[data.length - 1].senderId == user.id)) {
-            this.receivedString = this.receivedString.filter(message => message.friend !== user);
-            this.receivedString = this.receivedString.filter(item => item.friend !== this.user);
-            this.receivedString.push({friend:user, message:data[data.length - 1].message})
+            this.saad = this.saad.filter(message => message.friend !== user);
+            this.saad = this.saad.filter(item => item.friend !== this.user);
+            if (!this.receivedString.includes(user))
+              this.saad.push({friend:user, message:data[data.length - 1]})
           }
         })
-      }
-    })
-  });
+        }
+      })
+    });
   }
 
   onResize() {
@@ -88,8 +101,14 @@ export class DirectComponent implements OnInit {
           this.messages.push(item)
       })
     })
+    this.chatService.lastConversation = {name:name, friend:friend};
     this.conversation.emit(this.messages);
     this.customEvent.emit(friend)
+  }
+
+  ngOnDestroy(): void {
+    this.messages = []
+    this.receivedString = []
   }
 
 }

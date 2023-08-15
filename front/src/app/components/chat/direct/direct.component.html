@@ -11,9 +11,16 @@
             </span>
         </span> -->
         
-        
-        <span *ngFor="let item2 of receivedString" id="message">
-            <p *ngIf="item2.friend && f.id == item2.friend.id">{{item2.message}}</p>
+        <span *ngFor="let item of saad">
+            <span *ngFor="let item2 of receivedString" id="message">
+                <p *ngIf="item2.friend && f.id == item2.friend.id && item !== item2">{{item2.message.message}}</p>
+            </span>
+        </span>
+
+        <span *ngFor="let item2 of receivedString">
+            <span *ngFor="let item of saad" id="message">
+                <p *ngIf="item.friend && f.id == item.friend.id && item2 !== item">{{item.message.message}}</p>
+            </span>
         </span>
     </div>
 </div>

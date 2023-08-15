@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, Subscription, fromEvent, take } from 'rxjs
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Message } from '../models/message.model';
 import { User } from '../models/user.model';
-import { Socket } from 'ngx-socket-io';
+// import { Socket } from 'ngx-socket-io';
 import { ChatSocketService } from './core/chat-socket.service';
 import { LoginService } from './login.service';
 
@@ -21,6 +21,7 @@ export class ChatService {
   lastMessage = new BehaviorSubject<any[]>([])
   saad$ = this.lastMessage.asObservable()
 
+  lastConversation:any
   constructor(private http:HttpClient, private socket:ChatSocketService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id
@@ -30,7 +31,7 @@ export class ChatService {
     // this.socket.fromEvent<string>('updated')
   }
 
-  updateLastMessage(friend:User, message: string) {
+  updateLastMessage(friend:User, message: Message) {
     this.stringSource.next({friend:friend, message:message});
   }
 

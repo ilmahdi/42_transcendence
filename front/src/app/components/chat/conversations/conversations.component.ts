@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
 import { Socket } from 'ngx-socket-io';
 import Pusher from 'pusher-js';
@@ -13,7 +13,7 @@ import { LoginService } from 'src/app/services/login.service';
   templateUrl: './conversations.component.html',
   styleUrls: ['./conversations.component.css']
 })
-export class ConversationsComponent implements OnInit {
+export class ConversationsComponent implements OnInit, OnDestroy {
 
   @Input() userEmitted:any
   @Input() conversationEmitted:Message[] = [];
@@ -44,7 +44,7 @@ export class ConversationsComponent implements OnInit {
       // if (data.receiverId === this.userId)
       //   this.chatService.updateLastMessage(this.user!, data.message!);
       // else
-        this.chatService.updateLastMessage(this.userEmitted[0], data.message!);
+        this.chatService.updateLastMessage(this.userEmitted[0], data);
        this.messages.push(data)})
   }
 
@@ -63,7 +63,11 @@ export class ConversationsComponent implements OnInit {
     if (!message) return;
     this.chatService.updateSocketId(this.userId!)
     this.chatService.sendNewMessage(msg, this.userEmitted[0])
-    this.chatService.updateLastMessage(this.userEmitted[0], msg.message);
+    // this.chatService.updateLastMessage(this.user!, msg.message);
     this.msg.reset();
+  }
+
+  ngOnDestroy(): void {
+    console.log("DESTROYED");
   }
 }

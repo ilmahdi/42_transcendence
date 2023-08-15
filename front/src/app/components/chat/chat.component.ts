@@ -22,12 +22,14 @@ export class ChatComponent implements OnInit {
   smallScreen:boolean = false;
   displayConvers:boolean = false;
 
+  lastMessage:Message[] = []
   constructor(private chatService:ChatService, private loginService:LoginService) {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
   }
 
   ngOnInit(): void {
+    this.chatService.getLastMessage().subscribe(data=>this.lastMessage?.push(data))
   }
 
   onResize() {
@@ -57,5 +59,4 @@ export class ChatComponent implements OnInit {
   getConversation(data:Message[]) {
     this.conversationEvent = data;
   }
-
 }

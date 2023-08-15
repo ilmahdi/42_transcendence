@@ -5,9 +5,7 @@ import { Message } from './utils/models/message.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MessageEntity } from './utils/models/message.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
-import { ChatGateway } from './chat.gateway';
-import { User } from 'src/user/utils/models/user.class';
-import { GameGateway } from 'src/game/game.gateway';
+import { EventEmitter } from 'events';
 
 @Injectable()
 export class ChatService {
