@@ -92,6 +92,7 @@
 
 
 .cf-sec-two {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -158,6 +159,17 @@
     width: 13.8rem;
 }
 
+.cf-sec-two-alert {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    color: var(--second-text-color);
+    background-color: var(--fourth-backgroud-color);
+    width: 16rem;
+    padding: 0.8rem 0;
+    /* border-radius: 0.2rem; */
+    top: 18rem;
+}
 
 
 /***********************************************/

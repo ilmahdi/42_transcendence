@@ -14,10 +14,6 @@ export class ProfileIdComponent implements OnInit {
   userData : any = {
     avatar : "./assets/imgs/cover.png",
     username:"ilmahdi",
-    wins: 10,
-    losses: 3,
-    draws:  0,
-    rating: 1000,
 
   }
 }

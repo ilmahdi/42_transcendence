@@ -28,6 +28,22 @@
             </label>
             <input class="cf-sec-two-text" type="text" formControlName="username" id="username" placeholder="Username">
         </div>
-        <button type="submit" class="cf-sec-two-btn">Submit</button>
+
+        <button type="submit" class="cf-sec-two-btn" [disabled]="myformGroup.invalid">Submit</button>
+
+            <div class="cf-sec-two-alert" *ngIf="myformGroup.get('username')?.hasError('required')">
+              Username is required.
+            </div>
+            <div class="cf-sec-two-alert" *ngIf="myformGroup.get('username')?.hasError('minlength')">
+              Username should be at least 4 characters long.
+            </div>
+            <div class="cf-sec-two-alert" *ngIf="myformGroup.get('username')?.hasError('maxlength')">
+              Username should not exceed 20 characters.
+            </div>
+            <div class="cf-sec-two-alert" *ngIf="myformGroup.get('username')?.hasError('pattern')">
+              Username can only contain letters, digits, underscores, and hyphens.
+            </div>
+
+        
     </form>
 </div>

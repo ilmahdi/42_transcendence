@@ -36,6 +36,14 @@
     left: 9.2rem;
     top: 0.9rem;
 }
+.pi-sec-four-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    fill: var(--primary-text-color);
+}
 .pi-sec-one-icon:hover {
     fill: var(--second-hover-background-color);
 }
@@ -55,13 +63,44 @@
     background-color: rgba(160, 100, 100, 0.25);
     font-weight: 400;
 }
+.pi-sec-four {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 10rem;
+    height: 2.4rem;
+    font-weight: 400;
+    gap: 0.6rem;
+}
+
+.pi-sec-four-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.2rem;
+    border-radius: 0.6rem;
+    border: 0.08rem solid var(--primary-border-color);
+    background-color: rgba(160, 100, 100, 0.25);
+    font-weight: 400;
+    gap: 0.6rem;
+}
+.pi-sec-four-btn.b1 {
+    padding: 0 0.6rem;
+}
+.pi-sec-four-btn.b2 {
+    padding: 0 0.2rem;
+}
 
 
 .pi-sec-three:hover {
     cursor: pointer;
     border: 0.08rem solid var(--second-hover-background-color) ;
     background-color: rgba(160, 100, 100, 0.5);
-    
+}
+.pi-sec-four-btn:hover {
+    cursor: pointer;
+    border: 0.08rem solid var(--second-hover-background-color) ;
+    background-color: rgba(160, 100, 100, 0.5);
 }
 
 

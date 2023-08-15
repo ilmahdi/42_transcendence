@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
@@ -22,7 +22,10 @@ export class SettingsComponent implements OnInit {
     private router: Router,
     ) {
       this.myformGroup = this.formBuilder.group({
-        username: this.userDataShort.username,
+        username: [
+          this.userDataShort.username, 
+          [Validators.required, Validators.minLength(4), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z0-9_-]*$/)],
+        ],
       })
     }
   public selectedImage: string | ArrayBuffer = '';
@@ -36,9 +39,9 @@ export class SettingsComponent implements OnInit {
     this.userService.getUserData().subscribe((data: IUserData) => {
 
       this.selectedImage = data.avatar;
-      this.userDataShort.id = data.id
-      this.userDataShort.username = data.username
-      this.userDataShort.avatar = data.avatar
+      this.userDataShort.id = data.id;
+      this.userDataShort.username = data.username;
+      this.userDataShort.avatar = data.avatar;
 
       this.myformGroup.patchValue({
         username: this.userDataShort.username,
@@ -80,15 +83,12 @@ export class SettingsComponent implements OnInit {
       formData.append('image', this.selectedFile);
 
       return this.userService.uploadImage(formData)
-      
     }
     return new Observable();
   }
-  private updateUser() {
 
-    return this.userService.updateUserData(this.userDataShort).subscribe(data => {
-      console.log(data)
-    });
+  private updateUser() {
+    return this.userService.updateUserData(this.userDataShort).subscribe();
   }
   
 }
