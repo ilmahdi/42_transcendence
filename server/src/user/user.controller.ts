@@ -64,16 +64,15 @@ export class UserController {
       @Patch("/:id")
       updateUser(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
         try {
-          
           const updatedUser = this.userService.updateUser(id, updateUserDto);
-        return updatedUser;
+          return updatedUser;
         
-      } catch (error) {
-        if (error instanceof NotFoundException) {
-          throw new NotFoundException(error.message);
+        } catch (error) {
+          if (error instanceof NotFoundException) {
+            throw new NotFoundException(error.message);
+          }
+          throw new Error('Error updating user');
         }
-        throw new Error('Error updating user');
-      }
     }
     
     

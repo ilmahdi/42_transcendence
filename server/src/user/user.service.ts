@@ -42,7 +42,6 @@ export class UserService {
 
     if (!user) 
       throw new Error('User not found');
-    console.log("=>>>>>>>>", updateUserDto);
     const updatedUser = await this.prismaService.userAccount.update({
       where: { id },
       data: updateUserDto,
