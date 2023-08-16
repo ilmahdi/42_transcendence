@@ -22,9 +22,12 @@ export class LeftBarComponent implements OnInit {
   entry!: ViewContainerRef;
 
   sub!: Subscription;
+  
+  public username :string = "";
 
 
   ngOnInit(): void {
+    this.username = this.authService.getLoggedInUser();
   }
   openModal() {
     this.sub = this.confirmService
@@ -33,5 +36,23 @@ export class LeftBarComponent implements OnInit {
         this.authService.logout();
         this.router.navigate(['/login']);
       });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ngOnDestroy(): void {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 }

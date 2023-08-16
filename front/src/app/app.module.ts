@@ -20,6 +20,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { ModalsModule } from './components/modals/modals.module';
 import { SettingsModule } from './components/settings/settings.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 
 
@@ -28,6 +29,7 @@ const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
 @NgModule({
   declarations: [
     AppComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,

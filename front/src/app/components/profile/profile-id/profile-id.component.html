@@ -2,31 +2,29 @@
 <div class="profile-id">
     <div class="pi-sec-one">
         <img class="pi-sec-one-img" src="https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg" alt="avatar">
-        <svg class="pi-sec-one-icon" xmlns="http://www.w3.org/2000/svg">
-            <use xlink:href="./assets/icons/modify.svg#icon-modify"></use>
-        </svg>
     </div>
     <div class="pi-sec-two">
         <span> {{ userData.username }} </span>
     </div>
-    <!-- <button class="pi-sec-three">
+    <button class="pi-sec-three" *ngIf="isOwnProfile; else isNotOwnProfile">
         <span> Edit profile </span>
-    </button> -->
-    <div class="pi-sec-four">
-        
-        <button class="pi-sec-four-btn b1"> 
+    </button>
+    <ng-template #isNotOwnProfile>
+        <div class="pi-sec-four">
+            
+            <button class="pi-sec-four-btn b1"> 
+                    <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/add.svg#icon-add"></use>
+                    </svg>
+                <span>Add</span> 
+            </button>   
+            <button class="pi-sec-four-btn b2"> 
                 <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="./assets/icons/add.svg#icon-add"></use>
+                    <use xlink:href="./assets/icons/more.svg#icon-more"></use>
                 </svg>
-            <span>Add</span> 
-        </button>   
-        <button class="pi-sec-four-btn b2"> 
-            <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="./assets/icons/more.svg#icon-more"></use>
-            </svg>
-        </button>   
-    </div>
-    
+            </button>   
+        </div>
+    </ng-template>
 </div>
 
 

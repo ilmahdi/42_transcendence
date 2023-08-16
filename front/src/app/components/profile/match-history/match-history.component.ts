@@ -10,7 +10,6 @@ export class MatchHistoryComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.matchs)
   }
   public matchs = [
     {

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-profile-id',
@@ -7,9 +9,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileIdComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    private authService: AuthService,
+  ) { }
+
+  public isOwnProfile: boolean = false;
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+
+      this.isOwnProfile = params['username'] === this.authService.getLoggedInUser();
+    });
   }
   userData : any = {
     avatar : "./assets/imgs/cover.png",
