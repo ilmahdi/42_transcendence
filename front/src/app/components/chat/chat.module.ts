@@ -20,7 +20,7 @@ const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
     ConversationsComponent,
     ConversationsComponent,
     DirectComponent,
-    RoomsComponent
+    RoomsComponent,
   ],
   exports: [ChatComponent],
   imports: [

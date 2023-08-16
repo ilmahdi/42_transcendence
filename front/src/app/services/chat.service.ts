@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, Subscription, fromEvent, take } from 'rxjs
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Message } from '../models/message.model';
 import { User } from '../models/user.model';
-// import { Socket } from 'ngx-socket-io';
+import * as io from 'socket.io-client';
 import { ChatSocketService } from './core/chat-socket.service';
 import { LoginService } from './login.service';
 
@@ -22,17 +22,23 @@ export class ChatService {
   saad$ = this.lastMessage.asObservable()
 
   lastConversation:any
+  last:any[] = []
+
   constructor(private http:HttpClient, private socket:ChatSocketService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id
     })
-    this.socket.connect()
+    // this.socket.connect()
     this.updateSocketId(this.userId!)
-    // this.socket.fromEvent<string>('updated')
+    this.sendToGetLastMessage(this.userId!)
   }
 
-  updateLastMessage(friend:User, message: Message) {
-    this.stringSource.next({friend:friend, message:message});
+  setSocket(socket:ChatSocketService) {
+    this.socket = socket
+  }
+
+  updateLastMessage(message: Message) {
+    this.stringSource.next(message);
   }
 
   updateSocketId(userId:number) {
@@ -60,12 +66,12 @@ export class ChatService {
     return this.socket.fromEvent<Message[]>('getConversation')
   }
 
-  sendToGetLastMessage(id1:number, id2:number) {
-    this.socket.emit('getLastMessage', {id1, id2});
+  sendToGetLastMessage(id:number) {
+    this.socket.emit('getLastMessage', id);
   }
 
   getLastMessage() {
-    return this.socket.fromEvent<Message>('recLastMessage');
+    return this.socket.fromEvent<Message[]>('recLastMessage');
   }
 
   token:string|null = localStorage.getItem('token');

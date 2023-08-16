@@ -37,18 +37,16 @@ export class ChatService {
         }
     }
 
-    getLastMessage(id1:number, id2:number) {
+    getLastMessage(id:number) {
         try {
             const messages = this.messageRepository.find({
               where: [
-                {senderId: id1, receiverId: id2},
-                {senderId: id2, receiverId: id1}
+                {senderId: id},
+                {receiverId: id}
               ],
             });
-            // from(messages).subscribe(data=>console.log(data))
             return from(messages);
         } catch (error) {
-            // Handle errors (e.g., database connection errors)
             throw new Error('Could not retrieve messages');
         }
     }

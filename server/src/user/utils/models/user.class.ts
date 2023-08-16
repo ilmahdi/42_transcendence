@@ -2,7 +2,7 @@ import { IsEmail, IsString } from 'class-validator';
 
 export class User {
   id?: number;
-  socketId?:string
+  // socketId?:string
   firstName?: string;
   lastName?: string;
   @IsEmail()

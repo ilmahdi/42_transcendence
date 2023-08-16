@@ -24,18 +24,4 @@ export class ChatController {
   getConversation(@Body() data:any) {
     return this.chatService.getConversation(data.senderId, data.receiverId);
   }
-
-  @Post('getLastMessage')
-  getLastMessage(@Body() ids:any) {
-    return this.chatService.getLastMessage(ids.senderId, ids.receiverId)
-  }
-
-  @Post('test')
-  updateString(@Body() newString: string ): string {
-    // const { newString } = body;
-    // this.chatService.updateString(newString);
-    console.log(newString);
-    
-    return 'String updated successfully';
-  }
 }

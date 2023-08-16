@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
+import * as _ from 'lodash';
 import { Socket } from 'ngx-socket-io';
 import Pusher from 'pusher-js';
 import { Observable, take } from 'rxjs';
@@ -27,7 +28,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   messages: Message[] = [];
   
   users:User[] = [];
-  lastMessage:any[] = []
+  lastMessages:any[] = []
   constructor(private chatService: ChatService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
@@ -41,11 +42,11 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.messages = this.conversationEmitted
     return this.chatService.getNewMessage().subscribe(data=>{
-      // if (data.receiverId === this.userId)
-      //   this.chatService.updateLastMessage(this.user!, data.message!);
-      // else
-        this.chatService.updateLastMessage(this.userEmitted[0], data);
-       this.messages.push(data)})
+        this.chatService.updateLastMessage(data);
+       this.messages.push(data)
+       this.messages = _.sortBy(this.messages, 'date');
+      //  this.chatService.sendToGetLastMessage(this.userId!)
+      })
   }
 
   getConversEvent() {
@@ -63,8 +64,10 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     if (!message) return;
     this.chatService.updateSocketId(this.userId!)
     this.chatService.sendNewMessage(msg, this.userEmitted[0])
-    // this.chatService.updateLastMessage(this.user!, msg.message);
     this.msg.reset();
+    this.chatService.sendToGetLastMessage(this.userId!)
+    this.chatService.updateLastMessage(msg)
+    this.messages = _.sortBy(this.messages, 'date');
   }
 
   ngOnDestroy(): void {

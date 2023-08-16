@@ -30,18 +30,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
     // this.userService.updateUser(this.authService.getJwtUser(jwt), client.id)
   }
 
-  @SubscribeMessage('updateSocketId')
-  updateSocketId(client:Socket, userId:number) {
-    this.userService.updateUser(userId, client.id)
-    client.emit('updated', client.id);
-  }
+  // @SubscribeMessage('updateSocketId')
+  // updateSocketId(client:Socket, userId:number) {
+  //   this.userService.updateUser(userId, client.id)
+  //   client.emit('updated', client.id);
+  // }
 
   @SubscribeMessage('privateMessage')
   handlePrivateMessage(client: Socket, data: any) {
     this.chatService.saveMessage(data.message)
     console.log(data.user.socketId);
     
-    // this.server.to([data.user.socketId, client.id]).emit('recMessage', data.message);
+    // this.server.to([data.user.socketId, client.id]).emit('recMessage', data.message)
     this.server.emit('recMessage', data.message);
   }
 
@@ -53,9 +53,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   }
 
   @SubscribeMessage('getLastMessage')
-  getLastMessage(client:Socket, ids:any) {
-    this.chatService.getLastMessage(ids.id1, ids.id2).subscribe(data=>{
-      client.emit('recLastMessage', data[data.length - 1]);
+  getLastMessage(client:Socket, id:number) {
+    this.chatService.getLastMessage(id).subscribe(data=>{
+      console.log(data);
+      client.emit('recLastMessage', data);
     });
   }
 }

@@ -23,13 +23,19 @@ export class ChatComponent implements OnInit {
   displayConvers:boolean = false;
 
   lastMessage:Message[] = []
+  userId?:number
   constructor(private chatService:ChatService, private loginService:LoginService) {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
+
+    this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
+      this.userId = id;
+    })
+    chatService.sendToGetLastMessage(this.userId!)
   }
 
   ngOnInit(): void {
-    this.chatService.getLastMessage().subscribe(data=>this.lastMessage?.push(data))
+    // this.chatService.getLastMessage().subscribe(data=>this.lastMessage?.push(data))
   }
 
   onResize() {

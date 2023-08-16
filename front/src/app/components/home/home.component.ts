@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ChatSocketService } from '../chat/core/chat-socket.service';
+import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
   selector: 'app-home',
@@ -7,7 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private chatServise:ChatService, private socket:ChatSocketService) {
+    this.socket.connect()
+    chatServise.setSocket(this.socket)
+  }
 
   ngOnInit(): void {
   }

@@ -3,8 +3,9 @@ import { ChatService } from 'src/app/services/chat.service';
 import { BehaviorSubject, Subscription, finalize, flatMap, last, map, take, tap } from 'rxjs';
 import { Message } from 'src/app/models/message.model';
 import { User } from 'src/app/models/user.model';
-import { Router } from '@angular/router';
+import * as _ from 'lodash';
 import { LoginService } from 'src/app/services/login.service';
+import { ConversationsComponent } from '../conversations/conversations.component';
 
 @Component({
   selector: 'app-direct',
@@ -23,11 +24,11 @@ export class DirectComponent implements OnInit, OnDestroy {
   userId?:number;
   messages: Message[] = [];
 
-  receivedString: any[] = [];
+  lastMessages: any[] = [];
   user?:User
 
   @Input() latest:Message[] = []
-  saad:any[] = []
+  saad:{friend:User, message:Message}[] = []
   constructor(private chatService:ChatService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
@@ -37,43 +38,34 @@ export class DirectComponent implements OnInit, OnDestroy {
       this.user = data;
     })
 
-    this.chatService.string$.subscribe(newString => {
-      this.receivedString = this.receivedString.filter(item => item.friend !== newString.friend);
-      this.receivedString = this.receivedString.filter(item => item.friend !== this.user);
-      //////////////////////////////////////////////THE PROBLEM HERE: receivedString MUST HAVE JUST ONE MESSAGE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-      console.log(this.receivedString)
-      let copy: any[] = []
-      this.receivedString.forEach(item=>{
-        if (item.friend !== newString.friend)
-          copy.push(item)
-      })
-      this.receivedString = []
-      this.receivedString = copy
-      this.receivedString.push(newString);
-      if (newString.friend) {
-        this.saad = this.saad.filter(item => item.friend !== newString.friend);
-        this.openConversation(newString.friend.firstName, newString.friend)
-      }
-    });
-
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
+
+    // this.chatService.sendNewMessage({id:0, senderId:this.userId, receiverId:this.userId, message:"Welcome", date:new Date}, this.user)
+    this.chatService.getNewMessage().subscribe(data=>{
+      this.chatService.updateLastMessage(data);})
+
+    this.chatService.getLastMessage().subscribe(data=> {
+      data.forEach(data=> {
+        this.lastMessages = this.lastMessages.filter(item => !((item.receiverId === data.receiverId && item.senderId === data.senderId) || (item.senderId === data.receiverId && item.receiverId === data.senderId)));
+        this.lastMessages.push(data)
+        chatService.string$.subscribe(data=>{
+          if (this.lastMessages[this.lastMessages.length - 1] !== data) {
+            this.lastMessages = this.lastMessages.filter(item => !((item.receiverId === data.receiverId && item.senderId === data.senderId) || (item.senderId === data.receiverId && item.receiverId === data.senderId)));
+            this.lastMessages.push(data)
+          }
+        })
+        this.lastMessages = _.sortBy(this.lastMessages, 'date');
+        // MAKAYDKHELX HNA ILA KANT LCONVERSATIION KHAWYA
+      })
+    })
   }
 
   ngOnInit(): void {
-    this.saad = []
     this.chatService.getUsers().subscribe((data) => {
       data.forEach((user)=>{
         if (user.id != this.userId) {
           this.users?.push(user)
-        this.chatService.getLast(this.userId!, user.id!).subscribe(data=>{
-          if (data.length && (data[data.length - 1].receiverId == user.id || data[data.length - 1].senderId == user.id)) {
-            this.saad = this.saad.filter(message => message.friend !== user);
-            this.saad = this.saad.filter(item => item.friend !== this.user);
-            if (!this.receivedString.includes(user))
-              this.saad.push({friend:user, message:data[data.length - 1]})
-          }
-        })
         }
       })
     });
@@ -92,7 +84,6 @@ export class DirectComponent implements OnInit, OnDestroy {
       this.color = {color:'', name:''}
 
     //  GET THE CONVERSATION FROM SERVER
-
     this.chatService.sendToGetConversation(this.userId!, friend.id!)
     this.chatService.getConversation().
     subscribe((data) => {
@@ -108,7 +99,6 @@ export class DirectComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.messages = []
-    this.receivedString = []
   }
 
 }
