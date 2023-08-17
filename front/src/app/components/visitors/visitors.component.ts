@@ -33,3 +33,8 @@ export class VisitorsComponent implements OnInit {
     window.location.href = this.apiUrlAuth;
   }
 }
+
+
+// ft_id
+// username
+// avatar

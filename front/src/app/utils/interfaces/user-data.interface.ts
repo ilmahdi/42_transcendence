@@ -11,6 +11,7 @@ export interface IUserData {
 
 export interface IUserDataShort {
     id?:number;
+    ft_id?:number;
     username?:string,
     avatar?: string,
 }

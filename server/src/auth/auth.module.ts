@@ -2,21 +2,18 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { FtLoginSrategy } from './utils/strategies/ft-login.strategy';
 import { AuthService } from './auth.service';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
-import { UserService } from 'src/user/user.service';
 import { UserModule } from 'src/user/user.module';
 import { JwtStrategy } from './utils/strategies/jwt.strategy';
+import { TokenService } from 'src/common/services/token.service';
 
 @Module({
     imports: [
-        JwtModule.register({ signOptions: {expiresIn: "1d"} }),
         PassportModule,
-        UserModule
+        UserModule,
     ],
     controllers: [AuthController],
-    providers: [AuthService, FtLoginSrategy, JwtStrategy],
+    providers: [AuthService, FtLoginSrategy, JwtStrategy, TokenService],
 
 })
 export class AuthModule {}

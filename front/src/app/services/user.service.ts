@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { JWT_TOKEN } from '../utils/constants';
 import { IUserData, IUserDataShort } from '../utils/interfaces/user-data.interface';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +24,21 @@ export class UserService {
   uploadImage (formData :FormData) : Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/user/avatar/upload`, formData ,this.getHeaders());
   }
+  registerUser (userDataShort :IUserDataShort) : Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/user/register`, userDataShort ,this.getHeaders())
+    .pipe(
+      catchError( error => {
+        return throwError(() => error);
+      })
+    );
+  }
   updateUserData (userDataShort :IUserDataShort) : Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/user/${userDataShort.id}`, userDataShort ,this.getHeaders());
+    return this.http.patch<any>(`${this.apiUrl}/user/${userDataShort.id}`, userDataShort ,this.getHeaders())
+    .pipe(
+      catchError( error => {
+        return throwError(() => error);
+      })
+    );
   }
 
 

@@ -21,15 +21,21 @@ export class AuthController {
     }
     @Get("login/42")
     @UseGuards(FtLoginGuard)
-    ftLogin(){
+    ftLogin(){0
     }
     
     @Get("callback/42")
     @UseGuards(FtLoginGuard)
     ftCallback(@Req() req, @Res() res){
         console.log(req.user)
-        res.status(302).redirect(`${process.env.FONTEND_URL}?access_token=${req.user.token}&first_login=${req.user.firstLogin}`);
-        return req.token;
+        let queryUserData = "";
+        if (req.user.firstLogin === "true")
+            queryUserData = `ft_id=${req.user.profile.ft_id}&username=${req.user.profile.username}&avatar=${req.user.profile.avatar}`;
+        else 
+            queryUserData = `access_token=${req.user.token}`;
+        
+
+        res.status(302).redirect(`${process.env.FONTEND_URL}?${queryUserData}&first_login=${req.user.firstLogin}`);
     }
     @Get("logout/42")
     @UseGuards(JwtGuard)
@@ -39,3 +45,6 @@ export class AuthController {
     }
 
 }
+// ft_id
+// username
+// avatar

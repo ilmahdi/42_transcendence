@@ -8,6 +8,7 @@ import { editFileName, imageFileFilter } from "./utils/utility/upload-utils";
 import { Request, Response } from "express";
 import * as fs from 'fs';
 import { UpdateUserDto } from "./utils/dtos/update-user.dto";
+import { CreateUserDto } from "./utils/dtos/create-user.dto";
 
 
 @Controller('user')
@@ -43,7 +44,7 @@ export class UserController {
     }
 
     
-    @UseGuards(JwtGuard)
+
     @Post("avatar/upload")
     @UseInterceptors(
       FileInterceptor('image', {
@@ -60,6 +61,19 @@ export class UserController {
       }
 
 
+      @Post("register")
+      registerUser(@Body() createUserDto: CreateUserDto) {
+        try {
+          const token = this.userService.registerUser(createUserDto);
+          return token;
+        
+        } catch (error) {
+          if (error instanceof NotFoundException) {
+            throw new NotFoundException(error.message);
+          }
+          throw new Error('Error creating user');
+        }
+    }
       @UseGuards(JwtGuard)
       @Patch("/:id")
       updateUser(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {

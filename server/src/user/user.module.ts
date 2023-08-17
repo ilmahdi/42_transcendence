@@ -4,11 +4,12 @@ import { AuthService } from '../auth/auth.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
+import { TokenService } from 'src/common/services/token.service';
 
 @Module({
   imports: [PrismaModule],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, TokenService],
   exports: [UserService]
 
 })

@@ -48,7 +48,7 @@ model UserAccount {
   id                  Int         @id @default(autoincrement())
   ft_id               Int         @unique
   username            String      @unique
-  email               String      @unique
+  // email               String      @unique
   tfa_secret          String?
   is_tfa_enabled      Boolean?     @default(false)
   avatar              String

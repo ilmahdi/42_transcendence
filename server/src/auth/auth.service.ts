@@ -1,48 +1,35 @@
-import { ConflictException, HttpException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-// import * as bcrypt from "bcryptjs"
-import * as jwt from "jsonwebtoken"
-import { retry } from 'rxjs';
-import { brotliCompress } from 'zlib';
+import { Injectable } from '@nestjs/common';
 import { Profile } from './utils/interfaces'
 import { UserService } from 'src/user/user.service';
-import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from 'src/common/interfaces';
+import { TokenService } from 'src/common/services/token.service';
 
 
 @Injectable()
 export class AuthService {
     constructor(
             private readonly userService: UserService,
-            private jwtService: JwtService,
+            private tokenService: TokenService,
         ){
     }
 
-    async validateUser(profile: Profile){
+    async validateFtUser(profile: Profile){
         let firstLogin :string = "false";
-        let user = await this.userService.findUserByUsername(profile.username);
+        let user = await this.userService.findUserByFtId(profile.ft_id);
         if (!user)
         {
-            user = await this.userService.addUser(profile);
+            // user = await this.userService.addUser(profile);
             firstLogin = "true";
+            return { profile, firstLogin }
         }
-        const token = await this.generateJwt(
+        const token =  this.tokenService.generateToken(
             {
                 sub: user.id,
                 username: user.username,
             }
         )
-        return {token, firstLogin }
+        return { token, firstLogin }
     }
 
-
-    // utility functions: 
-    /*************************************************************************/
-    async generateJwt(payload: JwtPayload) {
-        return await this.jwtService.signAsync(payload, {
-            secret: process.env.JWT_SECRET,
-          })
-      }
 }
     
 

@@ -29,13 +29,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    background-color: var(--fourth-backgroud-color);
+    background-color: var(--second-background-color);
     padding: 1rem;
     border-radius: 1.4rem 1.4rem 0 0;
     height: 100%;
     gap: 1.6rem;
     width: min(80vw, 30rem);
     min-width: 16rem;
+    margin-top: 1rem;
 }
 
 .cf-sec-one {
@@ -45,6 +46,10 @@
     align-items: center;
     justify-content: center;
     position: relative;
+}
+
+.cf-sec-two {
+    height: 4rem;
 }
 
 .cf-sec-one-input {
@@ -91,7 +96,7 @@
 }
 
 
-.cf-sec-two {
+.cf-sec-two-input {
     position: relative;
     display: flex;
     align-items: center;
@@ -115,12 +120,15 @@
 
 }
 .cf-sec-two-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: 1.8rem;
     height: 1.8rem;
     stroke: var(--primary-border-color);
+    fill: none;
+}
+.cf-sec-two-icon.i1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .cf-sec-two-text {
@@ -144,9 +152,35 @@
     box-shadow: none;
 }
 
-.cf-sec-two-icon:hover {
+.cf-sec-two-icon.i1:hover {
     cursor: pointer;
     stroke: var(--second-text-color);
+
+}
+
+.cf-sec-two-alert {
+    display: flex;
+    align-items: center;
+    color: red;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+.cf-sec-two-alert-hide {
+    display: none;
+}
+
+.cf-sec-two-icon.i2 {
+    width: 1rem;
+    height: 1rem;
+    stroke: red;
+    margin-right: 0.3rem;
+
+}
+.cf-sec-two-icon.i3 {
+    width: 1rem;
+    height: 1rem;
+    stroke: var(--second-text-color);
+    margin-right: 0.3rem;
 
 }
 
@@ -159,16 +193,13 @@
     width: 13.8rem;
 }
 
-.cf-sec-two-alert {
-    position: absolute;
+.cf-sec-two-message {
     display: flex;
-    justify-content: center;
+    align-items: center;
     color: var(--second-text-color);
-    background-color: var(--fourth-backgroud-color);
-    width: 16rem;
-    padding: 0.8rem 0;
-    /* border-radius: 0.2rem; */
-    top: 18rem;
+    background-color: var(--second-background-color);
+    top: 18.6rem;
+    font-size: 0.8rem;
 }
 
 

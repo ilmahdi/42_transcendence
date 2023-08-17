@@ -25,7 +25,7 @@ import { Profile } from '../interfaces'
         }
         
         // console.log(miniProfile);
-        const user = await this.authService.validateUser(miniProfile);
+        const user = await this.authService.validateFtUser(miniProfile);
         if (!user) {
           throw new UnauthorizedException();
         }

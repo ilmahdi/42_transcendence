@@ -31,8 +31,8 @@ export class SettingsComponent implements OnInit {
   public selectedImage: string | ArrayBuffer = '';
   public selectedFile: File | null = null;
   public myformGroup! :FormGroup;
-  public userDataShort: IUserDataShort = { 
-  }
+  public userDataShort: IUserDataShort = {}
+  public isUsernameTaken :boolean = false;
 
 
   ngOnInit(): void {
@@ -47,6 +47,11 @@ export class SettingsComponent implements OnInit {
         username: this.userDataShort.username,
       });
    });
+
+   this.myformGroup.get('username')?.valueChanges.subscribe(newUsername => {
+      if (this.isUsernameTaken)
+        this.isUsernameTaken = false;
+    })
 
   }
 
@@ -70,7 +75,6 @@ export class SettingsComponent implements OnInit {
     }
     this.userDataShort.username = this.myformGroup.value.username;
     this.updateUser();
-    this.router.navigate(["/home"]);
   
   }
 
@@ -88,7 +92,18 @@ export class SettingsComponent implements OnInit {
   }
 
   private updateUser() {
-    return this.userService.updateUserData(this.userDataShort).subscribe();
+    return this.userService.updateUserData(this.userDataShort).subscribe({
+      next: response => {
+        // console.log('Received data:', response);
+        this.router.navigate(["/home"]);
+      },
+      error: error => {
+        this.isUsernameTaken = true;
+        // console.error('Error:', error.error.message); 
+      }
+  });
   }
+
+ 
   
 }
