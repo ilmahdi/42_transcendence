@@ -6,14 +6,33 @@
     width: 572px;
     background-color: #231C1C;
     border-radius: 15px 15px 15px 15px;
-    /* overflow: auto; */
+    overflow-y: hidden;
+    overflow-x: hidden;
+    scrollbar-color: #5e6147 var(--second-background-color);
+    scrollbar-width: 0.4rem;
+}
+
+.body::-webkit-scrollbar
+ {
+    width: 0.4rem;
+    background-color: var(--second-background-color);
+} 
+.body::-webkit-scrollbar-thumb  {
+    border-radius: 0.4rem;
+    background-color: #5e6147;
+}
+.body::-webkit-scrollbar-thumb:hover  {
+    background-color: #555;
 }
 
 .header {
+    /* position: fixed; */
+    top: 0px;
     width: 100%;
+    width: 572px;
     height: 46px;
     background-color: #D38146;
-    border-radius: 15px 15px 0px 0px;
+    /* border-radius: 15px 15px 0px 0px; */
 }
 
 .fa-angle-double-left {
@@ -43,11 +62,12 @@ img {
 }
 
 #typing {
-    bottom: 0px;
-    position: absolute;
+    bottom: 10px;
+    position: fixed;
     margin-bottom: 3%;
-    margin-left: 3%;
-    width: 83%;
+    margin-left: 20px;
+    width: 400px;
+    /* width: 83%; */
     height: 44px;
     border-radius: 23px 0px 0px 23px;
     text-indent: 20px;
@@ -58,14 +78,16 @@ img {
 }
 
 .send {
-    position: absolute;
-    bottom: 0px;
+    position: fixed;
+    bottom: 10px;
     margin-bottom: 3%;
-    margin-left: 86%;
-    width: 10%;
+    margin-left: 420px;
+    width: 40px;
+    /* width: 10%; */
     height: 44px;
     border-radius: 0px 23px 23px 0px;
     background-color: #584747;
+    /* box-shadow: 0px 10px 20px */
 }
 
 .disk {
@@ -100,8 +122,8 @@ img {
 #sentMessage {
     color: white;
     position: absolute;
-    left: 10px;
-    border-radius: 0px 20px 20px 20px;
+    right: 10px;
+    border-radius: 20px 20px 20px 20px;
     height: 40px;
     background-color: #D38146;
     max-width: 60%;
@@ -109,11 +131,11 @@ img {
 
 #receivedMessage {
     color: white;
-    right: 10px;
+    left: 10px;
     position: absolute;
-    border-radius: 20px 0px 20px 20px;
+    border-radius: 20px 20px 20px 20px;
     height: 40px;
-    background-color: #D38146;
+    background-color: #584747;
     max-width: 60%;
 }
 
@@ -126,7 +148,7 @@ p {
 
 .messages {
     position: relative;
-    overflow: auto;
+    /* overflow: auto; */
 }
 
 @media (min-width: 2000px) {
@@ -153,6 +175,12 @@ p {
         right: 80px;
         width: 70%;
     }
+    #typing {
+        width: 60%;
+    }
+    .send {
+        margin-left: 60%;
+    }
     .fa-angle-double-left {
         display: block;
     }
@@ -162,6 +190,13 @@ p {
     .body {
         width: 65%;
         right: 50px;
+    }
+    #typing {
+        margin-left: 10px;
+        width: 53%;
+    }
+    .send {
+        margin-left: 53%;
     }
     img {
         margin-left: 50px;
