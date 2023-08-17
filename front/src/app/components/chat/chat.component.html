@@ -19,9 +19,15 @@
 
     <div class="headerPart" [style.border-radius]="!roomsClicked?'0px 15px 0px 0px' : '15px 0px 0px 0px'" *ngIf="roomsClicked">
         <input type="text" class="roomsSearch" placeholder="search...">
-        <!-- <span id="roomsRightSerch"></span> -->
-        <span class="fa fa-search"></span>
-        <span class="fa fa-plus-square"></span>
+        <span class="fa fa-search fa-rooms"></span>
+        <span class="fa fa-plus-square" (click)="createRoom()"></span>
+    </div>
+
+    <div class="createRoom" *ngIf="addRoom">
+        <form [formGroup]="room">
+            <p id="giveName">Give your room a name</p>
+            <input type="text" placeholder="Room name" id="roomName">
+        </form>
     </div>
 
     <app-direct *ngIf="directClicked" (customEvent)="onCustomEvent($event)" (conversation)="getConversation($event)"></app-direct>

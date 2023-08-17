@@ -7,6 +7,7 @@ import { LoginService } from 'src/app/services/login.service';
 import { take } from 'rxjs';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-chat',
@@ -14,6 +15,8 @@ import * as _ from 'lodash';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
+
+  room = new FormGroup({name: new FormControl})
 
   userEvent?:any[]
   conversationEvent!:Message[];
@@ -24,8 +27,8 @@ export class ChatComponent implements OnInit {
   smallScreen:boolean = false;
   displayConvers:boolean = false;
 
-  lastMessages: any[] = [];
   userId?:number
+  addRoom:boolean = false
   constructor(private chatService:ChatService, private loginService:LoginService, private router:Router) {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
@@ -37,7 +40,6 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.chatService.getLastMessage().subscribe(data=>this.lastMessage?.push(data))
   }
 
   onResize() {
@@ -66,5 +68,10 @@ export class ChatComponent implements OnInit {
 
   getConversation(data:Message[]) {
     this.conversationEvent = data;
+  }
+
+  createRoom() {
+    this.chatService.createRoom(true)
+    this.chatService.add$.subscribe(data=>this.addRoom = data)
   }
 }

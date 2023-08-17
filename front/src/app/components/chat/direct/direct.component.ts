@@ -89,7 +89,7 @@ export class DirectComponent implements OnInit, OnDestroy {
           this.messages.push(item)
       })
     })
-    this.chatService.lastConversation = {name:name, friend:friend};
+    this.chatService.createRoom(false)
     this.conversation.emit(this.messages);
     this.customEvent.emit(friend)
   }

@@ -1,4 +1,4 @@
-<div class="body" *ngIf="userEmitted" [style.display]="userEmitted[1]? 'block': 'none'">
+<div class="body" *ngIf="userEmitted && !addRoom" [style.display]="userEmitted[1]? 'block': 'none'">
     <div class="header">
         <span class="fa fa-angle-double-left" (click)="getConversEvent()"></span>
         <img src="../../../../assets/sghajdao.jpg" alt="avatar">

@@ -18,11 +18,12 @@ export class ChatService {
   string$ = this.stringSource.asObservable();
 
   users:User[] = [];
-  lastMessage = new BehaviorSubject<any[]>([])
-  saad$ = this.lastMessage.asObservable()
 
   lastConversation:any
   last:any[] = []
+
+  addRoom = new BehaviorSubject<boolean>(false)
+  add$ = this.addRoom.asObservable()
 
   constructor(private http:HttpClient, private socket:ChatSocketService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
@@ -35,6 +36,10 @@ export class ChatService {
 
   setSocket(socket:ChatSocketService) {
     this.socket = socket
+  }
+
+  createRoom(statue:boolean) {
+    this.addRoom.next(statue);
   }
 
   updateLastMessage(message: Message) {

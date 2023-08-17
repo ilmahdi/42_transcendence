@@ -29,6 +29,8 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   
   users:User[] = [];
   lastMessages:any[] = []
+
+  addRoom:boolean = false
   constructor(private chatService: ChatService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
@@ -37,6 +39,8 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     loginService.user.pipe(take(1)).subscribe((data?:any) => {
       this.user = data;
     })
+
+    chatService.add$.subscribe(data=>this.addRoom = data)
   }
 
   ngOnInit() {
