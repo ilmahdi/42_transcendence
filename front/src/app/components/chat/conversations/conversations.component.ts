@@ -45,7 +45,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
         this.chatService.updateLastMessage(data);
        this.messages.push(data)
        this.messages = _.sortBy(this.messages, 'date');
-      //  this.chatService.sendToGetLastMessage(this.userId!)
+       this.chatService.sendToGetLastMessage(this.userId!)
       })
   }
 

@@ -39,7 +39,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   @SubscribeMessage('privateMessage')
   handlePrivateMessage(client: Socket, data: any) {
     this.chatService.saveMessage(data.message)
-    console.log(data.user.socketId);
+    console.log("SOCKET ", data.user.socketId);
     
     // this.server.to([data.user.socketId, client.id]).emit('recMessage', data.message)
     this.server.emit('recMessage', data.message);
@@ -56,7 +56,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   getLastMessage(client:Socket, id:number) {
     this.chatService.getLastMessage(id).subscribe(data=>{
       console.log(data);
-      client.emit('recLastMessage', data);
+      if (!data.length)
+        client.emit('recLastMessage', [{id:0, senderId:id, receiverId:id, message:"Welcome", date:new Date}])
+      else
+        client.emit('recLastMessage', data);
     });
+  }
+
+  @SubscribeMessage('updateReaded')
+  updateReaded(client:Socket, ids:any) {
+    this.chatService.updateReaded(ids.receiverId, ids.senderId);
   }
 }

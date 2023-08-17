@@ -27,8 +27,6 @@ export class DirectComponent implements OnInit, OnDestroy {
   lastMessages: any[] = [];
   user?:User
 
-  @Input() latest:Message[] = []
-  saad:{friend:User, message:Message}[] = []
   constructor(private chatService:ChatService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
@@ -41,7 +39,6 @@ export class DirectComponent implements OnInit, OnDestroy {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
 
-    // this.chatService.sendNewMessage({id:0, senderId:this.userId, receiverId:this.userId, message:"Welcome", date:new Date}, this.user)
     this.chatService.getNewMessage().subscribe(data=>{
       this.chatService.updateLastMessage(data);})
 
@@ -95,6 +92,18 @@ export class DirectComponent implements OnInit, OnDestroy {
     this.chatService.lastConversation = {name:name, friend:friend};
     this.conversation.emit(this.messages);
     this.customEvent.emit(friend)
+  }
+
+  editeDateFormat(date:Date) {
+    const newDate = new Date(date)
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',   // Two-digit day
+      month: '2-digit', // Two-digit month
+      year: 'numeric'   // Full year
+    };
+    
+    const formattedDate: string = newDate.toLocaleDateString('en-GB', options);
+    return formattedDate
   }
 
   ngOnDestroy(): void {

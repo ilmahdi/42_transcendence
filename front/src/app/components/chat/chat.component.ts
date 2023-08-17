@@ -5,6 +5,8 @@ import { ChatService } from 'src/app/services/chat.service';
 import { LoginComponent } from '../login/login.component';
 import { LoginService } from 'src/app/services/login.service';
 import { take } from 'rxjs';
+import { Router } from '@angular/router';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-chat',
@@ -22,9 +24,9 @@ export class ChatComponent implements OnInit {
   smallScreen:boolean = false;
   displayConvers:boolean = false;
 
-  lastMessage:Message[] = []
+  lastMessages: any[] = [];
   userId?:number
-  constructor(private chatService:ChatService, private loginService:LoginService) {
+  constructor(private chatService:ChatService, private loginService:LoginService, private router:Router) {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
 
@@ -49,7 +51,7 @@ export class ChatComponent implements OnInit {
 
   onRooms() {
     this.roomsClicked = true;
-    this.directClicked = false;
+    // this.directClicked = false;
   }
 
   conversEvent(convers:boolean) {

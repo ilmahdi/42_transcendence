@@ -50,4 +50,18 @@ export class ChatService {
             throw new Error('Could not retrieve messages');
         }
     }
+
+    updateReaded(receiverId:number, senderId:number) {
+        const message = this.messageRepository.find({
+            where: {
+              senderId: senderId, receiverId: receiverId
+            },
+        });
+        from(message).subscribe(data=>{
+            data.forEach(data=>{
+                const msg = {id:data.id, senderId:data.senderId, receiverId:data.receiverId, message:data.message, date:data.date, readed:true}
+                this.messageRepository.update(msg.id, msg);
+            })
+        })
+    }
 }

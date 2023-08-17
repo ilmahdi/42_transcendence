@@ -24,4 +24,6 @@ export class MessageEntity {
   @Column()
   date?:Date;
 
+  @Column({default:false})
+  readed?:boolean
 }

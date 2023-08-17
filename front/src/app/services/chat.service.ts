@@ -84,16 +84,7 @@ export class ChatService {
     return this.http.get<User[]>('http://localhost:3000/api/auth/allUsers', this.httpOptions).pipe(take(1));
   }
 
-  sendMessage(msg:Message) {
-    return this.http.post('http://localhost:3000/api/chat/messages', msg);
-  }
-
-  getAllMessages(): Observable<Message[]> {
-    return this.http.get<Message[]>('http://localhost:3000/api/chat/getMessages')
-  }
-
-  getLast(senderId:number, receiverId:number): Observable<Message[]> {
-    const data = {senderId, receiverId}
-    return this.http.post<Message[]>('http://localhost:3000/api/chat/getLastMessage', data)
+  updateReaded(receiverId:number, senderId:number) {
+    this.socket.emit('updateReaded', {receiverId:receiverId, senderId:senderId})
   }
 }
