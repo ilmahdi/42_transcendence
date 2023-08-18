@@ -29,6 +29,8 @@ export class ChatComponent implements OnInit {
 
   userId?:number
   addRoom:boolean = false
+  // users:User[] = []
+  users:{user:User, added:boolean}[] = []
   constructor(private chatService:ChatService, private loginService:LoginService, private router:Router) {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
@@ -40,6 +42,13 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.chatService.getUsers().subscribe((data) => {
+      data.forEach((user)=>{
+        if (user.id != this.userId) {
+          this.users?.push({user:user, added:false})
+        }
+      })
+    });
   }
 
   onResize() {
@@ -70,8 +79,18 @@ export class ChatComponent implements OnInit {
     this.conversationEvent = data;
   }
 
-  createRoom() {
+  displayFormRoom() {
     this.chatService.createRoom(true)
     this.chatService.add$.subscribe(data=>this.addRoom = data)
+  }
+
+  addToRoom(user:{user:User, added:boolean}) {
+    user.added = !user.added
+    console.log(this.users);
+    
+  }
+
+  getConversations() {
+    this.addRoom = false
   }
 }
