@@ -30,32 +30,32 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
     // this.userService.updateUser(this.authService.getJwtUser(jwt), client.id)
   }
 
-  // @SubscribeMessage('updateSocketId')
-  // updateSocketId(client:Socket, userId:number) {
-  //   this.userService.updateUser(userId, client.id)
-  //   client.emit('updated', client.id);
-  // }
+  @SubscribeMessage('updateSocketId')
+  updateSocketId(client:Socket, userId:number) {
+    this.userService.updateUser(userId, client.id)
+    client.emit('updated', client.id);
+  }
 
   @SubscribeMessage('privateMessage')
   handlePrivateMessage(client: Socket, data: any) {
     this.chatService.saveMessage(data.message)
     console.log("SOCKET ", data.user.socketId);
     
-    // this.server.to([data.user.socketId, client.id]).emit('recMessage', data.message)
-    this.server.emit('recMessage', data.message);
+    // this.server.to([data.user.socketId, client.id]).emit('recMessage', data.message);
+    // this.server.emit('recMessage', data.message);
+    this.server.to([this.id[0], this.id[1]]).emit('recMessage', data.message);
   }
 
   @SubscribeMessage('getConversation')
   async getConversation(client: Socket, data:any) {
     // const messages = await this.chatService.getConversation(data.senderId, data.receiverId).toPromise();
     this.chatService.getConversation(data.senderId, data.receiverId).subscribe(data=>this.server.to(client.id).emit('getConversation', data))
-    // this.server.to(client.id).emit('getConversation', messages);
+    // this.server.to(client.id).emit('getConversation', messages)
   }
 
   @SubscribeMessage('getLastMessage')
   getLastMessage(client:Socket, id:number) {
     this.chatService.getLastMessage(id).subscribe(data=>{
-      console.log(data);
       if (!data.length)
         client.emit('recLastMessage', [{id:0, senderId:id, receiverId:id, message:"Welcome", date:new Date}])
       else

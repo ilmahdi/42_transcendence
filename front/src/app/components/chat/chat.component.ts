@@ -29,7 +29,6 @@ export class ChatComponent implements OnInit {
 
   userId?:number
   addRoom:boolean = false
-  // users:User[] = []
   users:{user:User, added:boolean}[] = []
   constructor(private chatService:ChatService, private loginService:LoginService, private router:Router) {
     this.screenWidth = window.innerWidth;
@@ -86,11 +85,15 @@ export class ChatComponent implements OnInit {
 
   addToRoom(user:{user:User, added:boolean}) {
     user.added = !user.added
-    console.log(this.users);
-    
   }
 
   getConversations() {
     this.addRoom = false
+  }
+
+  createRoom() {
+    let usersAdded = this.users.filter(user=> user.added === true)
+    console.log(usersAdded);
+    
   }
 }

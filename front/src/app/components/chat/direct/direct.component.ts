@@ -90,7 +90,8 @@ export class DirectComponent implements OnInit, OnDestroy {
       })
     })
     this.chatService.createRoom(false)
-    this.conversation.emit(this.messages);
+    this.chatService.updateConversation(this.messages);
+    // this.conversation.emit(this.messages);
     this.customEvent.emit(friend)
   }
 

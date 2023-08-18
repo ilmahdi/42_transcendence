@@ -6,11 +6,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MessageEntity } from './utils/models/message.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { EventEmitter } from 'events';
+import { RoomEntity } from './utils/models/room.entity';
 
 @Injectable()
 export class ChatService {
     constructor(
-        @InjectRepository(MessageEntity) private readonly messageRepository:Repository<MessageEntity>
+        @InjectRepository(MessageEntity) private readonly messageRepository:Repository<MessageEntity>,
+        // @InjectRepository(RoomEntity) private readonly roomRepository:Repository<RoomEntity>
     ) {}
 
     saveMessage(message: Message) {
@@ -29,7 +31,6 @@ export class ChatService {
                 {senderId: receiverId, receiverId: senderId}
               ],
             });
-
             return from(messages);
         } catch (error) {
             // Handle errors (e.g., database connection errors)
@@ -64,4 +65,7 @@ export class ChatService {
             })
         })
     }
+
+    ///////////////////////////////////////// ROOMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 }

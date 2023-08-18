@@ -1,8 +1,23 @@
-import { Body, Controller, Get, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { Message } from './utils/models/message.interface';
 import { MessageBody } from '@nestjs/websockets';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import * as path from 'path'; 
+
+export const storage = {
+  storage:diskStorage({
+    destination: './uploads/images',
+    filename: (req, file, cb)=> {
+      const filename: string = path.parse(file.originalname).name.replace(/\s/g, '');
+      const extension: string = path.parse(file.originalname).ext;
+
+      cb(null, `${filename}${extension}`)
+    }
+  })
+}
 
 @Controller('chat')
 export class ChatController {
@@ -23,5 +38,14 @@ export class ChatController {
   @Post('getConversation')
   getConversation(@Body() data:any) {
     return this.chatService.getConversation(data.senderId, data.receiverId);
+  }
+
+  ////////////////////////////////////////// ROMMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+  ////////////////////////////////////////// UPLOAD IMAE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file', storage))
+  uploadFile(@UploadedFile() file) {
+    return of({imagePath: file.filename})
   }
 }

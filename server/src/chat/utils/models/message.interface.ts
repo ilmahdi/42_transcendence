@@ -7,4 +7,5 @@ export interface Message {
   message?: string;
   date?:Date;
   readed?:boolean;
+  roomId?:number;
 }

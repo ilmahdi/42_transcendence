@@ -26,4 +26,7 @@ export class MessageEntity {
 
   @Column({default:false})
   readed?:boolean
+
+  @Column({default:-1})
+  roomId?:number
 }

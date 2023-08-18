@@ -25,11 +25,14 @@ export class ChatService {
   addRoom = new BehaviorSubject<boolean>(false)
   add$ = this.addRoom.asObservable()
 
+  conversationSource = new BehaviorSubject<Message[]>([])
+  conversation$ = this.conversationSource.asObservable()
+
   constructor(private http:HttpClient, private socket:ChatSocketService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id
     })
-    // this.socket.connect()
+    this.socket.connect()
     this.updateSocketId(this.userId!)
     this.sendToGetLastMessage(this.userId!)
   }
@@ -40,6 +43,10 @@ export class ChatService {
 
   createRoom(statue:boolean) {
     this.addRoom.next(statue);
+  }
+
+  updateConversation(conversation:Message[]) {
+    this.conversationSource.next(conversation)
   }
 
   updateLastMessage(message: Message) {

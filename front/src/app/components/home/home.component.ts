@@ -9,9 +9,10 @@ import { ChatService } from 'src/app/services/chat.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private chatServise:ChatService, private socket:ChatSocketService) {
-    this.socket.connect()
-    chatServise.setSocket(this.socket)
+  constructor(/* private chatServise:ChatService, private socket:ChatSocketService, */ private chatService:ChatService) {
+    // this.socket.connect()
+    // chatServise.setSocket(this.socket)
+    this.chatService
   }
 
   ngOnInit(): void {

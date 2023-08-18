@@ -44,7 +44,8 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.messages = this.conversationEmitted
+    // this.messages = this.conversationEmitted
+    this.chatService.conversation$.subscribe(data=> this.messages = data)
     return this.chatService.getNewMessage().subscribe(data=>{
         this.chatService.updateLastMessage(data);
        this.messages.push(data)
