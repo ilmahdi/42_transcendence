@@ -35,7 +35,6 @@ export class FirstLoginComponent implements OnInit {
   public userDataShort: IUserDataShort = {}
   public isUsernameTaken :boolean = false;
 
-
   ngOnInit(): void {
 
    this.userDataShort.ft_id = + this.route.snapshot.queryParamMap.get('ft_id')!;
@@ -43,11 +42,9 @@ export class FirstLoginComponent implements OnInit {
    this.selectedImage = this.route.snapshot.queryParamMap.get('avatar')!;
    this.userDataShort.avatar = this.route.snapshot.queryParamMap.get('avatar')!;
 
-   this.myformGroup = this.formBuilder.group({
-    username: [
-      this.userDataShort.username,
-    ],
-  })
+   this.myformGroup.patchValue({
+    username: this.userDataShort.username,
+  });
 
 
    this.myformGroup.get('username')?.valueChanges.subscribe(newUsername => {
