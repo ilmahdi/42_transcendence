@@ -32,9 +32,5 @@ export class ProfileIdComponent implements OnInit {
       this.isOwnProfile = params['username'] === this.authService.getLoggedInUser();
     });
   }
-  // userData : any = {
-  //   avatar : "./assets/imgs/cover.png",
-  //   username:"ilmahdi",
-
-  // }
+  
 }

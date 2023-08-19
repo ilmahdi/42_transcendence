@@ -21,7 +21,7 @@ export class UserController {
     @UseGuards(JwtGuard)
     @Get("me")
     getMyData(@Req() req :Request) : any {
-        console.log(req.user)
+        // console.log(req.user)
         return req.user;
         
     }

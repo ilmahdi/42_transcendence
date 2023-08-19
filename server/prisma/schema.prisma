@@ -45,23 +45,22 @@ enum AccessLevels {
 // database models
 //********************************************************************//
 model UserAccount {
-  id                  Int         @id @default(autoincrement())
-  ft_id               Int         @unique
-  username            String      @unique
-  // email               String      @unique
-  tfa_secret          String?
-  is_tfa_enabled      Boolean?     @default(false)
-  avatar              String
-  status              Status       @default(OFFLINE)
-  wins                Int           @default(0)          
-  losses              Int           @default(0)
-  draws               Int           @default(0)
-  rating              Int           @default(1000)
+  id                  Int                 @id @default(autoincrement())
+  ft_id               Int                 @unique
+  username            String              @unique
+  // email               String              @unique
+  tfa_secret          String?       
+  is_tfa_enabled      Boolean?            @default(false)
+  avatar              String        
+  status              Status              @default(OFFLINE)
+  wins                Int                 @default(0)          
+  losses              Int                 @default(0)
+  draws               Int                 @default(0)
+  rating              Int                 @default(1000)
 
-  created_at          DateTime    @default(now())
-  updated_at          DateTime    @updatedAt
+  created_at          DateTime            @default(now())
+  updated_at          DateTime            @updatedAt
 
-  leaderboard         Leaderboard?
   friendship_from     Friendship[]        @relation("friendship_from")
   friendship_to       Friendship[]        @relation("friendship_to")
   blocking_user       BlockedUsers[]      @relation("blocking_user")
@@ -76,27 +75,13 @@ model UserAccount {
   restricted_members  RestrictedMembers[] @relation()
 }
 
-model Leaderboard {
-  user_id             Int         @unique
-  total_matches       Int
-  wins_count          Int
-  losses_count        Int
-  level               Int         @default(0)
-
-  user                UserAccount         @relation(fields: [user_id], references: [id])
-}
-
-// model UserAchievements {
-//   level               Int           @unique
-//   achievement         String
-// } 
 
 model Friendship {
-  id                  Int  @id @default(autoincrement())
+  id                  Int                 @id @default(autoincrement())
   user_id             Int
   friend_id           Int
   friendship_status   FriendshipStatus
-  created_at          DateTime    @default(now())
+  created_at          DateTime            @default(now())
 
   user                UserAccount         @relation("friendship_from", fields: [user_id], references: [id])
   friend              UserAccount         @relation("friendship_to", fields: [friend_id], references: [id])
