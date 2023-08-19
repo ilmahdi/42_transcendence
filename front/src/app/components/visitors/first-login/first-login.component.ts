@@ -93,7 +93,7 @@ export class FirstLoginComponent implements OnInit {
   private registerUser() {
     return this.userService.registerUser(this.userDataShort).subscribe({
       next: response => {
-        console.log('Received data:', response);
+        // console.log('Received data:', response);
         if (response.token) 
           localStorage.setItem(JWT_TOKEN, response.token);
         this.router.navigate(["/home"]);

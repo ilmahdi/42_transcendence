@@ -20,9 +20,16 @@ export class UserController {
 
     @UseGuards(JwtGuard)
     @Get("me")
-    getUser(@Req() req :Request) : any {
+    getMyData(@Req() req :Request) : any {
         console.log(req.user)
         return req.user;
+        
+    }
+    @UseGuards(JwtGuard)
+    @Get(":username")
+    getUser(@Param('username') username: string) : any {
+        
+        return this.userService.findUserByUsername(username);
         
     }
 
@@ -78,8 +85,8 @@ export class UserController {
       @Patch("/:id")
       updateUser(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
         try {
-          const updatedUser = this.userService.updateUser(id, updateUserDto);
-          return updatedUser;
+          const token = this.userService.updateUser(id, updateUserDto);
+          return token;
         
         } catch (error) {
           if (error instanceof NotFoundException) {

@@ -16,7 +16,6 @@ import { environment } from 'src/environments/environment';
 export class SettingsComponent implements OnInit {
 
   constructor(
-    private http: HttpClient,
     private formBuilder: FormBuilder,
     private userService: UserService,
     private router: Router,
@@ -95,6 +94,7 @@ export class SettingsComponent implements OnInit {
     return this.userService.updateUserData(this.userDataShort).subscribe({
       next: response => {
         // console.log('Received data:', response);
+        localStorage.setItem(JWT_TOKEN, response.token);
         this.router.navigate(["/home"]);
       },
       error: error => {

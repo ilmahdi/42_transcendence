@@ -74,8 +74,8 @@ export class UserService {
                     username: user.username,
                 }
             )
-            console.log(token)
-            return {token};
+            // console.log(token)
+            return { token };
 
         } catch(error) {
             throw new HttpException('Failed to update user', HttpStatus.CONFLICT);
@@ -96,9 +96,15 @@ export class UserService {
 
         try {
 
-            const updatedUser = this.updateUserData(id, updateUserDto);
-            return updatedUser;
-
+            const user = await this.updateUserData(id, updateUserDto);
+            const token = this.tokenService.generateToken(
+                {
+                    sub: user.id,
+                    username: user.username,
+                }
+            )
+            // console.log(token)
+            return { token };
         } catch(error) {
             throw new HttpException('Failed to update user', HttpStatus.CONFLICT);
         }

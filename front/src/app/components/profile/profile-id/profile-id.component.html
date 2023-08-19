@@ -6,7 +6,7 @@
     <div class="pi-sec-two">
         <span> {{ userData.username }} </span>
     </div>
-    <button class="pi-sec-three" *ngIf="isOwnProfile; else isNotOwnProfile">
+    <button routerLink="/settings"  class="pi-sec-three" *ngIf="isOwnProfile; else isNotOwnProfile">
         <span> Edit profile </span>
     </button>
     <ng-template #isNotOwnProfile>

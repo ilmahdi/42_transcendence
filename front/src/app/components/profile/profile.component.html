@@ -5,7 +5,7 @@
 <app-online-friends></app-online-friends>
     
 <div class="wrap-component">
-    <app-profile-stats></app-profile-stats>
+    <app-profile-stats [userData]="userData"></app-profile-stats>
     <div class="profile-buttons">
         <div class="pb-button" (click)="!isClicked && toggleActive()" [class.active-btn]="isClicked">
             <svg class="pb-btn-icon" xmlns="http://www.w3.org/2000/svg">

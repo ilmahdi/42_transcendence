@@ -20,6 +20,9 @@ export class UserService {
   getUserData () : Observable<IUserData> {
     return this.http.get<IUserData>(`${this.apiUrl}/user/me` ,this.getHeaders());
   }
+  getUserDataByUsername (username :string) : Observable<IUserData> {
+    return this.http.get<IUserData>(`${this.apiUrl}/user/${username}` ,this.getHeaders());
+  }
 
   uploadImage (formData :FormData) : Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/user/avatar/upload`, formData ,this.getHeaders());

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
 
 @Component({
   selector: 'app-profile-id',
@@ -15,6 +16,15 @@ export class ProfileIdComponent implements OnInit {
   ) { }
 
   public isOwnProfile: boolean = false;
+  @Input() userData: IUserData = {
+    id:0,
+    username: '',
+    avatar: '',
+    wins: 0,
+    losses: 0,
+    draws: 0,
+    rating: 0,
+  };
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -22,9 +32,9 @@ export class ProfileIdComponent implements OnInit {
       this.isOwnProfile = params['username'] === this.authService.getLoggedInUser();
     });
   }
-  userData : any = {
-    avatar : "./assets/imgs/cover.png",
-    username:"ilmahdi",
+  // userData : any = {
+  //   avatar : "./assets/imgs/cover.png",
+  //   username:"ilmahdi",
 
-  }
+  // }
 }

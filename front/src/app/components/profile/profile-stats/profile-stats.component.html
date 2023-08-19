@@ -1,7 +1,7 @@
 
 <div class="profile-stats">
     <div class="ps-sec-one">
-        <app-profile-id></app-profile-id> 
+        <app-profile-id [userData]="userData"></app-profile-id> 
     </div>
     <div class="ps-sec-two">
         <span class="ps-sec-two-item"> <span class="ps-sec-two-item-nb"> {{ userData.wins + userData.losses + userData.draws }} </span> games played  </span>

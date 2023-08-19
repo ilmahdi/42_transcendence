@@ -12,7 +12,7 @@ import { JwtGuard } from './utils/guards/jwt.guard';
 export class AuthController {
     constructor(private readonly authServie: AuthService){
     }
-    @Get("hello") 
+    @Get("hello")
     testLink() {
         return { 
             msg: "hello form nest",
@@ -27,7 +27,7 @@ export class AuthController {
     @Get("callback/42")
     @UseGuards(FtLoginGuard)
     ftCallback(@Req() req, @Res() res){
-        console.log(req.user)
+        // console.log(req.user)
         let queryUserData = "";
         if (req.user.firstLogin === "true")
             queryUserData = `ft_id=${req.user.profile.ft_id}&username=${req.user.profile.username}&avatar=${req.user.profile.avatar}`;
