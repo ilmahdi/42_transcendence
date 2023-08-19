@@ -38,12 +38,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
 
   @SubscribeMessage('privateMessage')
   handlePrivateMessage(client: Socket, data: any) {
-    this.chatService.saveMessage(data.message)
-    console.log("SOCKET ", data.user.socketId);
-    
-    // this.server.to([data.user.socketId, client.id]).emit('recMessage', data.message);
-    // this.server.emit('recMessage', data.message);
-    this.server.to([this.id[0], this.id[1]]).emit('recMessage', data.message);
+      this.chatService.saveMessage(data.message)
+      console.log("SOCKET ", data.user.socketId);
+      
+      // this.server.to([data.user.socketId, client.id]).emit('recMessage', data.message);
+      // this.server.emit('recMessage', data.message)
+      this.server.to([this.id[0], this.id[1]]).emit('recMessage', data.message);
   }
 
   @SubscribeMessage('getConversation')
@@ -66,5 +66,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   @SubscribeMessage('updateReaded')
   updateReaded(client:Socket, ids:any) {
     this.chatService.updateReaded(ids.receiverId, ids.senderId);
+  }
+
+  ////////////////////////// ROOMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+  @SubscribeMessage('getRooms')
+  getRooms(client:Socket, id:number) {
+    this.chatService.getRooms(id).subscribe(data=>{
+      client.emit('recRooms', data)
+    })
   }
 }

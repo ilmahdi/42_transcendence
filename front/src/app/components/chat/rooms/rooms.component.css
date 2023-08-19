@@ -1,4 +1,4 @@
-.convers {
+.list {
     display: flex;
     position: absolute;
     flex-direction: column;
@@ -10,28 +10,60 @@
     border-radius: 0px 0px 15px 15px;
 }
 
+.room {
+    display: flex;
+    /* position: absolute; */
+    height: 66px;
+    width: 92%;
+    background-color: #201717;
+    margin-top: 10px;
+    margin-left: 4%;
+    border-radius: 10px 10px 10px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.room:hover {
+    background-color: #D38146;
+}
+
+#image {
+    width: 35px;
+    height: 35px;
+    background-color: white;
+    border-radius: 20px;
+    margin-top: 17px;
+    margin-left: 3%;
+}
+
+#roomName {
+    color: #DEC8C8;
+    margin-top: 7px;
+    margin-left: 4%;
+}
+
 @media (min-width: 2000px) {
-    .convers {
+    .list {
         left: 470px;
         width: 320px;
     }
 }
 
 @media (max-width: 1092px) {
-    .convers {
+    .list {
         left: 110px;
     }
 }
 
 @media (max-width: 934px) {
-    .convers {
+    .list {
         left: 35%;
         width: 320px;
     }
 }
 
 @media (max-width: 660px) {
-    .convers {
+    .list {
         left: 22%;
     }
 }

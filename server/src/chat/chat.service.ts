@@ -1,18 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import * as Pusher from 'pusher';
-import { from } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { Message } from './utils/models/message.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MessageEntity } from './utils/models/message.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { EventEmitter } from 'events';
 import { RoomEntity } from './utils/models/room.entity';
+import { Room } from './utils/models/room.interface';
 
 @Injectable()
 export class ChatService {
     constructor(
         @InjectRepository(MessageEntity) private readonly messageRepository:Repository<MessageEntity>,
-        // @InjectRepository(RoomEntity) private readonly roomRepository:Repository<RoomEntity>
+        @InjectRepository(RoomEntity) private readonly roomRepository:Repository<RoomEntity>
     ) {}
 
     saveMessage(message: Message) {
@@ -68,4 +69,24 @@ export class ChatService {
 
     ///////////////////////////////////////// ROOMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+    createRoom(room:Room) {
+        return from(this.roomRepository.save(room));
+    }
+
+    getRooms(id:number) {
+        try {
+            const rooms = this.roomRepository.find({
+              where: {
+                adminId: id
+            }
+            });
+            return from(rooms);
+        } catch (error) {
+            throw new Error('Could not retrieve messages');
+        }
+        // return from(this.roomRepository.createQueryBuilder('room')
+        //     .where('room.adminId = :id', { id })
+        //     .orWhere('ARRAY[:id] && room.usersId', { id })
+        //     .getMany());
+    }
 }

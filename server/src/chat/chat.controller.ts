@@ -6,6 +6,7 @@ import { Observable, of } from 'rxjs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path'; 
+import { Room } from './utils/models/room.interface';
 
 export const storage = {
   storage:diskStorage({
@@ -42,10 +43,16 @@ export class ChatController {
 
   ////////////////////////////////////////// ROMMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+  @Post('createRoom')
+  createRoom(@Body() room:Room) {
+    this.chatService.createRoom(room);
+    return room
+  }
+
   ////////////////////////////////////////// UPLOAD IMAE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
   @Post('upload')
   @UseInterceptors(FileInterceptor('file', storage))
   uploadFile(@UploadedFile() file) {
-    return of({imagePath: file.filename})
+    return of({imagePath: file.filename});
   }
 }

@@ -123,7 +123,7 @@ img {
     color: white;
     position: absolute;
     right: 10px;
-    border-radius: 20px 20px 20px 20px;
+    border-radius: 20px 5px 20px 20px;
     height: 40px;
     background-color: #D38146;
     max-width: 60%;
@@ -133,7 +133,7 @@ img {
     color: white;
     left: 10px;
     position: absolute;
-    border-radius: 20px 20px 20px 20px;
+    border-radius: 5px 20px 20px 20px;
     height: 40px;
     background-color: #584747;
     max-width: 60%;

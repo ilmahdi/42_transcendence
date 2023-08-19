@@ -6,6 +6,7 @@ import { User } from '../models/user.model';
 import * as io from 'socket.io-client';
 import { ChatSocketService } from './core/chat-socket.service';
 import { LoginService } from './login.service';
+import { Room } from '../models/room.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class ChatService {
       this.userId = id
     })
     this.socket.connect()
-    this.updateSocketId(this.userId!)
+    // this.updateSocketId(this.userId!)
     this.sendToGetLastMessage(this.userId!)
   }
 
@@ -41,7 +42,7 @@ export class ChatService {
     this.socket = socket
   }
 
-  createRoom(statue:boolean) {
+  roomFormular(statue:boolean) {
     this.addRoom.next(statue);
   }
 
@@ -86,6 +87,14 @@ export class ChatService {
     return this.socket.fromEvent<Message[]>('recLastMessage');
   }
 
+  sendToGetRooms(id:number) {
+    this.socket.emit('getRooms', id);
+  }
+
+  getRooms() {
+    return this.socket.fromEvent<Room[]>('recRooms');
+  }
+
   token:string|null = localStorage.getItem('token');
   
   private httpOptions: { headers: HttpHeaders } = {
@@ -98,5 +107,9 @@ export class ChatService {
 
   updateReaded(receiverId:number, senderId:number) {
     this.socket.emit('updateReaded', {receiverId:receiverId, senderId:senderId})
+  }
+
+  createRoom(room:Room): Observable<Room> {
+    return this.http.post('http://localhost:3000/api/chat/createRoom', room);
   }
 }

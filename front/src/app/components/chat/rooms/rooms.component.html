@@ -1,2 +1,6 @@
-<div class="convers">
+<div class="list">
+    <div *ngFor="let room of rooms" class="room">
+        <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="image">
+        <p id="roomName">{{room.name}}</p>
+    </div>
 </div>

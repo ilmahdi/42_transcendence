@@ -32,10 +32,10 @@
 <div class="createRoom" *ngIf="addRoom" [style.display]="addRoom? 'block' : 'none'">
     <span class="fa fa-angle-double-left" *ngIf="screenWidth<= 934" (click)="getConversations()"></span>
     <form [formGroup]="room">
-        <p id="giveName">Give your room a name</p>
-        <input type="text" placeholder="Room name" id="roomName">
+        <p id="giveName" [style]="roomFormularTitles[0].error? 'color: red' : 'color:white'">{{roomFormularTitles[0].title}}</p>
+        <input type="text" placeholder="Room name" id="roomName" formControlName="name">
     </form>
-    <p id="giveName" style="top: 45%;">Add people to your room</p>
+    <p id="giveName" [style]="roomFormularTitles[1].error? 'top: 45%;color: red' : 'top:45%;color:white'">{{roomFormularTitles[1].title}}</p>
     <div class="people">
         <div *ngFor="let user of users" class="users" (click)="addToRoom(user)" [style.backgroundColor]="user.added? '#D38146' : ''">
             <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="img">

@@ -42,6 +42,7 @@ export class DirectComponent implements OnInit, OnDestroy {
     this.chatService.getNewMessage().subscribe(data=>{
       this.chatService.updateLastMessage(data);})
 
+    chatService.sendToGetLastMessage(this.userId!)
     this.chatService.getLastMessage().subscribe(data=> {
       data.forEach(data=> {
         this.lastMessages = this.lastMessages.filter(item => !((item.receiverId === data.receiverId && item.senderId === data.senderId) || (item.senderId === data.receiverId && item.receiverId === data.senderId)));
@@ -89,7 +90,7 @@ export class DirectComponent implements OnInit, OnDestroy {
           this.messages.push(item)
       })
     })
-    this.chatService.createRoom(false)
+    this.chatService.roomFormular(false)
     this.chatService.updateConversation(this.messages);
     // this.conversation.emit(this.messages);
     this.customEvent.emit(friend)

@@ -14,7 +14,7 @@ import { RoomEntity } from './utils/models/room.entity';
   providers: [ChatService, AuthService, JwtService, ChatGateway, UserService],
   controllers: [ChatController],
   imports: [
-    TypeOrmModule.forFeature([MessageEntity, UserEntity])
+    TypeOrmModule.forFeature([MessageEntity, UserEntity, RoomEntity])
   ]
 })
 export class ChatModule {}

@@ -8,10 +8,10 @@
     <div class="messages">
         <div *ngFor="let message of messages">
             <br>
-            <span *ngIf="message.senderId === userId" id="sentMessage">
+            <span *ngIf="message.senderId === userId && message.receiverId === userEmitted[0].id" id="sentMessage">
                 <p>&emsp;{{message.message}}&emsp;</p>
             </span>
-            <span *ngIf="message.receiverId === userId" id="receivedMessage">
+            <span *ngIf="message.receiverId === userId && message.senderId === userEmitted[0].id" id="receivedMessage">
                 <p>&emsp;{{message.message}}&emsp;</p>
             </span>
             <br>

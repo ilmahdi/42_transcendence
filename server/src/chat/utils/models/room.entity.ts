@@ -15,10 +15,9 @@ export class RoomEntity {
     @Column()
     adminId?:number;
 
-    // @Column()
-    // messages?:string[]
-    // messages?: {message:string, date:Date}[];
+    @Column({default:'Room'})
+    name?:string;
 
-    @Column()
+    @Column('integer', { array: true, default: [] })
     usersId?:number[]
 }
