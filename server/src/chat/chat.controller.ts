@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { Message } from './utils/models/message.interface';
 import { MessageBody } from '@nestjs/websockets';
@@ -7,6 +7,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path'; 
 import { Room } from './utils/models/room.interface';
+import { join } from 'path/posix';
 
 export const storage = {
   storage:diskStorage({
@@ -54,5 +55,10 @@ export class ChatController {
   @UseInterceptors(FileInterceptor('file', storage))
   uploadFile(@UploadedFile() file) {
     return of({imagePath: file.filename});
+  }
+
+  @Get('image/:imagePath')
+  findImage(@Param('imagePath') imagePath, @Res() res) {
+    return of(res.sendFile(join(process.cwd(), 'uploads/images/' + imagePath)))
   }
 }

@@ -90,7 +90,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
         this.server.to(user.socketId).emit('recRoomMessage', data.message);
       })
     })
-    this.server.to(client.id).emit('recRoomMessage', data.message);
   }
 
   @SubscribeMessage('roomConversation')

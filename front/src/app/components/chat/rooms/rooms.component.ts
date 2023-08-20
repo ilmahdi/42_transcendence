@@ -14,15 +14,21 @@ export class RoomsComponent implements OnInit {
 
   @Output() conversData = new EventEmitter<Room>()
   smallScreen:boolean = false;
+  screenWidth: number = 1000;
   
   userId?:number;
 
   rooms:Room[] = []
   messages:Message[] = []
+  color:any = {color:'', name:''}
+
   constructor(private loginService:LoginService, private chatService:ChatService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
     })
+
+    this.screenWidth = window.innerWidth;
+    window.addEventListener('resize', this.onResize.bind(this));
   }
 
   ngOnInit(): void {
@@ -34,7 +40,19 @@ export class RoomsComponent implements OnInit {
     })
   }
 
+  onResize() {
+    this.screenWidth = window.innerWidth;
+  }
+
   openRoom(room:Room) {
+    //  IF THE SCREEN WIDTH < 934 SO THE CONVERSATION BUTTON COLOR WILL NOT CHANGE WHEN THE USER CLICK IT
+    if (this.screenWidth > 934) {
+      this.color = {color:'#D38146', name:room.name}
+    }
+    else
+      this.color = {color:'', name:''}
+
+    //  GET THE CONVERSATION FROM SERVER
     this.chatService.sendToGetRoomConversation(room)
     this.chatService.getRoomConversation().
     subscribe((data) => {

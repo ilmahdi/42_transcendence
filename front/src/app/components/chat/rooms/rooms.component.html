@@ -1,5 +1,5 @@
 <div class="list">
-    <div *ngFor="let room of rooms" class="room" (click)="openRoom(room)">
+    <div *ngFor="let room of rooms" class="room" (click)="openRoom(room)" [style.backgroundColor]="(color.name === room.name)? color.color : ''">
         <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="image">
         <p id="roomName">{{room.name}}</p>
     </div>

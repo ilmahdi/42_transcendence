@@ -41,7 +41,20 @@
             <span id="conv">Conversation in <span style="font-weight: bolder;">{{roomConvers[0].name}}</span></span>
         </div>
 
-        <p *ngFor="let item of roomMessage" style="color: white;">{{item.message}}</p>
+        <div class="messages">
+            <div *ngFor="let message of roomMessage">
+                <br>
+                <span *ngIf="message.senderId === userId" id="sentMessage">
+                    <p>&emsp;{{message.message}}&emsp;</p>
+                </span>
+                <span *ngIf="message.senderId !== userId" id="receivedMessage">
+                    <p>&emsp;{{message.message}}&emsp;</p>
+                </span>
+                <br>
+            </div>
+        </div>
+
+        <!-- <p *ngFor="let item of roomMessage" style="color: white;">{{item.message}}</p> -->
 
         <form [formGroup]="msg">
             <input type="text" id="typing" placeholder="write a message" formControlName="message">

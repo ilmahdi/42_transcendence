@@ -103,6 +103,7 @@ export class ChatComponent implements OnInit {
     usersAdded.forEach(item=> {
       usersId.push(item.user.id!)
     })
+    usersId.push(this.userId!)
     let room = {adminId:this.userId, name:this.room.value.name, usersId:usersId};
     if (usersId.length && this.room.value.name) {
       this.chatService.createRoom(room).subscribe()

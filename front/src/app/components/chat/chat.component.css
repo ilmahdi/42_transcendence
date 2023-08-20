@@ -120,6 +120,16 @@
     scrollbar-width: 0.4rem;
 }
 
+#imageUpload {
+    position: absolute;
+    top: 10%;
+    left: 40%;
+    font-size: 20;
+    appearance: none;
+    border: none;
+    outline: none;
+}
+
 #giveName {
     position: absolute;
     left: 35%;
