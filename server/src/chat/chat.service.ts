@@ -73,20 +73,34 @@ export class ChatService {
         return from(this.roomRepository.save(room));
     }
 
-    getRooms(id:number) {
+    getRooms(id: number) {
         try {
-            const rooms = this.roomRepository.find({
-              where: {
-                adminId: id
-            }
-            });
-            return from(rooms);
+          const rooms = this.roomRepository
+            .createQueryBuilder('room')
+            .where('room.adminId = :id OR :id = ANY(room.usersId)', { id })
+            .getMany();
+    
+          return from(rooms);
         } catch (error) {
-            throw new Error('Could not retrieve messages');
+          throw new Error('Could not retrieve rooms');
         }
-        // return from(this.roomRepository.createQueryBuilder('room')
-        //     .where('room.adminId = :id', { id })
-        //     .orWhere('ARRAY[:id] && room.usersId', { id })
-        //     .getMany());
+    }
+
+    getRoomConversation(roomId:number) {
+        if (roomId != -1) {
+            try {
+                const messages = this.messageRepository.find({
+                  where: {
+                    roomId:roomId
+                  },
+                });
+                return from(messages);
+            } catch (error) {
+                // Handle errors (e.g., database connection errors)
+                throw new Error('Could not retrieve messages');
+            }
+        }
+        else
+            return null
     }
 }

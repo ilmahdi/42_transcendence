@@ -21,6 +21,7 @@ export class ChatComponent implements OnInit {
 
   userEvent?:any[]
   conversationEvent!:Message[];
+  roomData?:any[]
 
   directClicked: boolean = true
   roomsClicked: boolean = false
@@ -76,6 +77,7 @@ export class ChatComponent implements OnInit {
     this.smallScreen = true
     this.userEvent = [user, true]
     this.displayConvers = false
+    this.roomData = []
   }
 
   getConversation(data:Message[]) {
@@ -104,6 +106,8 @@ export class ChatComponent implements OnInit {
     let room = {adminId:this.userId, name:this.room.value.name, usersId:usersId};
     if (usersId.length && this.room.value.name) {
       this.chatService.createRoom(room).subscribe()
+      this.room.reset()
+      usersAdded.forEach(item=>item.added = false)
     }
     else {
       if (!usersId.length)
@@ -115,5 +119,16 @@ export class ChatComponent implements OnInit {
       else
         this.roomFormularTitles[0].error = false
     }
+  }
+
+  resetRoomFormular() {
+    this.room.reset()
+    this.users.forEach(item=>item.added = false)
+  }
+
+  getRoomConvers(room:Room) {
+    this.smallScreen = true
+    this.displayConvers = false
+    this.roomData = [room, true]
   }
 }

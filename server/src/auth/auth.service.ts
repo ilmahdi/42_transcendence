@@ -56,7 +56,7 @@ export class AuthService {
     }
 
     getJwtUser(jwt: string): Observable<User | null> {
-        return from(this.jwtService.verifyAsync(jwt)).pipe(
+        return from(this.jwtService.verify(jwt)).pipe(
           map(({ user }: { user: User }) => {
             return user;
           }),

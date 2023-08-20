@@ -206,3 +206,9 @@ p {
         margin-left: 98px;
     }
 }
+
+p{
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    user-select:none;
+}

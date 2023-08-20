@@ -4,6 +4,7 @@ import { User } from "./utils/models/user.class";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "./utils/models/user.entity";
 import { Repository } from "typeorm";
+import { from } from "rxjs";
 
 @Injectable()
 export class UserService {
@@ -32,6 +33,19 @@ export class UserService {
 
     updateUser(userId:number, socketId:string) {
         this.userRepository.update(userId, {socketId})
+    }
+
+    getUserById(id:number) {
+        try {
+            const user = this.userRepository.findOne({
+              where: {
+                id:id
+              }
+            });
+            return from(user);
+        } catch (error) {
+            throw new Error('Could not retrieve messages');
+        }
     }
 
 }

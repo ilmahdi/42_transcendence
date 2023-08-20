@@ -29,12 +29,15 @@ export class ChatService {
   conversationSource = new BehaviorSubject<Message[]>([])
   conversation$ = this.conversationSource.asObservable()
 
+  roomConversationSource = new BehaviorSubject<Message[]>([])
+  roomConversation$ = this.roomConversationSource.asObservable()
+
   constructor(private http:HttpClient, private socket:ChatSocketService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id
     })
     this.socket.connect()
-    // this.updateSocketId(this.userId!)
+    this.updateSocketId(this.userId!)
     this.sendToGetLastMessage(this.userId!)
   }
 
@@ -48,6 +51,10 @@ export class ChatService {
 
   updateConversation(conversation:Message[]) {
     this.conversationSource.next(conversation)
+  }
+
+  updateRoomConversation(roomConversation:Message[]) {
+    this.roomConversationSource.next(roomConversation);
   }
 
   updateLastMessage(message: Message) {
@@ -93,6 +100,23 @@ export class ChatService {
 
   getRooms() {
     return this.socket.fromEvent<Room[]>('recRooms');
+  }
+
+  sendRoomMessage(id:number, room:Room, message:Message) {
+    this.socket.emit('roomMessage', {senderId:id, room:room, message:message})
+  }
+
+  getRoomMessage() {
+    return this.socket.fromEvent<Message>('recRoomMessage');
+  }
+
+  sendToGetRoomConversation(room:Room) {
+    // const data = {senderId, receiverId}
+    this.socket.emit('roomConversation', room);
+  }
+
+  getRoomConversation() {
+    return this.socket.fromEvent<Message[]>('recRoomConversation')
   }
 
   token:string|null = localStorage.getItem('token');

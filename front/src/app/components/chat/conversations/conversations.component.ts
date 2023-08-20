@@ -5,6 +5,7 @@ import { Socket } from 'ngx-socket-io';
 import Pusher from 'pusher-js';
 import { Observable, take } from 'rxjs';
 import { Message } from 'src/app/models/message.model';
+import { Room } from 'src/app/models/room.model';
 import { User } from 'src/app/models/user.model';
 import { ChatService } from 'src/app/services/chat.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -18,6 +19,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
 
   @Input() userEmitted:any
   @Input() conversationEmitted:Message[] = [];
+  @Input() roomConvers?:any
   @Output() getconvers = new EventEmitter<boolean>()
   displayConv:boolean = true
   userId?:number
@@ -26,6 +28,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   msg = new FormGroup({message: new FormControl})
 
   messages: Message[] = [];
+  roomMessage:Message[] =[]
   
   users:User[] = [];
   lastMessages:any[] = []
@@ -44,14 +47,20 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.messages = this.conversationEmitted
+    // FOR PRIVATE MESSAGE
     this.chatService.conversation$.subscribe(data=> this.messages = data)
-    return this.chatService.getNewMessage().subscribe(data=>{
+    this.chatService.getNewMessage().subscribe(data=>{
         this.chatService.updateLastMessage(data);
        this.messages.push(data)
        this.messages = _.sortBy(this.messages, 'date');
        this.chatService.sendToGetLastMessage(this.userId!)
       })
+    
+    // FOR ROOM MESSAGE
+    this.chatService.roomConversation$.subscribe(data=>{
+      this.roomMessage = data
+    })
+    this.chatService.getRoomMessage().subscribe(data=>this.roomMessage.push(data))
   }
 
   getConversEvent() {
@@ -59,7 +68,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     this.userEmitted[1] = false;
   }
 
-  onSubmit() {
+  sendPrivateMessage() {
     let message = this.msg.value.message
     let senderId = this.userId
     let receiverId = this.userEmitted[0].id
@@ -73,6 +82,13 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     this.chatService.sendToGetLastMessage(this.userId!)
     this.chatService.updateLastMessage(msg)
     this.messages = _.sortBy(this.messages, 'date');
+  }
+
+  sendRoomMessage() {
+    const msg = {senderId:this.userId, receiverId:this.userId, message:this.msg.value.message, date:new Date(), readed:false, roomId:this.roomConvers[0].id}
+    if (!msg.message) return;
+    this.chatService.sendRoomMessage(this.userId!, this.roomConvers[0], msg)
+    this.msg.reset();
   }
 
   ngOnDestroy(): void {

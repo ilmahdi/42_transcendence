@@ -7,6 +7,8 @@ import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/user/utils/models/user.interface';
 import { UserService } from 'src/user/user.service';
+import { JwtService } from '@nestjs/jwt';
+import { Room } from './utils/models/room.interface';
 
 @WebSocketGateway({cors: {origin: 'http://localhost:4200'}})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
@@ -15,7 +17,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   messages:Message[] = []
   id:string[] = []
 
-  constructor(private chatService:ChatService, private authService:AuthService, private userService:UserService) {
+  constructor(private chatService:ChatService, private authService:AuthService, private userService:UserService, private readonly jwtService: JwtService) {
   }
 
   handleDisconnect(client: Socket) {
@@ -27,7 +29,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   {
     console.log("CONNECTED  ", client.id)
     this.id.push(client.id)
-    // this.userService.updateUser(this.authService.getJwtUser(jwt), client.id)
+
+    // const jwt = client.handshake.headers.authorization || null;
+    // this.userService.updateUser(this.authService.getJwtUser(jwt), client.id);
   }
 
   @SubscribeMessage('updateSocketId')
@@ -74,6 +78,25 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   getRooms(client:Socket, id:number) {
     this.chatService.getRooms(id).subscribe(data=>{
       client.emit('recRooms', data)
+    })
+  }
+
+  @SubscribeMessage('roomMessage')
+  roomMessage(client:Socket, data:any) {
+    this.chatService.saveMessage(data.message);
+    let usersId:(number[]) = data.room.usersId;
+    usersId.forEach(id=> {
+      this.userService.getUserById(id).subscribe(user=>{
+        this.server.to(user.socketId).emit('recRoomMessage', data.message);
+      })
+    })
+    this.server.to(client.id).emit('recRoomMessage', data.message);
+  }
+
+  @SubscribeMessage('roomConversation')
+  roomConversation(client:Socket, room:Room) {
+    this.chatService.getRoomConversation(room.id).subscribe(data=>{
+      this.server.to(client.id).emit('recRoomConversation', data)
     })
   }
 }

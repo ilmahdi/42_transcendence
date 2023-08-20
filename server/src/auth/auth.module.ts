@@ -15,10 +15,9 @@ import { JwtStrategy } from './guards/jwt.strategy';
 @Module({
     imports: [
         UserModule,
-        JwtModule.registerAsync({useFactory: () => ({
+        JwtModule.register({
             secret: process.env.JWT_SECRET,
-            signOptions: {expiresIn: '3600s'}
-          })}),
+            signOptions: {expiresIn: '3600s'}}),
         TypeOrmModule.forFeature([UserEntity])
     ],
     controllers: [AuthController],

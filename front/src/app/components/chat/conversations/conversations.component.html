@@ -1,31 +1,55 @@
-<div class="body" *ngIf="userEmitted && !addRoom" [style.display]="userEmitted[1]? 'block': 'none'">
-    <div class="header">
-        <span class="fa fa-angle-double-left" (click)="getConversEvent()"></span>
-        <img src="../../../../assets/sghajdao.jpg" alt="avatar">
-        <span id="conv">Conversation with <span style="font-weight: bolder;">{{userEmitted[0].firstName}}</span></span>
-    </div>
+<div *ngIf="!roomConvers[0]">
+    <div class="body" *ngIf="userEmitted && !addRoom" [style.display]="userEmitted[1]? 'block': 'none'">
+        <div class="header">
+            <span class="fa fa-angle-double-left" (click)="getConversEvent()"></span>
+            <img src="../../../../assets/sghajdao.jpg" alt="avatar">
+            <span id="conv">Conversation with <span style="font-weight: bolder;">{{userEmitted[0].firstName}}</span></span>
+        </div>
 
-    <div class="messages">
-        <div *ngFor="let message of messages">
-            <br>
-            <span *ngIf="message.senderId === userId && message.receiverId === userEmitted[0].id" id="sentMessage">
-                <p>&emsp;{{message.message}}&emsp;</p>
-            </span>
-            <span *ngIf="message.receiverId === userId && message.senderId === userEmitted[0].id" id="receivedMessage">
-                <p>&emsp;{{message.message}}&emsp;</p>
-            </span>
-            <br>
+        <div class="messages">
+            <div *ngFor="let message of messages">
+                <br>
+                <span *ngIf="message.senderId === userId && message.receiverId === userEmitted[0].id" id="sentMessage">
+                    <p>&emsp;{{message.message}}&emsp;</p>
+                </span>
+                <span *ngIf="message.receiverId === userId && message.senderId === userEmitted[0].id" id="receivedMessage">
+                    <p>&emsp;{{message.message}}&emsp;</p>
+                </span>
+                <br>
+            </div>
+        </div>
+
+        <!-- <p *ngFor="let item of messages" style="color: white;">{{item.message}}</p> -->
+
+        <form [formGroup]="msg">
+            <input type="text" id="typing" placeholder="write a message" formControlName="message">
+        </form>
+        <div class="send" (click)="sendPrivateMessage()">
+            <div class="disk">
+                <span class="fa fa-send" (click)="sendPrivateMessage()"></span>
+            </div>
         </div>
     </div>
+</div>
 
-    <!-- <p *ngFor="let item of messages" style="color: white;">{{item.message}}</p> -->
 
-    <form [formGroup]="msg">
-        <input type="text" id="typing" placeholder="write a message" formControlName="message">
-    </form>
-    <div class="send" (click)="onSubmit()">
-        <div class="disk">
-            <span class="fa fa-send" (click)="onSubmit()"></span>
+<div *ngIf="roomConvers[0]">
+    <div class="body" *ngIf="roomConvers && !addRoom" [style.display]="roomConvers[1]? 'block': 'none'">
+        <div class="header">
+            <span class="fa fa-angle-double-left" (click)="getConversEvent()"></span>
+            <img src="../../../../assets/sghajdao.jpg" alt="avatar">
+            <span id="conv">Conversation in <span style="font-weight: bolder;">{{roomConvers[0].name}}</span></span>
+        </div>
+
+        <p *ngFor="let item of roomMessage" style="color: white;">{{item.message}}</p>
+
+        <form [formGroup]="msg">
+            <input type="text" id="typing" placeholder="write a message" formControlName="message">
+        </form>
+        <div class="send" (click)="sendRoomMessage()">
+            <div class="disk">
+                <span class="fa fa-send" (click)="sendRoomMessage()"></span>
+            </div>
         </div>
     </div>
 </div>
