@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as Pusher from 'pusher';
-import { Observable, from } from 'rxjs';
+import { Observable, from, map, switchMap } from 'rxjs';
 import { Message } from './utils/models/message.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MessageEntity } from './utils/models/message.entity';
@@ -32,7 +32,7 @@ export class ChatService {
                 {senderId: receiverId, receiverId: senderId}
               ],
             });
-            return from(messages);
+            return from(messages).pipe(map((messages: Message[]) => messages.filter(item => item.roomId === -1)));;
         } catch (error) {
             // Handle errors (e.g., database connection errors)
             throw new Error('Could not retrieve messages');
@@ -47,7 +47,7 @@ export class ChatService {
                 {receiverId: id}
               ],
             });
-            return from(messages);
+            return from(messages).pipe(map((messages: Message[]) => messages.filter(item => item.roomId === -1)));;
         } catch (error) {
             throw new Error('Could not retrieve messages');
         }
@@ -103,4 +103,52 @@ export class ChatService {
         else
             return null
     }
+
+    getRoomLastMessage(id:number): Observable<Message[]> {
+      try {
+        const rooms = this.roomRepository
+            .createQueryBuilder('room')
+            .where('room.adminId = :id OR :id = ANY(room.usersId)', { id })
+            .getMany();
+
+        const messages = this.messageRepository.find({
+          where: [
+            {senderId: id},
+            {receiverId: id}
+          ],
+        });
+
+        return from(messages).pipe(map((messages: Message[]) => messages.filter(item => item.roomId !== -1)));
+    } catch (error) {
+        throw new Error('Could not retrieve messages');
+    }
+  }
+
+  getMessagesByUserId(userId: number): Observable<Message[]> {
+    return from(
+      this.roomRepository
+        .createQueryBuilder('room')
+        .select('room.id')
+        .where('room.adminId = :userId OR :userId = ANY(room.usersId)', {
+          userId,
+        })
+        .getMany()
+    ).pipe(
+      switchMap((rooms: Room[]) => {
+        const roomIds = rooms.map(room => room.id);
+
+        if (roomIds.length === 0) {
+          return from([]); // Return empty array as an observable if no matching rooms found
+        }
+
+        return from(
+          this.messageRepository
+            .createQueryBuilder('message')
+            .where('message.roomId IN (:...roomIds)', { roomIds })
+            .getMany()
+        );
+      })
+    );
+  }
+
 }

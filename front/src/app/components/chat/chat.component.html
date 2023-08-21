@@ -32,7 +32,7 @@
 <div class="createRoom" *ngIf="addRoom" [style.display]="addRoom? 'block' : 'none'">
     <span class="fa fa-angle-double-left" *ngIf="screenWidth<= 934" (click)="getConversations()"></span>
     <form [formGroup]="room">
-        <input type="file" id="imageUpload">
+        <input type="file" id="imageUpload" formControlName="imagePath" (change)="handleFileChange($event)">
         <p id="giveName" [style]="roomFormularTitles[0].error? 'color: red' : 'color:white'">{{roomFormularTitles[0].title}}</p>
         <input type="text" placeholder="Room name" id="roomName" formControlName="name">
     </form>

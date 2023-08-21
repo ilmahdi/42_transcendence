@@ -19,5 +19,8 @@ export class RoomEntity {
     name?:string;
 
     @Column('integer', { array: true, default: [] })
-    usersId?:number[]
+    usersId?:number[];
+
+    @Column({default: 'default.png'})
+    imagePath?:string;
 }

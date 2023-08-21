@@ -4,6 +4,7 @@ import { LoginService } from 'src/app/services/login.service';
 import { ChatService } from '../../../services/chat.service';
 import { Room } from 'src/app/models/room.model';
 import { Message } from 'src/app/models/message.model';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-rooms',
@@ -21,6 +22,8 @@ export class RoomsComponent implements OnInit {
   rooms:Room[] = []
   messages:Message[] = []
   color:any = {color:'', name:''}
+  lastMessages: any[] = [];
+  selectedRoom?:Room
 
   constructor(private loginService:LoginService, private chatService:ChatService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
@@ -29,6 +32,36 @@ export class RoomsComponent implements OnInit {
 
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
+
+    this.chatService.getRoomMessage().subscribe(data=>{
+      this.chatService.updateRoomLastMessage(data);})
+
+    chatService.sendToGetRoomLastMessage(this.userId!)
+    this.chatService.getRoomLastMessage().subscribe(data=> {
+      data.forEach(data=> {
+        this.lastMessages = this.lastMessages.filter(item => !(item.roomId === data.roomId));
+        this.lastMessages.push(data)
+        chatService.roomLastMessage$.subscribe(data=>{
+          if (this.lastMessages[this.lastMessages.length - 1] !== data) {
+            this.lastMessages = this.lastMessages.filter(item => !(item.roomId === data.roomId));
+            this.lastMessages.push(data)
+          }
+        })
+        this.lastMessages = _.sortBy(this.lastMessages, 'date');
+      })
+    })
+  }
+
+  editeDateFormat(date:Date) {
+    const newDate = new Date(date)
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',   // Two-digit day
+      month: '2-digit', // Two-digit month
+      year: 'numeric'   // Full year
+    };
+    
+    const formattedDate: string = newDate.toLocaleDateString('en-GB', options);
+    return formattedDate
   }
 
   ngOnInit(): void {
@@ -62,8 +95,8 @@ export class RoomsComponent implements OnInit {
       })
     })
     this.chatService.updateRoomConversation(this.messages);
-
     this.chatService.roomFormular(false)
+
     this.conversData.emit(room);
   }
 }

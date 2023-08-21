@@ -1,6 +1,18 @@
 <div class="list">
     <div *ngFor="let room of rooms" class="room" (click)="openRoom(room)" [style.backgroundColor]="(color.name === room.name)? color.color : ''">
-        <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="image">
+        <img [src]="'http://localhost:3000/api/chat/image/' + room.imagePath" alt="avatar" id="image">
         <p id="roomName">{{room.name}}</p>
+
+        <span *ngFor="let item of lastMessages" id="message">
+            <span *ngIf="item">
+                <p *ngIf="item && item.roomId === room.id">{{item.message}}</p>
+            </span>
+        </span>
+
+        <span *ngFor="let item of lastMessages" id="date">
+            <span *ngIf="item">
+                <p *ngIf="item && item.roomId === room.id">{{editeDateFormat(item.date)}}</p>
+            </span>
+        </span>
     </div>
 </div>

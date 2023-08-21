@@ -60,7 +60,12 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     this.chatService.roomConversation$.subscribe(data=>{
       this.roomMessage = data
     })
-    this.chatService.getRoomMessage().subscribe(data=>this.roomMessage.push(data))
+    this.chatService.getRoomMessage().subscribe(data=>{
+      this.chatService.updateRoomLastMessage(data);
+      this.roomMessage.push(data)
+      this.messages = _.sortBy(this.messages, 'date');
+      this.chatService.sendToGetRoomLastMessage(this.userId!)
+    })
   }
 
   getConversEvent() {
@@ -85,10 +90,14 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   }
 
   sendRoomMessage() {
-    const msg = {senderId:this.userId, receiverId:this.userId, message:this.msg.value.message, date:new Date(), readed:false, roomId:this.roomConvers[0].id}
+    const msg = {senderId:this.userId, receiverId:this.roomConvers[0].id, message:this.msg.value.message, date:new Date(), readed:false, roomId:this.roomConvers[0].id}
     if (!msg.message) return;
+    this.chatService.updateSocketId(this.userId!)
     this.chatService.sendRoomMessage(this.userId!, this.roomConvers[0], msg)
     this.msg.reset();
+    this.chatService.sendToGetRoomLastMessage(this.userId!)
+    this.chatService.updateRoomLastMessage(msg)
+    this.messages = _.sortBy(this.messages, 'date');
   }
 
   ngOnDestroy(): void {

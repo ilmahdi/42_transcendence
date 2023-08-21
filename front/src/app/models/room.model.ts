@@ -3,4 +3,5 @@ export interface Room {
     adminId?:number;
     name?:string;
     usersId?:number[]
+    imagePath?:string;
 }

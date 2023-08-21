@@ -17,7 +17,7 @@ import { Room } from 'src/app/models/room.model';
 })
 export class ChatComponent implements OnInit {
 
-  room = new FormGroup({name: new FormControl})
+  room = new FormGroup({name: new FormControl, imagePath: new FormControl})
 
   userEvent?:any[]
   conversationEvent!:Message[];
@@ -35,6 +35,7 @@ export class ChatComponent implements OnInit {
 
   roomFormularTitles:any[] = [{title:'Give your room a name', error:false}, {title:'Add people to your room', error:false}]
 
+  selectedFile?: File
   constructor(private chatService:ChatService, private loginService:LoginService, private router:Router) {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
@@ -43,6 +44,7 @@ export class ChatComponent implements OnInit {
       this.userId = id;
     })
     chatService.sendToGetLastMessage(this.userId!)
+    chatService.sendToGetRoomLastMessage(this.userId!)
   }
 
   ngOnInit(): void {
@@ -97,6 +99,10 @@ export class ChatComponent implements OnInit {
     this.addRoom = false
   }
 
+  handleFileChange(event: any): void {
+    this.selectedFile = event.target.files[0];
+  }
+
   createRoom() {
     let usersAdded = this.users.filter(user=> user.added === true)
     let usersId: (number)[] = []
@@ -104,8 +110,13 @@ export class ChatComponent implements OnInit {
       usersId.push(item.user.id!)
     })
     usersId.push(this.userId!)
+
+    const formData = new FormData();
+    formData.append('file', this.selectedFile!)
+    // this.chatService.uploadImage(formData).subscribe()
+
     let room = {adminId:this.userId, name:this.room.value.name, usersId:usersId};
-    if (usersId.length && this.room.value.name) {
+    if (usersId.length && this.room.value.name && this.room.value.imagePath) {
       this.chatService.createRoom(room).subscribe()
       this.room.reset()
       usersAdded.forEach(item=>item.added = false)

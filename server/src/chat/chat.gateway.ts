@@ -27,7 +27,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   @UseGuards(JwtGuard)
   handleConnection(client: Socket, ...args: any[]) 
   {
-    console.log("CONNECTED  ", client.id)
+    console.log("CONNECTED  ", client.id);
     this.id.push(client.id)
 
     // const jwt = client.handshake.headers.authorization || null;
@@ -97,5 +97,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
     this.chatService.getRoomConversation(room.id).subscribe(data=>{
       this.server.to(client.id).emit('recRoomConversation', data)
     })
+  }
+
+  @SubscribeMessage('getRoomLastMessage')
+  getRoomLastMessage(client:Socket, id:number) {
+    this.chatService.getMessagesByUserId(id).subscribe(data=>{
+      if (!data.length)
+        client.emit('recRoomLastMessage', [{id:0, senderId:id, receiverId:id, message:"Welcome", date:new Date(), roomId:1}])
+      else
+        client.emit('recRoomLastMessage', data)
+    });
   }
 }

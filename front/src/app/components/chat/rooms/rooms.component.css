@@ -42,6 +42,22 @@
     margin-left: 4%;
 }
 
+#date {
+    position: absolute;
+    font-size: small;
+    color: #ABABAB;
+    margin-top: 10px;
+    margin-left: 60%;
+}
+
+#message {
+    position: absolute;
+    color: #ABABAB;
+    font-size: small;
+    margin-top: 33px;
+    margin-left: 72px;
+}
+
 @media (min-width: 2000px) {
     .list {
         left: 470px;

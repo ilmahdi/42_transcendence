@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Put, Res, UploadedFile, UseIntercep
 import { ChatService } from './chat.service';
 import { Message } from './utils/models/message.interface';
 import { MessageBody } from '@nestjs/websockets';
-import { Observable, of } from 'rxjs';
+import { Observable, from, of } from 'rxjs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path'; 
@@ -53,12 +53,14 @@ export class ChatController {
   ////////////////////////////////////////// UPLOAD IMAE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
   @Post('upload')
   @UseInterceptors(FileInterceptor('file', storage))
-  uploadFile(@UploadedFile() file) {
-    return of({imagePath: file.filename});
+  uploadFile(@UploadedFile() file): Observable<string> {
+    console.log(file);
+    
+    return from(file.filename as string);
   }
 
   @Get('image/:imagePath')
   findImage(@Param('imagePath') imagePath, @Res() res) {
-    return of(res.sendFile(join(process.cwd(), 'uploads/images/' + imagePath)))
+    return of(res.sendFile(join(process.cwd(), 'uploads/images/' + imagePath)));
   }
 }

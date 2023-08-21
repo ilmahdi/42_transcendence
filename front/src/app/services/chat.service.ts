@@ -32,6 +32,9 @@ export class ChatService {
   roomConversationSource = new BehaviorSubject<Message[]>([])
   roomConversation$ = this.roomConversationSource.asObservable()
 
+  roomLastMessageSource = new BehaviorSubject<any>({});
+  roomLastMessage$ = this.roomLastMessageSource.asObservable()
+
   constructor(private http:HttpClient, private socket:ChatSocketService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id
@@ -39,6 +42,7 @@ export class ChatService {
     this.socket.connect()
     this.updateSocketId(this.userId!)
     this.sendToGetLastMessage(this.userId!)
+    this.sendToGetRoomLastMessage(this.userId!)
   }
 
   setSocket(socket:ChatSocketService) {
@@ -59,6 +63,10 @@ export class ChatService {
 
   updateLastMessage(message: Message) {
     this.stringSource.next(message);
+  }
+
+  updateRoomLastMessage(message:Message) {
+    this.roomLastMessageSource.next(message);
   }
 
   updateSocketId(userId:number) {
@@ -94,6 +102,14 @@ export class ChatService {
     return this.socket.fromEvent<Message[]>('recLastMessage');
   }
 
+  sendToGetRoomLastMessage(id:number) {
+    this.socket.emit('getRoomLastMessage', id);
+  }
+
+  getRoomLastMessage() {
+    return this.socket.fromEvent<Message[]>('recRoomLastMessage');
+  }
+
   sendToGetRooms(id:number) {
     this.socket.emit('getRooms', id);
   }
@@ -111,7 +127,6 @@ export class ChatService {
   }
 
   sendToGetRoomConversation(room:Room) {
-    // const data = {senderId, receiverId}
     this.socket.emit('roomConversation', room);
   }
 
@@ -135,5 +150,9 @@ export class ChatService {
 
   createRoom(room:Room): Observable<Room> {
     return this.http.post('http://localhost:3000/api/chat/createRoom', room);
+  }
+
+  uploadImage(image:FormData) {
+    return this.http.post('http://localhost:3000/api/chat/upload', image);
   }
 }
