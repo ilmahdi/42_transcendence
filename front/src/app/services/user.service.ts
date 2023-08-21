@@ -21,7 +21,7 @@ export class UserService {
     return this.http.get<IUserData>(`${this.apiUrl}/user/me` ,this.getHeaders());
   }
   getUserDataByUsername (username :string) : Observable<IUserData> {
-    return this.http.get<IUserData>(`${this.apiUrl}/user/${username}` ,this.getHeaders());
+    return this.http.get<IUserData>(`${this.apiUrl}/user/data/${username}` ,this.getHeaders());
   }
 
   uploadImage (formData :FormData) : Observable<any> {
@@ -36,7 +36,7 @@ export class UserService {
     );
   }
   updateUserData (userDataShort :IUserDataShort) : Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/user/${userDataShort.id}`, userDataShort ,this.getHeaders())
+    return this.http.patch<any>(`${this.apiUrl}/user/update/${userDataShort.id}`, userDataShort ,this.getHeaders())
     .pipe(
       catchError( error => {
         return throwError(() => error);

@@ -1,41 +1,85 @@
-import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuBarService } from 'src/app/services/menu-bar.service';
 
 @Component({
   selector: 'app-top-bar',
   templateUrl: './top-bar.component.html',
   styleUrls: ['./top-bar.component.css'],
-  animations: [
-    // to fix later
-    trigger('sidebarSlide', [
-      state('open', style({ transform: 'translateX(0)' })),
-      state('closed', style({ transform: 'translateX(-100%)' })),
-      transition('open <=> closed', animate('9s ease')),
-    ]),
-  ],
-  
 })
 export class TopBarComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  public searchQuery: string = '';
+  public searchResults: any[] = [];
+  public activeIndex: number = -1;
+
   constructor(
     public menuBarService: MenuBarService,
-    private elementRef: ElementRef,
-    ) {
-    }
-    isSidebarOpen: boolean = false;
-
+    private router: Router,
+  ) {
+  }
 
   toggleLeftBar() {
     this.menuBarService.iShowLeftBar = !this.menuBarService.iShowLeftBar;
   }
-
-  @HostListener('document:click', ['$event'])
-  onClick(event: MouseEvent) {
-    if (!this.elementRef.nativeElement.contains(event.target)) {
-      this.menuBarService.iShowLeftBar = false;
+  onOutClick() {
+    this.searchQuery = '';
+    this. searchResults = [];
+  }
+  onSearchInputChange() {
+    if (this.searchQuery.length > 2) {
+      this.activeIndex = -1;
+      this.searchUsers();
+    } else {
+      this.searchResults = [];
     }
   }
+
+  onSearchInputKeyDown(event: KeyboardEvent) {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp')
+      event.preventDefault();
+    if (event.key === 'ArrowDown') {
+      if (this.activeIndex < this.searchResults.length - 1)
+      this.activeIndex++;
+      else
+      this.activeIndex = 0;
+    }
+    else if (event.key === 'ArrowUp') {
+      if (this.activeIndex > 0)
+        this.activeIndex--;
+      else
+        this.activeIndex = this.searchResults.length - 1;
+    }
+
+  }
+  onUserItemEnter(event: Event) {
+    event.preventDefault();
+    if (this.activeIndex >= 0 && this.activeIndex < this.searchResults.length) {
+      this.router.navigate(["/profile", this.searchResults[this.activeIndex].username]);
+      this.onOutClick()
+    }
+  }
+
+
+
+  // private functions
+  searchUsers() {
+    this.menuBarService.searchUsers(this.searchQuery).subscribe({
+      next: response => {
+        this.searchResults = response;
+        console.log(response)
+      },
+      error: error => {
+        console.error('Error:', error.error.message); 
+      }
+    });
+  }
+
+
+
 }
+
+

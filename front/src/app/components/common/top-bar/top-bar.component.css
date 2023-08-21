@@ -8,10 +8,22 @@
     color: var(--primary-text-color);
 }
 
-/* top bar  */
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 12;
+    pointer-events: none;
+    background-color: none;
+}
+
+/* top bar */
 /******/
 .top-bar {
-    position: fixed;
+    position: relative;
+}
+.top-bar-content {
+    position: absolute;
     height: var(--top-bar-hieght);
     width: calc(100% - var(--right-bar-width));
     background-color: var(--top-bar-background-color);
@@ -20,9 +32,20 @@
     justify-content: space-around;
     align-items: center;
     z-index: 5;
-    /* margin-right: 14rem; */
 }
 
+
+.tb-results {
+    position: absolute;
+    top: var(--top-bar-hieght);
+    /* left: var(--left-bar-width); */
+    display: flex;
+    flex-direction: column;
+    width: 12rem;
+    z-index: 11;
+    /* border-radius: 0.2rem; */
+    box-shadow: 0 0rem 0.08rem black;
+}
 
 /* top bar section */
 /******/
@@ -35,11 +58,14 @@
     justify-content: center;
 }
 .tb-sec-two {
+    /* position: relative; */
     display: flex;
     align-items: center;
     flex-grow: 1;
     min-width: max-content;
     margin-left: 1rem;
+    height: 1rem;
+    gap: 0;
 }
 .tb-sec-three {
     display: flex;
@@ -55,7 +81,36 @@
 
 /* top bar section item */
 /******/
+.tb-sec-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
 
+.tb-sec-item.i2 {
+    justify-content: flex-start;
+}
+
+.tb-result-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: var(--third-background-color);
+    height: 2.2rem;
+    padding: 0.6rem;
+    gap: 0.6rem;
+    border: none;
+}
+.tb-result-item:hover {
+    cursor: pointer;
+    background-color: var(--primary-hover-background-color);
+}
+
+.tb-result-item.active {
+    cursor: pointer;
+    background-color: var(--primary-hover-background-color);
+}
 
 
 /* top bar section item specific */
@@ -69,6 +124,7 @@
     width: 1.8rem;
     height: 1.8rem;
     fill: var(--primary-text-color);
+    flex-shrink: 0;
 }
 
 /**/
@@ -87,6 +143,20 @@
 /******/
 
 
+/* top bar section item img */
+/******/
+.tb-sec-item-img {
+
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    object-fit: cover;
+
+    pointer-events: none;
+}
+
+
+
 /* top bar section item text */
 /******/
 
@@ -97,7 +167,12 @@
     outline: none;
     margin-left: 0.6rem;
     font-size: 0.9rem;
-    width: 10rem;
+    width: 100%;
+    /* background-color: blueviolet; */
+
+    max-width: 12rem;
+    min-width: min-content;
+    height: 1.6rem;
 }
 
 .tb-sec-item-text[type="search"]::-webkit-search-cancel-button{
@@ -125,7 +200,7 @@
     
     /* top bar  */
     /******/
-    .top-bar {
+    .top-bar-content {
         width: 100%;
     }
     /* top bar section */

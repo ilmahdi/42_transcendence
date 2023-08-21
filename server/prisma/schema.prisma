@@ -46,7 +46,7 @@ enum AccessLevels {
 //********************************************************************//
 model UserAccount {
   id                  Int                 @id @default(autoincrement())
-  ft_id               Int                 @unique
+  ft_id               Int                 
   username            String              @unique
   // email               String              @unique
   tfa_secret          String?       

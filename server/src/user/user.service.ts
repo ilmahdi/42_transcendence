@@ -21,14 +21,17 @@ export class UserService {
         })
         return user;
     }
-    async findUserByFtId(id: number) {
-        const user = await this.prismaService.userAccount.findUnique({
-            where: {
-                ft_id: id,
-            },
-        })
-        return user;
-    }
+    // async findUserByFtId(id: number) {
+    //     const user = await this.prismaService.userAccount.findUnique({
+    //         where: {
+    //             // original auth
+    //             // ft_id: id,
+    //             id: id,
+    //             // 
+    //         },
+    //     })
+    //     return user;
+    // }
     async findUserByUsername(username: string) {
         const user = await this.prismaService.userAccount.findUnique({
             where: {
@@ -36,6 +39,21 @@ export class UserService {
             },
         })
         return user;
+    }
+    async findManyUsers(query :string) {
+        const users = await this.prismaService.userAccount.findMany({
+            select: {
+                username: true,
+                avatar: true,
+              },
+            take: 13,
+            where: {
+                username: {
+                    startsWith: query,
+                }
+            },
+        })
+        return users;
     }
     async addUser(createUserDto: CreateUserDto) {
         const user = await this.prismaService.userAccount.create({
@@ -54,13 +72,15 @@ export class UserService {
         return updatedUser;
     }
     async registerUser(createUserDto :CreateUserDto) {
+        // original auth
 
-        let user = await this.findUserByFtId(createUserDto.ft_id);
+        // let user = await this.findUserByFtId(createUserDto.ft_id);
+        // if (user) 
+        //     throw new HttpException('User is already exist', HttpStatus.CONFLICT);
+        
+        //
 
-        if (user) 
-            throw new HttpException('User is already exist', HttpStatus.CONFLICT);
-
-        user = await this.findUserByUsername(createUserDto.username);
+        const user = await this.findUserByUsername(createUserDto.username);
 
         if (user) 
             throw new HttpException('Username is already in use', HttpStatus.CONFLICT);
@@ -82,34 +102,39 @@ export class UserService {
         }
         
   }
-    async updateUser(id :number, updateUserDto :UpdateUserDto) {
+  async updateUser(id :number, updateUserDto :UpdateUserDto) {
+      
+      let user = await this.findUserById(id);
+      
+      if (!user) 
+      throw new HttpException('User not found', HttpStatus.CONFLICT);
+    
+    user = await this.findUserByUsername(updateUserDto.username);
+    
+    if (user && user.id != id ) 
+    throw new HttpException('Username is already in use', HttpStatus.CONFLICT);
 
-        let user = await this.findUserById(id);
-
-        if (!user) 
-        throw new HttpException('User not found', HttpStatus.CONFLICT);
-
-        user = await this.findUserByUsername(updateUserDto.username);
-
-        if (user && user.id != id ) 
-            throw new HttpException('Username is already in use', HttpStatus.CONFLICT);
-
-        try {
-
-            const user = await this.updateUserData(id, updateUserDto);
-            const token = this.tokenService.generateToken(
-                {
-                    sub: user.id,
-                    username: user.username,
-                }
-            )
-            // console.log(token)
-            return { token };
-        } catch(error) {
-            throw new HttpException('Failed to update user', HttpStatus.CONFLICT);
+try {
+    
+    const user = await this.updateUserData(id, updateUserDto);
+    const token = this.tokenService.generateToken(
+        {
+            sub: user.id,
+            username: user.username,
         }
-        
-  }
+        )
+        // console.log(token)
+        return { token };
+    } catch(error) {
+        throw new HttpException('Failed to update user', HttpStatus.CONFLICT);
+    }
+    
+}
+async searchUsers(query :string) {
+    const users = await this.findManyUsers(query)
+    
+    return users;
+}
 
 
 }

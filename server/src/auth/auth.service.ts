@@ -14,7 +14,10 @@ export class AuthService {
 
     async validateFtUser(profile: Profile){
         let firstLogin :string = "false";
-        let user = await this.userService.findUserByFtId(profile.ft_id);
+        // original auth
+        // let user = await this.userService.findUserByFtId(profile.ft_id);
+        let user = await this.userService.findUserByUsername(profile.username);
+        // 
         if (!user)
         {
             // user = await this.userService.addUser(profile);

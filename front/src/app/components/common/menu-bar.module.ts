@@ -7,6 +7,7 @@ import { TopBarRoutingModule } from './top-bar/top-bar-routing.module';
 import { LeftBarSecondComponent } from './left-bar-second/left-bar-second.component';
 import { LeftBarSecondRoutingModule } from './left-bar-second/left-bar-second-routing.module';
 import { OnlineFriendsComponent } from './right-bar/online-friends/online-friends.component';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -19,6 +20,7 @@ import { OnlineFriendsComponent } from './right-bar/online-friends/online-friend
   ],
   imports: [
     CommonModule,
+    FormsModule,
     LeftBarRoutingModule,
     LeftBarSecondRoutingModule,
     TopBarRoutingModule
@@ -31,4 +33,5 @@ import { OnlineFriendsComponent } from './right-bar/online-friends/online-friend
    ]
 })
 export class MenuBarModule { 
- }
+}
+

@@ -7,7 +7,7 @@ import { JwtPayload } from '../interfaces';
 export class TokenService {
 
   generateToken(payload: JwtPayload) {
-    return  jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' })
+    return  jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' })
   }
 
   verifyToken(token: string): any {

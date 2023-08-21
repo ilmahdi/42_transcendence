@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Patch, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, NotFoundException, Param, Patch, Post, Query, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { JwtGuard } from "src/auth/utils/guards/jwt.guard";
 import { UserData } from "./utils/interfaces/user-data.interface";
@@ -25,14 +25,54 @@ export class UserController {
         return req.user;
         
     }
+
     @UseGuards(JwtGuard)
-    @Get(":username")
+    @Get("search")
+    searchUsers(@Query('q') query: string) { 
+      
+        const users = this.userService.searchUsers(query);
+        return users;
+    }
+
+
+    @Post("avatar/upload")
+    @UseInterceptors(
+      FileInterceptor('image', {
+        storage: diskStorage({
+          destination: process.env.UPLOAD_DIR, 
+          filename: editFileName,   
+        }),
+        fileFilter: imageFileFilter,
+      }),
+      )
+      async uploadImage(@UploadedFile() image: Express.Multer.File) {
+        
+        return { filename: image.filename };
+      }
+
+      
+      
+    @Post("register")
+    registerUser(@Body() createUserDto: CreateUserDto) {
+      try {
+        const token = this.userService.registerUser(createUserDto);
+        return token;
+        
+      } catch (error) {
+        if (error instanceof NotFoundException) {
+          throw new NotFoundException(error.message);
+        }
+        throw new Error('Error creating user');
+      }
+    }
+    
+    @UseGuards(JwtGuard)
+    @Get("data/:username")
     getUser(@Param('username') username: string) : any {
         
         return this.userService.findUserByUsername(username);
         
     }
-
 
     @Get("avatar/:filename")
     getAvatar(@Param('filename') filename: string, @Res() res: Response) {
@@ -50,50 +90,12 @@ export class UserController {
       }
     }
 
-    
-
-    @Post("avatar/upload")
-    @UseInterceptors(
-      FileInterceptor('image', {
-        storage: diskStorage({
-          destination: process.env.UPLOAD_DIR, 
-          filename: editFileName,   
-        }),
-        fileFilter: imageFileFilter,
-      }),
-      )
-      async uploadImage(@UploadedFile() image: Express.Multer.File) {
-        
-        return { filename: image.filename };
-      }
-
-
-      @Post("register")
-      registerUser(@Body() createUserDto: CreateUserDto) {
-        try {
-          const token = this.userService.registerUser(createUserDto);
-          return token;
-        
-        } catch (error) {
-          if (error instanceof NotFoundException) {
-            throw new NotFoundException(error.message);
-          }
-          throw new Error('Error creating user');
-        }
-    }
-      @UseGuards(JwtGuard)
-      @Patch("/:id")
-      updateUser(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-        try {
-          const token = this.userService.updateUser(id, updateUserDto);
-          return token;
-        
-        } catch (error) {
-          if (error instanceof NotFoundException) {
-            throw new NotFoundException(error.message);
-          }
-          throw new Error('Error updating user');
-        }
+    @UseGuards(JwtGuard)
+    @Patch("update/:id")
+    updateUser(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+      
+      const token = this.userService.updateUser(id, updateUserDto);
+      return token;
     }
     
     
