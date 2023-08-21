@@ -113,9 +113,11 @@ export class ChatComponent implements OnInit {
 
     const formData = new FormData();
     formData.append('file', this.selectedFile!)
-    // this.chatService.uploadImage(formData).subscribe()
+    this.chatService.uploadImage(formData).subscribe()
+    let path:string = this.room.value.imagePath
+    let imageName = path.split('\\')
 
-    let room = {adminId:this.userId, name:this.room.value.name, usersId:usersId};
+    let room = {adminId:this.userId, name:this.room.value.name, usersId:usersId, imagePath:imageName[imageName.length - 1]};
     if (usersId.length && this.room.value.name && this.room.value.imagePath) {
       this.chatService.createRoom(room).subscribe()
       this.room.reset()
