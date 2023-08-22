@@ -19,7 +19,7 @@ app-profile-id {
     max-width: 50rem;
     overflow: hidden;
     position: relative;
-    color: var(--primary-text-color);
+    color: white;
 }
 
 

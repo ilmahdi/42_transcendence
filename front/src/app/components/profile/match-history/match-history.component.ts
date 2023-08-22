@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { UserService } from 'src/app/services/user.service'; 
+import { IHistory } from 'src/app/utils/interfaces/history.interface';
 
 @Component({
   selector: 'app-match-history',
@@ -7,58 +10,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MatchHistoryComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private userService: UserService,
+    private route: ActivatedRoute,
+  ) {
+  }
+  public matchs : IHistory[] = [];
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+
+      this.userService.getMatchHistory(params['username']).subscribe((data: IHistory[]) => {
+        this.matchs = data;
+     });
+    });
   }
-  public matchs = [
-    {
-      avatar1 : "https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg",
-      username1 : "imahdi",
-      score1: +9,
-      rating1: 1245,
-      avatar2 : "https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg",
-      username2 : "ossama",
-      score2: -8,
-      rating2: 1322,
-      date : new Date(),
-      duration : "00min 10s",
-    },
-    {
-      avatar1 : "https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg",
-      username1 : "imahdi",
-      score1: +9,
-      rating1: 1245,
-      avatar2 : "https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg",
-      username2 : "ossama",
-      score2: -8,
-      rating2: 1322,
-      date : new Date(),
-      duration : "00min 10s",
-    },
-    {
-      avatar1 : "https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg",
-      username1 : "imahdi",
-      score1: +9,
-      rating1: 1245,
-      avatar2 : "https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg",
-      username2 : "ossama",
-      score2: -8,
-      rating2: 1322,
-      date : new Date(),
-      duration : "00min 10s",
-    },
-    {
-      avatar1 : "https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg",
-      username1 : "imahdi",
-      score1: +9,
-      rating1: 1245,
-      avatar2 : "https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg",
-      username2 : "ossama",
-      score2: -8,
-      rating2: 1322,
-      date : new Date(),
-      duration : "00min 10s",
-    },
-  ]
 }

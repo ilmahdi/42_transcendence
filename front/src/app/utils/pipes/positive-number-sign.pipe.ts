@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'positiveNumber'
+  name: 'positiveNumberSign'
 })
-export class PositiveNumberPipe implements PipeTransform {
+export class PositiveNumberPipeSign implements PipeTransform {
   transform(value: number): string {
     if (value >= 0) {
       return `+${value}`;

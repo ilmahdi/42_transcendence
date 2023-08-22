@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { JWT_TOKEN } from '../utils/constants';
 import { IUserData, IUserDataShort } from '../utils/interfaces/user-data.interface';
 import { Observable, catchError, throwError } from 'rxjs';
+import { IHistory } from '../utils/interfaces/history.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -52,5 +53,13 @@ export class UserService {
     const headers = { Authorization: `Bearer ${accessToken}` };
     return { headers };
   }
-
+  
+  
+  
+  
+  // temporary 
+  /*********************************************/
+  getMatchHistory (username :string) : Observable<IHistory[]> {
+    return this.http.get<IHistory[]>(`${this.apiUrl}/tmp/history` ,this.getHeaders());
+  }
 }

@@ -70,7 +70,6 @@ export class TopBarComponent implements OnInit {
     this.menuBarService.searchUsers(this.searchQuery).subscribe({
       next: response => {
         this.searchResults = response;
-        console.log(response)
       },
       error: error => {
         console.error('Error:', error.error.message); 

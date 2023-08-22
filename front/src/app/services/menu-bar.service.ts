@@ -18,7 +18,7 @@ export class MenuBarService {
   }
 
   searchUsers(searchQuery :string ) : Observable<any> {
-    console.log(searchQuery)
+    
     return this.http.get<any>(`${this.apiUrl}/user/search?q=${searchQuery}`,this.getHeaders())
     .pipe(
       catchError( error => {
