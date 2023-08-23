@@ -1,5 +1,6 @@
 
 <div class="profile-id">
+    
     <div class="pi-sec-one">
         <img class="pi-sec-one-img" [src]="userData.avatar" alt="avatar">
     </div>
@@ -17,12 +18,21 @@
                         <use xlink:href="./assets/icons/add.svg#icon-add"></use>
                     </svg>
                 <span>Add</span> 
-            </button>   
-            <button class="pi-sec-four-btn b2"> 
-                <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="./assets/icons/more.svg#icon-more"></use>
-                </svg>
-            </button>   
+            </button>
+            <div class="pi-sec-four-containe">
+
+                <button class="pi-sec-four-btn b2" [class.active]="isMoreClicked" (click)="onMoreClick()"
+                    appClickOutside (appClickOutside)="isMoreClicked && onClickedOutside()"
+                > 
+                    <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/more.svg#icon-more"></use>
+                    </svg>
+                </button>   
+                <div class="pi-sec-four-more" *ngIf="isMoreClicked">
+                    <app-more-opts *ngIf="isMoreClicked"></app-more-opts>
+                </div>
+            </div>
         </div>
     </ng-template>
 </div>
+

@@ -25,10 +25,6 @@ export class TopBarComponent implements OnInit {
   toggleLeftBar() {
     this.menuBarService.iShowLeftBar = !this.menuBarService.iShowLeftBar;
   }
-  onOutClick() {
-    this.searchQuery = '';
-    this. searchResults = [];
-  }
   onSearchInputChange() {
     if (this.searchQuery.length > 2) {
       this.activeIndex = -1;
@@ -55,12 +51,18 @@ export class TopBarComponent implements OnInit {
     }
 
   }
+
   onUserItemEnter(event: Event) {
     event.preventDefault();
     if (this.activeIndex >= 0 && this.activeIndex < this.searchResults.length) {
       this.router.navigate(["/profile", this.searchResults[this.activeIndex].username]);
-      this.onOutClick()
+      this.onClickedOutside()
     }
+  }
+
+  onClickedOutside(): void {
+    this.searchQuery = '';
+    this. searchResults = [];    
   }
 
 

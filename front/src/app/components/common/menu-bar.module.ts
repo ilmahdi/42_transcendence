@@ -8,6 +8,8 @@ import { LeftBarSecondComponent } from './left-bar-second/left-bar-second.compon
 import { LeftBarSecondRoutingModule } from './left-bar-second/left-bar-second-routing.module';
 import { OnlineFriendsComponent } from './right-bar/online-friends/online-friends.component';
 import { FormsModule } from '@angular/forms';
+import { SharedModule } from 'src/app/utils/shared/shared.module';
+
 
 
 
@@ -23,7 +25,8 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     LeftBarRoutingModule,
     LeftBarSecondRoutingModule,
-    TopBarRoutingModule
+    TopBarRoutingModule,
+    SharedModule,
   ],
   exports: [ 
     LeftBarComponent,

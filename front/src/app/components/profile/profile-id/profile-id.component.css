@@ -73,6 +73,17 @@
     gap: 0.6rem;
 }
 
+.pi-sec-four-containe {
+    position: relative;
+
+}
+.pi-sec-four-more {
+    position: absolute;
+    z-index: 11;
+    bottom: 2.2rem;
+    left: 2.3rem;
+}
+
 .pi-sec-four-btn {
     display: flex;
     align-items: center;
@@ -90,7 +101,11 @@
 .pi-sec-four-btn.b2 {
     padding: 0 0.2rem;
 }
-
+.pi-sec-four-btn.b2.active {
+    border-top-right-radius: 0;
+    border-color: var(--third-background-color);
+    background-color: var(--third-background-color);
+}
 
 .pi-sec-three:hover {
     cursor: pointer;
@@ -136,7 +151,19 @@
     width: 1.6rem;
     height: 1.6rem;
 }
-    
+
+
+.pi-sec-four-btn.b2.active {
+    border-radius: 0.6rem 0.6rem 0.6rem 0;
+}
+
+.pi-sec-four-more {
+    position: absolute;
+    z-index: 11;
+    top: 2.4rem;
+    left: -10rem;
+}
+
 
 }
 

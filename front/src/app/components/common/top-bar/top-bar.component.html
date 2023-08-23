@@ -1,5 +1,5 @@
 <app-left-bar-second *ngIf="this.menuBarService.iShowLeftBar"></app-left-bar-second>
-<div class="top-bar" (click)="onOutClick()">
+<div class="top-bar">
     
     <ul  class="top-bar-content">
         <div class="tb-sec-all tb-sec-one">
@@ -20,13 +20,14 @@
                     (ngModelChange)="onSearchInputChange()" 
                     (keydown)="onSearchInputKeyDown($event)"
                     (keydown.enter)="onUserItemEnter($event)"
-                    name="look" type="search" placeholder="search...">
+                    name="look" type="search" placeholder="search..."
+                    appClickOutside (appClickOutside)="searchQuery && onClickedOutside()" >
             </li>
             <div class="tb-results" *ngIf="searchResults.length">
                 <button class="tb-result-item" 
                     *ngFor="let searchResult of searchResults; let i = index" 
                     [class.active]="i === activeIndex" 
-                    [routerLink]="['/profile', searchResult.username]">
+                    [routerLink]="['/profile', searchResult.username]" >
                     
                     <img class="tb-sec-item-img" [src]="searchResult.avatar" alt="avatar">
                     <span class="tb-sec-item-user">{{searchResult.username}}</span>
@@ -52,4 +53,3 @@
     
     
 </div>
-<!-- <div class="overlay" (click)="onOutClick()"></div> -->

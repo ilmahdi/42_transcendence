@@ -12,6 +12,9 @@ import { MatchHistoryComponent } from './match-history/match-history.component';
 import { PositiveNumberPipeSign } from 'src/app/utils/pipes/positive-number-sign.pipe';
 import { RelativeTimePipe } from 'src/app/utils/pipes/relative-time.pipe';
 import { AchievementsComponent } from './achievements/achievements.component';
+import { MoreOptsComponent } from './more-opts/more-opts.component';
+import { SharedModule } from 'src/app/utils/shared/shared.module';
+
 
 
 @NgModule({
@@ -23,6 +26,7 @@ import { AchievementsComponent } from './achievements/achievements.component';
     PositiveNumberPipeSign,
     RelativeTimePipe,
     AchievementsComponent,
+    MoreOptsComponent,
   ],
   exports: [ProfileComponent],
   imports: [
@@ -31,6 +35,7 @@ import { AchievementsComponent } from './achievements/achievements.component';
     NavBarModule,
     OnlineModule,
     MenuBarModule,
+    SharedModule,
   ]
 })
 export class ProfileModule { }

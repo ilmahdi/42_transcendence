@@ -20,6 +20,7 @@ app-profile-id {
     overflow: hidden;
     position: relative;
     color: white;
+    overflow: visible;
 }
 
 

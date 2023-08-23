@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" >
+<symbol 
+    id="icon-unblock"
+  viewBox="0 0 24 24"
+>
+   <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M20 21C20 17.13 16.1903 14 11.5 14C6.80966 14 3 17.13 3 21" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M10 19.52L11.52 21.04L14.56 18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+</symbol>
+</svg>
+
+
+
+
+
+

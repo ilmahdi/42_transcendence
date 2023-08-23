@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
@@ -6,7 +6,7 @@ import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
 @Component({
   selector: 'app-profile-id',
   templateUrl: './profile-id.component.html',
-  styleUrls: ['./profile-id.component.css']
+  styleUrls: ['./profile-id.component.css'],
 })
 export class ProfileIdComponent implements OnInit {
 
@@ -16,6 +16,7 @@ export class ProfileIdComponent implements OnInit {
   ) { }
 
   public isOwnProfile: boolean = false;
+  public isMoreClicked: boolean = false;
   @Input() userData: IUserData = {
     id:0,
     username: '',
@@ -31,6 +32,14 @@ export class ProfileIdComponent implements OnInit {
 
       this.isOwnProfile = params['username'] === this.authService.getLoggedInUser();
     });
+  }
+
+  onMoreClick(){
+    this.isMoreClicked = !this.isMoreClicked;
+  }
+  
+  onClickedOutside(): void {
+    this.isMoreClicked = false
   }
   
 }
