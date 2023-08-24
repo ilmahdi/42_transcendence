@@ -85,10 +85,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   }
 
   @SubscribeMessage('getNotReadedMessages')
-  getNotReadedMessages(client:Socket, id:number) {
-    this.chatService.getUnreadMessageCountsBySenderId(id).subscribe(data=>{
+  async getNotReadedMessages(client:Socket, id:number) {
+    const data = await this.chatService.getUnreadMessageCountsBySenderId(id)
       client.emit('recNotReadedMessages', data);
-    })
+    // })
     
   }
 

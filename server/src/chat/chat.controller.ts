@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { Message } from './utils/models/message.interface';
 import { MessageBody } from '@nestjs/websockets';
@@ -13,8 +13,9 @@ export const storage = {
   storage:diskStorage({
     destination: './uploads/images',
     filename: (req, file, cb)=> {
-      const filename: string = path.parse(file.originalname).name.replace(/\s/g, '');
-      const extension: string = path.parse(file.originalname).ext;
+      const originalname = file.originalname || 'default.jpg'; 
+      const filename: string = path.parse(originalname).name.replace(/\s/g, '');
+      const extension: string = path.parse(originalname).ext;
 
       cb(null, `${filename}${extension}`)
     }
@@ -47,6 +48,12 @@ export class ChatController {
     return this.chatService.getUnreadMessageCountsBySenderId(id)
   }
 
+  @Get('search')
+  async searchConversation(@Query('query') query:string) {
+    const users = await this.chatService.searchConversation(query);
+    return users;
+  }
+
   ////////////////////////////////////////// ROMMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
   @Post('createRoom')
@@ -55,13 +62,20 @@ export class ChatController {
     return room
   }
 
+  @Get('searchRoom')
+  async searchRoom(@Query('query') query:string) {
+    const rooms = await this.chatService.searchRooms(query);
+    return rooms;
+  }
+
   ////////////////////////////////////////// UPLOAD IMAE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
   @Post('upload')
   @UseInterceptors(FileInterceptor('file', storage))
   uploadFile(@UploadedFile() file): Observable<string> {
     console.log(file);
-    
-    return from(file.filename as string);
+    if (file)
+      return from(file.filename as string);
+    return from('default.jpg')
   }
 
   @Get('image/:imagePath')

@@ -41,7 +41,7 @@ export class DirectComponent implements OnInit, OnDestroy {
     window.addEventListener('resize', this.onResize.bind(this));
 
     // GET THE NUMBER OF MESSAGES WHICH ARE NOT HAVE READED BY YOUR SELF WITH THE SENDER ID
-    chatService.sendToGetNotReadedMessages(this.userId!)
+    // chatService.sendToGetNotReadedMessages(this.userId!)
     this.chatService.getNewMessage().subscribe(data=>{
       this.chatService.updateLastMessage(data);
       chatService.getNotReadedMessages().subscribe(data=>{
@@ -83,7 +83,12 @@ export class DirectComponent implements OnInit, OnDestroy {
           this.users?.push(user);
         }
       })
+      this.chatService.updateUsers(this.users)
     });
+
+    this.chatService.users$.subscribe(data=> {
+      this.users = data;
+    })
   }
 
   onResize() {
@@ -113,6 +118,9 @@ export class DirectComponent implements OnInit, OnDestroy {
     })
     this.chatService.roomFormular(false);
     this.chatService.updateConversation(this.messages);
+    this.chatService.getNotReadedMessages().subscribe(data=>{
+      this.chatService.updateReadedBehav(data);
+    })
     this.customEvent.emit(friend)
   }
 
@@ -130,6 +138,7 @@ export class DirectComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.messages = []
+    this.chatService.updateUsers([])
   }
 
 }

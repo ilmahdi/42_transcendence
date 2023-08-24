@@ -12,18 +12,16 @@
     </div>
 
     <div class="headerPart" [style.border-radius]="!roomsClicked?'0px 15px 0px 0px' : '15px 0px 0px 0px'">
-        <input type="text" class="search" placeholder="search...">
+        <input type="text" class="search" placeholder="search..." [(ngModel)]="searchQuery" (ngModelChange)="searchQueryConvers()">
         <span id="rightSerch"></span>
-        <span class="fa fa-search"></span>
+        <span class="fa fa-search" (click)="searchConvers()"></span>
     </div>
 
     <div class="headerPart" [style.border-radius]="!roomsClicked?'0px 15px 0px 0px' : '15px 0px 0px 0px'" *ngIf="roomsClicked">
-        <input type="text" class="roomsSearch" placeholder="search...">
-        <span class="fa fa-search fa-rooms"></span>
+        <input type="text" class="roomsSearch" placeholder="search..." [(ngModel)]="searchQuery" (ngModelChange)="searchQueryRooms()">
+        <span class="fa fa-search fa-rooms" (click)="searchRooms()"></span>
         <span class="fa fa-plus-square" (click)="displayFormRoom()"></span>
     </div>
-
-    
 
     <app-direct *ngIf="directClicked" (customEvent)="onCustomEvent($event)" (conversation)="getConversation($event)"></app-direct>
     <app-rooms *ngIf="roomsClicked" (conversData)="getRoomConvers($event)"></app-rooms>

@@ -31,7 +31,6 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   roomMessage:Message[] =[]
   
   users:User[] = [];
-  lastMessages:any[] = []
 
   addRoom:boolean = false
   constructor(private chatService: ChatService, private loginService:LoginService) {

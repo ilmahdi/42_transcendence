@@ -36,6 +36,9 @@ export class ChatComponent implements OnInit {
   roomFormularTitles:any[] = [{title:'Give your room a name', error:false}, {title:'Add people to your room', error:false}]
 
   selectedFile?: File
+
+  searchQuery: string = '';/////////////
+  searchResults: User[] = [];
   constructor(private chatService:ChatService, private loginService:LoginService, private router:Router) {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
@@ -144,5 +147,33 @@ export class ChatComponent implements OnInit {
     this.smallScreen = true
     this.displayConvers = false
     this.roomData = [room, true]
+  }
+
+  searchConvers() {
+    this.chatService.searchConvers(this.searchQuery).subscribe(data=>{
+      this.searchResults = data
+      this.chatService.updateUsers(data)
+    })
+  }
+
+  searchQueryConvers() {
+    this.chatService.searchConvers(this.searchQuery).subscribe(data=>{
+      this.searchResults = data
+      this.chatService.updateUsers(data)
+    })
+  }
+
+  searchRooms() {
+    this.chatService.searchRooms(this.searchQuery).subscribe(data=>{
+      this.searchResults = data
+      this.chatService.updateRooms(data)
+    })
+  }
+
+  searchQueryRooms() {
+    this.chatService.searchRooms(this.searchQuery).subscribe(data=>{
+      this.searchResults = data
+      this.chatService.updateRooms(data)
+    })
   }
 }

@@ -8,12 +8,14 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import { EventEmitter } from 'events';
 import { RoomEntity } from './utils/models/room.entity';
 import { Room } from './utils/models/room.interface';
+import { UserEntity } from 'src/user/utils/models/user.entity';
 
 @Injectable()
 export class ChatService {
     constructor(
         @InjectRepository(MessageEntity) private readonly messageRepository:Repository<MessageEntity>,
-        @InjectRepository(RoomEntity) private readonly roomRepository:Repository<RoomEntity>
+        @InjectRepository(RoomEntity) private readonly roomRepository:Repository<RoomEntity>,
+        @InjectRepository(UserEntity) private readonly userRepository:Repository<UserEntity>
     ) {}
 
     saveMessage(message: Message) {
@@ -72,19 +74,53 @@ export class ChatService {
       this.messageRepository.update(msg.id, msg);
     }
 
-    getUnreadMessageCountsBySenderId(receiverId: number): Observable<{ senderId: number; unreadCount: number }[]> {
+    // getUnreadMessageCountsBySenderId(receiverId: number): Observable<{ senderId: number; unreadCount: number; }[]> {
+    //   const query = `
+    //     SELECT "senderId", COUNT(*) AS "unreadCount"
+    //     FROM "message"
+    //     WHERE "receiverId" = $1 AND "readed" = false
+    //     GROUP BY "senderId"
+    //   `;
+  
+    //   return from(this.messageRepository.query(query, [receiverId])).pipe(
+    //     map(unreadMessages => unreadMessages as { senderId: number; unreadCount: number }[])
+    //   );
+    // }
+
+    async getUnreadMessageCountsBySenderId(receiverId: number): Promise<{ senderId: number; unreadCount: number }[]> {
       const query = `
         SELECT "senderId", COUNT(*) AS "unreadCount"
         FROM "message"
         WHERE "receiverId" = $1 AND "readed" = false
         GROUP BY "senderId"
       `;
-  
-      return from(this.messageRepository.query(query, [receiverId])).pipe(
-        map(unreadMessages => unreadMessages as { senderId: number; unreadCount: number }[])
-      );
+    
+      try {
+        const unreadMessages = await this.messageRepository.query(query, [receiverId]);
+        return unreadMessages as { senderId: number; unreadCount: number }[];
+      } catch (error) {
+        console.error('Error querying unread messages:', error);
+        throw error; // Re-throw the error to be handled at a higher level
+      }
     }
 
+    async searchConversation(query:string) {
+      const users = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.firstName LIKE :query OR user.lastName LIKE :query', { query: `%${query}%` })
+      .getMany();
+
+      return users;
+    }
+
+    async searchRooms(query:string) {
+      const users = await this.roomRepository
+      .createQueryBuilder('room')
+      .where('room.name LIKE :query', { query: `%${query}%` })
+      .getMany();
+
+      return users;
+    }
     ///////////////////////////////////////// ROOMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     createRoom(room:Room) {

@@ -38,6 +38,12 @@ export class ChatService {
   notReadedMessageSource = new BehaviorSubject<{ senderId: number; unreadCount: number }[]>([]);
   notReadedMessage$ = this.notReadedMessageSource.asObservable()
 
+  usersSource = new BehaviorSubject<User[]>([]);
+  users$ = this.usersSource.asObservable()
+
+  roomsSource = new BehaviorSubject<Room[]>([]);
+  rooms$ = this.roomsSource.asObservable()
+
   constructor(private http:HttpClient, private socket:ChatSocketService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id
@@ -46,6 +52,15 @@ export class ChatService {
     this.updateSocketId(this.userId!)
     this.sendToGetLastMessage(this.userId!)
     this.sendToGetRoomLastMessage(this.userId!)
+  }
+
+  updateRooms(rooms:Room[]) {
+    this.roomsSource.next(rooms)
+  }
+
+  updateUsers(users:User[]) {
+    users = users.filter(item=> item.id !== this.userId)
+    this.usersSource.next(users);
   }
 
   setSocket(socket:ChatSocketService) {
@@ -169,5 +184,13 @@ export class ChatService {
 
   uploadImage(image:FormData) {
     return this.http.post('http://localhost:3000/api/chat/upload', image);
+  }
+
+  searchConvers(name:string) {
+    return this.http.get<User[]>('http://localhost:3000/api/chat/search?query=' + name)
+  }
+
+  searchRooms(name:string) {
+    return this.http.get<Room[]>('http://localhost:3000/api/chat/searchRoom?query=' + name)
   }
 }

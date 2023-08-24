@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { take } from 'rxjs';
 import { LoginService } from 'src/app/services/login.service';
 import { ChatService } from '../../../services/chat.service';
@@ -11,7 +11,7 @@ import * as _ from 'lodash';
   templateUrl: './rooms.component.html',
   styleUrls: ['./rooms.component.css']
 })
-export class RoomsComponent implements OnInit {
+export class RoomsComponent implements OnInit, OnDestroy {
 
   @Output() conversData = new EventEmitter<Room>()
   smallScreen:boolean = false;
@@ -67,10 +67,14 @@ export class RoomsComponent implements OnInit {
   ngOnInit(): void {
     this.chatService.sendToGetRooms(this.userId!);
     this.chatService.getRooms().subscribe(data=>{
+      this.rooms = []
       data.forEach(item=> {
         this.rooms.push(item)
       })
+      this.chatService.updateRooms(this.rooms)
     })
+
+    this.chatService.rooms$.subscribe(data=>{this.rooms = data})
   }
 
   onResize() {
@@ -98,5 +102,9 @@ export class RoomsComponent implements OnInit {
     this.chatService.roomFormular(false)
 
     this.conversData.emit(room);
+  }
+
+  ngOnDestroy(): void {
+    this.chatService.updateRooms([])
   }
 }
