@@ -52,13 +52,13 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     this.chatService.getNewMessage().subscribe(data=>{
         this.chatService.updateLastMessage(data);
        this.messages.push(data)
-       this.messages = _.sortBy(this.messages, 'date');
+      //  this.messages = _.sortBy(this.messages, 'date');
        this.chatService.sendToGetLastMessage(this.userId!)
       })
     
     // FOR ROOM MESSAGE
     this.chatService.roomConversation$.subscribe(data=>{
-      this.roomMessage = data
+      this.roomMessage = data;
     })
     this.chatService.getRoomMessage().subscribe(data=>{
       this.chatService.updateRoomLastMessage(data);
@@ -95,7 +95,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     this.chatService.updateSocketId(this.userId!)
     this.chatService.sendRoomMessage(this.userId!, this.roomConvers[0], msg)
     this.msg.reset();
-    this.chatService.sendToGetRoomLastMessage(this.userId!)
+    this.chatService.sendToGetRoomLastMessage(this.userId!);
     this.chatService.updateRoomLastMessage(msg)
     this.messages = _.sortBy(this.messages, 'date');
   }

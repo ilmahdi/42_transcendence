@@ -35,6 +35,9 @@ export class ChatService {
   roomLastMessageSource = new BehaviorSubject<any>({});
   roomLastMessage$ = this.roomLastMessageSource.asObservable()
 
+  notReadedMessageSource = new BehaviorSubject<{ senderId: number; unreadCount: number }[]>([]);
+  notReadedMessage$ = this.notReadedMessageSource.asObservable()
+
   constructor(private http:HttpClient, private socket:ChatSocketService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id
@@ -51,6 +54,10 @@ export class ChatService {
 
   roomFormular(statue:boolean) {
     this.addRoom.next(statue);
+  }
+
+  updateReadedBehav(data:{ senderId: number; unreadCount: number }[]) {
+    this.notReadedMessageSource.next(data)
   }
 
   updateConversation(conversation:Message[]) {
@@ -134,6 +141,14 @@ export class ChatService {
     return this.socket.fromEvent<Message[]>('recRoomConversation')
   }
 
+  sendToGetNotReadedMessages(receiverId:number) {
+    this.socket.emit('getNotReadedMessages', receiverId);
+  }
+
+  getNotReadedMessages() {
+    return this.socket.fromEvent<{ senderId: number; unreadCount: number }[]>('recNotReadedMessages');
+  }
+
   token:string|null = localStorage.getItem('token');
   
   private httpOptions: { headers: HttpHeaders } = {
@@ -144,8 +159,8 @@ export class ChatService {
     return this.http.get<User[]>('http://localhost:3000/api/auth/allUsers', this.httpOptions).pipe(take(1));
   }
 
-  updateReaded(receiverId:number, senderId:number) {
-    this.socket.emit('updateReaded', {receiverId:receiverId, senderId:senderId})
+  updateReaded(message:Message) {
+    this.socket.emit('updateReaded', message)
   }
 
   createRoom(room:Room): Observable<Room> {

@@ -25,8 +25,9 @@ export class DirectComponent implements OnInit, OnDestroy {
   messages: Message[] = [];
 
   lastMessages: any[] = [];
-  user?:User
+  user?:User;
 
+  notReaded:{ senderId: number; unreadCount: number }[] = []
   constructor(private chatService:ChatService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
@@ -39,31 +40,47 @@ export class DirectComponent implements OnInit, OnDestroy {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
 
+    // GET THE NUMBER OF MESSAGES WHICH ARE NOT HAVE READED BY YOUR SELF WITH THE SENDER ID
+    chatService.sendToGetNotReadedMessages(this.userId!)
     this.chatService.getNewMessage().subscribe(data=>{
-      this.chatService.updateLastMessage(data);})
-
+      this.chatService.updateLastMessage(data);
+      chatService.getNotReadedMessages().subscribe(data=>{
+        chatService.updateReadedBehav(data);
+      })
+    })
+    
+    
     chatService.sendToGetLastMessage(this.userId!)
     this.chatService.getLastMessage().subscribe(data=> {
       data.forEach(data=> {
         this.lastMessages = this.lastMessages.filter(item => !((item.receiverId === data.receiverId && item.senderId === data.senderId) || (item.senderId === data.receiverId && item.receiverId === data.senderId)));
         this.lastMessages.push(data)
         chatService.string$.subscribe(data=>{
+          chatService.sendToGetNotReadedMessages(this.userId!)//////////
           if (this.lastMessages[this.lastMessages.length - 1] !== data) {
             this.lastMessages = this.lastMessages.filter(item => !((item.receiverId === data.receiverId && item.senderId === data.senderId) || (item.senderId === data.receiverId && item.receiverId === data.senderId)));
             this.lastMessages.push(data)
+            // console.log(data)
           }
         })
         this.lastMessages = _.sortBy(this.lastMessages, 'date');
         // MAKAYDKHELX HNA ILA KANT LCONVERSATIION KHAWYA
       })
     })
+
+    chatService.notReadedMessage$.subscribe(data=>{
+        this.notReaded = [];
+        // this.notReaded = this.notReaded.filter(item=> item.senderId !== data[0].senderId);
+        data.forEach(item=>this.notReaded.push(item));
+    })
+    
   }
 
   ngOnInit(): void {
     this.chatService.getUsers().subscribe((data) => {
       data.forEach((user)=>{
         if (user.id != this.userId) {
-          this.users?.push(user)
+          this.users?.push(user);
         }
       })
     });
@@ -87,12 +104,15 @@ export class DirectComponent implements OnInit, OnDestroy {
     subscribe((data) => {
       this.messages.splice(0, this.messages.length);
       data.forEach((item)=>{
-          this.messages.push(item)
+          this.messages.push(item);
+          if (item.senderId !== this.userId) {
+            this.chatService.updateReaded(item);
+            this.chatService.updateReadedBehav(this.notReaded.filter(shit=> shit.senderId !== item.senderId));
+          }
       })
     })
-    this.chatService.roomFormular(false)
+    this.chatService.roomFormular(false);
     this.chatService.updateConversation(this.messages);
-    // this.conversation.emit(this.messages);
     this.customEvent.emit(friend)
   }
 

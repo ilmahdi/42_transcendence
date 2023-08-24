@@ -42,6 +42,11 @@ export class ChatController {
     return this.chatService.getConversation(data.senderId, data.receiverId);
   }
 
+  @Post('notReaded')
+  notReaded(@Body() id:number) {
+    return this.chatService.getUnreadMessageCountsBySenderId(id)
+  }
+
   ////////////////////////////////////////// ROMMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
   @Post('createRoom')

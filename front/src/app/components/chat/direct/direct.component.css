@@ -74,6 +74,16 @@
     margin-left: 49px;
 }
 
+#notReaded {
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    border-radius: 15px;
+    right: 20px;
+    top: 30px;
+    background-color: #FF7A00;
+}
+
 @media (min-width: 2000px) {
     .convers {
         left: 470px;

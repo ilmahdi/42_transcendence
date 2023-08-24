@@ -37,7 +37,7 @@
     <div class="body" *ngIf="roomConvers && !addRoom" [style.display]="roomConvers[1]? 'block': 'none'">
         <div class="header">
             <span class="fa fa-angle-double-left" (click)="getConversEvent()"></span>
-            <img src="../../../../assets/sghajdao.jpg" alt="avatar">
+            <img [src]="'http://localhost:3000/api/chat/image/' + roomConvers[0].imagePath" alt="avatar">
             <span id="conv">Conversation in <span style="font-weight: bolder;">{{roomConvers[0].name}}</span></span>
         </div>
 

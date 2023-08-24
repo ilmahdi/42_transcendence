@@ -53,18 +53,36 @@ export class ChatService {
         }
     }
 
-    updateReaded(receiverId:number, senderId:number) {
-        const message = this.messageRepository.find({
-            where: {
-              senderId: senderId, receiverId: receiverId
-            },
-        });
-        from(message).subscribe(data=>{
-            data.forEach(data=>{
-                const msg = {id:data.id, senderId:data.senderId, receiverId:data.receiverId, message:data.message, date:data.date, readed:true}
-                this.messageRepository.update(msg.id, msg);
-            })
-        })
+    // updateReaded(receiverId:number, senderId:number) {
+    //     const message = this.messageRepository.find({
+    //         where: {
+    //           senderId: senderId, receiverId: receiverId
+    //         },
+    //     });
+    //     from(message).subscribe(data=>{
+    //         data.forEach(data=>{
+    //             const msg = {id:data.id, senderId:data.senderId, receiverId:data.receiverId, message:data.message, date:data.date, readed:true}
+    //             this.messageRepository.update(msg.id, msg);
+    //         })
+    //     })
+    // }
+
+    updateReaded(message:Message) {
+      let msg = {id:message.id, senderId:message.senderId, receiverId:message.receiverId, message:message.message, date:message.date, readed:true, roomId:-1}
+      this.messageRepository.update(msg.id, msg);
+    }
+
+    getUnreadMessageCountsBySenderId(receiverId: number): Observable<{ senderId: number; unreadCount: number }[]> {
+      const query = `
+        SELECT "senderId", COUNT(*) AS "unreadCount"
+        FROM "message"
+        WHERE "receiverId" = $1 AND "readed" = false
+        GROUP BY "senderId"
+      `;
+  
+      return from(this.messageRepository.query(query, [receiverId])).pipe(
+        map(unreadMessages => unreadMessages as { senderId: number; unreadCount: number }[])
+      );
     }
 
     ///////////////////////////////////////// ROOMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
