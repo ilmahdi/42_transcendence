@@ -20,9 +20,9 @@ export class MatchHistoryComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
 
-      this.userService.getMatchHistory(params['username']).subscribe((data: IHistory[]) => {
-        this.matchs = data;
-     });
+    //   this.userService.getMatchHistory(params['username']).subscribe((data: IHistory[]) => {
+    //     this.matchs = data;
+    //  });
     });
   }
 }
