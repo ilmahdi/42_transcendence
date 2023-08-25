@@ -26,10 +26,9 @@ app-profile-id {
 
 
 .ps-sec-one-img {
-    
-    height: 18rem;
-    border-radius: 1rem 1rem 0 0;
+    height: 100%;
     width: 100%;
+    border-radius: 1rem 1rem 0 0;
     max-width: 50rem;
     object-fit: cover;
 }
@@ -38,15 +37,25 @@ app-profile-id {
     border-radius: 1rem 1rem 0 0;
     width: 100%;
     max-width: 50rem;
-    background-image: url(../../../../assets/imgs/cover.png);
-    object-fit: cover;
+    box-shadow: 0 0rem 0.2rem black;
     
 }
+
+
+.ps-sec-one-blur {
+    position: absolute;
+    border-radius: 1rem 1rem 0 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(var(--primary-transparent-color-background), 60%);
+
+}
+
 .ps-sec-two {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    background-color: rgb(var(--primary-transparent-color-background));
+    background-color: rgb(var(--primary-transparent-color-background), 70%);
     position: absolute;
     bottom: 0rem;
     width: 100%;
@@ -86,12 +95,9 @@ app-profile-id {
     .ps-sec-one {
         position: relative;
     }
-    .ps-sec-one-cover {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background-color: rgb(var(--primary-transparent-color-background));
+    .ps-sec-one-blur {
 
+        background-color: rgb(var(--primary-transparent-color-background), 90%);
     }
     .ps-sec-two {
         flex-direction: column;
@@ -114,9 +120,6 @@ app-profile-id {
         font-weight: 500;
         justify-content: center;
         align-items: center;
-    }
-    .ps-sec-one-img {
-        display: none;
     }
     .ps-sec-one {
         height: 20rem;

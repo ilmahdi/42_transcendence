@@ -1,16 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Profile } from "src/auth/utils/interfaces";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateUserDto } from "./utils/dtos/update-user.dto";
 import { CreateUserDto } from "./utils/dtos/create-user.dto";
 import { TokenService } from "src/common/services/token.service";
+import { FrinedshipDto } from "./utils/dtos/friendship.dto";
 
 @Injectable()
 export class UserService {
     constructor(
         private readonly prismaService: PrismaService,
         private tokenService: TokenService,
-        ){
+    ) {
     }
 
     async findUserById(id: number) {
@@ -40,12 +40,12 @@ export class UserService {
         })
         return user;
     }
-    async findManyUsers(query :string) {
+    async findManyUsers(query: string) {
         const users = await this.prismaService.userAccount.findMany({
             select: {
                 username: true,
                 avatar: true,
-              },
+            },
             take: 13,
             where: {
                 username: {
@@ -64,25 +64,25 @@ export class UserService {
         })
         return user;
     }
-    async updateUserData (id :number, updateUserDto :UpdateUserDto) {
+    async updateUserData(id: number, updateUserDto: UpdateUserDto) {
         const updatedUser = await this.prismaService.userAccount.update({
             where: { id },
             data: updateUserDto,
         });
         return updatedUser;
     }
-    async registerUser(createUserDto :CreateUserDto) {
+    async registerUser(createUserDto: CreateUserDto) {
         // original auth
 
         // let user = await this.findUserByFtId(createUserDto.ft_id);
         // if (user) 
         //     throw new HttpException('User is already exist', HttpStatus.CONFLICT);
-        
+
         //
 
         const user = await this.findUserByUsername(createUserDto.username);
 
-        if (user) 
+        if (user)
             throw new HttpException('Username is already in use', HttpStatus.CONFLICT);
 
         try {
@@ -97,44 +97,97 @@ export class UserService {
             // console.log(token)
             return { token };
 
-        } catch(error) {
+        } catch (error) {
             throw new HttpException('Failed to update user', HttpStatus.CONFLICT);
         }
-        
-  }
-  async updateUser(id :number, updateUserDto :UpdateUserDto) {
-      
-      let user = await this.findUserById(id);
-      
-      if (!user) 
-      throw new HttpException('User not found', HttpStatus.CONFLICT);
-    
-    user = await this.findUserByUsername(updateUserDto.username);
-    
-    if (user && user.id != id ) 
-    throw new HttpException('Username is already in use', HttpStatus.CONFLICT);
 
-try {
-    
-    const user = await this.updateUserData(id, updateUserDto);
-    const token = this.tokenService.generateToken(
-        {
-            sub: user.id,
-            username: user.username,
-        }
-        )
-        // console.log(token)
-        return { token };
-    } catch(error) {
-        throw new HttpException('Failed to update user', HttpStatus.CONFLICT);
     }
-    
-}
-async searchUsers(query :string) {
-    const users = await this.findManyUsers(query)
-    
-    return users;
-}
+    async updateUser(id: number, updateUserDto: UpdateUserDto) {
+
+        let user = await this.findUserById(id);
+
+        if (!user)
+            throw new HttpException('User not found', HttpStatus.CONFLICT);
+
+        user = await this.findUserByUsername(updateUserDto.username);
+
+        if (user && user.id != id)
+            throw new HttpException('Username is already in use', HttpStatus.CONFLICT);
+
+        try {
+
+            const user = await this.updateUserData(id, updateUserDto);
+            const token = this.tokenService.generateToken(
+                {
+                    sub: user.id,
+                    username: user.username,
+                }
+            )
+            // console.log(token)
+            return { token };
+        } catch (error) {
+            throw new HttpException('Failed to update user', HttpStatus.CONFLICT);
+        }
+
+    }
+    async searchUsers(query: string) {
+        const users = await this.findManyUsers(query)
+
+        return users;
+    }
+
+    async addFriend(friendship: FrinedshipDto) {
+        const existingFriendship = await this.checkFriendship(friendship)
+
+        if (existingFriendship) {
+            throw new HttpException('Friendship already exists', HttpStatus.CONFLICT);
+        }
+
+        const friendshipData = await this.prismaService.friendship.create({
+            data: {
+                user_id: friendship.user_id,
+                friend_id: friendship.friend_id,
+                friendship_status: 'WAITING',
+            },
+        });
+        return friendshipData;
+    }
+    async checkFriendship(friendship: FrinedshipDto) {
+
+        const existingFriendship = await this.prismaService.friendship.findFirst({
+            where: {
+                OR: [
+                    {
+                        user_id: friendship.user_id,
+                        friend_id: friendship.friend_id,
+                    },
+                    {
+                        friend_id: friendship.friend_id,
+                        user_id: friendship.user_id,
+                    },
+                ],
+            },
+        });
+        return existingFriendship;
+    }
+    async deleteFriendship(friendshipId :number) {
+
+        const existingFriendship = await this.prismaService.friendship.findUnique({
+            where: {
+              id: friendshipId,
+            },
+        })
+
+        if (!existingFriendship) {
+            throw new HttpException('Friendship not found', HttpStatus.CONFLICT);
+        }
+        
+        return await this.prismaService.friendship.delete({
+            where: {
+              id: friendshipId,
+            },
+          });
+    }
 
 
 }

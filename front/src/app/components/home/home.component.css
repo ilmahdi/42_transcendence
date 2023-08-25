@@ -52,6 +52,7 @@
     height: 20rem;
     gap: 1rem;
     min-width: 34rem;
+    box-shadow: 0 0rem 0.1rem black;
 
 }
 
@@ -74,6 +75,7 @@
     background-repeat: no-repeat;
     background-size: auto 20rem;
     background-position: center top -0.2rem;
+    box-shadow: 0 0rem 0.1rem black;
 }
 
 /* home page section one */

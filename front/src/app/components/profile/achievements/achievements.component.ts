@@ -7,8 +7,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AchievementsComponent implements OnInit {
 
-  progressWidth : string = "30%"
-
   constructor() { }
 
   ngOnInit(): void {

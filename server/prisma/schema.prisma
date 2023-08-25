@@ -56,7 +56,10 @@ model UserAccount {
   wins                Int                 @default(0)          
   losses              Int                 @default(0)
   draws               Int                 @default(0)
+  games               Int                 @default(0)
   rating              Int                 @default(1000)
+
+  win_streak          Int                 @default(0)
 
   created_at          DateTime            @default(now())
   updated_at          DateTime            @updatedAt

@@ -20,14 +20,14 @@
         <div class="ld-sec-table">
           <div
             class="ld-sec-tb-row"
-            *ngFor="let user of users; let i = index"
+            *ngFor="let friend of friends; let i = index"
           >
             <div class="ld-sec-tb-data">
-              <span class="ld-sec-tb-data-item entry">{{ user.name }}</span>
+              <span class="ld-sec-tb-data-item entry">{{ friend.name }}</span>
               <span class="ld-sec-tb-data-item">
-                <img src="{{ user.avatar }}" />
+                <img src="{{ friend.avatar }}" />
               </span>
-              <span class="ld-sec-tb-data-item">{{ user.rating }}</span>
+              <span class="ld-sec-tb-data-item">{{ friend.rating }}</span>
               <span class="ld-sec-tb-data-item">
                   <svg class="ld-sec-tb-data-icon" xmlns="http://www.w3.org/2000/svg">
                       <use xlink:href="./assets/icons/arrow.svg#icon-arrow"></use>

@@ -45,6 +45,16 @@ export class UserService {
     );
   }
 
+  addFriend (friendship :{user_id: number, friend_id: number}) : Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/user/friends/add`, friendship ,this.getHeaders());
+  }
+  checkFriendship (friendship :{user_id: number, friend_id: number}) : Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/user/friends/check`, friendship ,this.getHeaders());
+  }
+  cancelFriend (frinedship_id :number) : Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/user/friends/cancel/${frinedship_id}` ,this.getHeaders());
+  }
+
 
   // private functions
   /*********************************************/

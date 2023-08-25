@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Patch, Post, Query, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { JwtGuard } from "src/auth/utils/guards/jwt.guard";
 import { UserData } from "./utils/interfaces/user-data.interface";
@@ -9,6 +9,8 @@ import { Request, Response } from "express";
 import * as fs from 'fs';
 import { UpdateUserDto } from "./utils/dtos/update-user.dto";
 import { CreateUserDto } from "./utils/dtos/create-user.dto";
+import { FrinedshipDto } from "./utils/dtos/friendship.dto";
+import { log } from "console";
 
 
 @Controller('user')
@@ -98,5 +100,29 @@ export class UserController {
       return token;
     }
     
-    
+    @UseGuards(JwtGuard)
+    @Post("friends/add")
+    addFriend(@Body() friendship: FrinedshipDto) : any {
+
+        return this.userService.addFriend(friendship);        
+    }
+    @UseGuards(JwtGuard)
+    @Post("friends/check")
+    async checkFriendship(@Body() friendship: FrinedshipDto) {
+
+        const existingFriendship = await this.userService.checkFriendship(friendship);
+        if (existingFriendship)
+          return existingFriendship;
+
+        return { friendship_status: "NONE" };
+
+    }
+    @UseGuards(JwtGuard)
+    @Delete('friends/cancel/:friendshipId')
+    async cancelFriend(@Param('friendshipId') friendshipId: number) {
+
+      const friendship = await this.userService.deleteFriendship(friendshipId);
+      return friendship;
+
+    }
   }

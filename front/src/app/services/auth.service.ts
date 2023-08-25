@@ -24,10 +24,16 @@ export class AuthService {
    getLoggedInUser(): string {
     const token = localStorage.getItem(JWT_TOKEN);
     if (token) {
-      const decodedToken = this.jwtHelper.decodeToken(token);
-      return decodedToken.username;
+      return this.getUsernameFromToken(token);
     }
     return "";
+  }
+   getLoggedInUserId(): number {
+    const token = localStorage.getItem(JWT_TOKEN);
+    if (token) {
+      return +this.getIdFromToken(token);
+    }
+    return -1;
   }
 
   clearToken(): void {
@@ -36,6 +42,15 @@ export class AuthService {
 
   logout(): void {
     this.clearToken();
+  }
+
+  getUsernameFromToken(token :string) {
+    const decodedToken = this.jwtHelper.decodeToken(token);
+    return decodedToken.username;
+  }
+  getIdFromToken(token :string) {
+    const decodedToken = this.jwtHelper.decodeToken(token);
+    return decodedToken.sub;
   }
  
 

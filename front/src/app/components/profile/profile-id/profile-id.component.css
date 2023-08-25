@@ -14,8 +14,9 @@
     width: 13rem; 
     padding: 1rem;
     background-color:blueviolet;
-    background-color: rgba(var(--primary-transparent-color-background));
+    background-color: rgba(var(--primary-transparent-color-background), 86%);
     border-radius: 1rem;
+    box-shadow: 0 0rem 0.4rem black;
 }
 
 
@@ -25,6 +26,8 @@
     height: 7rem;
     object-fit: cover;
     border-radius: 50%;
+    padding: 0.05rem;
+    border: 0.01rem solid var(--primary-border-color);
     
 }
 
@@ -102,6 +105,7 @@
     padding: 0 0.2rem;
 }
 .pi-sec-four-btn.b2.active {
+    box-shadow: 0 0rem 0.4rem black;
     border-top-right-radius: 0;
     border-color: var(--third-background-color);
     background-color: var(--third-background-color);
@@ -129,6 +133,7 @@
     width: 10rem;
     padding: 0.8rem;
     background-color: rgba(0,0,0, 0%);
+    box-shadow: 0 0rem 0rem black;
 }
 
 .pi-sec-three {
@@ -142,8 +147,6 @@
     width: 5.4rem;
     height: 5.4rem;
     object-fit: cover;
-    border-radius: 50%;
-    
 }
 .pi-sec-one-icon {
     left: 7.4rem;
@@ -160,8 +163,8 @@
 .pi-sec-four-more {
     position: absolute;
     z-index: 11;
-    top: 2.4rem;
-    left: -10rem;
+    top: 2.3rem;
+    left: -9.8rem;
 }
 
 

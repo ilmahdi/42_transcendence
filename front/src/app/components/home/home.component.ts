@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit {
     wins: 0,
     losses: 0,
     draws: 0,
+    games: 0,
     rating: 0,
   };
 

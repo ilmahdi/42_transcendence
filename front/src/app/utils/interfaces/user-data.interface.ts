@@ -5,6 +5,7 @@ export interface IUserData {
     wins: number,
     losses: number,
     draws:  number,
+    games: number,
     rating: number,
 }
 

@@ -13,11 +13,17 @@
     <ng-template #isNotOwnProfile>
         <div class="pi-sec-four">
             
-            <button class="pi-sec-four-btn b1"> 
+            <button class="pi-sec-four-btn b1" (click)="onAddClick()" *ngIf="friendshipStatus==='NONE'"> 
                     <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
                         <use xlink:href="./assets/icons/add.svg#icon-add"></use>
                     </svg>
                 <span>Add</span> 
+            </button>
+            <button class="pi-sec-four-btn b1" (click)="onCancelClick()" *ngIf="friendshipStatus==='WAITING'"> 
+                    <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/cancel.svg#icon-cancel"></use>
+                    </svg>
+                <span>Cancel</span> 
             </button>
             <div class="pi-sec-four-containe">
 

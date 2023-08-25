@@ -24,7 +24,6 @@ import { Profile } from '../interfaces'
           avatar: profile._json.image.link,
         }
         
-        // console.log(miniProfile);
         const user = await this.authService.validateFtUser(miniProfile);
         if (!user) {
           throw new UnauthorizedException();

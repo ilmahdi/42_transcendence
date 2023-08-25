@@ -68,18 +68,19 @@
     width: 9.4rem;
     height: 9.4rem;
     gap: 0.6rem;
+    box-shadow: 0 0rem 0.3rem black;
 }
 
 .ac-item-cover {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: rgba(var(--ach-transparent-color-background), 50%);
-    border: solid 0.2rem rgb(var(--ach-transparent-color-background));
+    background-color: rgba(var(--ach-transparent-color-background), 60%);
+    /* border: solid 0.2rem rgb(var(--ach-transparent-color-background)); */
     border-radius: 0.6rem;
     
 }
 .ac-item-uncover {
-    background-color: var(--primary-hover-background-color);
+    background-color: var(--third-background-color);
     z-index: -1;
  }
