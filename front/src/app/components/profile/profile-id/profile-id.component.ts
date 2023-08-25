@@ -21,6 +21,7 @@ export class ProfileIdComponent implements OnChanges {
   public isMoreClicked: boolean = false;
   public friendshipStatus: string = "NONE";
   public friendshipId: number = -1;
+  public isRequestInitiator :boolean = true;
 
   @Input() userData: IUserData = {
     id:0,
@@ -37,8 +38,6 @@ export class ProfileIdComponent implements OnChanges {
     this.route.params.subscribe(params => {
 
       this.isOwnProfile = params['username'] === this.authService.getLoggedInUser();
-
-      
     });
   }
 
@@ -60,8 +59,12 @@ export class ProfileIdComponent implements OnChanges {
       friend_id: this.userData.id
     }).subscribe({
       next: response => {
+
         this.friendshipStatus = response.friendship_status;
         this.friendshipId = response.id;
+        this.isRequestInitiator = this.authService.getLoggedInUserId() === response.user_id;
+        console.log(this.userData.id, response.user_id);
+        
       },
       error: error => {
         console.error('Error:', error.error.message); 
@@ -82,6 +85,19 @@ export class ProfileIdComponent implements OnChanges {
       }
     });
   }
+  onAcceptClick() {
+    if (this.friendshipId < 0)
+      return
+    this.userService.acceptFriend(this.friendshipId).subscribe({
+      next: response => {
+        
+        this.friendshipStatus = response.friendship_status;
+      },
+      error: error => {
+        console.error('Error:', error.error.message); 
+      }
+    });
+  }
 
   checkFriendshipStatus(): void {
     if (!this.isOwnProfile) {
@@ -90,12 +106,13 @@ export class ProfileIdComponent implements OnChanges {
         friend_id: this.userData.id
       }).subscribe({
         next: response => {
-          console.log(response.friendship_status)
-          this.friendshipStatus = "NONE";
+          
+          this.friendshipStatus = response.friendship_status;
           this.friendshipId = response.id;
+          this.isRequestInitiator = this.authService.getLoggedInUserId() === response.user_id;
         },
         error: error => {
-          console.error('Error checking friendship:', error.error.message);
+          console.error('Error:', error.error.message);
         }
       });
     }

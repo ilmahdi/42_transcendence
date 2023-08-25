@@ -25,7 +25,10 @@
             <div class="ld-sec-tb-data">
               <span class="ld-sec-tb-data-item entry">{{ friend.name }}</span>
               <span class="ld-sec-tb-data-item">
-                <img src="{{ friend.avatar }}" />
+                <img src="{{ friend.avatar }}" 
+                  style="display: none" onload="this.style.display=''"
+                  onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+                />
               </span>
               <span class="ld-sec-tb-data-item">{{ friend.rating }}</span>
               <span class="ld-sec-tb-data-item">

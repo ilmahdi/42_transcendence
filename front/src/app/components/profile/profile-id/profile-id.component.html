@@ -2,7 +2,10 @@
 <div class="profile-id">
     
     <div class="pi-sec-one">
-        <img class="pi-sec-one-img" [src]="userData.avatar" alt="avatar">
+        <img class="pi-sec-one-img" [src]="userData.avatar" 
+            style="display: none" onload="this.style.display=''"
+            onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+        />
     </div>
     <div class="pi-sec-two">
         <span> {{ userData.username }} </span>
@@ -19,11 +22,23 @@
                     </svg>
                 <span>Add</span> 
             </button>
-            <button class="pi-sec-four-btn b1" (click)="onCancelClick()" *ngIf="friendshipStatus==='WAITING'"> 
+            <button class="pi-sec-four-btn b1" (click)="onCancelClick()" *ngIf="isRequestInitiator && friendshipStatus==='WAITING'"> 
                     <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
                         <use xlink:href="./assets/icons/cancel.svg#icon-cancel"></use>
                     </svg>
                 <span>Cancel</span> 
+            </button>
+            <button class="pi-sec-four-btn b1" (click)="onAcceptClick()" *ngIf="!isRequestInitiator && friendshipStatus==='WAITING'"> 
+                    <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/add.svg#icon-add"></use>
+                    </svg>
+                <span>Accept</span> 
+            </button>
+            <button class="pi-sec-four-btn b1" *ngIf=" friendshipStatus==='ACCEPTED'"> 
+                    <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/play.svg#icon-play"></use>
+                    </svg>
+                <span>Play</span> 
             </button>
             <div class="pi-sec-four-containe">
 

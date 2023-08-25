@@ -6,7 +6,10 @@
   <div class="home-page">
     <div class="hp-sec-one">
       <div class="hb-s-one-profile">
-        <img class="hb-profile-img" [routerLink]="['/profile', userData.username]" [src]="userData.avatar" />
+        <img class="hb-profile-img" [routerLink]="['/profile', userData.username]" [src]="userData.avatar" 
+            style="display: none" onload="this.style.display=''"
+            onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+        />
         <span class="hb-profile-text" [routerLink]="['/profile', userData.username]"> {{ userData.username }} </span>
       </div>
       <div class="hb-s-one-overview">

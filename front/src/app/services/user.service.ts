@@ -54,6 +54,9 @@ export class UserService {
   cancelFriend (frinedship_id :number) : Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/user/friends/cancel/${frinedship_id}` ,this.getHeaders());
   }
+  acceptFriend (frinedship_id :number) : Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/user/friends/accept/${frinedship_id}` ,this.getHeaders());
+  }
 
 
   // private functions

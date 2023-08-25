@@ -125,4 +125,12 @@ export class UserController {
       return friendship;
 
     }
+    @UseGuards(JwtGuard)
+    @Get('friends/accept/:friendshipId')
+    async acceptFriend(@Param('friendshipId') friendshipId: number) {
+
+      const friendship = await this.userService.acceptFriendship(friendshipId);
+      return friendship;
+
+    }
   }

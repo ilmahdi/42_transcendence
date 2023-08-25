@@ -4,7 +4,10 @@
     >
 
     <div class="rb-sec-one">
-        <img class="rb-sec-one-img" [src]="imgUrl" alt="avatar">
+        <img class="rb-sec-one-img" [src]="imgUrl"
+            style="display: none" onload="this.style.display=''"
+            onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+        />
         <span class="rb-sec-one-text">ilmahdi</span>
     </div>
     <!-- <span class="rb-sec-all-hr"></span> -->
@@ -14,7 +17,10 @@
     <!-- <span class="rb-sec-all-hr"></span> -->
     <div class="rb-sec-three" *ngFor="let i of users">
         <div class="rb-sec-three-item" >    
-            <img class="rb-sec-three-img"  [src]="imgUrl2" alt="avatar">
+            <img class="rb-sec-three-img"  [src]="imgUrl2" 
+                style="display: none" onload="this.style.display=''"
+                onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+            />
             <span class="rb-sec-three-g-dot"></span>
             <span class="rb-sec-three-text">{{i.name}}</span>
         </div>

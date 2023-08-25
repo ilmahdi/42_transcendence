@@ -29,7 +29,11 @@
                     [class.active]="i === activeIndex" 
                     [routerLink]="['/profile', searchResult.username]" >
                     
-                    <img class="tb-sec-item-img" [src]="searchResult.avatar" alt="avatar">
+                    <img class="tb-sec-item-img" [src]="searchResult.avatar" 
+
+                        style="display: none" onload="this.style.display=''"
+                        onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+                    />
                     <span class="tb-sec-item-user">{{searchResult.username}}</span>
                     
                 </button>

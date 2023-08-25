@@ -153,7 +153,6 @@ export class UserService {
         return friendshipData;
     }
     async checkFriendship(friendship: FrinedshipDto) {
-
         const existingFriendship = await this.prismaService.friendship.findFirst({
             where: {
                 OR: [
@@ -162,8 +161,8 @@ export class UserService {
                         friend_id: friendship.friend_id,
                     },
                     {
-                        friend_id: friendship.friend_id,
-                        user_id: friendship.user_id,
+                        user_id: friendship.friend_id,
+                        friend_id: friendship.user_id,
                     },
                 ],
             },
@@ -187,6 +186,29 @@ export class UserService {
               id: friendshipId,
             },
           });
+    }
+    async acceptFriendship(friendshipId :number) {
+
+        const existingFriendship = await this.prismaService.friendship.findUnique({
+            where: {
+              id: friendshipId,
+            },
+        })
+
+        if (!existingFriendship) {
+            throw new HttpException('Friendship not found', HttpStatus.CONFLICT);
+        }
+        
+        const updatedFriendship = await this.prismaService.friendship.update({
+            where: { 
+                id: friendshipId 
+            },
+            data: { 
+                friendship_status: "ACCEPTED",
+            },
+          });
+
+        return updatedFriendship
     }
 
 
