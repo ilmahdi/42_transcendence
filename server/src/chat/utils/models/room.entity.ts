@@ -12,8 +12,8 @@ export class RoomEntity {
     @PrimaryGeneratedColumn()
     id?: number;
 
-    @Column()
-    adminId?:number;
+    @Column('integer', { array: true, default: [] })
+    adminId?:number[];
 
     @Column({default:'Room'})
     name?:string;

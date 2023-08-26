@@ -186,6 +186,18 @@
     margin-left: 4%;
 }
 
+.asAdmin {
+    height: 36px;
+    width: 18%;
+    background-color: #201717;;
+    position: absolute;
+    right: 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+    margin-top: 10px;
+    color: white;
+}
+
 #submit {
     position: absolute;
     bottom: 10px;

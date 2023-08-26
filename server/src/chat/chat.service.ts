@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import * as Pusher from 'pusher';
 import { Observable, from, map, switchMap } from 'rxjs';
 import { Message } from './utils/models/message.interface';
@@ -70,7 +70,7 @@ export class ChatService {
     // }
 
     updateReaded(message:Message) {
-      let msg = {id:message.id, senderId:message.senderId, receiverId:message.receiverId, message:message.message, date:message.date, readed:true, roomId:-1}
+      let msg = {id:message.id, senderId:message.senderId, receiverId:message.receiverId, message:message.message, date:message.date, readed:true}
       this.messageRepository.update(msg.id, msg);
     }
 
@@ -91,7 +91,7 @@ export class ChatService {
       const query = `
         SELECT "senderId", COUNT(*) AS "unreadCount"
         FROM "message"
-        WHERE "receiverId" = $1 AND "readed" = false
+        WHERE "receiverId" = $1 AND "readed" = false AND "roomId" = -1
         GROUP BY "senderId"
       `;
     
@@ -131,7 +131,7 @@ export class ChatService {
         try {
           const rooms = this.roomRepository
             .createQueryBuilder('room')
-            .where('room.adminId = :id OR :id = ANY(room.usersId)', { id })
+            .where(':id = ANY(room.adminId) OR :id = ANY(room.usersId)', { id })
             .getMany();
     
           return from(rooms);
@@ -162,7 +162,7 @@ export class ChatService {
       try {
         const rooms = this.roomRepository
             .createQueryBuilder('room')
-            .where('room.adminId = :id OR :id = ANY(room.usersId)', { id })
+            .where(':id = ANY(room.adminId) OR :id = ANY(room.usersId)', { id })
             .getMany();
 
         const messages = this.messageRepository.find({
@@ -183,7 +183,7 @@ export class ChatService {
       this.roomRepository
         .createQueryBuilder('room')
         .select('room.id')
-        .where('room.adminId = :userId OR :userId = ANY(room.usersId)', {
+        .where(':userId = ANY(room.adminId) OR :userId = ANY(room.usersId)', {
           userId,
         })
         .getMany()
@@ -203,6 +203,33 @@ export class ChatService {
         );
       })
     );
+  }
+
+  async getUnreadedRoomMessages(userId: number): Promise<{senderId:number, roomId: number, unreadCount: number }[]> {
+    const rooms = await this.roomRepository.createQueryBuilder('room')
+    .where(':userId = ANY(room.adminId) OR :userId = ANY(room.usersId)', { userId })
+    .getMany();
+
+    if (!rooms || rooms.length === 0) {
+      throw new NotFoundException('No rooms found for the user.');
+    }
+
+  const roomIds = rooms.map(room => room.id);
+
+  const unreadMessages = await this.messageRepository
+    .createQueryBuilder('message')
+    .select('message.roomId', 'roomId')
+    .addSelect('message.senderId', 'senderId')
+    .addSelect('COUNT(*)', 'unreadCount')
+    .where('message.roomId IN (:...roomIds)', { roomIds })
+    .andWhere('message.readed = false')
+    .groupBy('message.roomId, message.senderId')
+    .getRawMany();
+    return unreadMessages.map(message => ({
+      senderId: message.senderId,
+      roomId: message.roomId,
+      unreadCount: message.unreadCount,
+    }));
   }
 
 }

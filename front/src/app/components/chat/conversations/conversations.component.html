@@ -21,12 +21,14 @@
 
         <!-- <p *ngFor="let item of messages" style="color: white;">{{item.message}}</p> -->
 
-        <form [formGroup]="msg">
-            <input type="text" id="typing" placeholder="write a message" formControlName="message">
-        </form>
-        <div class="send" (click)="sendPrivateMessage()">
-            <div class="disk">
-                <span class="fa fa-send" (click)="sendPrivateMessage()"></span>
+        <div class="writing">
+            <form [formGroup]="msg">
+                <input type="text" id="typing" placeholder="write a message" formControlName="message">
+            </form>
+            <div class="send" (click)="sendPrivateMessage()">
+                <div class="disk">
+                    <span class="fa fa-send" (click)="sendPrivateMessage()"></span>
+                </div>
             </div>
         </div>
     </div>
@@ -47,7 +49,8 @@
                 <span *ngIf="message.senderId === userId" id="sentMessage">
                     <p>&emsp;{{message.message}}&emsp;</p>
                 </span>
-                <span *ngIf="message.senderId !== userId" id="receivedMessage">
+                <img src="../../../../assets/sghajdao.jpg" *ngIf="message.senderId !== userId" style="font-size: 25px; margin-left: 10px;margin-top: 0px;">
+                <span *ngIf="message.senderId !== userId" id="receivedMessage" style="left:50px;">
                     <p>&emsp;{{message.message}}&emsp;</p>
                 </span>
                 <br>

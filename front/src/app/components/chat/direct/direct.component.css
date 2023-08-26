@@ -74,14 +74,15 @@
     margin-left: 49px;
 }
 
-#notReaded {
-    position: absolute;
-    height: 15px;
-    width: 15px;
-    border-radius: 15px;
-    right: 20px;
-    top: 30px;
+.notReaded {
+    position: relative;
+    height: 20px;
+    width: 20px;
+    border-radius: 65px;
+    margin-left: 100px;
+    top: 37px;
     background-color: #FF7A00;
+    color: white;
 }
 
 @media (min-width: 2000px) {

@@ -36,7 +36,8 @@
     </form>
     <p id="giveName" [style]="roomFormularTitles[1].error? 'top: 45%;color: red' : 'top:45%;color:white'">{{roomFormularTitles[1].title}}</p>
     <div class="people">
-        <div *ngFor="let user of users" class="users" (click)="addToRoom(user)" [style.backgroundColor]="user.added? '#D38146' : ''">
+        <div *ngFor="let user of users" class="users" (click)="addToRoom(user)" [style.backgroundColor]="user.added? '#D38146' : ''" [style.width]="user.added? '74%': '92%'">
+            <div class="asAdmin" *ngIf="user.added" (click)="addAdmin(user)" [style.backgroundColor]="user.admin? '#D38146' : ''"><p style="margin-left: 10px;margin-top: 5px;">As Admin</p></div>
             <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="img">
             <p id="name">{{user.user.firstName}}</p>
         </div>

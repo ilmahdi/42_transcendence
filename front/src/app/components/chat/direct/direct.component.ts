@@ -17,6 +17,17 @@ export class DirectComponent implements OnInit, OnDestroy {
   @Output() customEvent = new EventEmitter<User>();
   @Output() conversation= new EventEmitter<Message[]>();
 
+  private subscription0?: Subscription
+  private subscription1?: Subscription
+  private subscription2?: Subscription
+  private subscription3?: Subscription
+  private subscription4?: Subscription
+  private subscription5?: Subscription
+  private subscription6?: Subscription
+  private subscription7?: Subscription
+  private subscription8?: Subscription
+  private subscription9?: Subscription
+
   users:User[] = [];
   screenWidth: number = 1000;
   color:any = {color:'', name:''}
@@ -29,11 +40,11 @@ export class DirectComponent implements OnInit, OnDestroy {
 
   notReaded:{ senderId: number; unreadCount: number }[] = []
   constructor(private chatService:ChatService, private loginService:LoginService) {
-    this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
+    this.subscription0 = this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
     })
 
-    loginService.user.pipe(take(1)).subscribe((data?:any) => {
+    this.subscription1 =  loginService.user.pipe(take(1)).subscribe((data?:any) => {
       this.user = data;
     })
 
@@ -41,34 +52,34 @@ export class DirectComponent implements OnInit, OnDestroy {
     window.addEventListener('resize', this.onResize.bind(this));
 
     // GET THE NUMBER OF MESSAGES WHICH ARE NOT HAVE READED BY YOUR SELF WITH THE SENDER ID
-    // chatService.sendToGetNotReadedMessages(this.userId!)
-    this.chatService.getNewMessage().subscribe(data=>{
+    chatService.sendToGetNotReadedMessages(this.userId!);
+    this.subscription2 = this.chatService.getNewMessage().subscribe(data=>{
       this.chatService.updateLastMessage(data);
-      chatService.getNotReadedMessages().subscribe(data=>{
+      this.subscription3 = chatService.getNotReadedMessages().subscribe(data=>{
         chatService.updateReadedBehav(data);
       })
     })
-    
+
     
     chatService.sendToGetLastMessage(this.userId!)
-    this.chatService.getLastMessage().subscribe(data=> {
+    this.subscription4 = this.chatService.getLastMessage().subscribe(data=> {
       data.forEach(data=> {
         this.lastMessages = this.lastMessages.filter(item => !((item.receiverId === data.receiverId && item.senderId === data.senderId) || (item.senderId === data.receiverId && item.receiverId === data.senderId)));
         this.lastMessages.push(data)
-        chatService.string$.subscribe(data=>{
-          chatService.sendToGetNotReadedMessages(this.userId!)//////////
+        this.subscription5 = chatService.string$.subscribe(data=>{
           if (this.lastMessages[this.lastMessages.length - 1] !== data) {
             this.lastMessages = this.lastMessages.filter(item => !((item.receiverId === data.receiverId && item.senderId === data.senderId) || (item.senderId === data.receiverId && item.receiverId === data.senderId)));
             this.lastMessages.push(data)
             // console.log(data)
           }
+          chatService.sendToGetNotReadedMessages(this.userId!)//////////
         })
         this.lastMessages = _.sortBy(this.lastMessages, 'date');
         // MAKAYDKHELX HNA ILA KANT LCONVERSATIION KHAWYA
       })
     })
 
-    chatService.notReadedMessage$.subscribe(data=>{
+    this.subscription6 = chatService.notReadedMessage$.subscribe(data=>{
         this.notReaded = [];
         // this.notReaded = this.notReaded.filter(item=> item.senderId !== data[0].senderId);
         data.forEach(item=>this.notReaded.push(item));
@@ -77,7 +88,7 @@ export class DirectComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.chatService.getUsers().subscribe((data) => {
+    this.subscription7 = this.chatService.getUsers().subscribe((data) => {
       data.forEach((user)=>{
         if (user.id != this.userId) {
           this.users?.push(user);
@@ -86,7 +97,7 @@ export class DirectComponent implements OnInit, OnDestroy {
       this.chatService.updateUsers(this.users)
     });
 
-    this.chatService.users$.subscribe(data=> {
+    this.subscription8 = this.chatService.users$.subscribe(data=> {
       this.users = data;
     })
   }
@@ -118,7 +129,7 @@ export class DirectComponent implements OnInit, OnDestroy {
     })
     this.chatService.roomFormular(false);
     this.chatService.updateConversation(this.messages);
-    this.chatService.getNotReadedMessages().subscribe(data=>{
+    this.subscription9 = this.chatService.getNotReadedMessages().subscribe(data=>{
       this.chatService.updateReadedBehav(data);
     })
     this.customEvent.emit(friend)
@@ -139,6 +150,16 @@ export class DirectComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.messages = []
     this.chatService.updateUsers([])
-  }
 
+    this.subscription0?.unsubscribe()
+    this.subscription1?.unsubscribe()
+    this.subscription2?.unsubscribe()
+    this.subscription3?.unsubscribe()
+    this.subscription4?.unsubscribe()
+    this.subscription5?.unsubscribe()
+    this.subscription6?.unsubscribe()
+    this.subscription7?.unsubscribe()
+    this.subscription8?.unsubscribe()
+    this.subscription9?.unsubscribe()
+  }
 }

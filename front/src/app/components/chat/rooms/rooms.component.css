@@ -58,6 +58,17 @@
     margin-left: 72px;
 }
 
+.notReaded {
+    position: relative;
+    height: 20px;
+    width: 20px;
+    border-radius: 65px;
+    margin-left: 100px;
+    top: 37px;
+    background-color: #FF7A00;
+    color: white;
+}
+
 @media (min-width: 2000px) {
     .list {
         left: 470px;

@@ -31,7 +31,7 @@ export class ChatComponent implements OnInit {
 
   userId?:number
   addRoom:boolean = false
-  users:{user:User, added:boolean}[] = []
+  users:{user:User, added:boolean, admin:boolean}[] = []
 
   roomFormularTitles:any[] = [{title:'Give your room a name', error:false}, {title:'Add people to your room', error:false}]
 
@@ -48,13 +48,18 @@ export class ChatComponent implements OnInit {
     })
     chatService.sendToGetLastMessage(this.userId!)
     chatService.sendToGetRoomLastMessage(this.userId!)
+
+    // chatService.sendToGetNotReadedRoomMessages(this.userId!);
+    chatService.getNotReadedRoomMessages().subscribe(data=>{
+      chatService.updateReadedRoomBehav(data)
+    })
   }
 
   ngOnInit(): void {
     this.chatService.getUsers().subscribe((data) => {
       data.forEach((user)=>{
         if (user.id != this.userId) {
-          this.users?.push({user:user, added:false})
+          this.users?.push({user:user, added:false, admin:false})
         }
       })
     });
@@ -94,8 +99,13 @@ export class ChatComponent implements OnInit {
     this.chatService.add$.subscribe(data=>this.addRoom = data)
   }
 
-  addToRoom(user:{user:User, added:boolean}) {
+  addToRoom(user:{user:User, added:boolean, admin:boolean}) {
     user.added = !user.added
+  }
+
+  addAdmin(user:{user:User, added:boolean, admin:boolean}) {
+    user.added = !user.added
+    user.admin = !user.admin
   }
 
   getConversations() {
@@ -108,11 +118,18 @@ export class ChatComponent implements OnInit {
 
   createRoom() {
     let usersAdded = this.users.filter(user=> user.added === true)
+    let admins = this.users.filter(user=> user.admin === true);
     let usersId: (number)[] = []
     usersAdded.forEach(item=> {
       usersId.push(item.user.id!)
     })
     usersId.push(this.userId!)
+
+    let adminsId: number[] = []
+    admins.forEach(admin=> {
+      adminsId.push(admin.user.id!)
+    })
+    adminsId.push(this.userId!)
 
     const formData = new FormData();
     formData.append('file', this.selectedFile!)
@@ -120,7 +137,7 @@ export class ChatComponent implements OnInit {
     let path:string = this.room.value.imagePath
     let imageName = path.split('\\')
 
-    let room = {adminId:this.userId, name:this.room.value.name, usersId:usersId, imagePath:imageName[imageName.length - 1]};
+    let room = {adminId:adminsId, name:this.room.value.name, usersId:usersId, imagePath:imageName[imageName.length - 1]};
     if (usersId.length && this.room.value.name && this.room.value.imagePath) {
       this.chatService.createRoom(room).subscribe()
       this.room.reset()

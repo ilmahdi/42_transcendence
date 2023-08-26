@@ -9,9 +9,9 @@
         </span> -->
 
         <span *ngFor="let item of notReaded">
-            <!-- <span id="notReaded"> -->
-                <p style="color: white;" *ngIf="f.id === item.senderId">{{item.unreadCount}}</p>
-            <!-- </span> -->
+            <div class="notReaded" *ngIf="f.id === item.senderId">
+                <p style="left: 5px;position: relative;bottom: 2px;">{{item.unreadCount}}</p>
+            </div>
         </span>
 
         <span *ngFor="let item of lastMessages" id="message">

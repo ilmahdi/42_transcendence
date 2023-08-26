@@ -38,6 +38,9 @@ export class ChatService {
   notReadedMessageSource = new BehaviorSubject<{ senderId: number; unreadCount: number }[]>([]);
   notReadedMessage$ = this.notReadedMessageSource.asObservable()
 
+  notReadedRoomMessageSource = new BehaviorSubject<{senderId:number, roomId: number; unreadCount: number }[]>([]);
+  notReadedRoomMessage$ = this.notReadedRoomMessageSource.asObservable()
+
   usersSource = new BehaviorSubject<User[]>([]);
   users$ = this.usersSource.asObservable()
 
@@ -52,6 +55,16 @@ export class ChatService {
     this.updateSocketId(this.userId!)
     this.sendToGetLastMessage(this.userId!)
     this.sendToGetRoomLastMessage(this.userId!)
+
+    this.sendToGetNotReadedMessages(this.userId!);
+    this.getNotReadedMessages().subscribe(data=>{
+      this.updateReadedBehav(data);
+    })
+
+    this.sendToGetNotReadedRoomMessages(this.userId!);
+    this.getNotReadedRoomMessages().subscribe(data=>{
+      this.updateReadedRoomBehav(data)
+    })
   }
 
   updateRooms(rooms:Room[]) {
@@ -73,6 +86,10 @@ export class ChatService {
 
   updateReadedBehav(data:{ senderId: number; unreadCount: number }[]) {
     this.notReadedMessageSource.next(data)
+  }
+
+  updateReadedRoomBehav(data:{senderId:number, roomId: number; unreadCount: number }[]) {
+    this.notReadedRoomMessageSource.next(data)
   }
 
   updateConversation(conversation:Message[]) {
@@ -162,6 +179,14 @@ export class ChatService {
 
   getNotReadedMessages() {
     return this.socket.fromEvent<{ senderId: number; unreadCount: number }[]>('recNotReadedMessages');
+  }
+
+  sendToGetNotReadedRoomMessages(receiverId:number) {
+    this.socket.emit('getUnreadedRoomMessages', receiverId);
+  }
+
+  getNotReadedRoomMessages() {
+    return this.socket.fromEvent<{senderId:number, roomId: number; unreadCount: number}[]>('recNotReadedRoomMessages')
   }
 
   token:string|null = localStorage.getItem('token');
