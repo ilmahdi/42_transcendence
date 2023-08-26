@@ -1,4 +1,5 @@
-import { IsNumber } from "class-validator";
+import { FriendshipStatus } from "@prisma/client";
+import { IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class FrinedshipDto {
     
@@ -7,4 +8,8 @@ export class FrinedshipDto {
 
     @IsNumber()
     friend_id: number
+
+    @IsOptional()
+    @IsEnum(FriendshipStatus)
+    friendship_status?: FriendshipStatus;
 }

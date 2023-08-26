@@ -4,6 +4,7 @@ import { UpdateUserDto } from "./utils/dtos/update-user.dto";
 import { CreateUserDto } from "./utils/dtos/create-user.dto";
 import { TokenService } from "src/common/services/token.service";
 import { FrinedshipDto } from "./utils/dtos/friendship.dto";
+import { FriendshipStatus } from "@prisma/client";
 
 @Injectable()
 export class UserService {
@@ -147,7 +148,7 @@ export class UserService {
             data: {
                 user_id: friendship.user_id,
                 friend_id: friendship.friend_id,
-                friendship_status: 'WAITING',
+                friendship_status: friendship.friendship_status,
             },
         });
         return friendshipData;
@@ -187,7 +188,7 @@ export class UserService {
             },
           });
     }
-    async acceptFriendship(friendshipId :number) {
+    async changeFriendshipStatus(friendshipId :number, friendshipStatus: FriendshipStatus) {
 
         const existingFriendship = await this.prismaService.friendship.findUnique({
             where: {
@@ -204,12 +205,34 @@ export class UserService {
                 id: friendshipId 
             },
             data: { 
-                friendship_status: "ACCEPTED",
+                friendship_status: friendshipStatus,
             },
           });
 
         return updatedFriendship
     }
+    async updateFriend(friendshipId :number, friendship: FrinedshipDto) {
 
+        const existingFriendship = await this.prismaService.friendship.findUnique({
+            where: {
+              id: friendshipId,
+            },
+        })
+
+        if (!existingFriendship) {
+            throw new HttpException('Friendship not found', HttpStatus.CONFLICT);
+        }
+        
+        const updatedFriendship = await this.prismaService.friendship.update({
+            where: { 
+                id: friendshipId 
+            },
+            data: { 
+                ...friendship,
+            },
+          });
+
+        return updatedFriendship
+    }
 
 }

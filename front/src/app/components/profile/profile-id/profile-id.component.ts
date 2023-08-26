@@ -53,24 +53,11 @@ export class ProfileIdComponent implements OnChanges {
   onClickedOutside(): void {
     this.isMoreClicked = false
   }
-  onAddClick() {
-    this.userService.addFriend({
-      user_id: this.authService.getLoggedInUserId(), 
-      friend_id: this.userData.id
-    }).subscribe({
-      next: response => {
 
-        this.friendshipStatus = response.friendship_status;
-        this.friendshipId = response.id;
-        this.isRequestInitiator = this.authService.getLoggedInUserId() === response.user_id;
-        console.log(this.userData.id, response.user_id);
-        
-      },
-      error: error => {
-        console.error('Error:', error.error.message); 
-      }
-    });
+  onAddClick() {
+    this.addFriend("WAITING")
   }
+
   onCancelClick() {
     if (this.friendshipId < 0)
       return
@@ -86,24 +73,14 @@ export class ProfileIdComponent implements OnChanges {
     });
   }
   onAcceptClick() {
-    if (this.friendshipId < 0)
-      return
-    this.userService.acceptFriend(this.friendshipId).subscribe({
-      next: response => {
-        
-        this.friendshipStatus = response.friendship_status;
-      },
-      error: error => {
-        console.error('Error:', error.error.message); 
-      }
-    });
+    this.changeFriendshipStatus("ACCEPTED")
   }
 
   checkFriendshipStatus(): void {
     if (!this.isOwnProfile) {
       this.userService.checkFriendship({
         user_id: this.authService.getLoggedInUserId(), 
-        friend_id: this.userData.id
+        friend_id: this.userData.id,
       }).subscribe({
         next: response => {
           
@@ -116,6 +93,97 @@ export class ProfileIdComponent implements OnChanges {
         }
       });
     }
+  }
+
+  handleUnfriendClick() {
+    this.userService.cancelFriend(this.friendshipId).subscribe({
+      next: response => {
+        this.friendshipStatus = "NONE"
+        this.friendshipId = -1;
+      },
+      error: error => {
+        console.error('Error:', error.error.message); 
+      }
+    });
+  }
+
+  handleBlockClick() {
+    if (this.friendshipId < 0) {
+      this.addFriend("BLOCKED")
+    }
+    
+    else {
+      this.userService.updateFriend(this.friendshipId, {
+        user_id: this.authService.getLoggedInUserId(), 
+        friend_id: this.userData.id,
+        friendship_status: "BLOCKED",
+      }).subscribe({
+        next: response => {
+  
+          this.friendshipStatus = response.friendship_status;
+          this.friendshipId = response.id;
+          this.isRequestInitiator = this.authService.getLoggedInUserId() === response.user_id;
+        },
+        error: error => {
+          console.error('Error:', error.error.message); 
+        }
+      });
+    }
+  }
+
+  onUnblockClick() {
+    if (this.friendshipId < 0) {
+
+    }
+    this.userService.cancelFriend(this.friendshipId).subscribe({
+      next: response => {
+        this.friendshipStatus = "NONE";
+        this.friendshipId = -1;
+      },
+      error: error => {
+        console.error('Error:', error.error.message); 
+      }
+    });
+  }
+
+
+
+
+
+
+
+
+  // private functions
+  addFriend(friendshipStatus :string) {
+    this.userService.addFriend({
+      user_id: this.authService.getLoggedInUserId(), 
+      friend_id: this.userData.id,
+      friendship_status: friendshipStatus,
+    }).subscribe({
+      next: response => {
+
+        this.friendshipStatus = response.friendship_status;
+        this.friendshipId = response.id;
+        this.isRequestInitiator = this.authService.getLoggedInUserId() === response.user_id;
+      },
+      error: error => {
+        console.error('Error:', error.error.message); 
+      }
+    });
+  }
+
+  changeFriendshipStatus (friendshipStatus :string) {
+    if (this.friendshipId < 0)
+      return
+    this.userService.changeFriendshipStatus(this.friendshipId, friendshipStatus).subscribe({
+      next: response => {
+        
+        this.friendshipStatus = response.friendship_status;
+      },
+      error: error => {
+        console.error('Error:', error.error.message); 
+      }
+    });
   }
   
 }

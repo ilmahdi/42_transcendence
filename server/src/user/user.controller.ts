@@ -11,6 +11,7 @@ import { UpdateUserDto } from "./utils/dtos/update-user.dto";
 import { CreateUserDto } from "./utils/dtos/create-user.dto";
 import { FrinedshipDto } from "./utils/dtos/friendship.dto";
 import { log } from "console";
+import { FriendshipStatus } from "@prisma/client";
 
 
 @Controller('user')
@@ -107,6 +108,12 @@ export class UserController {
         return this.userService.addFriend(friendship);        
     }
     @UseGuards(JwtGuard)
+    @Patch("friends/update/:friendshipId")
+    updateFriend(@Param('friendshipId') friendshipId: number, @Body() friendship: FrinedshipDto) : any {
+
+        return this.userService.updateFriend(friendshipId, friendship);        
+    }
+    @UseGuards(JwtGuard)
     @Post("friends/check")
     async checkFriendship(@Body() friendship: FrinedshipDto) {
 
@@ -114,7 +121,7 @@ export class UserController {
         if (existingFriendship)
           return existingFriendship;
 
-        return { friendship_status: "NONE" };
+        return { friendship_status: "NONE",  id: -1};
 
     }
     @UseGuards(JwtGuard)
@@ -126,11 +133,13 @@ export class UserController {
 
     }
     @UseGuards(JwtGuard)
-    @Get('friends/accept/:friendshipId')
-    async acceptFriend(@Param('friendshipId') friendshipId: number) {
-
-      const friendship = await this.userService.acceptFriendship(friendshipId);
+    @Post('friends/change/:friendshipId')
+    async changeFriend(
+      @Param('friendshipId') friendshipId: number, 
+      @Body("friendshipStatus") friendshipStatus: FriendshipStatus) {
+      
+      const friendship = await this.userService.changeFriendshipStatus(friendshipId, friendshipStatus);
       return friendship;
-
+      
     }
   }

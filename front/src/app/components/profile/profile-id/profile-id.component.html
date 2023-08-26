@@ -10,11 +10,13 @@
     <div class="pi-sec-two">
         <span> {{ userData.username }} </span>
     </div>
+
     <button routerLink="/settings"  class="pi-sec-three" *ngIf="isOwnProfile; else isNotOwnProfile">
         <span> Edit profile </span>
     </button>
+
     <ng-template #isNotOwnProfile>
-        <div class="pi-sec-four">
+        <div class="pi-sec-four" *ngIf="friendshipStatus !== 'BLOCKED'; else isBlocked">
             
             <button class="pi-sec-four-btn b1" (click)="onAddClick()" *ngIf="friendshipStatus==='NONE'"> 
                     <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
@@ -50,10 +52,25 @@
                     </svg>
                 </button>   
                 <div class="pi-sec-four-more" *ngIf="isMoreClicked">
-                    <app-more-opts *ngIf="isMoreClicked"></app-more-opts>
+                    <app-more-opts
+                        [friendshipStatus]="friendshipStatus"
+                        [friendshipId]="friendshipId" 
+                        (unfriendClick)="handleUnfriendClick()"
+                        (blockClick)="handleBlockClick()">
+                    </app-more-opts>
                 </div>
             </div>
         </div>
     </ng-template>
+
+    <ng-template #isBlocked>
+        <button class="pi-sec-three" *ngIf="isRequestInitiator" (click)="onUnblockClick()">
+            <span> unblock </span>
+        </button>
+        <div class="pi-sec-three" *ngIf="!isRequestInitiator">
+            <span> blocked </span>
+        </div>
+    </ng-template>
+     
 </div>
 

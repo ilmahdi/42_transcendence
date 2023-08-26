@@ -5,6 +5,7 @@ import { JWT_TOKEN } from '../utils/constants';
 import { IUserData, IUserDataShort } from '../utils/interfaces/user-data.interface';
 import { Observable, catchError, throwError } from 'rxjs';
 import { IHistory } from '../utils/interfaces/history.interface';
+import { IFrinedship } from '../utils/interfaces/friendship.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -45,17 +46,23 @@ export class UserService {
     );
   }
 
-  addFriend (friendship :{user_id: number, friend_id: number}) : Observable<any> {
+  addFriend (friendship :IFrinedship) : Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/user/friends/add`, friendship ,this.getHeaders());
   }
-  checkFriendship (friendship :{user_id: number, friend_id: number}) : Observable<any> {
+  updateFriend (frinedship_id :number, friendship :IFrinedship) : Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/user/friends/update/${frinedship_id}`, friendship ,this.getHeaders());
+  }
+  checkFriendship (friendship :IFrinedship) : Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/user/friends/check`, friendship ,this.getHeaders());
   }
   cancelFriend (frinedship_id :number) : Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/user/friends/cancel/${frinedship_id}` ,this.getHeaders());
   }
-  acceptFriend (frinedship_id :number) : Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/user/friends/accept/${frinedship_id}` ,this.getHeaders());
+  changeFriendshipStatus (frinedship_id :number, friendshipStatus :string) : Observable<any> {
+    return this.http.post<any>(
+          `${this.apiUrl}/user/friends/change/${frinedship_id}`, 
+          {friendshipStatus} ,this.getHeaders(),
+      );
   }
 
 

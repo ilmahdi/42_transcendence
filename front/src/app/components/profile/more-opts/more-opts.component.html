@@ -5,13 +5,19 @@
         </svg>
         <span class="mo-text"> Message </span> 
     </div>
-    <div class="mo-item">
+    <div class="mo-item" *ngIf="friendshipStatus !== 'ACCEPTED'">
         <svg class="mo-icon" xmlns="http://www.w3.org/2000/svg">
             <use xlink:href="./assets/icons/play_add.svg#icon-play_add"></use>
         </svg>
         <span class="mo-text"> Play </span> 
     </div>
-    <div class="mo-item">
+    <div class="mo-item" *ngIf="friendshipStatus === 'ACCEPTED'" (click)="onUnfriendClick()">
+        <svg class="mo-icon" xmlns="http://www.w3.org/2000/svg">
+            <use xlink:href="./assets/icons/unfriend.svg#icon-unfriend"></use>
+        </svg>
+        <span class="mo-text"> Unfriend </span> 
+    </div>
+    <div class="mo-item" (click)="onBlockClick()">
         <svg class="mo-icon" xmlns="http://www.w3.org/2000/svg">
             <use xlink:href="./assets/icons/block.svg#icon-block"></use>
         </svg>
