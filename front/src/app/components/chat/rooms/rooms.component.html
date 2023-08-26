@@ -1,4 +1,6 @@
 <div class="list">
+    <div class="roomSearch"><p style="text-align: center;margin-top: 5px;">Show me more rooms</p></div>
+
     <div *ngFor="let room of rooms" class="room" (click)="openRoom(room)" [style.backgroundColor]="(color.name === room.name)? color.color : ''">
         <img [src]="'http://localhost:3000/api/chat/image/' + room.imagePath" alt="avatar" id="image">
         <p id="roomName">{{room.name}}</p>
@@ -22,3 +24,5 @@
         </span>
     </div>
 </div>
+
+<app-other-rooms></app-other-rooms>

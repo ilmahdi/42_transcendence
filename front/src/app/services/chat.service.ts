@@ -23,6 +23,9 @@ export class ChatService {
   lastConversation:any
   last:any[] = []
 
+  backToRoomFormularSource = new BehaviorSubject<boolean>(false)
+  backToRoomFormular$ = this.backToRoomFormularSource.asObservable()
+
   addRoom = new BehaviorSubject<boolean>(false)
   add$ = this.addRoom.asObservable()
 
@@ -205,6 +208,10 @@ export class ChatService {
 
   createRoom(room:Room): Observable<Room> {
     return this.http.post('http://localhost:3000/api/chat/createRoom', room);
+  }
+
+  getAllRooms() {
+    return this.http.get<Room[]>('http://localhost:3000/api/chat/allRooms')
   }
 
   uploadImage(image:FormData) {

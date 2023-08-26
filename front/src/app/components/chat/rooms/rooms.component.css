@@ -10,6 +10,26 @@
     border-radius: 0px 0px 15px 15px;
 }
 
+.roomSearch {
+    position: relative;
+    height: 40px;
+    width: 95%;
+    left: 2%;
+    top: 10px;
+    margin-bottom: 10px;
+
+    border-radius: 10px 10px 10px 10px;
+    background-color: #201717;
+    color: #DEC8C8;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.roomSearch:hover {
+    background-color: #D38146;
+}
+
 .room {
     display: flex;
     /* position: absolute; */

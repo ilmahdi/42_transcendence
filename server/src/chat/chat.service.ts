@@ -9,13 +9,15 @@ import { EventEmitter } from 'events';
 import { RoomEntity } from './utils/models/room.entity';
 import { Room } from './utils/models/room.interface';
 import { UserEntity } from 'src/user/utils/models/user.entity';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class ChatService {
     constructor(
         @InjectRepository(MessageEntity) private readonly messageRepository:Repository<MessageEntity>,
         @InjectRepository(RoomEntity) private readonly roomRepository:Repository<RoomEntity>,
-        @InjectRepository(UserEntity) private readonly userRepository:Repository<UserEntity>
+        @InjectRepository(UserEntity) private readonly userRepository:Repository<UserEntity>,
+        private authService:AuthService
     ) {}
 
     saveMessage(message: Message) {
@@ -124,7 +126,18 @@ export class ChatService {
     ///////////////////////////////////////// ROOMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     createRoom(room:Room) {
+      if (room.password) {
+        this.authService.hashPassword(room.password).subscribe(data=> {
+          room.password = data;
+          return from(this.roomRepository.save(room));
+        })
+      }
+      else
         return from(this.roomRepository.save(room));
+    }
+
+    getAllRooms() {
+      return from(this.roomRepository.find());
     }
 
     getRooms(id: number) {

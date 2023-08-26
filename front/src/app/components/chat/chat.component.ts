@@ -37,8 +37,10 @@ export class ChatComponent implements OnInit {
 
   selectedFile?: File
 
-  searchQuery: string = '';/////////////
+  searchQuery: string = '';
   searchResults: User[] = [];
+  nextStep:boolean = false
+  roomFormular:any = {}
   constructor(private chatService:ChatService, private loginService:LoginService, private router:Router) {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
@@ -139,9 +141,12 @@ export class ChatComponent implements OnInit {
 
     let room = {adminId:adminsId, name:this.room.value.name, usersId:usersId, imagePath:imageName[imageName.length - 1]};
     if (usersId.length && this.room.value.name && this.room.value.imagePath) {
-      this.chatService.createRoom(room).subscribe()
-      this.room.reset()
-      usersAdded.forEach(item=>item.added = false)
+      this.roomFormular = room;
+      this.nextStep = true
+      this.chatService.backToRoomFormularSource.next(false);
+      // this.chatService.createRoom(room).subscribe()
+      // this.room.reset()
+      // usersAdded.forEach(item=>item.added = false)
     }
     else {
       if (!usersId.length)

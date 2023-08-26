@@ -1,0 +1,8 @@
+<div class="otehrRooms">
+    <div *ngFor="let room of allRooms" class="room">
+        <div class="join">JOIN</div>
+        <p id="name">{{room.name}}</p>
+        <p id="type">{{room.type}}</p>
+        <img [src]="'http://localhost:3000/api/chat/image/' + room.imagePath">
+    </div>
+</div>

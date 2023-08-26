@@ -1,0 +1,102 @@
+.otehrRooms {
+    position: absolute;
+    margin-top: 90px;
+    right: 270px;
+    height: calc(100px + 65%);
+    width: 500px;
+    background-color: #231C1C;
+    border-radius: 15px 15px 15px 15px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    scrollbar-color: #5e6147 var(--second-background-color);
+    scrollbar-width: 0.4rem;
+}
+
+.room {
+    position: relative;
+    margin-top: 10px;
+    margin-left: 10%;
+    height: 110px;
+    width: 80%;
+    border-radius: 10px;
+    background-color: #201717;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.room:hover {
+    background-color: #D38146;
+    width: 60%;
+    opacity: 1;
+}
+
+.room:hover .join{
+    background-color: #D38146;
+    width: 20%;
+    opacity: 1;
+}
+
+.join {
+    color: white;
+    position: absolute;
+    right: 10px;
+    height: 30px;
+    width: 20%;
+    opacity: 0;
+    top: 40px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+img {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    border-radius: 40px;
+    left: 20px;
+    top: 30px;
+}
+
+#name {
+    position: relative;
+    color: #DEC8C8;
+    top: 5px;
+    text-align: center;
+    font-size: larger;
+    /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+}
+
+#type {
+    position: relative;
+    color: #696969;
+    top: 10px;
+    text-align: center;
+}
+
+@media (max-width: 1324px) {
+    .otehrRooms {
+        right: 20px;
+        /* width: 400px; */
+    }
+}
+
+@media (max-width: 1324px) {
+    .otehrRooms {
+        right: 40px;
+    }
+}
+
+@media (max-width: 934px) {
+    .otehrRooms {
+        right: 9%;
+        width: 70%;
+    }
+    .fa-angle-double-left {
+        display: block;
+    }
+}
+
+@media (max-width: 660px) {
+    .otehrRooms {
+        height: 80%;
+    }
+}

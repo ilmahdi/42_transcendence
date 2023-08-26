@@ -45,6 +45,7 @@
     <button id="submit" (click)="createRoom()"><span>Create</span></button>
     <button id="submit" style="left: 30px;" (click)="resetRoomFormular()"><span>Reset</span></button>
 </div>
+<app-creating-rooms *ngIf="nextStep" [roomFormular]="roomFormular"></app-creating-rooms>
 
 <app-conversations *ngIf="smallScreen" [userEmitted]="userEvent" [conversationEmitted]="conversationEvent" (getconvers)="conversEvent($event)" [roomConvers]="roomData"></app-conversations>
 <app-online></app-online>

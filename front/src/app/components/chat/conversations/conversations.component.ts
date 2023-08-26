@@ -67,9 +67,12 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     })
   }
 
-  getConversEvent() {
+  getConversEvent(flag:number) {
     this.getconvers.emit(true);
-    this.userEmitted[1] = false;
+    if (flag === 0)
+      this.userEmitted[1] = false;
+    else
+      this.roomConvers[1] = false
   }
 
   sendPrivateMessage() {

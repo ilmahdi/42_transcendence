@@ -62,6 +62,11 @@ export class ChatController {
     return room
   }
 
+  @Get('allRooms')
+  getAllRooms() {
+    return this.chatService.getAllRooms();
+  }
+
   @Get('searchRoom')
   async searchRoom(@Query('query') query:string) {
     const rooms = await this.chatService.searchRooms(query);
@@ -72,7 +77,6 @@ export class ChatController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('file', storage))
   uploadFile(@UploadedFile() file): Observable<string> {
-    console.log(file);
     if (file)
       return from(file.filename as string);
     return from('default.jpg')
