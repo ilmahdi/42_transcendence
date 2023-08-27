@@ -9,6 +9,7 @@ import { LeftBarSecondRoutingModule } from './left-bar-second/left-bar-second-ro
 import { OnlineFriendsComponent } from './right-bar/online-friends/online-friends.component';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/utils/shared/shared.module';
+import { NotifyComponent } from './top-bar/notify/notify.component';
 
 
 
@@ -19,6 +20,7 @@ import { SharedModule } from 'src/app/utils/shared/shared.module';
     LeftBarSecondComponent,
     TopBarComponent,
     OnlineFriendsComponent,
+    NotifyComponent,
   ],
   imports: [
     CommonModule,

@@ -15,6 +15,7 @@ export class TopBarComponent implements OnInit {
   public searchQuery: string = '';
   public searchResults: any[] = [];
   public activeIndex: number = -1;
+  public isNotifClicked: boolean = false;
 
   constructor(
     public menuBarService: MenuBarService,
@@ -56,13 +57,20 @@ export class TopBarComponent implements OnInit {
     event.preventDefault();
     if (this.activeIndex >= 0 && this.activeIndex < this.searchResults.length) {
       this.router.navigate(["/profile", this.searchResults[this.activeIndex].username]);
-      this.onClickedOutside()
+      this.onClickedOutside1()
     }
   }
 
-  onClickedOutside(): void {
+  onClickedOutside1(): void {
     this.searchQuery = '';
     this. searchResults = [];    
+  }
+  onClickedOutside2(event: Event): void {
+    event.stopPropagation();
+    this.isNotifClicked = !this.isNotifClicked;
+  }
+  onClickedOutside3(): void {
+    this.isNotifClicked = !this.isNotifClicked;
   }
 
 

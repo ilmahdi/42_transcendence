@@ -1,4 +1,3 @@
-<app-left-bar-second *ngIf="this.menuBarService.iShowLeftBar"></app-left-bar-second>
 <div class="top-bar">
     
     <ul  class="top-bar-content">
@@ -21,39 +20,44 @@
                     (keydown)="onSearchInputKeyDown($event)"
                     (keydown.enter)="onUserItemEnter($event)"
                     name="look" type="search" placeholder="search..."
-                    appClickOutside (appClickOutside)="searchQuery && onClickedOutside()" >
+                    appClickOutside (appClickOutside)="searchQuery && onClickedOutside1()" >
             </li>
             <div class="tb-results" *ngIf="searchResults.length">
                 <button class="tb-result-item" 
                     *ngFor="let searchResult of searchResults; let i = index" 
                     [class.active]="i === activeIndex" 
                     [routerLink]="['/profile', searchResult.username]" >
-                    
-                    <img class="tb-sec-item-img" [src]="searchResult.avatar" 
-
-                        style="display: none" onload="this.style.display=''"
-                        onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
-                    />
-                    <span class="tb-sec-item-user">{{searchResult.username}}</span>
-                    
-                </button>
-            </div>
-            
+                
+                <img class="tb-sec-item-img" [src]="searchResult.avatar" 
+                
+                    style="display: none" onload="this.style.display=''"
+                    onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+                />
+                <span class="tb-sec-item-user">{{searchResult.username}}</span>
+                
+            </button>
         </div>
-        <div class="tb-sec-three">
             
-            <li class="tb-sec-item">
-                <svg class="tb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="./assets/icons/message.svg#icon-message"></use>
-                </svg>
-            </li>
-            <li class="tb-sec-item">
-                <svg class="tb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="./assets/icons/notif.svg#icon-notif"></use>
-                </svg>
-            </li>
-        </div>
-    </ul>
-    
-    
+    </div>
+    <div class="tb-sec-three">
+        
+        <li class="tb-sec-item">
+            <svg class="tb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="./assets/icons/message.svg#icon-message"></use>
+            </svg>
+        </li>
+        <li class="tb-sec-item notif" appClickOutside (click)="onClickedOutside2($event)">
+            <svg class="tb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="./assets/icons/notif.svg#icon-notif"></use>
+            </svg>
+            
+        </li>
+    </div>
+</ul>
+<div class="app-notify-containe" *ngIf="isNotifClicked" appClickOutside (appClickOutside)="onClickedOutside3()">
+    <app-notify ></app-notify>
 </div>
+
+</div>
+
+<app-left-bar-second *ngIf="this.menuBarService.iShowLeftBar"></app-left-bar-second>

@@ -17,11 +17,22 @@
     background-color: none;
 }
 
+
+.app-notify-containe {
+    position: absolute;
+    top: var(--top-bar-hieght);
+    right: var(--right-bar-width);
+    z-index: 11;
+    box-shadow: 0 0rem 0.2rem black;
+}
+
 /* top bar */
 /******/
 .top-bar {
     position: relative;
+    user-select: none;
 }
+
 .top-bar-content {
     position: absolute;
     height: var(--top-bar-hieght);
@@ -199,6 +210,9 @@
 
 @media (max-width: 1000px) {
     
+    .app-notify-containe {
+        right: 0.6rem;
+    }
     /* top bar  */
     /******/
     .top-bar-content {
@@ -210,5 +224,5 @@
         /* width: 100%; */
         width: var(--second-left-bar-width);
         /* padding-left: 1.5rem; */
-}
+    }
 }
