@@ -8,11 +8,30 @@
 
 
 .notifictions {
-    background-color: aliceblue;
+    background-color: transparent;
     z-index: 11;
     border-radius: 4rem;
-    box-shadow: 0 0rem 0.2rem black;
+    /* box-shadow: 0 0rem 0.2rem black; */
 }
+
+
+
+.nf-index {
+   
+    display: block;
+    height: 3rem;
+    width: 3rem;
+    background-color: var(--fourth-background-color);
+    border: inherit;
+    clip-path: polygon(0% 50%, 70% 100%, 0% 100%);
+    transform: rotate(145deg);
+    border-radius: 0 0 0 0.4rem;
+    position: absolute;
+    right: 0.5rem;
+    top: -0.4rem;
+    /* z-index: -1; */
+}
+
 
 .nf-title {
     display: flex;
@@ -41,13 +60,15 @@
     
 }
 
+
 .nf-item {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    gap: 0.6rem;
+    width: 100%;
     padding: 0.4rem 0.6rem;
     background-color: var(--third-background-color);
-    gap: 0.6rem;
     border-bottom: 0.2rem solid var(--fourth-background-color);
 }
 
@@ -59,8 +80,8 @@
 }
 
 .nf-item-img {
-    width: 5rem;
-    height: 5rem;
+    width: 4rem;
+    height: 4rem;
     padding: 0.1rem;
     border-radius: 50%;
     object-fit: cover;
@@ -72,7 +93,9 @@
     border-color: var(--second-text-color);
 }
 
-
+.nf-item-details {
+    flex: 1;
+}
 
 .nf-item-dts-l1 {
     display: flex;

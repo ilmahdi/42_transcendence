@@ -6,6 +6,7 @@ import { IUserData, IUserDataShort } from '../utils/interfaces/user-data.interfa
 import { Observable, catchError, throwError } from 'rxjs';
 import { IHistory } from '../utils/interfaces/history.interface';
 import { IFrinedship } from '../utils/interfaces/friendship.interface';
+import { Socket } from 'ngx-socket-io';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +15,12 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
+    private socket: Socket,
   ) { }
 
   private apiUrl = environment.apiUrl;
 
-
+  // http handlers
   getUserData () : Observable<IUserData> {
     return this.http.get<IUserData>(`${this.apiUrl}/user/me` ,this.getHeaders());
   }
@@ -63,6 +65,26 @@ export class UserService {
           `${this.apiUrl}/user/friends/change/${frinedship_id}`, 
           {friendshipStatus} ,this.getHeaders(),
       );
+  }
+
+  // socket handler
+  initSocketConnection(userId: string) {
+    this.socket.ioSocket.query = { userId };
+    this.socket.connect();
+
+    this.socket.on('connect', () => {
+      console.log('Connected to WebSocket server');
+
+    });
+  }
+  
+  endSocketConnection(userId :string) {
+    this.socket.ioSocket.query = { userId }; 
+    this.socket.on('disconnect', () => {
+      console.log('Disconnected from WebSocket server');
+      
+    });
+
   }
 
 

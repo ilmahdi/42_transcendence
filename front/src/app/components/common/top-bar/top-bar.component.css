@@ -23,7 +23,7 @@
     top: var(--top-bar-hieght);
     right: var(--right-bar-width);
     z-index: 11;
-    box-shadow: 0 0rem 0.2rem black;
+    box-shadow: 0 0rem 2rem black;
 }
 
 /* top bar */
@@ -139,6 +139,10 @@
     flex-shrink: 0;
 }
 
+.tb-sec-item-icon.active {
+    fill: var(--second-hover-background-color);
+}
+
 /**/
 /* effect */
 .tb-sec-one :hover
@@ -211,7 +215,7 @@
 @media (max-width: 1000px) {
     
     .app-notify-containe {
-        right: 0.6rem;
+        right: 0.4rem;
     }
     /* top bar  */
     /******/

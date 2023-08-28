@@ -5,11 +5,12 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { TokenService } from 'src/common/services/token.service';
+import { UserGateway } from './user.gateway';
 
 @Module({
   imports: [PrismaModule],
   controllers: [UserController],
-  providers: [UserService, TokenService],
+  providers: [UserService, UserGateway, TokenService],
   exports: [UserService]
 
 })

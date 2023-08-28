@@ -46,8 +46,8 @@
                 <use xlink:href="./assets/icons/message.svg#icon-message"></use>
             </svg>
         </li>
-        <li class="tb-sec-item notif" appClickOutside (click)="onClickedOutside2($event)">
-            <svg class="tb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
+        <li class="tb-sec-item notif" appClickOutside (click)="onClickedOutside2($event)" >
+            <svg class="tb-sec-item-icon" xmlns="http://www.w3.org/2000/svg" [class.active]="isNotifClicked">
                 <use xlink:href="./assets/icons/notif.svg#icon-notif"></use>
             </svg>
             
