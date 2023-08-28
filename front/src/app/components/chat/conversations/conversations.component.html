@@ -1,5 +1,5 @@
 <div *ngIf="!roomConvers[0]">
-    <div class="body" *ngIf="userEmitted && !addRoom" [style.display]="userEmitted[1]? 'block': 'none'">
+    <div class="body" *ngIf="userEmitted && displayConversation" [style.display]="userEmitted[1]? 'block': 'none'">
         <div class="header">
             <span class="fa fa-angle-double-left" (click)="getConversEvent(0)"></span>
             <img src="../../../../assets/sghajdao.jpg" alt="avatar">
@@ -36,7 +36,7 @@
 
 
 <div *ngIf="roomConvers[0]">
-    <div class="body" *ngIf="roomConvers && !addRoom" [style.display]="roomConvers[1]? 'block': 'none'">
+    <div class="body" *ngIf="roomConvers && displayConversation" [style.display]="roomConvers[1]? 'block': 'none'">
         <div class="header">
             <span class="fa fa-angle-double-left" (click)="getConversEvent(1)"></span>
             <img [src]="'http://localhost:3000/api/chat/image/' + roomConvers[0].imagePath" alt="avatar">

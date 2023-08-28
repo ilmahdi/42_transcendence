@@ -41,7 +41,7 @@ export class ChatComponent implements OnInit {
   searchResults: User[] = [];
   nextStep:boolean = false
   roomFormular:any = {}
-  constructor(private chatService:ChatService, private loginService:LoginService, private router:Router) {
+  constructor(private chatService:ChatService, private loginService:LoginService) {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
 
@@ -54,6 +54,12 @@ export class ChatComponent implements OnInit {
     // chatService.sendToGetNotReadedRoomMessages(this.userId!);
     chatService.getNotReadedRoomMessages().subscribe(data=>{
       chatService.updateReadedRoomBehav(data)
+    })
+
+    // RESET FORMULAR IF USER OPEN CONVERSATION
+    chatService.displayConversation$.subscribe(data=> {
+      if (data)
+        this.resetRoomFormular()
     })
   }
 
@@ -97,8 +103,10 @@ export class ChatComponent implements OnInit {
   }
 
   displayFormRoom() {
+    this.chatService.displayOtherRoomsSource.next(false);
     this.chatService.roomFormular(true)
     this.chatService.add$.subscribe(data=>this.addRoom = data)
+    this.chatService.displayConversationSource.next(false);
   }
 
   addToRoom(user:{user:User, added:boolean, admin:boolean}) {
@@ -187,15 +195,23 @@ export class ChatComponent implements OnInit {
 
   searchRooms() {
     this.chatService.searchRooms(this.searchQuery).subscribe(data=>{
-      this.searchResults = data
-      this.chatService.updateRooms(data)
+      this.searchResults = []
+      data.forEach(room=> {
+        if (room.usersId?.includes(this.userId!))
+          this.searchResults.push(room)
+      })
+      this.chatService.updateRooms(this.searchResults)
     })
   }
 
   searchQueryRooms() {
     this.chatService.searchRooms(this.searchQuery).subscribe(data=>{
-      this.searchResults = data
-      this.chatService.updateRooms(data)
+      this.searchResults = []
+      data.forEach(room=> {
+        if (room.usersId?.includes(this.userId!))
+          this.searchResults.push(room)
+      })
+      this.chatService.updateRooms(this.searchResults)
     })
   }
 }

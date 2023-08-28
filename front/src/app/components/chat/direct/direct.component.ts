@@ -89,6 +89,7 @@ export class DirectComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription7 = this.chatService.getUsers().subscribe((data) => {
+      this.users = []
       data.forEach((user)=>{
         if (user.id != this.userId) {
           this.users?.push(user);
@@ -132,6 +133,7 @@ export class DirectComponent implements OnInit, OnDestroy {
     this.subscription9 = this.chatService.getNotReadedMessages().subscribe(data=>{
       this.chatService.updateReadedBehav(data);
     })
+    this.chatService.displayComponents(false, true, false, true);
     this.customEvent.emit(friend)
   }
 

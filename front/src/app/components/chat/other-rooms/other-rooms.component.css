@@ -26,12 +26,11 @@
 
 .room:hover {
     background-color: #D38146;
-    width: 60%;
+    width: 85%;
     opacity: 1;
 }
 
 .room:hover .join{
-    background-color: #D38146;
     width: 20%;
     opacity: 1;
 }
@@ -39,12 +38,20 @@
 .join {
     color: white;
     position: absolute;
-    right: 10px;
+    right: 5px;
     height: 30px;
     width: 20%;
     opacity: 0;
     top: 40px;
     transition: opacity 0.3s ease-in-out;
+}
+
+.fa-caret-right {
+    position: absolute;
+    right: 3px;
+    top: 4px;
+    font-size: 20px;
+    color: white;
 }
 
 img {
@@ -72,16 +79,41 @@ img {
     text-align: center;
 }
 
-@media (max-width: 1324px) {
-    .otehrRooms {
-        right: 20px;
-        /* width: 400px; */
-    }
+.password {
+    position: relative;
+    top: 1px;
+    height: 80px;
+    width: 100%;
+    background-color: #201717;
+    border-radius: 10px 10px 0px 0px;
+    border: 2px solid #D38146;
+}
+
+#enterPassword {
+    position: relative;left: 10px;top: 5px;color: white;text-align: center;
+}
+
+#typing {
+    position: absolute;
+    bottom: 5px;
+    height: 40px;
+    width: 40%;
+    left: 30%;
+    text-indent: 20px;
+    border: none;
+    outline: none;
+    background-color: #584747;
+    color: #9D8686;
+    border-radius: 20px;
+}
+
+.fa-arrow-right {
+    position: absolute; right: 25%; font-size: 25px; color: #9D8686;cursor: pointer;
 }
 
 @media (max-width: 1324px) {
     .otehrRooms {
-        right: 40px;
+        right: 20px;
     }
 }
 
@@ -99,4 +131,10 @@ img {
     .otehrRooms {
         height: 80%;
     }
+}
+
+p{
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    user-select:none;
 }

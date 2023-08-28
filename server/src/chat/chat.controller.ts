@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { Message } from './utils/models/message.interface';
 import { MessageBody } from '@nestjs/websockets';
@@ -8,6 +8,8 @@ import { diskStorage } from 'multer';
 import * as path from 'path'; 
 import { Room } from './utils/models/room.interface';
 import { join } from 'path/posix';
+import { PrivateChatService } from './utils/services/privateChat.service';
+import { RoomChatService } from './utils/services/roomChat.service';
 
 export const storage = {
   storage:diskStorage({
@@ -24,33 +26,33 @@ export const storage = {
 
 @Controller('chat')
 export class ChatController {
-    constructor(private readonly chatService:ChatService) {}
+    constructor(private privateChatService:PrivateChatService, private roomChatService:RoomChatService) {}
 
   @Post('messages')
   async messages(@Body() msg:Message) {
-      this.chatService.saveMessage(msg)
+      this.privateChatService.saveMessage(msg)
       // await this.chatService.trigger('chat', 'message', msg);
       return [];
   }
 
   @Get('getMessages')
   getMessages() {
-    return this.chatService.getMessages()
+    return this.privateChatService.getMessages()
   }
 
   @Post('getConversation')
   getConversation(@Body() data:any) {
-    return this.chatService.getConversation(data.senderId, data.receiverId);
+    return this.privateChatService.getConversation(data.senderId, data.receiverId);
   }
 
   @Post('notReaded')
   notReaded(@Body() id:number) {
-    return this.chatService.getUnreadMessageCountsBySenderId(id)
+    return this.privateChatService.getUnreadMessageCountsBySenderId(id)
   }
 
   @Get('search')
   async searchConversation(@Query('query') query:string) {
-    const users = await this.chatService.searchConversation(query);
+    const users = await this.privateChatService.searchConversation(query);
     return users;
   }
 
@@ -58,19 +60,30 @@ export class ChatController {
 
   @Post('createRoom')
   createRoom(@Body() room:Room) {
-    this.chatService.createRoom(room);
+    this.roomChatService.createRoom(room);
     return room
   }
 
   @Get('allRooms')
   getAllRooms() {
-    return this.chatService.getAllRooms();
+    return this.roomChatService.getAllRooms();
   }
 
   @Get('searchRoom')
   async searchRoom(@Query('query') query:string) {
-    const rooms = await this.chatService.searchRooms(query);
+    const rooms = await this.roomChatService.searchRooms(query);
     return rooms;
+  }
+
+  @Post('joinRoom')
+  joinRoom(@Body() data:{id:number, room:Room}) {
+    this.roomChatService.joinRoom(data.id, data.room)
+    return data.room;
+  }
+
+  @Post('joinProtected')
+  joinProtectedRoom(@Body() data:{id:number, room:Room, password:string}) {
+    return this.roomChatService.joinProtected(data.id, data.room, data.password)
   }
 
   ////////////////////////////////////////// UPLOAD IMAE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

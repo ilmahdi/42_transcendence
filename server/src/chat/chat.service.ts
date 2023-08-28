@@ -10,6 +10,7 @@ import { RoomEntity } from './utils/models/room.entity';
 import { Room } from './utils/models/room.interface';
 import { UserEntity } from 'src/user/utils/models/user.entity';
 import { AuthService } from 'src/auth/auth.service';
+import { RoomType } from './utils/models/roomType.enum';
 
 @Injectable()
 export class ChatService {
@@ -136,8 +137,12 @@ export class ChatService {
         return from(this.roomRepository.save(room));
     }
 
-    getAllRooms() {
-      return from(this.roomRepository.find());
+    getAllRooms(id:number) {
+      const roomsQuery = this.roomRepository.find()
+
+      return from(roomsQuery).pipe(
+        map(rooms => rooms.filter(room => room.type !== RoomType.PRIVATE))
+      );
     }
 
     getRooms(id: number) {
@@ -243,6 +248,17 @@ export class ChatService {
       roomId: message.roomId,
       unreadCount: message.unreadCount,
     }));
+  }
+
+  joinRoom(userId:number, room:Room) {
+    if (room.type === RoomType.PUBLIC) {
+      const users:number[] = []
+      room.usersId.forEach(id=> {
+        users.push(id)
+      })
+      users.push(userId)
+      this.roomRepository.update(room.id, {usersId:users})
+    }
   }
 
 }

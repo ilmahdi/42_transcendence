@@ -21,7 +21,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   @Input() conversationEmitted:Message[] = [];
   @Input() roomConvers?:any
   @Output() getconvers = new EventEmitter<boolean>()
-  displayConv:boolean = true
+  // displayConv:boolean = true
   userId?:number
   user?:User
 
@@ -32,7 +32,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   
   users:User[] = [];
 
-  addRoom:boolean = false
+  displayConversation:boolean = true
   constructor(private chatService: ChatService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
@@ -42,7 +42,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
       this.user = data;
     })
 
-    chatService.add$.subscribe(data=>this.addRoom = data)
+    chatService.displayConversation$.subscribe(data=>this.displayConversation = data)
   }
 
   ngOnInit() {

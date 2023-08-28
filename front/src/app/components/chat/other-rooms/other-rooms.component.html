@@ -1,6 +1,17 @@
-<div class="otehrRooms">
-    <div *ngFor="let room of allRooms" class="room">
-        <div class="join">JOIN</div>
+<div class="otehrRooms" *ngIf="displayList">
+    <div class="password" [style.display]="protectSelect? 'block' : 'none'">
+        <p id="enterPassword">Enter the room password:</p>
+        <form [formGroup]="password">
+            <input type="text" id="typing" placeholder="Entre password" formControlName="password">
+        </form>
+        <span class="fa fa-arrow-right" (click)="onJoinProtected()"></span>
+    </div>
+
+    <div *ngFor="let room of allRooms" class="room" (click)="onJoinPublic(room)" [style.backgroundColor]="(protectSelect && room === roomWaitForPassword)? '#D38146' : ''">
+        <div class="join">
+            <p style="text-align: center;position: relative;">JOIN</p>
+            <span class="fa fa-caret-right"></span>
+        </div>
         <p id="name">{{room.name}}</p>
         <p id="type">{{room.type}}</p>
         <img [src]="'http://localhost:3000/api/chat/image/' + room.imagePath">

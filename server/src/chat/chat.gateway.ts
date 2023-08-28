@@ -10,6 +10,8 @@ import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { Room } from './utils/models/room.interface';
 import * as jwt from 'jsonwebtoken';
+import { PrivateChatService } from './utils/services/privateChat.service';
+import { RoomChatService } from './utils/services/roomChat.service';
 
 @WebSocketGateway({cors: {origin: 'http://localhost:4200'}})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
@@ -18,7 +20,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   messages:Message[] = []
   id:string[] = []
 
-  constructor(private chatService:ChatService, private authService:AuthService, private userService:UserService) {
+  constructor(private privateChatService:PrivateChatService, private roomChatService:RoomChatService, private authService:AuthService, private userService:UserService) {
   }
 
   handleDisconnect(client: Socket) {
@@ -54,7 +56,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
 
   @SubscribeMessage('privateMessage')
   handlePrivateMessage(client: Socket, data: any) {
-      this.chatService.saveMessage(data.message)
+      this.privateChatService.saveMessage(data.message)
       // console.log("SOCKET ", data.user.socketId);
       
       // this.server.to([data.user.socketId, client.id]).emit('recMessage', data.message);
@@ -65,13 +67,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   @SubscribeMessage('getConversation')
   async getConversation(client: Socket, data:any) {
     // const messages = await this.chatService.getConversation(data.senderId, data.receiverId).toPromise();
-    this.chatService.getConversation(data.senderId, data.receiverId).subscribe(data=>this.server.to(client.id).emit('getConversation', data))
+    this.privateChatService.getConversation(data.senderId, data.receiverId).subscribe(data=>this.server.to(client.id).emit('getConversation', data))
     // this.server.to(client.id).emit('getConversation', messages);
   }
 
   @SubscribeMessage('getLastMessage')
   getLastMessage(client:Socket, id:number) {
-    this.chatService.getLastMessage(id).subscribe(data=>{
+    this.privateChatService.getLastMessage(id).subscribe(data=>{
       if (!data.length)
         client.emit('recLastMessage', [{id:0, senderId:id, receiverId:id, message:"Welcome", date:new Date}])
       else
@@ -81,37 +83,37 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
 
   @SubscribeMessage('updateReaded')
   updateReaded(client:Socket, message:Message) {
-    this.chatService.updateReaded(message);
+    this.privateChatService.updateReaded(message);
   }
 
   @SubscribeMessage('getNotReadedMessages')
   async getNotReadedMessages(client:Socket, id:number) {
-    const data = await this.chatService.getUnreadMessageCountsBySenderId(id)
+    const data = await this.privateChatService.getUnreadMessageCountsBySenderId(id)
       this.server.to(client.id).emit('recNotReadedMessages', data)
     
   }
 
+  ////////////////////////// ROOMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
   @SubscribeMessage('getUnreadedRoomMessages')
   async getUnreadedRoomMessages(client:Socket, id:number) {
-    const data = await this.chatService.getUnreadedRoomMessages(id)
+    const data = await this.roomChatService.getUnreadedRoomMessages(id)
     console.log(data);
     
       this.server.to(client.id).emit('recNotReadedRoomMessages', data)
     
   }
 
-  ////////////////////////// ROOMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
   @SubscribeMessage('getRooms')
   getRooms(client:Socket, id:number) {
-    this.chatService.getRooms(id).subscribe(data=>{
+    this.roomChatService.getRooms(id).subscribe(data=>{
       client.emit('recRooms', data);
     })
   }
 
   @SubscribeMessage('roomMessage')
   roomMessage(client:Socket, data:any) {
-    this.chatService.saveMessage(data.message);
+    this.privateChatService.saveMessage(data.message);
     let usersId:(number[]) = data.room.usersId;
     usersId.forEach(id=> {
       this.userService.getUserById(id).subscribe(user=>{
@@ -122,18 +124,23 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
 
   @SubscribeMessage('roomConversation')
   roomConversation(client:Socket, room:Room) {
-    this.chatService.getRoomConversation(room.id).subscribe(data=>{
+    this.roomChatService.getRoomConversation(room.id).subscribe(data=>{
       this.server.to(client.id).emit('recRoomConversation', data)
     })
   }
 
   @SubscribeMessage('getRoomLastMessage')
   getRoomLastMessage(client:Socket, id:number) {
-    this.chatService.getMessagesByUserId(id).subscribe(data=>{
+    this.roomChatService.getMessagesByUserId(id).subscribe(data=>{
       if (!data.length)
         client.emit('recRoomLastMessage', [{id:0, senderId:id, receiverId:id, message:"Welcome", date:new Date(), roomId:1}])
       else
         client.emit('recRoomLastMessage', data)
     });
+  }
+
+  @SubscribeMessage('getOtherRooms')
+  getOtherRooms(client:Socket) {
+    this.roomChatService.getAllRooms().subscribe(data=>client.emit('recOtherRooms', data))
   }
 }

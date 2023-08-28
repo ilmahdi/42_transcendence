@@ -104,6 +104,10 @@ export class RoomsComponent implements OnInit, OnDestroy {
     this.screenWidth = window.innerWidth;
   }
 
+  displayOtherRooms() {
+    this.chatService.displayComponents(false, false, true, true);
+  }
+
   openRoom(room:Room) {
     //  IF THE SCREEN WIDTH < 934 SO THE CONVERSATION BUTTON COLOR WILL NOT CHANGE WHEN THE USER CLICK IT
     if (this.screenWidth > 934) {
@@ -126,8 +130,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
       })
     })
     this.chatService.updateRoomConversation(this.messages);
-    this.chatService.roomFormular(false)
-
+    this.chatService.displayComponents(false, true, false, true);
     this.conversData.emit(room);
   }
 

@@ -50,6 +50,12 @@ export class ChatService {
   roomsSource = new BehaviorSubject<Room[]>([]);
   rooms$ = this.roomsSource.asObservable()
 
+  displayOtherRoomsSource = new BehaviorSubject<boolean>(false);
+  displayOtherRooms$ = this.displayOtherRoomsSource.asObservable()
+
+  displayConversationSource = new BehaviorSubject<boolean>(false);
+  displayConversation$ = this.displayConversationSource.asObservable()
+
   constructor(private http:HttpClient, private socket:ChatSocketService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id
@@ -68,6 +74,13 @@ export class ChatService {
     this.getNotReadedRoomMessages().subscribe(data=>{
       this.updateReadedRoomBehav(data)
     })
+  }
+
+  displayComponents(formular:boolean, conversation:boolean, otherRooms:boolean, backto:boolean) {
+    this.roomFormular(formular)
+    this.displayConversationSource.next(conversation);
+    this.displayOtherRoomsSource.next(otherRooms);
+    this.backToRoomFormularSource.next(backto)
   }
 
   updateRooms(rooms:Room[]) {
@@ -192,6 +205,14 @@ export class ChatService {
     return this.socket.fromEvent<{senderId:number, roomId: number; unreadCount: number}[]>('recNotReadedRoomMessages')
   }
 
+  sendTetOtherRooms() {
+    this.socket.emit('getOtherRooms');
+  }
+
+  getOtherRooms() {
+    return this.socket.fromEvent<Room[]>('recOtherRooms');
+  }
+
   token:string|null = localStorage.getItem('token');
   
   private httpOptions: { headers: HttpHeaders } = {
@@ -224,5 +245,15 @@ export class ChatService {
 
   searchRooms(name:string) {
     return this.http.get<Room[]>('http://localhost:3000/api/chat/searchRoom?query=' + name)
+  }
+
+  joinRoom(id:number, room:Room) {
+    const data = {id:id, room:room}
+    return this.http.post<Room>('http://localhost:3000/api/chat/joinRoom', data)
+  }
+
+  joinProtected(id:number, room:Room, password:string) {
+    const data = {id:id, room:room, password:password}
+    return this.http.post<boolean>('http://localhost:3000/api/chat/joinProtected', data)
   }
 }
