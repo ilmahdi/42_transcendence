@@ -21,7 +21,7 @@
 .app-notify-containe {
     position: absolute;
     top: var(--top-bar-hieght);
-    right: var(--right-bar-width);
+    right: calc(var(--right-bar-width) + 0.4rem);
     z-index: 11;
     box-shadow: 0 0rem 2rem black;
 }

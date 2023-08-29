@@ -1,52 +1,31 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer } from '@nestjs/websockets';
+import { 
+  WebSocketGateway, 
+  SubscribeMessage, 
+  WebSocketServer, 
+} from '@nestjs/websockets';
 import { ChatService } from './chat.service';
-import { CreateChatDto } from './utils/dtos/create-chat.dto';
-import { UpdateChatDto } from './utils/dtos/update-chat.dto';
-import { Server } from 'http';
-import { Socket } from 'dgram';
+import { Server, Socket } from 'socket.io';
+import { ConnectionGateway } from 'src/common/gateways/connection.gateway';
 
-@WebSocketGateway({cors: {origin: ['http://localhost:4200']}})
-export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
-  constructor(private readonly chatService: ChatService) {}
+@WebSocketGateway({
+  cors: {
+      origin: ['http://localhost:4200'],
+  }
+})
+export class ChatGateway {
+  constructor(
+      private readonly chatService: ChatService,
+      private readonly connectionGateway :ConnectionGateway,
+    ) {}
 
   @WebSocketServer()
   server: Server
 
-  handleConnection(client: any, ...args: any[]) {
-      console.log('connection');
-  }
 
-  handleDisconnect(client: any) {
-      console.log('disconnected');
-  }
 
   @SubscribeMessage('sendMessage')
   handleMessage(socket: Socket, message: string) {
     this.server.emit('newMessage', message);
   }
 
-  // @SubscribeMessage('createChat')
-  // create(@MessageBody() createChatDto: CreateChatDto) {
-  //   return this.chatService.create(createChatDto);
-  // }
-
-  // @SubscribeMessage('findAllChat')
-  // findAll() {
-  //   return this.chatService.findAll();
-  // }
-
-  // @SubscribeMessage('findOneChat')
-  // findOne(@MessageBody() id: number) {
-  //   return this.chatService.findOne(id);
-  // }
-
-  // @SubscribeMessage('updateChat')
-  // update(@MessageBody() updateChatDto: UpdateChatDto) {
-  //   return this.chatService.update(updateChatDto.id, updateChatDto);
-  // }
-
-  // @SubscribeMessage('removeChat')
-  // remove(@MessageBody() id: number) {
-  //   return this.chatService.remove(id);
-  // }
 }

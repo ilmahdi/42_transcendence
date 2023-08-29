@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from './services/user.service';
+import { SocketService } from './utils/socket/socket.service';
 
 @Component({
   selector: 'app-root',
@@ -8,16 +8,16 @@ import { UserService } from './services/user.service';
 })
 export class AppComponent implements OnInit {
   constructor (
-    private userService: UserService,
+    private socketService: SocketService,
   ) {
   }
   ngOnInit(): void {
     const userId = 'your-user-id';
-    this.userService.initSocketConnection(userId);
+    this.socketService.initSocketConnection(userId);
   }
 
   ngOnDestroy():void {
     const userId = 'your-user-id';
-    this.userService.endSocketConnection(userId);
+    this.socketService.endSocketConnection(userId);
   }
 }

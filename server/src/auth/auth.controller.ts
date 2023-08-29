@@ -3,7 +3,8 @@ import { AuthService } from './auth.service';
 // import * as bcrypt from "bcryptjs"
 import { FtLoginGuard } from './utils/guards/ft-login.guard';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
+
+import { Request, Response } from "express";
 import { JwtGuard } from './utils/guards/jwt.guard';
 
 
@@ -26,7 +27,7 @@ export class AuthController {
     
     @Get("callback/42")
     @UseGuards(FtLoginGuard)
-    ftCallback(@Req() req, @Res() res){
+    ftCallback(@Req() req :any, @Res() res :Response){
         // console.log(req.user)
         let queryUserData = "";
         if (req.user.firstLogin === "true")
