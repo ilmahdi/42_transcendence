@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CustomSocket } from './socket.module';
+import { JWT_TOKEN } from '../constants';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,11 @@ export class SocketService {
   }
 
 
-  initSocketConnection(userId: string) {
-    this.socket.connect();
+  initSocketConnection() {
+    
+    if (this.socket.setToken())
+      this.socket.connect();
+
 
     this.socket.on('connect', () => {
       console.log('Connected to WebSocket server');
@@ -21,7 +25,7 @@ export class SocketService {
     });
   }
   
-  endSocketConnection(userId :string) {
+  endSocketConnection() {
     this.socket.on('disconnect', () => {
       console.log('Disconnected from WebSocket server');
       

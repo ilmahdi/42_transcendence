@@ -12,12 +12,10 @@ export class AppComponent implements OnInit {
   ) {
   }
   ngOnInit(): void {
-    const userId = 'your-user-id';
-    this.socketService.initSocketConnection(userId);
+    this.socketService.initSocketConnection();
   }
 
   ngOnDestroy():void {
-    const userId = 'your-user-id';
-    this.socketService.endSocketConnection(userId);
+    this.socketService.endSocketConnection();
   }
 }

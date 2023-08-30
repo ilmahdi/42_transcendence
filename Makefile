@@ -19,3 +19,4 @@ stop-services:
 	pkill -f "ng serve"
 	pkill -f "node"
 	docker-compose down
+

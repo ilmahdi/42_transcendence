@@ -2,6 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { JWT_TOKEN } from '../../utils/constants';
+import { SocketService } from 'src/app/utils/socket/socket.service';
 
 @Component({
   selector: 'app-visitors',
@@ -13,6 +14,7 @@ export class VisitorsComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private socketService: SocketService,
   ) { }
 
   private apiUrlAuth = environment.apiUrlAuth;
@@ -27,6 +29,7 @@ export class VisitorsComponent implements OnInit {
     
     if (!this.firstLogin)
       this.router.navigate(["/home"]);
+      this.socketService.initSocketConnection();
   }
 
   redirectToLogin() {
