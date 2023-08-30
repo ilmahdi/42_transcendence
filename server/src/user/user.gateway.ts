@@ -9,7 +9,7 @@ import { ConnectionGateway } from 'src/common/gateways/connection.gateway';
 
 @WebSocketGateway({
     cors: {
-        origin: ['http://localhost:4200'],
+        origin: [process.env.FONTEND_URL],
     }
 })
 
@@ -25,9 +25,11 @@ export class UserGateway  {
 
  
 
-  @SubscribeMessage('sendMessage')
+  @SubscribeMessage('hello')
   handleMessage(socket: Socket, message: string) {
-    this.server.emit('newMessage', message);
+    // this.server.emit('newMessage', message);
+    console.log("front say hello")
+  
   }
 
 }

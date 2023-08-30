@@ -36,7 +36,7 @@ export class AuthController {
             queryUserData = `access_token=${req.user.token}`;
         
 
-        res.status(302).redirect(`${process.env.FONTEND_URL}?${queryUserData}&first_login=${req.user.firstLogin}`);
+        res.status(302).redirect(`${process.env.FONTEND_URL}/login?${queryUserData}&first_login=${req.user.firstLogin}`);
     }
     @Get("logout/42")
     @UseGuards(JwtGuard)

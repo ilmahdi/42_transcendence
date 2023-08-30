@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 import { MenuBarService } from 'src/app/services/menu-bar.service';
+import { INotifyData } from 'src/app/utils/interfaces/notify-data.interface';
 
 @Component({
   selector: 'app-top-bar',
@@ -9,18 +11,31 @@ import { MenuBarService } from 'src/app/services/menu-bar.service';
 })
 export class TopBarComponent implements OnInit {
 
-  ngOnInit(): void {
+  constructor(
+    public menuBarService: MenuBarService,
+    public authServece: AuthService,
+    private router: Router,
+  ) {
   }
-
+  
   public searchQuery: string = '';
   public searchResults: any[] = [];
   public activeIndex: number = -1;
   public isNotifClicked: boolean = false;
-
-  constructor(
-    public menuBarService: MenuBarService,
-    private router: Router,
-  ) {
+  public isNewNotif: boolean = false;
+  public notifyData :INotifyData[] = []
+  
+  ngOnInit(): void {
+    const userId :number = this.authServece.getLoggedInUserId()
+    this.menuBarService.getNotifications(userId).subscribe({
+      next: response => {
+        this.notifyData = response;
+        console.log(this.notifyData);
+      },
+      error: error => {
+        console.error('Error:', error.error.message); 
+      }
+    });
   }
 
   toggleLeftBar() {
@@ -65,12 +80,13 @@ export class TopBarComponent implements OnInit {
     this.searchQuery = '';
     this. searchResults = [];    
   }
-  onClickedOutside2(event: Event): void {
-    event.stopPropagation();
+  onClickedOutside2(): void {
     this.isNotifClicked = !this.isNotifClicked;
   }
-  onClickedOutside3(): void {
+  onClickNotif(event: Event): void {
+    event.stopPropagation();
     this.isNotifClicked = !this.isNotifClicked;
+    this.menuBarService.sendEvent("hello")
   }
 
 

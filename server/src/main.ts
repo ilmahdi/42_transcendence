@@ -13,7 +13,7 @@ async function bootstrap() {
     },
   }))
   app.enableCors({
-    origin: 'http://localhost:4200',
+    origin: process.env.FONTEND_URL,
   });
   await app.listen(3000);
 }

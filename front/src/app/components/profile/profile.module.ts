@@ -9,11 +9,10 @@ import { MenuBarModule } from '../common/menu-bar.module';
 import { ProfileStatsComponent } from './profile-stats/profile-stats.component';
 import { ProfileIdComponent } from './profile-id/profile-id.component';
 import { MatchHistoryComponent } from './match-history/match-history.component';
-import { PositiveNumberPipeSign } from 'src/app/utils/pipes/positive-number-sign.pipe';
-import { RelativeTimePipe } from 'src/app/utils/pipes/relative-time.pipe';
 import { AchievementsComponent } from './achievements/achievements.component';
 import { MoreOptsComponent } from './more-opts/more-opts.component';
 import { SharedModule } from 'src/app/utils/shared/shared.module';
+import { PipesModule } from 'src/app/utils/pipes/pipes.module';
 
 
 
@@ -23,8 +22,6 @@ import { SharedModule } from 'src/app/utils/shared/shared.module';
     ProfileStatsComponent,
     ProfileIdComponent,
     MatchHistoryComponent,
-    PositiveNumberPipeSign,
-    RelativeTimePipe,
     AchievementsComponent,
     MoreOptsComponent,
   ],
@@ -36,6 +33,7 @@ import { SharedModule } from 'src/app/utils/shared/shared.module';
     OnlineModule,
     MenuBarModule,
     SharedModule,
+    PipesModule,
   ]
 })
 export class ProfileModule { }

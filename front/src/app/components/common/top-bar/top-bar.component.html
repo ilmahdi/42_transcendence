@@ -46,16 +46,19 @@
                 <use xlink:href="./assets/icons/message.svg#icon-message"></use>
             </svg>
         </li>
-        <li class="tb-sec-item notif" appClickOutside (click)="onClickedOutside2($event)" >
+        <li class="tb-sec-item notif" appClickOutside (click)="onClickNotif($event)" >
             <svg class="tb-sec-item-icon" xmlns="http://www.w3.org/2000/svg" [class.active]="isNotifClicked">
                 <use xlink:href="./assets/icons/notif.svg#icon-notif"></use>
             </svg>
+            <div class="tb-sec-item-indic" *ngIf="isNewNotif">
+                <span> 1 </span>
+            </div>
             
         </li>
     </div>
 </ul>
-<div class="app-notify-containe" *ngIf="isNotifClicked" appClickOutside (appClickOutside)="onClickedOutside3()">
-    <app-notify ></app-notify>
+<div class="app-notify-containe" *ngIf="isNotifClicked" appClickOutside (appClickOutside)="onClickedOutside2()">
+    <app-notify [notifyData]="notifyData"></app-notify>
 </div>
 
 </div>

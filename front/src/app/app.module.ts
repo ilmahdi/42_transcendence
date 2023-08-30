@@ -20,6 +20,8 @@ import { SettingsModule } from './components/settings/settings.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { SocketModule } from './utils/socket/socket.module';
+import { MenuBarModule } from './components/common/menu-bar.module';
+import { PipesModule } from './utils/pipes/pipes.module';
 
 
 @NgModule({
@@ -50,6 +52,7 @@ import { SocketModule } from './utils/socket/socket.module';
       config: {
       }
     }),
+    MenuBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

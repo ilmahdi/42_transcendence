@@ -9,8 +9,6 @@ import { JWT_TOKEN } from '../utils/constants';
 })
 export class AuthService {
 
-  private apiUrl = environment.apiUrl;
-
   constructor(
     private http: HttpClient,
     public jwtHelper: JwtHelperService

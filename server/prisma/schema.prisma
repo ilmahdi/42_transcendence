@@ -41,6 +41,12 @@ enum AccessLevels {
   BANNED
   MUTED
 }
+enum NotificationType {
+  FRIEND_REQUEST
+  FRIEND_ACCEPTE
+  GAME_INVITE
+  GAME_ACCEPTE
+}
 
 // database models
 //********************************************************************//
@@ -74,6 +80,24 @@ model UserAccount {
   channel_admins      ChannelAdmins[]     @relation()
   channel_members     ChannelMembers[]    @relation()
   restricted_members  RestrictedMembers[] @relation()
+  notif_to            Notification[]      @relation("notif_to")
+  notif_from          Notification[]      @relation("notif_from")
+}
+
+
+model Notification { 
+  id                  Int               @id @default(autoincrement())
+  to_id               Int
+  from_id             Int
+  type                NotificationType
+  seen                Boolean           @default(false)
+
+  created_at          DateTime          @default(now())
+  updated_at          DateTime          @updatedAt
+
+
+  notif_to            UserAccount         @relation("notif_to", fields: [to_id], references: [id])
+  notif_from          UserAccount         @relation("notif_from", fields: [from_id], references: [id])
 }
 
 

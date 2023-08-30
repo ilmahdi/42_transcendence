@@ -6,7 +6,7 @@ import { TokenService } from '../services/token.service';
 
 @WebSocketGateway({
     cors: {
-        origin: ['http://localhost:4200'],
+        origin: [process.env.FONTEND_URL],
     }
   })
 @WebSocketGateway()
@@ -33,7 +33,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
 
     this.connectedUsers[socketId] = decodedToken.sub;
 
-    console.log(`User ${this.connectedUsers[socketId]} connected with socket ID ${socketId}`);
+    console.log(`User ${decodedToken.username} connected with socket ID ${socketId}`);
   }
 
   handleDisconnect(client: Socket) {

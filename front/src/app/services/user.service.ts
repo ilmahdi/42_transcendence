@@ -16,7 +16,6 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
-    private socket: CustomSocket,
   ) { }
 
   private apiUrl = environment.apiUrl;
@@ -24,17 +23,17 @@ export class UserService {
   // http handlers
   /*********************************************/
   getUserData () : Observable<IUserData> {
-    return this.http.get<IUserData>(`${this.apiUrl}/user/me` ,this.getHeaders());
+    return this.http.get<IUserData>(`${this.apiUrl}/api/user/me` ,this.getHeaders());
   }
   getUserDataByUsername (username :string) : Observable<IUserData> {
-    return this.http.get<IUserData>(`${this.apiUrl}/user/data/${username}` ,this.getHeaders());
+    return this.http.get<IUserData>(`${this.apiUrl}/api/user/data/${username}` ,this.getHeaders());
   }
 
   uploadImage (formData :FormData) : Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/user/avatar/upload`, formData ,this.getHeaders());
+    return this.http.post<any>(`${this.apiUrl}/api/user/avatar/upload`, formData ,this.getHeaders());
   }
   registerUser (userDataShort :IUserDataShort) : Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/user/register`, userDataShort ,this.getHeaders())
+    return this.http.post<any>(`${this.apiUrl}/api/user/register`, userDataShort ,this.getHeaders())
     .pipe(
       catchError( error => {
         return throwError(() => error);
@@ -42,7 +41,7 @@ export class UserService {
     );
   }
   updateUserData (userDataShort :IUserDataShort) : Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/user/update/${userDataShort.id}`, userDataShort ,this.getHeaders())
+    return this.http.patch<any>(`${this.apiUrl}/api/user/update/${userDataShort.id}`, userDataShort ,this.getHeaders())
     .pipe(
       catchError( error => {
         return throwError(() => error);
@@ -51,20 +50,20 @@ export class UserService {
   }
 
   addFriend (friendship :IFrinedship) : Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/user/friends/add`, friendship ,this.getHeaders());
+    return this.http.post<any>(`${this.apiUrl}/api/user/friends/add`, friendship ,this.getHeaders());
   }
   updateFriend (frinedship_id :number, friendship :IFrinedship) : Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/user/friends/update/${frinedship_id}`, friendship ,this.getHeaders());
+    return this.http.patch<any>(`${this.apiUrl}/api/user/friends/update/${frinedship_id}`, friendship ,this.getHeaders());
   }
   checkFriendship (friendship :IFrinedship) : Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/user/friends/check`, friendship ,this.getHeaders());
+    return this.http.post<any>(`${this.apiUrl}/api/user/friends/check`, friendship ,this.getHeaders());
   }
   cancelFriend (frinedship_id :number) : Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/user/friends/cancel/${frinedship_id}` ,this.getHeaders());
+    return this.http.delete<any>(`${this.apiUrl}/api/user/friends/cancel/${frinedship_id}` ,this.getHeaders());
   }
   changeFriendshipStatus (frinedship_id :number, friendshipStatus :string) : Observable<any> {
     return this.http.post<any>(
-          `${this.apiUrl}/user/friends/change/${frinedship_id}`, 
+          `${this.apiUrl}/api/user/friends/change/${frinedship_id}`, 
           {friendshipStatus} ,this.getHeaders(),
       );
   }
@@ -90,6 +89,6 @@ export class UserService {
   // temporary 
   /*********************************************/
   getMatchHistory (username :string) : Observable<IHistory[]> {
-    return this.http.get<IHistory[]>(`${this.apiUrl}/tmp/history` ,this.getHeaders());
+    return this.http.get<IHistory[]>(`${this.apiUrl}/api/tmp/history` ,this.getHeaders());
   }
 }

@@ -17,7 +17,7 @@ export class VisitorsComponent implements OnInit {
     private socketService: SocketService,
   ) { }
 
-  private apiUrlAuth = environment.apiUrlAuth;
+  private apiUrlAuth :string = environment.apiUrlAuth;
   public firstLogin :boolean = false;
 
 
@@ -36,8 +36,3 @@ export class VisitorsComponent implements OnInit {
     window.location.href = this.apiUrlAuth;
   }
 }
-
-
-// ft_id
-// username
-// avatar

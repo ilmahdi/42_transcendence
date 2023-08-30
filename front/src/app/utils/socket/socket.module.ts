@@ -1,6 +1,7 @@
 import { Injectable, NgModule } from '@angular/core';
 import { Socket, SocketIoModule } from 'ngx-socket-io';
 import { JWT_TOKEN } from '../constants';
+import { environment } from 'src/environments/environment';
 
 
 function getToken() {
@@ -15,7 +16,7 @@ function getToken() {
 @Injectable()
 export class CustomSocket extends Socket {
   constructor() {
-    super({ url: 'http://localhost:3000' });
+    super({ url: environment.apiUrl });
   }
 
   setToken() : boolean{
