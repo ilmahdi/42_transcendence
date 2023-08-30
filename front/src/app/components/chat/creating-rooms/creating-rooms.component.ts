@@ -60,6 +60,7 @@ export class CreatingRoomsComponent implements OnInit {
   }
 
   back() {
-    this.chatService.backToRoomFormularSource.next(true);
+    this.chatService.displayComponents(true, false, false, true, true, false)
+    // this.chatService.backToRoomFormularSource.next(true);
   }
 }

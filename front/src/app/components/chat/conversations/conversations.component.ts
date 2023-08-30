@@ -20,8 +20,6 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   @Input() userEmitted:any
   @Input() conversationEmitted:Message[] = [];
   @Input() roomConvers?:any
-  @Output() getconvers = new EventEmitter<boolean>()
-  // displayConv:boolean = true
   userId?:number
   user?:User
 
@@ -33,7 +31,9 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   users:User[] = [];
 
   displayConversation:boolean = true
+  options:boolean = false
   constructor(private chatService: ChatService, private loginService:LoginService) {
+    this.chatService.optionsSource.next(false)
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
     })
@@ -43,6 +43,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     })
 
     chatService.displayConversation$.subscribe(data=>this.displayConversation = data)
+    this.chatService.options$.subscribe(data=>this.options = data)
   }
 
   ngOnInit() {
@@ -67,12 +68,15 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     })
   }
 
-  getConversEvent(flag:number) {
-    this.getconvers.emit(true);
-    if (flag === 0)
-      this.userEmitted[1] = false;
-    else
-      this.roomConvers[1] = false
+  openOptions() {
+    this.chatService.roomOptionsSource.next(this.roomConvers[0])
+    // this.chatService.optionsSource.next(true)
+    // this.options = true
+    this.chatService.displayComponents(false, false, false, true, true, true)
+  }
+
+  getConversEvent() {
+    this.chatService.displayComponents(false, false, false, false, false, false)
   }
 
   sendPrivateMessage() {

@@ -13,6 +13,7 @@ import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { ChatService } from 'src/app/services/chat.service';
 import { CreatingRoomsComponent } from './creating-rooms/creating-rooms.component';
 import { OtherRoomsComponent } from './other-rooms/other-rooms.component';
+import { RoomOptionsComponent } from './room-options/room-options.component';
 
 const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
 
@@ -25,6 +26,7 @@ const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
     RoomsComponent,
     CreatingRoomsComponent,
     OtherRoomsComponent,
+    RoomOptionsComponent,
   ],
   exports: [ChatComponent],
   imports: [

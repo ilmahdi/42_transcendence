@@ -56,6 +56,18 @@ export class ChatService {
   displayConversationSource = new BehaviorSubject<boolean>(false);
   displayConversation$ = this.displayConversationSource.asObservable()
 
+  displayConversSource = new BehaviorSubject<boolean>(false);
+  displayConvers$ = this.displayConversSource.asObservable();
+
+  optionsSource = new BehaviorSubject<boolean>(false);
+  options$ = this.optionsSource.asObservable()
+
+  otherRoomSource = new BehaviorSubject<Room[]>([])
+  otherRoom$ = this.otherRoomSource.asObservable()
+
+  roomOptionsSource = new BehaviorSubject<Room>({})
+  roomOptions$ = this.roomOptionsSource.asObservable();
+
   constructor(private http:HttpClient, private socket:ChatSocketService, private loginService:LoginService) {
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id
@@ -76,11 +88,13 @@ export class ChatService {
     })
   }
 
-  displayComponents(formular:boolean, conversation:boolean, otherRooms:boolean, backto:boolean) {
+  displayComponents(formular:boolean, conversation:boolean, otherRooms:boolean, backto:boolean, convers:boolean, options:boolean) {
     this.roomFormular(formular)
     this.displayConversationSource.next(conversation);
     this.displayOtherRoomsSource.next(otherRooms);
-    this.backToRoomFormularSource.next(backto)
+    this.backToRoomFormularSource.next(backto);
+    this.displayConversSource.next(convers)
+    this.optionsSource.next(options)
   }
 
   updateRooms(rooms:Room[]) {
@@ -255,5 +269,9 @@ export class ChatService {
   joinProtected(id:number, room:Room, password:string) {
     const data = {id:id, room:room, password:password}
     return this.http.post<boolean>('http://localhost:3000/api/chat/joinProtected', data)
+  }
+
+  getRoomMembers(room:Room) {
+    return this.http.post<User[]>('http://localhost:3000/api/chat/roomMembers' , room);
   }
 }

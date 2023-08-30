@@ -19,9 +19,9 @@ export class ChatComponent implements OnInit {
 
   room = new FormGroup({name: new FormControl, imagePath: new FormControl})
 
-  userEvent?:any[]
+  userEvent:any[] = []
   conversationEvent!:Message[];
-  roomData?:any[]
+  roomData:any[] = []
 
   directClicked: boolean = true
   roomsClicked: boolean = false
@@ -71,6 +71,7 @@ export class ChatComponent implements OnInit {
         }
       })
     });
+    this.chatService.displayConvers$.subscribe(data=> this.displayConvers = data)
   }
 
   onResize() {
@@ -87,14 +88,9 @@ export class ChatComponent implements OnInit {
     this.directClicked = false;
   }
 
-  conversEvent(convers:boolean) {
-    this.displayConvers = convers
-  }
-
   onCustomEvent(user:User) {
     this.smallScreen = true
     this.userEvent = [user, true]
-    this.displayConvers = false
     this.roomData = []
   }
 
@@ -103,10 +99,8 @@ export class ChatComponent implements OnInit {
   }
 
   displayFormRoom() {
-    this.chatService.displayOtherRoomsSource.next(false);
-    this.chatService.roomFormular(true)
     this.chatService.add$.subscribe(data=>this.addRoom = data)
-    this.chatService.displayConversationSource.next(false);
+    this.chatService.displayComponents(true, false, false, true, true, false)
   }
 
   addToRoom(user:{user:User, added:boolean, admin:boolean}) {
@@ -119,7 +113,9 @@ export class ChatComponent implements OnInit {
   }
 
   getConversations() {
+    this.resetRoomFormular()
     this.addRoom = false
+    this.chatService.displayComponents(false, false, false, true, false, false)
   }
 
   handleFileChange(event: any): void {
@@ -148,16 +144,15 @@ export class ChatComponent implements OnInit {
     let imageName = path.split('\\')
 
     let room = {adminId:adminsId, name:this.room.value.name, usersId:usersId, imagePath:imageName[imageName.length - 1]};
-    if (usersId.length && this.room.value.name && this.room.value.imagePath) {
+    if (usersId.length > 1 && this.room.value.name && this.room.value.imagePath) {
       this.roomFormular = room;
       this.nextStep = true
+      this.roomFormularTitles[1].error = false
+      this.roomFormularTitles[0].error = false
       this.chatService.backToRoomFormularSource.next(false);
-      // this.chatService.createRoom(room).subscribe()
-      // this.room.reset()
-      // usersAdded.forEach(item=>item.added = false)
     }
     else {
-      if (!usersId.length)
+      if (usersId.length <= 1)
         this.roomFormularTitles[1].error = true
       else
         this.roomFormularTitles[1].error = false

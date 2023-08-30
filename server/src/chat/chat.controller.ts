@@ -86,6 +86,11 @@ export class ChatController {
     return this.roomChatService.joinProtected(data.id, data.room, data.password)
   }
 
+  @Post('roomMembers')
+  getRoomMembers(@Body() room:Room) {
+    return this.roomChatService.getRoomMembers(room);
+  }
+
   ////////////////////////////////////////// UPLOAD IMAE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
   @Post('upload')
   @UseInterceptors(FileInterceptor('file', storage))

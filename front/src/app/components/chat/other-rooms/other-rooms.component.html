@@ -1,19 +1,23 @@
 <div class="otehrRooms" *ngIf="displayList">
-    <div class="password" [style.display]="protectSelect? 'block' : 'none'">
-        <p id="enterPassword">Enter the room password:</p>
-        <form [formGroup]="password">
-            <input type="text" id="typing" placeholder="Entre password" formControlName="password">
+    <div class="search">
+        <span class="fa fa-angle-double-left" *ngIf="screenWidth<= 934" (click)="hideOtherRooms()"></span>
+        <form [formGroup]="search">
+            <input type="text" formControlName="search" id="searchInput" placeholder="Search..." [(ngModel)]="searchQuery" (ngModelChange)="searchQueryRooms()">
         </form>
-        <span class="fa fa-arrow-right" (click)="onJoinProtected()"></span>
     </div>
 
+    <h3 id="noRoom" *ngIf="!allRooms[0]">No room has found</h3>
+
     <div *ngFor="let room of allRooms" class="room" (click)="onJoinPublic(room)" [style.backgroundColor]="(protectSelect && room === roomWaitForPassword)? '#D38146' : ''">
-        <div class="join">
+        <div class="join" (click)="(protectSelect && room === roomWaitForPassword)? onJoinProtected() : ''">
             <p style="text-align: center;position: relative;">JOIN</p>
             <span class="fa fa-caret-right"></span>
         </div>
+        <form [formGroup]="password" *ngIf="(protectSelect && room === roomWaitForPassword)">
+            <input type="password" id="typing" placeholder="Entre password" formControlName="password">
+        </form>
         <p id="name">{{room.name}}</p>
-        <p id="type">{{room.type}}</p>
+        <p id="type" *ngIf="!(protectSelect && room === roomWaitForPassword)">{{room.type}}</p>
         <img [src]="'http://localhost:3000/api/chat/image/' + room.imagePath">
     </div>
 </div>

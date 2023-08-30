@@ -1,0 +1,155 @@
+.options {
+    position: absolute;
+    margin-top: 90px;
+    right: 270px;
+    height: calc(100px + 65%);
+    width: 572px;
+    background-color: #231C1C;
+    border-radius: 15px 15px 15px 15px;
+}
+
+.roomType {
+    position: relative;
+    height: 100px;
+    width: 100%;
+    border-radius: 15px 15px 0px 0px;
+    /* background-color: white; */
+}
+
+h4 {
+    top: 7px;
+    position: relative;
+    text-align: center;
+    color: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+#public {
+    position: absolute;
+    left: 7%;
+    top: 50px;
+    height: 40px;
+    width: 25%;
+    background-color: #201717;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#protected {
+    position: absolute;
+    left: 37%;
+    top: 50px;
+    height: 40px;
+    width: 25%;
+    background-color: #201717;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#private {
+    position: absolute;
+    left: 67%;
+    top: 50px;
+    height: 40px;
+    width: 25%;
+    background-color: #201717;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#public:hover, #protected:hover, #private:hover {
+    background-color: #D38146;
+}
+
+#typeName {
+    position: relative;
+    text-align: center;
+    color: white;
+    top: 7px;
+}
+
+#changePass {
+    position: relative;
+    top: 65px;
+    text-align: center;
+    color: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+input {
+    position: relative;
+    width: 50%;
+    height: 40px;
+    left: 25%;
+    top: 65px;
+    border: none;
+    outline: none;
+    text-indent: 20px;
+    border-radius: 10px;
+    background-color: #584747;
+    color: #9D8686;
+}
+
+.members {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 125px);
+    overflow: hidden;
+}
+
+#membersTitle {
+    position: relative;
+    top: 65px;
+    text-align: center;
+    color: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.user {
+    position: relative;
+    margin-top: 10px;
+    margin-left: 10%;
+    height: 80px;
+    width: 80%;
+    border-radius: 10px;
+    background-color: #201717;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+@media (min-width: 2000px) {
+    .options {
+        right: 470px;
+        width: 672px;
+    }
+}
+
+@media (max-width: 1366px) {
+    .options {
+        width: 490px;
+    }
+}
+
+@media (max-width: 1324px) {
+    .options {
+        right: 20px;
+    }
+}
+
+@media (max-width: 934px) {
+    .options {
+        right: 80px;
+        width: 70%;
+    }
+}
+
+@media (max-width: 660px) {
+    .options {
+        width: 65%;
+        right: 50px;
+        height: 80%;
+    }
+}

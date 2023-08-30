@@ -12,6 +12,37 @@
     scrollbar-width: 0.4rem;
 }
 
+.search {
+    position: relative;
+    width: 100%;
+    height: 55px;
+    top: 0px;
+    /* background-color: white; */
+}
+
+#searchInput {
+    position: relative;
+    width: 60%;
+    left: 20%;
+    top: 10px;
+    height: 40px;
+    text-indent: 20px;
+    border: none;
+    outline: none;
+    background-color: #584747;
+    color: #9D8686;
+    border-radius: 20px;
+}
+
+.fa-angle-double-left {
+    position: absolute;
+    cursor: pointer;
+    left: 10px;
+    top:10px;
+    font-size: 35px;
+    color: white;
+}
+
 .room {
     position: relative;
     margin-top: 10px;
@@ -79,26 +110,13 @@ img {
     text-align: center;
 }
 
-.password {
-    position: relative;
-    top: 1px;
-    height: 80px;
-    width: 100%;
-    background-color: #201717;
-    border-radius: 10px 10px 0px 0px;
-    border: 2px solid #D38146;
-}
-
-#enterPassword {
-    position: relative;left: 10px;top: 5px;color: white;text-align: center;
-}
-
 #typing {
     position: absolute;
     bottom: 5px;
     height: 40px;
     width: 40%;
     left: 30%;
+    top: 50px;
     text-indent: 20px;
     border: none;
     outline: none;
@@ -107,8 +125,9 @@ img {
     border-radius: 20px;
 }
 
-.fa-arrow-right {
-    position: absolute; right: 25%; font-size: 25px; color: #9D8686;cursor: pointer;
+#noRoom {
+    position: relative;color: white; text-align: center;top: 40%;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 @media (max-width: 1324px) {

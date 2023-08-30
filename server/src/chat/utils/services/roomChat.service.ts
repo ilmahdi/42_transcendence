@@ -10,6 +10,8 @@ import { Observable, from, map, switchMap } from "rxjs";
 import { RoomType } from "../models/roomType.enum";
 import { Message } from "../models/message.interface";
 import * as bcrypt from 'bcrypt'
+import { UserService } from "src/user/user.service";
+import { User } from "src/user/utils/models/user.class";
 
 @Injectable()
 export class RoomChatService {
@@ -17,7 +19,8 @@ export class RoomChatService {
         @InjectRepository(MessageEntity) private readonly messageRepository:Repository<MessageEntity>,
         @InjectRepository(RoomEntity) private readonly roomRepository:Repository<RoomEntity>,
         @InjectRepository(UserEntity) private readonly userRepository:Repository<UserEntity>,
-        private authService:AuthService
+        private authService:AuthService,
+        private userService:UserService
     ) {}
 
     async searchRooms(query:string) {
@@ -175,5 +178,19 @@ export class RoomChatService {
       }
 
       return false;
+    }
+
+    getRoomMembers(room:Room) {
+      const users = this.userRepository.findByIds(room.usersId)
+      return from(users)
+    }
+
+    changeRoomType(room:Room, type:RoomType) {
+      if (type !== RoomType.PROTECTED) {
+        room.type = type
+        this.roomRepository.save(room);
+      }
+      else {
+      }
     }
 }

@@ -133,7 +133,7 @@ export class DirectComponent implements OnInit, OnDestroy {
     this.subscription9 = this.chatService.getNotReadedMessages().subscribe(data=>{
       this.chatService.updateReadedBehav(data);
     })
-    this.chatService.displayComponents(false, true, false, true);
+    this.chatService.displayComponents(false, true, false, true, true, false);
     this.customEvent.emit(friend)
   }
 

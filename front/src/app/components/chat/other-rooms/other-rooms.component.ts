@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
-import { take } from 'rxjs';
+import { BehaviorSubject, take } from 'rxjs';
 import { Room } from 'src/app/models/room.model';
 import { RoomType } from 'src/app/models/roomType.enum';
 import { ChatService } from 'src/app/services/chat.service';
@@ -13,13 +13,20 @@ import { LoginService } from 'src/app/services/login.service';
 })
 export class OtherRoomsComponent implements OnInit{
   password = new FormGroup({password: new FormControl})
+  search = new FormGroup({search: new FormControl})
   allRooms:Room[] = []
   protectSelect:boolean = false;
   userId?:number
   roomWaitForPassword?:Room
   displayList:boolean = false
+  searchQuery: string = '';
+  searchResults: Room[] = [];
+  screenWidth: number = 1000;
 
   constructor(private chatService:ChatService, private loginService:LoginService) {
+    this.screenWidth = window.innerWidth;
+    window.addEventListener('resize', this.onResize.bind(this));
+
     this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
     })
@@ -35,7 +42,28 @@ export class OtherRoomsComponent implements OnInit{
         if (!room.usersId?.includes(this.userId!))
           this.allRooms.push(room)
       })
+      this.chatService.otherRoomSource.next(this.allRooms)
     })
+    this.chatService.otherRoom$.subscribe(data=> this.allRooms = data)
+  }
+
+  onResize() {
+    this.screenWidth = window.innerWidth;
+  }
+
+  searchQueryRooms() {
+    this.chatService.searchRooms(this.searchQuery).subscribe(data=>{
+      this.searchResults = []
+      data.forEach(room=> {
+        if (!room.usersId?.includes(this.userId!))
+          this.searchResults.push(room)
+      })
+      this.chatService.otherRoomSource.next(this.searchResults);
+    })
+  }
+
+  hideOtherRooms() {
+    this.chatService.displayComponents(false, false, false, false, false, false)
   }
 
   updateRoomsConversations() {
