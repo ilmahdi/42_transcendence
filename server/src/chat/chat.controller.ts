@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put, Query, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { Message } from './utils/models/message.interface';
 import { MessageBody } from '@nestjs/websockets';
@@ -10,6 +10,8 @@ import { Room } from './utils/models/room.interface';
 import { join } from 'path/posix';
 import { PrivateChatService } from './utils/services/privateChat.service';
 import { RoomChatService } from './utils/services/roomChat.service';
+import { RoomType } from '../../../front/src/app/models/roomType.enum';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
 export const storage = {
   storage:diskStorage({
@@ -89,6 +91,12 @@ export class ChatController {
   @Post('roomMembers')
   getRoomMembers(@Body() room:Room) {
     return this.roomChatService.getRoomMembers(room);
+  }
+
+  @Post('updateRoom')
+  updateRoom(@Body() room:Room) {
+    this.roomChatService.changeRoomType(room);
+    return room
   }
 
   ////////////////////////////////////////// UPLOAD IMAE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

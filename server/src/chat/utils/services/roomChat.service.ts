@@ -185,12 +185,17 @@ export class RoomChatService {
       return from(users)
     }
 
-    changeRoomType(room:Room, type:RoomType) {
-      if (type !== RoomType.PROTECTED) {
-        room.type = type
+    changeRoomType(room:Room) {
+      if (room.type !== RoomType.PROTECTED) {
+        console.log(room.type);
+        
         this.roomRepository.save(room);
       }
       else {
+        this.authService.hashPassword(room.password).subscribe(data=>{
+          room.password = data;
+          this.roomRepository.save(room);
+        })
       }
     }
 }

@@ -7,6 +7,7 @@ import * as io from 'socket.io-client';
 import { ChatSocketService } from './core/chat-socket.service';
 import { LoginService } from './login.service';
 import { Room } from '../models/room.model';
+import { RoomType } from '../models/roomType.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -273,5 +274,9 @@ export class ChatService {
 
   getRoomMembers(room:Room) {
     return this.http.post<User[]>('http://localhost:3000/api/chat/roomMembers' , room);
+  }
+
+  updateRoom(room:Room): Observable<Room> {
+    return this.http.post('http://localhost:3000/api/chat/updateRoom', room);
   }
 }
