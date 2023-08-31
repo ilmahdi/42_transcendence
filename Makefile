@@ -8,7 +8,7 @@ start-services:
 	if [ ! -d "front/node_modules" ]; then cd front && npm i ; fi
 	cd front && ng serve &
 	cd server && npx prisma db push --accept-data-loss 
-	# cd server && npx prisma studio --browser Google\ Chrome &
+	cd server && npx prisma studio --browser Google\ Chrome &
 	cd server && npm run start:dev & 
 
 pause:

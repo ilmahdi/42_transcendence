@@ -25,11 +25,27 @@ export class UserGateway  {
 
  
 
-  @SubscribeMessage('hello')
-  handleMessage(socket: Socket, message: string) {
-    // this.server.emit('newMessage', message);
-    console.log("front say hello")
-  
+  @SubscribeMessage('NotifyFriendRequest')
+  notifyUser(client: Socket, userId: string) {
+
+    const userSocketIds = this.connectionGateway.connectedUsersById[userId];
+    if (userSocketIds) {
+      userSocketIds.forEach((socketId) => {
+
+        this.server.to(socketId).emit('NotifyFriendRequest', { notify: 1 });
+      });
+    }
+  }
+  @SubscribeMessage('refreshUser')
+  refreshUser(client: Socket, userId: string) {
+
+    const userSocketIds = this.connectionGateway.connectedUsersById[userId];
+    if (userSocketIds) {
+      userSocketIds.forEach((socketId) => {
+
+        this.server.to(socketId).emit('refreshUser');
+      });
+    }
   }
 
 }

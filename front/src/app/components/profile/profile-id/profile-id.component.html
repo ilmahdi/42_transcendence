@@ -55,8 +55,10 @@
                     <app-more-opts
                         [friendshipStatus]="friendshipStatus"
                         [friendshipId]="friendshipId" 
+                        [isRequestInitiator]="isRequestInitiator" 
                         (unfriendClick)="handleUnfriendClick()"
-                        (blockClick)="handleBlockClick()">
+                        (blockClick)="handleBlockClick()"
+                        (cancelClick)="onCancelClick()">
                     </app-more-opts>
                 </div>
             </div>

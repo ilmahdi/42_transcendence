@@ -8,9 +8,17 @@ export enum NotificationType {
 
 export interface INotifyData {
     id: number,                  
-    username: string,               
-    avatar: string,             
-    type: NotificationType,                
+    type: string,                
     seen: Boolean,                          
+    notif_from : {
+      username: string,               
+      avatar: string,
+    }       
     created_at: Date,
-  }
+}
+
+export interface INotification {
+    from_id: number,
+    to_id: number,              
+    type?: string,       
+}

@@ -19,6 +19,7 @@ export class ProfileComponent implements OnInit {
     this.getUserData();
   }
   public isClicked :boolean = true;
+  // public isUserDataRecieved :boolean = false
   public userData: IUserData = {
     id:0,
     username: '',

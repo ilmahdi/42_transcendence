@@ -1,4 +1,10 @@
 <div class="more-opts">
+    <div class="mo-item" *ngIf="!isRequestInitiator && friendshipStatus == 'WAITING'" (click)="onCancleClick()">
+        <svg class="mo-icon" xmlns="http://www.w3.org/2000/svg">
+            <use xlink:href="./assets/icons/unfriend.svg#icon-unfriend"></use>
+        </svg>
+        <span class="mo-text"> Cancle </span> 
+    </div>
     <div class="mo-item">
         <svg class="mo-icon" xmlns="http://www.w3.org/2000/svg">
             <use xlink:href="./assets/icons/message_add.svg#icon-message_add"></use>

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { JWT_TOKEN } from '../utils/constants';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,14 +9,16 @@ import { JWT_TOKEN } from '../utils/constants';
 export class AuthService {
 
   constructor(
-    private http: HttpClient,
     public jwtHelper: JwtHelperService
     ) { }
 
-  isAuthenticated(): boolean {
-	  const accessToken = localStorage.getItem(JWT_TOKEN);
-	  return !this.jwtHelper.isTokenExpired(accessToken);
-	}
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+
+
+  setAuthenticated(value: boolean) {
+    this.isAuthenticatedSubject.next(value);
+  }
 
    getLoggedInUser(): string {
     const token = localStorage.getItem(JWT_TOKEN);

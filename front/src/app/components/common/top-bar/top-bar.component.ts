@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { MenuBarService } from 'src/app/services/menu-bar.service';
 import { INotifyData } from 'src/app/utils/interfaces/notify-data.interface';
+import { CustomSocket } from 'src/app/utils/socket/socket.module';
 
 @Component({
   selector: 'app-top-bar',
@@ -15,6 +16,7 @@ export class TopBarComponent implements OnInit {
     public menuBarService: MenuBarService,
     public authServece: AuthService,
     private router: Router,
+    private socket: CustomSocket,
   ) {
   }
   
@@ -22,20 +24,15 @@ export class TopBarComponent implements OnInit {
   public searchResults: any[] = [];
   public activeIndex: number = -1;
   public isNotifClicked: boolean = false;
-  public isNewNotif: boolean = false;
+  public isNewNotif: number = 0;
   public notifyData :INotifyData[] = []
   
   ngOnInit(): void {
-    const userId :number = this.authServece.getLoggedInUserId()
-    this.menuBarService.getNotifications(userId).subscribe({
-      next: response => {
-        this.notifyData = response;
-        console.log(this.notifyData);
-      },
-      error: error => {
-        console.error('Error:', error.error.message); 
-      }
+    this.socket.on('NotifyFriendRequest', (data :any) => {
+      this.isNewNotif += data.notify
+
     });
+    this.getNotifications();
   }
 
   toggleLeftBar() {
@@ -86,7 +83,8 @@ export class TopBarComponent implements OnInit {
   onClickNotif(event: Event): void {
     event.stopPropagation();
     this.isNotifClicked = !this.isNotifClicked;
-    this.menuBarService.sendEvent("hello")
+    this.isNewNotif = 0;
+    this.getNotifications();
   }
 
 
@@ -96,6 +94,41 @@ export class TopBarComponent implements OnInit {
     this.menuBarService.searchUsers(this.searchQuery).subscribe({
       next: response => {
         this.searchResults = response;
+      },
+      error: error => {
+        console.error('Error:', error.error.message); 
+      }
+    });
+  }
+
+  getNotifications() {
+    const userId :number = this.authServece.getLoggedInUserId()
+    this.menuBarService.getNotifications(userId).subscribe({
+      next: response => {
+        this.notifyData = response.slice().reverse();
+
+        if (this.isNotifClicked)
+        {
+          this.notifyData.forEach((notification :INotifyData) => {
+            notification.seen = true;
+          });
+          const seenIds = this.notifyData
+            .filter((notification :INotifyData) => notification.seen && notification.type == 'FRIEND_ACCEPTE')
+            .map((notification :INotifyData) => notification.id);
+            this.deleteNotifications(seenIds);
+        }
+      },
+      error: error => {
+        console.error('Error:', error.error.message); 
+      }
+      
+    });
+
+  }
+  deleteNotifications(notifications :number[]) {
+    this.menuBarService.deleteNotifications(notifications).subscribe({
+      next: response => {
+
       },
       error: error => {
         console.error('Error:', error.error.message); 

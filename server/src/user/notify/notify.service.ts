@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Notifications, NotifyData } from './utils/interfaces/notify-data.interface';
+import { NotificationCreateDto } from './utils/dtos/create-notification.dto';
 
 @Injectable()
 export class NotifyService {
@@ -18,48 +19,108 @@ export class NotifyService {
                 type: true,             
                 seen: true,                          
                 created_at: true,
-                // notif_from: {
-                //     select: {
-                //       username: true,
-                //       avatar: true,
-                //     },
-                // }, // test later
+                notif_from: {
+                    select: {
+                      username: true,
+                      avatar: true,
+                    },
+                },
             },
             where: {
                 to_id: userId,
               },
         });
-        return await this.transformNotifyData(notifications);
+        return notifications;
+    }
+
+    async addNotification(notification: NotificationCreateDto) {
+      const createdNotification = await this.prismaService.notification.create({
+        data: {
+          from_id: notification.from_id,
+          to_id: notification.to_id,
+          type: notification.type,
+        },
+      });
+  
+      return createdNotification;
+
+    }
+
+    async switchNotification(notification: NotificationCreateDto) {
+
+      const existingNotification = await this.prismaService.notification.findFirst({
+        where: {
+          from_id: notification.to_id,
+          to_id: notification.from_id,
+        },
+      });
+
+      if (!existingNotification) {
+        throw new HttpException('Notification not found', HttpStatus.CONFLICT);
+      }
+
+      const createdNotification = await this.prismaService.notification.update({
+        where: { 
+          id: existingNotification.id, 
+        },
+        data: {
+          from_id: notification.from_id,
+          to_id: notification.to_id,
+          type: notification.type,
+        },
+      });
+    
+      return createdNotification;
+
+    }
+    async deleteNotification(notification: NotificationCreateDto) {
+
+      const existingNotification = await this.prismaService.notification.findFirst({
+        where: {
+          from_id: notification.from_id,
+          to_id: notification.to_id,
+        },
+      });
+
+      if (!existingNotification) {
+        throw new HttpException('Notification not found', HttpStatus.CONFLICT);
+      }
+
+      const createdNotification = await this.prismaService.notification.delete({
+        where: { 
+          id: existingNotification.id, 
+        },
+      });
+    
+      return createdNotification;
+
+    }
+
+    async deleteNotifications(notificationIds :number[]) {
+      try {
+        const deletedNotifications = await this.prismaService.notification.deleteMany({
+          where: {
+            id: { in: notificationIds },
+          },
+        });
+        return deletedNotifications;
+      } catch (error) {
+        throw new HttpException('Failed to delete notifications', HttpStatus.CONFLICT);
+      }
     }
 
 
-    async transformNotifyData(notifications: Notifications[]): Promise<NotifyData[]> {
-        const transformedNotifications: NotifyData[] = [];
-      
-        for (const notification of notifications) {
-          const { from_id, ...rest } = notification;
-      
-          try {
-            const user = await this.prismaService.userAccount.findUnique({
-              where: { id: from_id },
-              select: { username: true, avatar: true },
-            });
-      
-            if (user) {
-              transformedNotifications.push({
-                ...rest,
-                username: user.username,
-                avatar: user.avatar,
-              });
-            }
-          } catch (error) {
 
-            throw new HttpException(`Error fetching user data for user ID ${from_id}:`, HttpStatus.CONFLICT);
-          }
-        }
-      
-        return transformedNotifications;
-      }
+
+
+
+
+
+
+
+
+
+
 }
 
 

@@ -12,9 +12,11 @@ export class MoreOptsComponent implements OnInit {
 
   @Input() friendshipStatus :string = "NONE";
   @Input() friendshipId :number = -1;
+  @Input() isRequestInitiator :boolean = true;
 
   @Output() unfriendClick: EventEmitter<void> = new EventEmitter<void>();
   @Output() blockClick: EventEmitter<void> = new EventEmitter<void>();
+  @Output() cancelClick: EventEmitter<void> = new EventEmitter<void>();
 
   ngOnInit(): void {
   }
@@ -24,6 +26,9 @@ export class MoreOptsComponent implements OnInit {
   }
   onBlockClick() {
     this.blockClick.emit()
+  }
+  onCancleClick() {
+    this.cancelClick.emit()
   }
 
 }

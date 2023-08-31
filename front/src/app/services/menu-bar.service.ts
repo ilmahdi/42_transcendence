@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import { JWT_TOKEN } from '../utils/constants';
 import { HttpClient } from '@angular/common/http';
 import { CustomSocket } from '../utils/socket/socket.module';
-import { INotifyData } from '../utils/interfaces/notify-data.interface';
+import { INotification, INotifyData, NotificationType } from '../utils/interfaces/notify-data.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,24 @@ export class MenuBarService {
   }
 
   getNotifications(userId :number) {
-    return this.http.get<INotifyData[]>(`${this.apiUrl}/api/notify/data/${userId}` ,this.getHeaders());
+
+    return this.http.get<INotifyData[]>(`${this.apiUrl}/api/user/notify/data/${userId}` ,this.getHeaders());
+  }
+  addNotification(notification :INotification) {
+
+    return this.http.post<any>(`${this.apiUrl}/api/user/notify/add`, notification ,this.getHeaders());
+  }
+  switchNotification(notification :INotification) {
+
+    return this.http.post<any>(`${this.apiUrl}/api/user/notify/switch`, notification ,this.getHeaders());
+  }
+  deleteNotification(notification :INotification) {
+
+    return this.http.patch<any>(`${this.apiUrl}/api/user/notify/delete`, notification ,this.getHeaders());
+  }
+  deleteNotifications(notifications :number[]) {
+
+    return this.http.patch<any>(`${this.apiUrl}/api/user/notify/deletes`, notifications ,this.getHeaders());
   }
 
   
@@ -42,8 +59,8 @@ export class MenuBarService {
   // socket handler
   /*********************************************/
 
-  sendEvent(eventName: string) {
-    this.socket.emit(eventName);
+  sendEvent(eventName: string, data :any) {
+    this.socket.emit(eventName, data);
   }
 
 

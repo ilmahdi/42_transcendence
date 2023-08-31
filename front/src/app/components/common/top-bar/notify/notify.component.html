@@ -8,25 +8,31 @@
     <div class="nf-items" *ngFor="let notif of notifyData">
         <div class="nf-item">
             <div class="nf-item-img-containe">
-                <img class="nf-item-img" [src]="notif.avatar"
+                <img class="nf-item-img" [src]="notif.notif_from.avatar" [routerLink]="['/profile', notif.notif_from.username]"
                     style="display: none" onload="this.style.display=''"
                     onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
                 />
             </div>
             <div class="nf-item-details">
                 <div class="nf-item-dts-l1">
-                    <div class="nf-item-dts-l1-name">
-                        {{ notif.username }}
+                    <div class="nf-item-dts-l1-name" [routerLink]="['/profile', notif.notif_from.username]">
+                        {{ notif.notif_from.username }}
                     </div>
                     <div class="nf-item-dts-l1-date">
                         {{ notif.created_at  | relativeTime }}
                     </div>
                     
                 </div>
-                <div class="nf-item-dts-l2" *ngIf="notif.type === NotificationType.FRIEND_REQUEST">
+                <div class="nf-item-dts-l2" *ngIf="notif.type == 'FRIEND_REQUEST'">
                     Sent you a friend request.
                 </div>
-                <div class="nf-item-dts-l3">
+                <div class="nf-item-dts-l2" *ngIf="notif.type == 'FRIEND_ACCEPTE'">
+                    Accepted your friend request.
+                </div>
+                <div class="nf-item-dts-l2" *ngIf="notif.type == 'GAME_INVITE'">
+                    Invite you to a game.
+                </div>
+                <div class="nf-item-dts-l3" *ngIf="notif.type == 'FRIEND_REQUEST'">
                     <button class="nf-item-dts-l3-btn b1">
                         accept
                     </button>
