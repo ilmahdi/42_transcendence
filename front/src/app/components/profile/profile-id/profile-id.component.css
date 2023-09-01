@@ -3,7 +3,6 @@
     padding: 0;
     font-family: 'Poppins', sans-serif;
     box-sizing: border-box;
-    color: var(--primary-text-color);
 }
 
 .profile-id {
@@ -17,6 +16,7 @@
     background-color: rgba(var(--primary-transparent-color-background), 86%);
     border-radius: 1rem;
     box-shadow: 0 0rem 0.4rem black;
+    color: var(--primary-text-color);
 }
 
 
@@ -45,7 +45,7 @@
     justify-content: center;
     width: 1.8rem;
     height: 1.8rem;
-    fill: var(--primary-text-color);
+    fill: white;
 }
 .pi-sec-one-icon:hover {
     fill: var(--second-hover-background-color);
@@ -94,15 +94,17 @@
     height: 2.2rem;
     border-radius: 0.6rem;
     border: 0.08rem solid var(--primary-border-color);
-    background-color: rgba(160, 100, 100, 0.25);
     font-weight: 400;
     gap: 0.6rem;
+    color: white;
 }
 .pi-sec-four-btn.b1 {
     padding: 0 0.6rem;
+    background-color: rgba(255, 176, 118, 0.6);
 }
 .pi-sec-four-btn.b2 {
     padding: 0 0.2rem;
+    background-color: rgba(255, 176, 118, 0.4);
 }
 .pi-sec-four-btn.b2.active {
     box-shadow: 0 0rem 0.4rem black;

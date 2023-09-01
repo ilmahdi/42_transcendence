@@ -3,10 +3,9 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { JWT_TOKEN } from '../utils/constants';
 import { IUserData, IUserDataShort } from '../utils/interfaces/user-data.interface';
-import { Observable, catchError, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { IHistory } from '../utils/interfaces/history.interface';
 import { IFrinedship } from '../utils/interfaces/friendship.interface';
-import { CustomSocket } from '../utils/socket/socket.module';
 
 
 @Injectable({
@@ -19,6 +18,7 @@ export class UserService {
   ) { }
 
   private apiUrl = environment.apiUrl;
+
 
   // http handlers
   /*********************************************/

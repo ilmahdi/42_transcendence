@@ -52,6 +52,10 @@ export class MenuBarService {
 
     return this.http.patch<any>(`${this.apiUrl}/api/user/notify/deletes`, notifications ,this.getHeaders());
   }
+  updateSeenNotifications(notifications :number[]) {
+
+    return this.http.patch<any>(`${this.apiUrl}/api/user/notify/update-seen`, notifications ,this.getHeaders());
+  }
 
   
 

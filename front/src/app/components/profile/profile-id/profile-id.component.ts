@@ -31,6 +31,7 @@ export class ProfileIdComponent implements OnChanges {
   public isRequestInitiator :boolean = true;
 
   private subscriptions: Subscription[] = [];
+  
 
   @Input() userData: IUserData = {
     id:0,
@@ -42,20 +43,24 @@ export class ProfileIdComponent implements OnChanges {
     games: 0,
     rating: 0,
   };
+  @Input() isUserDataRecieved :boolean = false
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    const subscription = this.route.params.subscribe(params => {
       this.isOwnProfile = params['username'] === this.authService.getLoggedInUser();
     });
+    this.subscriptions.push(subscription);
 
     this.socket.on('refreshUser', () => {  this.checkFriendshipStatus();
     });
   }
 
+
   ngOnChanges(changes :any): void {
     if (changes.userData && changes.userData.currentValue)
       this.checkFriendshipStatus();
   }
+
 
   onMoreClick(){
     this.isMoreClicked = !this.isMoreClicked;
@@ -114,7 +119,6 @@ export class ProfileIdComponent implements OnChanges {
           this.friendshipStatus = response.friendship_status;
           this.friendshipId = response.id;
           this.isRequestInitiator = this.authService.getLoggedInUserId() === response.user_id;
-          this.menuBarService.sendEvent("refreshUser", this.userData.id)
         },
         error: error => {
           console.error('Error:', error.error.message);
@@ -148,7 +152,7 @@ export class ProfileIdComponent implements OnChanges {
         console.error('Error:', error.error.message); 
       }
     });
-    // this.subscriptions.push(subscription);
+    this.subscriptions.push(subscription);
   }
 
   changeFriendshipStatus (friendshipStatus :string) {
@@ -169,7 +173,7 @@ export class ProfileIdComponent implements OnChanges {
         console.error('Error:', error.error.message); 
       }
     });
-    // this.subscriptions.push(subscription);
+    this.subscriptions.push(subscription);
   }
   cancelFriend () {
     const subscription = this.userService.cancelFriend(this.friendshipId).subscribe({
@@ -187,7 +191,7 @@ export class ProfileIdComponent implements OnChanges {
         console.error('Error:', error.error.message); 
       }
     });
-    // this.subscriptions.push(subscription);
+    this.subscriptions.push(subscription);
   }
   removeFriend() {
     const subscription = this.userService.cancelFriend(this.friendshipId).subscribe({
@@ -200,7 +204,7 @@ export class ProfileIdComponent implements OnChanges {
         console.error('Error:', error.error.message); 
       }
     });
-    // this.subscriptions.push(subscription);
+    this.subscriptions.push(subscription);
   }
   blockFriend() {
     const subscription = this.userService.updateFriend(this.friendshipId, {
@@ -213,8 +217,8 @@ export class ProfileIdComponent implements OnChanges {
         this.friendshipStatus = response.friendship_status;
         this.friendshipId = response.id;
         this.deleteNotification({
-          from_id: this.isRequestInitiator ? this.authService.getLoggedInUserId() : this.userData.id, 
-          to_id: this.isRequestInitiator ? this.userData.id : this.authService.getLoggedInUserId(),
+          from_id: (this.isRequestInitiator && this.friendshipStatus !== 'WAITING') ? this.authService.getLoggedInUserId() : this.userData.id, 
+          to_id: (this.isRequestInitiator && this.friendshipStatus !== 'WAITING') ? this.userData.id : this.authService.getLoggedInUserId(),
         });
         this.isRequestInitiator = this.authService.getLoggedInUserId() === response.user_id;
         this.menuBarService.sendEvent("refreshUser", this.userData.id)
@@ -223,7 +227,7 @@ export class ProfileIdComponent implements OnChanges {
         console.error('Error:', error.error.message); 
       }
     });
-    // this.subscriptions.push(subscription);
+    this.subscriptions.push(subscription);
   }
   unbBlockFriend() {
     const subscription = this.userService.cancelFriend(this.friendshipId).subscribe({
@@ -236,7 +240,7 @@ export class ProfileIdComponent implements OnChanges {
         console.error('Error:', error.error.message); 
       }
     });
-    // this.subscriptions.push(subscription);
+    this.subscriptions.push(subscription);
   }
 
   /******************************************************************** */
@@ -244,43 +248,44 @@ export class ProfileIdComponent implements OnChanges {
     const subscription = this.menuBarService.addNotification(notification).subscribe({
       next: response => {
 
-        this.menuBarService.sendEvent("NotifyFriendRequest", this.userData.id)
+        this.menuBarService.sendEvent("notifyFriendRequest", this.userData.id)
 
       },
       error: error => {
         console.error('Error:', error.error.message); 
       }
     });
-    // this.subscriptions.push(subscription);
+    this.subscriptions.push(subscription);
     
   }
   switchNotification(notification :INotification) {
     const subscription = this.menuBarService.switchNotification(notification).subscribe({
       next: response => {
 
-        this.menuBarService.sendEvent("NotifyFriendRequest", this.userData.id)
+        this.menuBarService.sendEvent("notifyFriendRequest", this.userData.id)
+        this.menuBarService.sendEvent("unNotifyFriendRequest", this.authService.getLoggedInUserId())
       },
       error: error => {
         console.error('Error:', error.error.message); 
       }
     });
-    // this.subscriptions.push(subscription);
+    this.subscriptions.push(subscription);
   }
   deleteNotification(notification :INotification) {
     const subscription = this.menuBarService.deleteNotification(notification).subscribe({
       next: response => {
 
+        this.menuBarService.sendEvent("unNotifyFriendRequest", this.isRequestInitiator ? this.userData.id : this.authService.getLoggedInUserId())
       },
       error: error => {
         console.error('Error:', error.error.message); 
       }
     });
-    // this.subscriptions.push(subscription);
+    this.subscriptions.push(subscription);
   }
 
   ngOnDestroy(): void {
     for (const subscription of this.subscriptions) {
-      console.log("------------->> unsubscribe", subscription)
       subscription.unsubscribe();
     }
   }

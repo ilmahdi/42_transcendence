@@ -28,7 +28,12 @@ export class TopBarComponent implements OnInit {
   public notifyData :INotifyData[] = []
   
   ngOnInit(): void {
-    this.socket.on('NotifyFriendRequest', (data :any) => {
+    this.socket.on('notifyFriendRequest', (data :any) => {
+      this.isNewNotif += data.notify
+
+    });
+    this.socket.on('unNotifyFriendRequest', (data :any) => {
+      if (this.isNewNotif)
       this.isNewNotif += data.notify
 
     });
@@ -107,16 +112,20 @@ export class TopBarComponent implements OnInit {
       next: response => {
         this.notifyData = response.slice().reverse();
 
-        if (this.isNotifClicked)
-        {
-          this.notifyData.forEach((notification :INotifyData) => {
-            notification.seen = true;
-          });
-          const seenIds = this.notifyData
+        this.notifyData.forEach((notification :INotifyData) => {
+          if (!notification.seen)
+          {
+            if (this.isNotifClicked)
+              notification.seen = true;
+            else
+              ++this.isNewNotif;
+          }
+        });
+
+        const seenIds = this.notifyData
             .filter((notification :INotifyData) => notification.seen && notification.type == 'FRIEND_ACCEPTE')
             .map((notification :INotifyData) => notification.id);
-            this.deleteNotifications(seenIds);
-        }
+        this.deleteNotifications(seenIds);
       },
       error: error => {
         console.error('Error:', error.error.message); 
@@ -126,6 +135,21 @@ export class TopBarComponent implements OnInit {
 
   }
   deleteNotifications(notifications :number[]) {
+    this.menuBarService.deleteNotifications(notifications).subscribe({
+      next: response => {
+        
+        const remaindIds = this.notifyData
+            .filter((notification :INotifyData) => notification.type !== 'FRIEND_ACCEPTE')
+            .map((notification :INotifyData) => notification.id);
+        this.updateSeenNotifications(remaindIds);
+
+      },
+      error: error => {
+        console.error('Error:', error.error.message); 
+      }
+    });
+  }
+  updateSeenNotifications(notifications :number[]) {
     this.menuBarService.deleteNotifications(notifications).subscribe({
       next: response => {
 

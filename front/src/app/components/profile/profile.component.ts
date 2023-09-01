@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
 
@@ -19,7 +20,6 @@ export class ProfileComponent implements OnInit {
     this.getUserData();
   }
   public isClicked :boolean = true;
-  // public isUserDataRecieved :boolean = false
   public userData: IUserData = {
     id:0,
     username: '',
@@ -30,17 +30,30 @@ export class ProfileComponent implements OnInit {
     games: 0,
     rating: 0,
   };
+  private subscriptions: Subscription[] = [];
 
   toggleActive() {
     this.isClicked = !this.isClicked;
   }
   getUserData() {
-    this.route.params.subscribe(params => {
+    const subscription = this.route.params.subscribe(params => {
 
-      this.userService.getUserDataByUsername(params['username']).subscribe((data: IUserData) => {
+      const subscription = this.userService.getUserDataByUsername(params['username']).subscribe((data: IUserData) => {
         this.userData = data;
      });
+     this.subscriptions.push(subscription);
     });
+    this.subscriptions.push(subscription);
+  }
+
+
+
+
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
 }

@@ -25,14 +25,25 @@ export class UserGateway  {
 
  
 
-  @SubscribeMessage('NotifyFriendRequest')
+  @SubscribeMessage('notifyFriendRequest')
   notifyUser(client: Socket, userId: string) {
 
     const userSocketIds = this.connectionGateway.connectedUsersById[userId];
     if (userSocketIds) {
       userSocketIds.forEach((socketId) => {
 
-        this.server.to(socketId).emit('NotifyFriendRequest', { notify: 1 });
+        this.server.to(socketId).emit('notifyFriendRequest', { notify: 1 });
+      });
+    }
+  }
+  @SubscribeMessage('unNotifyFriendRequest')
+  unNotifyUser(client: Socket, userId: string) {
+
+    const userSocketIds = this.connectionGateway.connectedUsersById[userId];
+    if (userSocketIds) {
+      userSocketIds.forEach((socketId) => {
+
+        this.server.to(socketId).emit('unNotifyFriendRequest', { notify: -1 });
       });
     }
   }
@@ -47,6 +58,6 @@ export class UserGateway  {
       });
     }
   }
-
+  
 }
 

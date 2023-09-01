@@ -23,14 +23,7 @@ export class ProfileStatsComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
-  // userData : any = {
-  //   username:"ilmahdi",
-  //   wins: 10,
-  //   losses: 3,
-  //   draws:  0,
-  //   rating: 1000,
-
-  // }
+  ngOnDestroy(): void {
+  }
 
 }
