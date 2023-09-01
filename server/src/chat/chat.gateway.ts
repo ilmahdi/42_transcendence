@@ -27,25 +27,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
     console.log("DISCONNECTED");
   }
 
-
-  // getLoggedInUser(): string {
-  //   const token = localStorage.getItem(JWT_TOKEN);
-  //   if (token) {
-  //     const decodedToken = this.jwtHelper.decodeToken(token);
-  //     return decodedToken.username;
-  //   }
-  //   return "";
-  // }
-
-
   @UseGuards(JwtGuard)
   handleConnection(client: Socket, ...args: any[]) 
   {
     console.log("CONNECTED  ", client.id);
     this.id.push(client.id)
-
-    // const jwt = client.handshake.headers.authorization || null;
-    // this.userService.updateUser(this.authService.getJwtUser(jwt), client.id);
   }
 
   @SubscribeMessage('updateSocketId')
@@ -111,6 +97,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
     })
   }
 
+  @SubscribeMessage('getRoomById')
+  getRoomById(client:Socket, id:number) {
+    this.roomChatService.getRoomById(id).subscribe(room=>client.emit('recRoomById', room))
+  }
+
   @SubscribeMessage('roomMessage')
   roomMessage(client:Socket, data:any) {
     this.privateChatService.saveMessage(data.message);
@@ -142,5 +133,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   @SubscribeMessage('getOtherRooms')
   getOtherRooms(client:Socket) {
     this.roomChatService.getAllRooms().subscribe(data=>client.emit('recOtherRooms', data))
+  }
+
+  @SubscribeMessage('getRoomMembers')
+  getRoomMembers(client:Socket, room:Room) {
+    this.roomChatService.getRoomMembers(room).subscribe(data=>{
+      client.emit('recRoomMembers', data)
+    })
   }
 }

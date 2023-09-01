@@ -228,6 +228,14 @@ export class ChatService {
     return this.socket.fromEvent<Room[]>('recOtherRooms');
   }
 
+  sendToGetRoomById(id:number) {
+    this.socket.emit('getRoomById', id)
+  }
+
+  getRoomById() {
+    return this.socket.fromEvent<Room>('recRoomById');
+  }
+
   token:string|null = localStorage.getItem('token');
   
   private httpOptions: { headers: HttpHeaders } = {
@@ -272,8 +280,16 @@ export class ChatService {
     return this.http.post<boolean>('http://localhost:3000/api/chat/joinProtected', data)
   }
 
-  getRoomMembers(room:Room) {
-    return this.http.post<User[]>('http://localhost:3000/api/chat/roomMembers' , room);
+  // getRoomMembers(room:Room) {
+  //   return this.http.post<User[]>('http://localhost:3000/api/chat/roomMembers' , room);
+  // }
+
+  sendToGetRoomMembers(room:Room) {
+    this.socket.emit('getRoomMembers', room)
+  }
+
+  getRoomMembers() {
+    return this.socket.fromEvent<{user:User, type:string}[]>('recRoomMembers');
   }
 
   updateRoom(room:Room): Observable<Room> {

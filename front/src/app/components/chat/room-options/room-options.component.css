@@ -10,10 +10,9 @@
 
 .roomType {
     position: relative;
-    height: 100px;
+    height: 125px;
     width: 100%;
     border-radius: 15px 15px 0px 0px;
-    /* background-color: white; */
 }
 
 h4 {
@@ -109,7 +108,8 @@ input {
 }
 
 .user {
-    position: relative;
+    /* position: relative; */
+    /* display: flex; */
     margin-top: 10px;
     margin-left: 10%;
     height: 80px;
@@ -118,6 +118,52 @@ input {
     background-color: #201717;
     cursor: pointer;
     transition: 0.3s;
+}
+
+#img {
+    width: 40px;
+    height: 40px;
+    border-radius: 30px;
+    margin-top: 20px;
+    margin-left: 3%;
+}
+
+#username {
+    position: relative;
+    text-align: center;
+    top: -55px;
+    color: white;
+}
+
+#type {
+    position: relative;
+    text-align: center;
+    top: -55px;
+    color: #696969;
+}
+
+.addAdmin {
+    height: 36px;
+    width: 20%;
+    background-color: #201717;;
+    position: absolute;
+    right: 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+    margin-top: 0px;
+    color: white;
+}
+
+.remove {
+    height: 36px;
+    width: 20%;
+    background-color: #201717;;
+    position: absolute;
+    right: 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+    margin-top: 40px;
+    color: white;
 }
 
 #submit {
@@ -190,4 +236,10 @@ button span {
         right: 50px;
         height: 80%;
     }
+}
+
+p{
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    user-select:none;
 }

@@ -69,9 +69,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   }
 
   openOptions() {
-    this.chatService.roomOptionsSource.next(this.roomConvers[0])
-    // this.chatService.optionsSource.next(true)
-    // this.options = true
+    // this.chatService.roomOptionsSource.next(this.roomConvers[0])
     this.chatService.displayComponents(false, false, false, true, true, true)
   }
 

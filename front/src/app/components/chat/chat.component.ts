@@ -171,6 +171,7 @@ export class ChatComponent implements OnInit {
   getRoomConvers(room:Room) {
     this.smallScreen = true
     this.displayConvers = false
+    this.chatService.sendToGetRoomById(room.id!)
     this.roomData = [room, true]
   }
 

@@ -10,8 +10,6 @@ import { Room } from './utils/models/room.interface';
 import { join } from 'path/posix';
 import { PrivateChatService } from './utils/services/privateChat.service';
 import { RoomChatService } from './utils/services/roomChat.service';
-import { RoomType } from '../../../front/src/app/models/roomType.enum';
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
 export const storage = {
   storage:diskStorage({
@@ -88,10 +86,10 @@ export class ChatController {
     return this.roomChatService.joinProtected(data.id, data.room, data.password)
   }
 
-  @Post('roomMembers')
-  getRoomMembers(@Body() room:Room) {
-    return this.roomChatService.getRoomMembers(room);
-  }
+  // @Post('roomMembers')
+  // getRoomMembers(@Body() room:Room) {
+  //   return this.roomChatService.getRoomMembers(room);
+  // }
 
   @Post('updateRoom')
   updateRoom(@Body() room:Room) {

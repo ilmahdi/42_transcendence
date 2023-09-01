@@ -6,7 +6,7 @@ import { UserEntity } from "src/user/utils/models/user.entity";
 import { Repository } from "typeorm";
 import { AuthService } from "src/auth/auth.service";
 import { Room } from "../models/room.interface";
-import { Observable, from, map, switchMap } from "rxjs";
+import { Observable, forkJoin, from, map, switchMap } from "rxjs";
 import { RoomType } from "../models/roomType.enum";
 import { Message } from "../models/message.interface";
 import * as bcrypt from 'bcrypt'
@@ -43,7 +43,14 @@ export class RoomChatService {
         else
           return from(this.roomRepository.save(room));
       }
-  
+
+      getRoomById(id:number){
+        let room = this.roomRepository.findOne({
+          where: {id :id}
+        });
+        return from(room);
+      }
+
       getAllRooms() {
         const roomsQuery = this.roomRepository.find()
   
@@ -181,14 +188,25 @@ export class RoomChatService {
     }
 
     getRoomMembers(room:Room) {
-      const users = this.userRepository.findByIds(room.usersId)
-      return from(users)
+      const userIds = room.usersId;
+      const adminIds = room.adminId;
+
+      const usersWithTypes: Observable<{ user: User; type: string }>[] = [];
+
+      userIds.forEach(id => {
+        const userType = adminIds.includes(id) ? 'admin' : 'user';
+        const userObservable = this.userService.getUserById(id).pipe(
+          map(user => ({ user, type: userType }))
+        );
+        usersWithTypes.push(userObservable);
+      });
+
+      return forkJoin(usersWithTypes);
     }
 
     changeRoomType(room:Room) {
       if (room.type !== RoomType.PROTECTED) {
-        console.log(room.type);
-        
+        room.password = null
         this.roomRepository.save(room);
       }
       else {
