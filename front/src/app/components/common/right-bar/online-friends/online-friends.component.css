@@ -178,7 +178,7 @@
     height: 0.5rem; 
     background-color: #089808; 
     border-radius: 50%;
-    border: solid 0.1rem;
+    border: solid 0.1rem transparent;
     border-color: var(--second-background-color);
     pointer-events: none;
   }

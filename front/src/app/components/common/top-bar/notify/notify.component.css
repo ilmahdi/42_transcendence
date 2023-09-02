@@ -56,8 +56,10 @@
     border-width: 0 0.4rem 0.2rem 0.4rem;
     border-style: solid;
     border-color: var(--fourth-background-color);
-    border-radius: 0 0 0.4rem 0.4rem ;
     
+}
+.nf-items:last-child {
+    border-radius: 0 0 0.4rem 0.4rem;
 }
 
 

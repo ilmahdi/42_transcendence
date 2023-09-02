@@ -8,9 +8,13 @@ export class NotificationCreateDto {
 
     @IsNumber()
     to_id: number
-
-
+    
     @IsOptional()
     @IsEnum(NotificationType)
     type?: NotificationType;
+    
+    
+    @IsOptional()
+    @IsNumber()
+    friendship_id?: number
 }

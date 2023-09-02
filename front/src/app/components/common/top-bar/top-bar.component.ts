@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { MenuBarService } from 'src/app/services/menu-bar.service';
 import { INotifyData } from 'src/app/utils/interfaces/notify-data.interface';
@@ -26,6 +27,9 @@ export class TopBarComponent implements OnInit {
   public isNotifClicked: boolean = false;
   public isNewNotif: number = 0;
   public notifyData :INotifyData[] = []
+
+
+  private subscriptions: Subscription[] = [];
   
   ngOnInit(): void {
     this.socket.on('notifyFriendRequest', (data :any) => {
@@ -34,7 +38,7 @@ export class TopBarComponent implements OnInit {
     });
     this.socket.on('unNotifyFriendRequest', (data :any) => {
       if (this.isNewNotif)
-      this.isNewNotif += data.notify
+        this.isNewNotif += data.notify
 
     });
     this.getNotifications();
@@ -67,7 +71,7 @@ export class TopBarComponent implements OnInit {
       else
         this.activeIndex = this.searchResults.length - 1;
     }
-
+    
   }
 
   onUserItemEnter(event: Event) {
@@ -108,7 +112,7 @@ export class TopBarComponent implements OnInit {
 
   getNotifications() {
     const userId :number = this.authServece.getLoggedInUserId()
-    this.menuBarService.getNotifications(userId).subscribe({
+    const subscription = this.menuBarService.getNotifications(userId).subscribe({
       next: response => {
         this.notifyData = response.slice().reverse();
 
@@ -121,17 +125,20 @@ export class TopBarComponent implements OnInit {
               ++this.isNewNotif;
           }
         });
-
-        const seenIds = this.notifyData
-            .filter((notification :INotifyData) => notification.seen && notification.type == 'FRIEND_ACCEPTE')
-            .map((notification :INotifyData) => notification.id);
-        this.deleteNotifications(seenIds);
+        if (this.isNotifClicked)
+        {
+          const seenIds = this.notifyData
+              .filter((notification :INotifyData) => notification.seen && notification.type == 'FRIEND_ACCEPTE')
+              .map((notification :INotifyData) => notification.id);
+          this.deleteNotifications(seenIds);
+        }
       },
       error: error => {
         console.error('Error:', error.error.message); 
       }
       
     });
+    this.subscriptions.push(subscription);
 
   }
   deleteNotifications(notifications :number[]) {
@@ -150,7 +157,7 @@ export class TopBarComponent implements OnInit {
     });
   }
   updateSeenNotifications(notifications :number[]) {
-    this.menuBarService.deleteNotifications(notifications).subscribe({
+    this.menuBarService.updateSeenNotifications(notifications).subscribe({
       next: response => {
 
       },

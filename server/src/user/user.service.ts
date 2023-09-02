@@ -143,32 +143,40 @@ export class UserService {
         if (existingFriendship) {
             throw new HttpException('Friendship already exists', HttpStatus.CONFLICT);
         }
-
-        const friendshipData = await this.prismaService.friendship.create({
-            data: {
-                user_id: friendship.user_id,
-                friend_id: friendship.friend_id,
-                friendship_status: friendship.friendship_status,
-            },
-        });
-        return friendshipData;
+        
+        try {
+            const friendshipData = await this.prismaService.friendship.create({
+                data: {
+                    user_id: friendship.user_id,
+                    friend_id: friendship.friend_id,
+                    friendship_status: friendship.friendship_status,
+                },
+            });
+            return friendshipData;
+        } catch (error) {
+            throw new HttpException('Failed to add user', HttpStatus.CONFLICT);
+        }
     }
     async checkFriendship(friendship: FrinedshipDto) {
-        const existingFriendship = await this.prismaService.friendship.findFirst({
-            where: {
-                OR: [
-                    {
-                        user_id: friendship.user_id,
-                        friend_id: friendship.friend_id,
-                    },
-                    {
-                        user_id: friendship.friend_id,
-                        friend_id: friendship.user_id,
-                    },
-                ],
-            },
-        });
-        return existingFriendship;
+        try {
+            const existingFriendship = await this.prismaService.friendship.findFirst({
+                where: {
+                    OR: [
+                        {
+                            user_id: friendship.user_id,
+                            friend_id: friendship.friend_id,
+                        },
+                        {
+                            user_id: friendship.friend_id,
+                            friend_id: friendship.user_id,
+                        },
+                    ],
+                },
+            });
+            return existingFriendship;
+        } catch (error) {
+            throw new HttpException('Failed to find user', HttpStatus.CONFLICT);
+        }
     }
     async deleteFriendship(friendshipId :number) {
 
@@ -181,35 +189,43 @@ export class UserService {
         if (!existingFriendship) {
             throw new HttpException('Friendship not found', HttpStatus.CONFLICT);
         }
-        
-        return await this.prismaService.friendship.delete({
-            where: {
-              id: friendshipId,
-            },
-          });
+        try {
+            const deletedFriendship = await this.prismaService.friendship.delete({
+                where: {
+                    id: friendshipId,
+                },
+            });
+            return deletedFriendship;
+        } catch (error) {
+            throw new HttpException('Failed to delete user', HttpStatus.CONFLICT);
+        }
     }
     async changeFriendshipStatus(friendshipId :number, friendshipStatus: FriendshipStatus) {
-
+        
         const existingFriendship = await this.prismaService.friendship.findUnique({
             where: {
-              id: friendshipId,
+                id: friendshipId,
             },
         })
-
+        
         if (!existingFriendship) {
             throw new HttpException('Friendship not found', HttpStatus.CONFLICT);
         }
         
-        const updatedFriendship = await this.prismaService.friendship.update({
-            where: { 
-                id: friendshipId 
-            },
-            data: { 
-                friendship_status: friendshipStatus,
-            },
-          });
-
-        return updatedFriendship
+        try {
+            const updatedFriendship = await this.prismaService.friendship.update({
+                where: { 
+                    id: friendshipId 
+                },
+                data: { 
+                    friendship_status: friendshipStatus,
+                },
+            });
+            return updatedFriendship
+        
+        } catch (error) {
+            throw new HttpException('Failed to accept user', HttpStatus.CONFLICT);
+        }
     }
     async updateFriend(friendshipId :number, friendship: FrinedshipDto) {
 
@@ -223,16 +239,20 @@ export class UserService {
             throw new HttpException('Friendship not found', HttpStatus.CONFLICT);
         }
         
-        const updatedFriendship = await this.prismaService.friendship.update({
-            where: { 
-                id: friendshipId 
-            },
-            data: { 
-                ...friendship,
-            },
-          });
+        try {
+            const updatedFriendship = await this.prismaService.friendship.update({
+                where: { 
+                    id: friendshipId 
+                },
+                data: { 
+                    ...friendship,
+                },
+            });
+            return updatedFriendship
 
-        return updatedFriendship
+        } catch (error) {
+            throw new HttpException('Failed to update user', HttpStatus.CONFLICT);
+        }
     }
 
 }

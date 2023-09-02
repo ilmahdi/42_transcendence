@@ -57,8 +57,12 @@
         </li>
     </div>
 </ul>
-<div class="app-notify-containe" *ngIf="isNotifClicked" appClickOutside (appClickOutside)="onClickedOutside2()">
-    <app-notify [notifyData]="notifyData"></app-notify>
+<div class="app-notify-containe" *ngIf="isNotifClicked" 
+    (buttonClickEvent)="onClickedOutside2()"
+    appClickOutside (appClickOutside)="onClickedOutside2()">
+    <app-notify 
+        (buttonClickEvent)="onClickedOutside2()" [notifyData]="notifyData">
+    </app-notify>
 </div>
 
 </div>

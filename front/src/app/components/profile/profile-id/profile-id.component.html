@@ -1,11 +1,16 @@
 
 <div class="profile-id">
     
-    <div class="pi-sec-one">
+    <div class="pi-sec-one" 
+        (mouseenter)="onShowTooltip()" (mouseleave)="hideTooltip()"  
+        [class.is-online]="connection === 'online'"
+        [class.is-playing]="connection === 'playing'">
         <img class="pi-sec-one-img" [src]="userData.avatar" 
             style="display: none" onload="this.style.display=''"
             onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
         />
+        <div class="pi-sec-one-dot"></div>
+        <div class="pi-sec-one-tooltip" *ngIf="showTooltip">{{connection}}</div>
     </div>
     <div class="pi-sec-two">
         <span> {{ userData.username }} </span>

@@ -5,7 +5,7 @@
     <h1 class="nf-title">
         Notifications
     </h1>
-    <div class="nf-items" *ngFor="let notif of notifyData">
+    <div class="nf-items" *ngFor="let notif of notifyData; let i = index">
         <div class="nf-item">
             <div class="nf-item-img-containe">
                 <img class="nf-item-img" [src]="notif.notif_from.avatar" [routerLink]="['/profile', notif.notif_from.username]"
@@ -33,10 +33,10 @@
                     Invite you to a game.
                 </div>
                 <div class="nf-item-dts-l3" *ngIf="notif.type == 'FRIEND_REQUEST'">
-                    <button class="nf-item-dts-l3-btn b1">
+                    <button class="nf-item-dts-l3-btn b1" (click)="onAcceptClick(i)">
                         accept
                     </button>
-                    <button class="nf-item-dts-l3-btn b2">
+                    <button class="nf-item-dts-l3-btn b2" (click)="onCancelClick(i)">
                         cancel
                     </button>
                 </div>

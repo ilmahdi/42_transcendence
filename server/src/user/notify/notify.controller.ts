@@ -47,4 +47,12 @@ export class NotifyController {
 
     return deletedNotifications;
   }
+  @UseGuards(JwtGuard)
+  @Patch('update-seen')
+  async updateSeenNotifications(@Body() notificationIds: number[]){
+
+    const updatedNotifications = await this.notifyService.updateSeenNotifications(notificationIds);
+
+    return updatedNotifications;
+  }
 }

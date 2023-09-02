@@ -19,7 +19,9 @@
     color: var(--primary-text-color);
 }
 
-
+.pi-sec-one {
+    position: relative;
+}
 
 .pi-sec-one-img {
     width: 7rem;
@@ -27,9 +29,63 @@
     object-fit: cover;
     border-radius: 50%;
     padding: 0.05rem;
-    border: 0.01rem solid var(--primary-border-color);
+    border: 0.01rem solid;
+    border-color: #FF4343;
     
 }
+
+.pi-sec-one-dot {
+    
+    position: absolute;
+    bottom: 0.5rem; 
+    left: 5.5rem; 
+    width: 1rem; 
+    height: 1rem; 
+    border-radius: 50%;
+    border: solid 0.1rem transparent;
+    border-color: var(--second-background-color);
+    pointer-events: none;
+    background-color: #FF4343;
+}
+
+.pi-sec-one-tooltip {
+    position: absolute;
+    bottom: 0.2rem; 
+    left: 5.5rem;
+    background-color: #333;
+    padding: 0px 8px;
+    border-radius: 1rem;
+    color: #FF4343;
+}
+
+.is-online {
+
+    .pi-sec-one-img {
+        border-color: green;
+    }
+    .pi-sec-one-dot {
+        background-color: green;
+    }
+    .pi-sec-one-tooltip {
+        color: green;
+    }
+        
+}
+
+.is-playing {
+
+    .pi-sec-one-img {
+        border-color: #D0D310;
+    }
+    .pi-sec-one-dot {
+        background-color: #D0D310;
+    }
+    .pi-sec-one-tooltip {
+        color: #D0D310;
+    }
+        
+}
+
 
 .pi-sec-one-icon {
     width: 1.8rem;
@@ -61,6 +117,7 @@
     justify-content: center;
     width: 10rem;
     height: 2.2rem;
+    color: var(--primary-text-color);
     border-radius: 0.6rem;
     border: 0.08rem solid var(--primary-border-color);
     background-color: rgba(160, 100, 100, 0.25);
@@ -150,6 +207,19 @@
     height: 5.4rem;
     object-fit: cover;
 }
+
+.pi-sec-one-dot {
+    width: 0.8rem; 
+    height: 0.8rem; 
+    bottom: 0.5rem; 
+    left: 4.3rem; 
+}
+
+.pi-sec-one-tooltip {
+    bottom: 0.2rem; 
+    left: 4.3rem;
+  }
+
 .pi-sec-one-icon {
     left: 7.4rem;
     top: 0.9rem;

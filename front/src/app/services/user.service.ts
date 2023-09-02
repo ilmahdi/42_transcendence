@@ -5,7 +5,7 @@ import { JWT_TOKEN } from '../utils/constants';
 import { IUserData, IUserDataShort } from '../utils/interfaces/user-data.interface';
 import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { IHistory } from '../utils/interfaces/history.interface';
-import { IFrinedship } from '../utils/interfaces/friendship.interface';
+import { IFriendship } from '../utils/interfaces/friendship.interface';
 
 
 @Injectable({
@@ -49,13 +49,13 @@ export class UserService {
     );
   }
 
-  addFriend (friendship :IFrinedship) : Observable<any> {
+  addFriend (friendship :IFriendship) : Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/api/user/friends/add`, friendship ,this.getHeaders());
   }
-  updateFriend (frinedship_id :number, friendship :IFrinedship) : Observable<any> {
+  updateFriend (frinedship_id :number, friendship :IFriendship) : Observable<any> {
     return this.http.patch<any>(`${this.apiUrl}/api/user/friends/update/${frinedship_id}`, friendship ,this.getHeaders());
   }
-  checkFriendship (friendship :IFrinedship) : Observable<any> {
+  checkFriendship (friendship :IFriendship) : Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/api/user/friends/check`, friendship ,this.getHeaders());
   }
   cancelFriend (frinedship_id :number) : Observable<any> {

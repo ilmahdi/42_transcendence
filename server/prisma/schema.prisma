@@ -86,6 +86,7 @@ model UserAccount {
 
 model Notification { 
   id                  Int               @id @default(autoincrement())
+  friendship_id       Int               @default(0)
   to_id               Int
   from_id             Int
   type                NotificationType

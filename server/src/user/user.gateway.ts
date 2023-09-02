@@ -58,6 +58,24 @@ export class UserGateway  {
       });
     }
   }
+  @SubscribeMessage('connection')
+  connection(client: Socket, userId: string) {
+
+    const userSocketIds = this.connectionGateway.connectedUsersById[userId];
+    
+    if (userSocketIds) {
+        this.server.to(client.id).emit('online');
+    }
+  }
+  @SubscribeMessage('watchConnection')
+  addToWatchConnection(client: Socket, userId: string) {
+
+    const userSocketIds = this.connectionGateway.connectedUsersById[userId];
+
+    if (userSocketIds) {
+        this.server.to(client.id).emit('connection');
+    }
+  }
   
 }
 

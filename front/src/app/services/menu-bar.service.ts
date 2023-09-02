@@ -40,11 +40,11 @@ export class MenuBarService {
 
     return this.http.post<any>(`${this.apiUrl}/api/user/notify/add`, notification ,this.getHeaders());
   }
-  switchNotification(notification :INotification) {
+  updateNotification(notification :INotification) {
 
     return this.http.post<any>(`${this.apiUrl}/api/user/notify/switch`, notification ,this.getHeaders());
   }
-  deleteNotification(notification :INotification) {
+  deleteFriendshipNotification(notification :INotification) {
 
     return this.http.patch<any>(`${this.apiUrl}/api/user/notify/delete`, notification ,this.getHeaders());
   }

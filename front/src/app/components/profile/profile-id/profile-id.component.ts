@@ -1,9 +1,10 @@
 import { Component, Input, OnChanges, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscriber, Subscription, firstValueFrom } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { MenuBarService } from 'src/app/services/menu-bar.service';
 import { UserService } from 'src/app/services/user.service';
+import { IFriendship } from 'src/app/utils/interfaces/friendship.interface';
 import { INotification } from 'src/app/utils/interfaces/notify-data.interface';
 import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
@@ -29,6 +30,7 @@ export class ProfileIdComponent implements OnChanges {
   public friendshipStatus: string = "NONE";
   public friendshipId: number = -1;
   public isRequestInitiator :boolean = true;
+  public loggedInUserId :number = this.authService.getLoggedInUserId();
 
   private subscriptions: Subscription[] = [];
   
@@ -45,20 +47,46 @@ export class ProfileIdComponent implements OnChanges {
   };
   @Input() isUserDataRecieved :boolean = false
 
+  public connection :string = "offline";
+  public showTooltip :boolean = false;
+
+  onShowTooltip() {
+    this.showTooltip = true;
+  }
+
+  hideTooltip() {
+    this.showTooltip = false;
+  }
+
   ngOnInit(): void {
     const subscription = this.route.params.subscribe(params => {
       this.isOwnProfile = params['username'] === this.authService.getLoggedInUser();
     });
     this.subscriptions.push(subscription);
 
-    this.socket.on('refreshUser', () => {  this.checkFriendshipStatus();
+    this.socket.on('refreshUser', () => {  
+      this.checkFriendshipStatus(this.getFriendship(this.loggedInUserId, this.userData.id));
+    });
+    this.socket.on('online', () => {  
+      this.connection = "online";
     });
   }
 
 
   ngOnChanges(changes :any): void {
-    if (changes.userData && changes.userData.currentValue)
-      this.checkFriendshipStatus();
+    if (!this.isOwnProfile)
+    {
+      
+      if (changes.userData && changes.userData.currentValue) {
+        
+        this.checkFriendshipStatus(this.getFriendship(this.loggedInUserId, this.userData.id));
+        
+        this.menuBarService.sendEvent("connection", this.userData.id)
+      }
+    }
+    else
+      this.menuBarService.sendEvent("connection", this.loggedInUserId)
+      
   }
 
 
@@ -70,33 +98,64 @@ export class ProfileIdComponent implements OnChanges {
     this.isMoreClicked = false
   }
 
-  onAddClick() {
-    this.addFriend("WAITING")
+  async onAddClick() {
+
+    await this.addFriend(this.getFriendship(this.loggedInUserId, this.userData.id, "WAITING"));
+    await this.addNotification(this.getNotification(this.loggedInUserId, this.userData.id, this.friendshipId, 'FRIEND_REQUEST'));
+
+    this.menuBarService.sendEvent("notifyFriendRequest", this.userData.id)
+
+    this.menuBarService.sendEvent("refreshUser", this.userData.id)
   }
 
-  onCancelClick() {
-    if (this.friendshipId > 0)
-      this.cancelFriend()
+  async onCancelClick() {
+
+    await this.deleteFriendshipNotification(this.getNotification(this.loggedInUserId, this.userData.id, this.friendshipId));
+    await this.cancelFriend(this.friendshipId)
+
+    this.menuBarService.sendEvent("unNotifyFriendRequest", this.isRequestInitiator ? this.userData.id : this.loggedInUserId)
+
+    this.menuBarService.sendEvent("refreshUser", this.userData.id)
   }
-  onAcceptClick() {
-    this.changeFriendshipStatus("ACCEPTED")
+  async onAcceptClick() {
+
+    await this.changeFriendshipStatus(this.friendshipId, "ACCEPTED")
+    await this.updateNotification(this.getNotification(this.loggedInUserId, this.userData.id, this.friendshipId, 'FRIEND_ACCEPTE'));
+
+
+    this.menuBarService.sendEvent("notifyFriendRequest", this.userData.id)
+    this.menuBarService.sendEvent("unNotifyFriendRequest", this.loggedInUserId)
+
+    this.menuBarService.sendEvent("refreshUser", this.userData.id)
   }
 
-  handleUnfriendClick() {
-    this.removeFriend()
+  async handleUnfriendClick() {
+
+    await this.removeFriend(this.friendshipId)
+
+    this.menuBarService.sendEvent("refreshUser", this.userData.id)
   }
 
-  handleBlockClick() {
-    if (this.friendshipId < 0) 
-      this.addFriend("BLOCKED")
+  async handleBlockClick() {
+
+    if (this.friendshipId < 0)
+      await this.addFriend(this.getFriendship(this.loggedInUserId, this.userData.id, "BLOCKED"));
     
-    else 
-      this.blockFriend()
+    else {
+      await this.blockFriend(this.friendshipId, this.getFriendship(this.loggedInUserId, this.userData.id, "BLOCKED"))
+      if (this.friendshipStatus == 'WAITING')
+        await this.deleteFriendshipNotification(this.getNotification(this.loggedInUserId, this.userData.id, this.friendshipId));
+      
+      
+      this.menuBarService.sendEvent("unNotifyFriendRequest", this.userData.id)
+      this.menuBarService.sendEvent("unNotifyFriendRequest", this.loggedInUserId)
+    }
+    this.menuBarService.sendEvent("refreshUser", this.userData.id)
   }
 
-  onUnblockClick() {
-    if (this.friendshipId > 0)
-      this.unbBlockFriend()
+  async onUnblockClick() {
+      await this.unbBlockFriend(this.friendshipId)
+      this.menuBarService.sendEvent("refreshUser", this.userData.id)
   }
   
   
@@ -108,186 +167,177 @@ export class ProfileIdComponent implements OnChanges {
   
   // private functions
   /******************************************************************** */
-  checkFriendshipStatus(): void {
-    if (!this.isOwnProfile) {
-      const subscription = this.userService.checkFriendship({
-        user_id: this.authService.getLoggedInUserId(), 
-        friend_id: this.userData.id,
-      }).subscribe({
-        next: response => {
-          
-          this.friendshipStatus = response.friendship_status;
-          this.friendshipId = response.id;
-          this.isRequestInitiator = this.authService.getLoggedInUserId() === response.user_id;
-        },
-        error: error => {
-          console.error('Error:', error.error.message);
-        }
-      });
-      this.subscriptions.push(subscription);
+  async checkFriendshipStatus(friendship :IFriendship) {
+
+    try {
+      const response = await firstValueFrom(this.userService.checkFriendship(friendship));
+  
+      this.updateFriendshipSwitches(response);
+      
+    } catch (error) {
+      console.error('Error:', error);
     }
   }
-  addFriend(friendshipStatus :string) {
 
-    const subscription = this.userService.addFriend({
-      user_id: this.authService.getLoggedInUserId(), 
-      friend_id: this.userData.id,
-      friendship_status: friendshipStatus,
-    }).subscribe({
-      next: response => {
+  async addFriend(friendship :IFriendship) {
 
-        this.friendshipStatus = response.friendship_status;
-        this.friendshipId = response.id;
-        this.isRequestInitiator = this.authService.getLoggedInUserId() === response.user_id;
-        if (friendshipStatus === 'WAITING') {
-          this.addNotification({
-            from_id: this.authService.getLoggedInUserId(), 
-            to_id: this.userData.id,
-            type: 'FRIEND_REQUEST',
-          })
-        }
-        this.menuBarService.sendEvent("refreshUser", this.userData.id)
-      },
-      error: error => {
-        console.error('Error:', error.error.message); 
-      }
-    });
-    this.subscriptions.push(subscription);
+    try {
+      const response = await firstValueFrom(this.userService.addFriend(friendship));
+  
+      this.updateFriendshipSwitches(response);
+      
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
 
-  changeFriendshipStatus (friendshipStatus :string) {
-    if (this.friendshipId < 0)
-      return
-      const subscription = this.userService.changeFriendshipStatus(this.friendshipId, friendshipStatus).subscribe({
-      next: response => {
-        
-        this.friendshipStatus = response.friendship_status;
-        this.switchNotification({
-          from_id: this.authService.getLoggedInUserId(), 
-          to_id: this.userData.id,
-          type: 'FRIEND_ACCEPTE',
-        });
-        this.menuBarService.sendEvent("refreshUser", this.userData.id)
-      },
-      error: error => {
-        console.error('Error:', error.error.message); 
-      }
-    });
-    this.subscriptions.push(subscription);
-  }
-  cancelFriend () {
-    const subscription = this.userService.cancelFriend(this.friendshipId).subscribe({
-      next: response => {
-        
-        this.friendshipStatus = "NONE";
-        this.friendshipId = -1;
-        this.deleteNotification({
-          from_id: this.isRequestInitiator ? this.authService.getLoggedInUserId() : this.userData.id, 
-          to_id: this.isRequestInitiator ? this.userData.id : this.authService.getLoggedInUserId(),
-        });
-        this.menuBarService.sendEvent("refreshUser", this.userData.id)
-      },
-      error: error => {
-        console.error('Error:', error.error.message); 
-      }
-    });
-    this.subscriptions.push(subscription);
-  }
-  removeFriend() {
-    const subscription = this.userService.cancelFriend(this.friendshipId).subscribe({
-      next: response => {
-        this.friendshipStatus = "NONE"
-        this.friendshipId = -1;
-        this.menuBarService.sendEvent("refreshUser", this.userData.id)
-      },
-      error: error => {
-        console.error('Error:', error.error.message); 
-      }
-    });
-    this.subscriptions.push(subscription);
-  }
-  blockFriend() {
-    const subscription = this.userService.updateFriend(this.friendshipId, {
-      user_id: this.authService.getLoggedInUserId(), 
-      friend_id: this.userData.id,
-      friendship_status: "BLOCKED",
-    }).subscribe({
-      next: response => {
+  async changeFriendshipStatus (friendshipId :number,friendshipStatus :string) {
 
-        this.friendshipStatus = response.friendship_status;
-        this.friendshipId = response.id;
-        this.deleteNotification({
-          from_id: (this.isRequestInitiator && this.friendshipStatus !== 'WAITING') ? this.authService.getLoggedInUserId() : this.userData.id, 
-          to_id: (this.isRequestInitiator && this.friendshipStatus !== 'WAITING') ? this.userData.id : this.authService.getLoggedInUserId(),
-        });
-        this.isRequestInitiator = this.authService.getLoggedInUserId() === response.user_id;
-        this.menuBarService.sendEvent("refreshUser", this.userData.id)
-      },
-      error: error => {
-        console.error('Error:', error.error.message); 
-      }
-    });
-    this.subscriptions.push(subscription);
+    try {
+      const response = await firstValueFrom(this.userService.changeFriendshipStatus(friendshipId, friendshipStatus));
+  
+      this.updateFriendshipSwitches(response);
+      
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
-  unbBlockFriend() {
-    const subscription = this.userService.cancelFriend(this.friendshipId).subscribe({
-      next: response => {
-        this.friendshipStatus = "NONE";
-        this.friendshipId = -1;
-        this.menuBarService.sendEvent("refreshUser", this.userData.id)
-      },
-      error: error => {
-        console.error('Error:', error.error.message); 
-      }
-    });
-    this.subscriptions.push(subscription);
+
+  async cancelFriend (friendshipId :number) {
+
+    try {
+      const response = await firstValueFrom(this.userService.cancelFriend(friendshipId));
+  
+      this.updateFriendshipSwitches(response);
+      
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
+
+  async removeFriend(friendshipId :number) {
+
+    try {
+      const response = await firstValueFrom(this.userService.cancelFriend(friendshipId));
+  
+      this.updateFriendshipSwitches(response);
+      
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  async blockFriend(friendshipId :number, friendship :IFriendship) {
+
+    try {
+      const response = await firstValueFrom(this.userService.updateFriend(friendshipId, friendship));
+  
+      this.updateFriendshipSwitches(response);
+      
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  async unbBlockFriend(friendshipId :number) {
+
+    try {
+      const response = await firstValueFrom(this.userService.cancelFriend(friendshipId));
+  
+      this.updateFriendshipSwitches(response);
+      
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+
+
+
+
+
+
 
   /******************************************************************** */
-  addNotification(notification :INotification) {
-    const subscription = this.menuBarService.addNotification(notification).subscribe({
-      next: response => {
+  async addNotification(notification :INotification) {
 
-        this.menuBarService.sendEvent("notifyFriendRequest", this.userData.id)
-
-      },
-      error: error => {
-        console.error('Error:', error.error.message); 
-      }
-    });
-    this.subscriptions.push(subscription);
-    
+    try {
+      await firstValueFrom(this.menuBarService.addNotification(notification));
+      
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
-  switchNotification(notification :INotification) {
-    const subscription = this.menuBarService.switchNotification(notification).subscribe({
-      next: response => {
 
-        this.menuBarService.sendEvent("notifyFriendRequest", this.userData.id)
-        this.menuBarService.sendEvent("unNotifyFriendRequest", this.authService.getLoggedInUserId())
-      },
-      error: error => {
-        console.error('Error:', error.error.message); 
-      }
-    });
-    this.subscriptions.push(subscription);
-  }
-  deleteNotification(notification :INotification) {
-    const subscription = this.menuBarService.deleteNotification(notification).subscribe({
-      next: response => {
+  async updateNotification(notification :INotification) {
 
-        this.menuBarService.sendEvent("unNotifyFriendRequest", this.isRequestInitiator ? this.userData.id : this.authService.getLoggedInUserId())
-      },
-      error: error => {
-        console.error('Error:', error.error.message); 
-      }
-    });
-    this.subscriptions.push(subscription);
+    try {
+      await firstValueFrom(this.menuBarService.updateNotification(notification));
+      
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
+
+  async deleteFriendshipNotification(notification :INotification) {
+
+    try {
+      await firstValueFrom(this.menuBarService.deleteFriendshipNotification(notification));
+      
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+
+
 
   ngOnDestroy(): void {
+
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
     }
+  }
+
+
+
+  // private utility functions
+  /******************************************************************** */
+  getFriendship (arg1 :number, arg2 :number, arg3? :string) :IFriendship { 
+    
+    const friendship: IFriendship = {
+      user_id: arg1,
+      friend_id: arg2,
+    };
+  
+    if (arg3) {
+      friendship.friendship_status = arg3;
+    }
+  
+    return friendship;
+  }
+  getNotification (arg1 :number, arg2 :number, arg3? :number, arg4? :string) :INotification { 
+    
+    const notification: INotification = {
+      from_id: arg1,
+      to_id: arg2,
+    };
+  
+    if (arg3) {
+      notification.friendship_id = arg3;
+    }
+    if (arg4) {
+      notification.type = arg4;
+    }
+  
+    return notification;
+  }
+  updateFriendshipSwitches (response :any) {
+
+    this.friendshipStatus = response.friendship_status;
+    this.friendshipId = response.id;
+    response.user_id
+      this.isRequestInitiator = this.loggedInUserId === response.user_id;
   }
  
   

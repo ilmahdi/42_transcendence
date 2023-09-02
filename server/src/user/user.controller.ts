@@ -103,15 +103,15 @@ export class UserController {
     
     @UseGuards(JwtGuard)
     @Post("friends/add")
-    addFriend(@Body() friendship: FrinedshipDto) : any {
+    async addFriend(@Body() friendship: FrinedshipDto) {
 
-        return this.userService.addFriend(friendship);        
+        return await this.userService.addFriend(friendship);        
     }
     @UseGuards(JwtGuard)
     @Patch("friends/update/:friendshipId")
-    updateFriend(@Param('friendshipId') friendshipId: number, @Body() friendship: FrinedshipDto) : any {
+    async updateFriend(@Param('friendshipId') friendshipId: number, @Body() friendship: FrinedshipDto) {
 
-        return this.userService.updateFriend(friendshipId, friendship);        
+        return await this.userService.updateFriend(friendshipId, friendship);        
     }
     @UseGuards(JwtGuard)
     @Post("friends/check")
@@ -128,8 +128,9 @@ export class UserController {
     @Delete('friends/cancel/:friendshipId')
     async cancelFriend(@Param('friendshipId') friendshipId: number) {
 
-      const friendship = await this.userService.deleteFriendship(friendshipId);
-      return friendship;
+      const deletedFriendship = await this.userService.deleteFriendship(friendshipId);
+
+      return { user_id: deletedFriendship?.user_id, friendship_status: "NONE",  id: -1};
 
     }
     @UseGuards(JwtGuard)
