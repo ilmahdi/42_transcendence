@@ -6,23 +6,8 @@
     width: 572px;
     background-color: #231C1C;
     border-radius: 15px 15px 15px 15px;
-    overflow-y: hidden;
-    overflow-x: hidden;
     scrollbar-color: #5e6147 var(--second-background-color);
     scrollbar-width: 0.4rem;
-}
-
-.body::-webkit-scrollbar
- {
-    width: 0.4rem;
-    background-color: var(--second-background-color);
-} 
-.body::-webkit-scrollbar-thumb  {
-    border-radius: 0.4rem;
-    background-color: #5e6147;
-}
-.body::-webkit-scrollbar-thumb:hover  {
-    background-color: #555;
 }
 
 .header {
@@ -31,7 +16,7 @@
     width: 100%;
     height: 46px;
     background-color: #D38146;
-    /* border-radius: 15px 15px 0px 0px; */
+    border-radius: 15px 15px 0px 0px;
 }
 
 .fa-angle-double-left {
@@ -133,7 +118,7 @@ img {
     color: white;
 }
 
-#sentMessage {
+.sentMessage {
     color: white;
     position: absolute;
     right: 10px;
@@ -143,7 +128,7 @@ img {
     max-width: 60%;
 }
 
-#receivedMessage {
+.receivedMessage {
     color: white;
     left: 10px;
     position: absolute;
@@ -151,6 +136,7 @@ img {
     height: 40px;
     background-color: #584747;
     max-width: 60%;
+    max-height: 100%;
 }
 
 p {
@@ -166,7 +152,22 @@ p {
     height: calc(100% - 120px);
     width: 100%;
     /* background-color: white; */
-    /* overflow: auto; */
+    /* overflow: hidden; */
+    scrollbar-color: #5e6147 var(--second-background-color);
+    scrollbar-width: 0.4rem;
+}
+
+.messages::-webkit-scrollbar
+ {
+    width: 0.4rem;
+    background-color: var(--second-background-color);
+} 
+.messages::-webkit-scrollbar-thumb  {
+    border-radius: 0.4rem;
+    background-color: #5e6147;
+}
+.messages::-webkit-scrollbar-thumb:hover  {
+    background-color: #555;
 }
 
 @media (min-width: 2000px) {

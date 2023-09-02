@@ -178,14 +178,14 @@ input {
     background-color: #D38146;
 }
 
-button span {
+#submit span {
     cursor: pointer;
     display: inline-block;
     position: relative;
     transition: 0.5s;
   }
   
-  button span:after {
+  #submit span:after {
     content: '\00bb';
     position: absolute;
     opacity: 0;
@@ -195,13 +195,52 @@ button span {
     font-size: 20px;
   }
   
-  button:hover span {
+  #submit:hover span {
     padding-right: 15px;
   }
   
-  button:hover span:after {
+  #submit:hover span:after {
     opacity: 1;
     right: 0;
+  }
+
+
+#back {
+  position: absolute;
+  bottom: 10px;
+  right: 30px;
+  height: 35px;
+  width: 100px;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  background-color: #D38146;
+}
+
+#back span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+  }
+  
+  #back span:after {
+    content: '\00AB';
+    position: absolute;
+    opacity: 0;
+    top: -5px;
+    left: -20px;
+    transition: 0.5s;
+    font-size: 20px;
+  }
+  
+  #back:hover span {
+    padding-left: 15px;
+  }
+  
+  #back:hover span:after {
+    opacity: 1;
+    left: 0;
   }
 
 @media (min-width: 2000px) {
@@ -235,6 +274,12 @@ button span {
         width: 65%;
         right: 50px;
         height: 80%;
+    }
+    #submit {
+        width: 80px;
+    }
+    #back {
+        width: 80px;
     }
 }
 

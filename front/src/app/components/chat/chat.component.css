@@ -131,9 +131,19 @@
 }
 
 #giveName {
-    position: absolute;
-    left: 35%;
-    top: 30%;
+    position: relative;
+    text-align: center;
+    /* left: 35%; */
+    margin-top: 130px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: white;
+}
+
+#addFriends {
+    position: relative;
+    text-align: center;
+    /* left: 35%; */
+    margin-top: 75px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color: white;
 }
@@ -210,30 +220,69 @@
     background-color: #D38146;
 }
 
-button span {
+#submit span {
   cursor: pointer;
   display: inline-block;
   position: relative;
   transition: 0.5s;
 }
 
-button span:after {
+#submit span:after {
   content: '\00bb';
   position: absolute;
   opacity: 0;
-  top: 0;
+  top: -5px;
   right: -20px;
   transition: 0.5s;
+  font-size: 20px;
 }
 
-button:hover span {
+#submit:hover span {
   padding-right: 15px;
 }
 
-button:hover span:after {
+#submit:hover span:after {
   opacity: 1;
   right: 0;
 }
+
+#reset {
+    position: absolute;
+    bottom: 10px;
+    right: 30px;
+    height: 35px;
+    width: 100px;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    background-color: #D38146;
+  }
+  
+  #reset span {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      transition: 0.5s;
+    }
+    
+    #reset span:after {
+      content: '\00AB';
+      position: absolute;
+      opacity: 0;
+      top: -5px;
+      left: -20px;
+      transition: 0.5s;
+      font-size: 20px;
+    }
+    
+    #reset:hover span {
+      padding-left: 15px;
+    }
+    
+    #reset:hover span:after {
+      opacity: 1;
+      left: 0;
+    }
 
 .fa-angle-double-left {
     position: absolute;
@@ -314,5 +363,21 @@ button:hover span:after {
     }
     .headerPart {
         left: 22%;
+    }
+    #submit {
+        width: 80px;
+    }
+    #reset {
+        width: 80px;
+    }
+    
+}
+
+@media (max-height: 500px) {
+    #giveName{
+        margin-top: 110px;
+    }
+    #addFriends {
+        margin-top: 55px;
     }
 }

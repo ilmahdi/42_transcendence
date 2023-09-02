@@ -64,6 +64,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
             this.lastMessages.push(data)
           }
           chatService.sendToGetNotReadedRoomMessages(this.userId!);
+          chatService.sendToGetNotReadedRoomMessages(this.userId!);
         })
         this.lastMessages = _.sortBy(this.lastMessages, 'date');
       })

@@ -9,12 +9,12 @@
         <div class="messages">
             <div *ngFor="let message of messages">
                 <br>
-                <span *ngIf="message.senderId === userId && message.receiverId === userEmitted[0].id" id="sentMessage">
+                <div *ngIf="message.senderId === userId && message.receiverId === userEmitted[0].id" class="sentMessage">
                     <p>&emsp;{{message.message}}&emsp;</p>
-                </span>
-                <span *ngIf="message.receiverId === userId && message.senderId === userEmitted[0].id" id="receivedMessage">
+                </div>
+                <div *ngIf="message.receiverId === userId && message.senderId === userEmitted[0].id" class="receivedMessage">
                     <p>&emsp;{{message.message}}&emsp;</p>
-                </span>
+                </div>
                 <br>
             </div>
         </div>
