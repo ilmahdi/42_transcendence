@@ -23,6 +23,16 @@ export class RoomChatService {
         private userService:UserService
     ) {}
 
+    private readonly saltRounds = 10; // Adjust as needed
+
+    async hashPassword(password: string): Promise<string> {
+      return bcrypt.hash(password, this.saltRounds);
+    }
+  
+    async comparePasswords(plainTextPassword: string, hashedPassword: string): Promise<boolean> {
+      return bcrypt.compare(plainTextPassword, hashedPassword);
+    }
+
     async searchRooms(query:string) {
       let n = 2
         const users = await this.roomRepository
@@ -33,12 +43,10 @@ export class RoomChatService {
         return users;
       }
   
-      createRoom(room:Room) {
+      async createRoom(room:Room) {
         if (room.password) {
-          this.authService.hashPassword(room.password).subscribe(data=> {
-            room.password = data;
-            return from(this.roomRepository.save(room));
-          })
+          room.password = await this.hashPassword(room.password)
+          return from(this.roomRepository.save(room));
         }
         else
           return from(this.roomRepository.save(room));
@@ -176,8 +184,7 @@ export class RoomChatService {
     }
 
     async joinProtected(id:number, room:Room, password:string) {
-      const isPasswordValid = await bcrypt.compare(password, room.password);
-
+      const isPasswordValid = this.comparePasswords(password, room.password);
       if (isPasswordValid) {
         room.usersId.push(id);
         await this.roomRepository.save(room);
@@ -204,16 +211,14 @@ export class RoomChatService {
       return forkJoin(usersWithTypes);
     }
 
-    changeRoomType(room:Room) {
+    async changeRoomType(room:Room) {
       if (room.type !== RoomType.PROTECTED) {
         room.password = null
         this.roomRepository.save(room);
       }
       else {
-        this.authService.hashPassword(room.password).subscribe(data=>{
-          room.password = data;
-          this.roomRepository.save(room);
-        })
+        room.password = await this.hashPassword(room.password)
+        this.roomRepository.save(room);
       }
     }
 }

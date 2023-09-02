@@ -19,8 +19,6 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
   private subscription3?:Subscription
   private subscription4?:Subscription
   private subscription5?:Subscription
-  private subscription6?:Subscription
-  private subscription7?:Subscription
 
   userId?:number;
   room:Room = {}
@@ -42,12 +40,11 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       if (this.room.adminId?.includes(this.userId!))
         this.isAdmin = true
       this.chatService.sendToGetRoomById(this.room.id!);
+      this.chatService.sendToGetRoomMembers(this.room);////////
     })
     this.type = this.room.type
     this.chatService.sendToGetRoomMembers(this.room);
-  }
 
-  ngOnInit(): void {
     this.subscription2 = this.chatService.getRoomById().subscribe(data=>this.chatService.roomOptionsSource.next(data));
     this.subscription3 = this.chatService.getRoomMembers().subscribe(users=> {
       this.members = []
@@ -58,6 +55,9 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
     })
   }
 
+  ngOnInit(): void {
+  }
+
   changeType(type:string) {
     if (type === 'public')
       this.type = RoomType.PUBLIC
@@ -65,8 +65,6 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.type = RoomType.PROTECTED
     else if(type === 'private')
       this.type = RoomType.PRIVATE
-
-    this.chatService.sendToGetRoomMembers(this.room);
   }
 
   clickOnMember(member:{user:User, type:string, click:boolean, admin:boolean, removed:boolean}) {
@@ -103,34 +101,34 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
     if (this.form.value.password) {
       this.room.password = this.form.value.password;
       this.chatService.roomOptionsSource.next(this.room)////////////
-      this.subscription4 = this.chatService.updateRoom(this.room).subscribe(data=>this.chatService.displayComponents(false, true, false, true, true, false));
+      this.chatService.updateRoom(this.room);
+      this.chatService.displayComponents(false, true, false, true, true, false)
     }
     else if (this.type !== RoomType.PROTECTED) {
       const data = this.room
+      console.log(this.room.type);
+      
       this.chatService.roomOptionsSource.next(this.room)////////////
-      this.chatService.roomOptions$.subscribe(data=>{
-        this.room = data
-      })
-      this.subscription5 = this.chatService.updateRoom(data).subscribe(data=>{
-        this.chatService.displayComponents(false, true, false, true, true, false)
-      });
+      this.chatService.updateRoom(this.room);
+      this.chatService.displayComponents(false, true, false, true, true, false)
     }
   }
 
   back() {
     this.chatService.displayComponents(false, true, false, true, true, false)
-    this.subscription6 = this.chatService.roomOptions$.subscribe(data=>{
+    this.subscription4 = this.chatService.roomOptions$.subscribe(data=>{
       this.room = data
     })
   }
 
   exitRoom() {
-    this.room.usersId = this.room.usersId?.filter(id=> id !== this.userId)
-    this.subscription7 = this.chatService.updateRoom(this.room).subscribe(data=>{
-      this.chatService.sendToGetRooms(this.userId!);
-      this.chatService.getRooms().subscribe(data=> {this.chatService.updateRooms(data);console.log(data)})
+    this.room.usersId = this.room.usersId?.filter(id=> id !== this.userId);
+    this.chatService.updateRoom(this.room)
+      for(let i:number = 0;i < 10;i++) {
+        this.chatService.sendToGetRooms(this.userId!);
+      }
+      this.subscription5 = this.chatService.getRooms().subscribe(data=> {this.chatService.updateRooms(data);})
       this.chatService.displayComponents(false, false, false, true, true, false)
-    });
   }
 
   ngOnDestroy(): void {
@@ -140,7 +138,5 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
     this.subscription3?.unsubscribe()
     this.subscription4?.unsubscribe()
     this.subscription5?.unsubscribe()
-    this.subscription6?.unsubscribe()
-    this.subscription7?.unsubscribe()
   }
 }

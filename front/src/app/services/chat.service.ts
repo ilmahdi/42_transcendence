@@ -292,7 +292,8 @@ export class ChatService {
     return this.socket.fromEvent<{user:User, type:string}[]>('recRoomMembers');
   }
 
-  updateRoom(room:Room): Observable<Room> {
-    return this.http.post('http://localhost:3000/api/chat/updateRoom', room);
+  updateRoom(room:Room) {
+    this.socket.emit('updateRoom', room)
+    // return this.http.post('http://localhost:3000/api/chat/updateRoom', room);
   }
 }

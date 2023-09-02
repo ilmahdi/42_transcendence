@@ -72,7 +72,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
     this.subscription5 = chatService.notReadedRoomMessage$.subscribe(data=>{
       this.notReaded = []
       data.forEach(item=>this.notReaded.push(item));
-  })
+    })
   }
 
   editeDateFormat(date:Date) {
@@ -97,7 +97,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
       this.chatService.updateRooms(this.rooms)
     })
 
-    this.subscription7 = this.chatService.rooms$.subscribe(data=>{this.rooms = data})
+    // this.subscription7 = this.chatService.rooms$.subscribe(data=>{this.rooms = data})
   }
 
   onResize() {

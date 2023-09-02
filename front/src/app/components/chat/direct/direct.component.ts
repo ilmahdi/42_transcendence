@@ -70,7 +70,6 @@ export class DirectComponent implements OnInit, OnDestroy {
           if (this.lastMessages[this.lastMessages.length - 1] !== data) {
             this.lastMessages = this.lastMessages.filter(item => !((item.receiverId === data.receiverId && item.senderId === data.senderId) || (item.senderId === data.receiverId && item.receiverId === data.senderId)));
             this.lastMessages.push(data)
-            // console.log(data)
           }
           chatService.sendToGetNotReadedMessages(this.userId!)//////////
         })

@@ -141,4 +141,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
       client.emit('recRoomMembers', data)
     })
   }
+
+  @SubscribeMessage('updateRoom')
+  updateRoom(client:Socket, room:Room) {
+    this.roomChatService.changeRoomType(room);
+  }
 }
