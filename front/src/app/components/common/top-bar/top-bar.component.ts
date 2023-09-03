@@ -141,6 +141,7 @@ export class TopBarComponent implements OnInit {
     this.subscriptions.push(subscription);
 
   }
+
   deleteNotifications(notifications :number[]) {
     this.menuBarService.deleteNotifications(notifications).subscribe({
       next: response => {
@@ -156,6 +157,7 @@ export class TopBarComponent implements OnInit {
       }
     });
   }
+  
   updateSeenNotifications(notifications :number[]) {
     this.menuBarService.updateSeenNotifications(notifications).subscribe({
       next: response => {
@@ -166,7 +168,6 @@ export class TopBarComponent implements OnInit {
       }
     });
   }
-
 
 
 }

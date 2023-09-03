@@ -5,6 +5,7 @@
     box-sizing: border-box;
 }
 
+
 .profile-id {
     display: flex;
     flex-direction: column;
@@ -30,7 +31,7 @@
     border-radius: 50%;
     padding: 0.05rem;
     border: 0.01rem solid;
-    border-color: #FF4343;
+    border-color: gray;
     
 }
 
@@ -45,7 +46,7 @@
     border: solid 0.1rem transparent;
     border-color: var(--second-background-color);
     pointer-events: none;
-    background-color: #FF4343;
+    background-color: gray;
 }
 
 .pi-sec-one-tooltip {
@@ -55,36 +56,48 @@
     background-color: #333;
     padding: 0px 8px;
     border-radius: 1rem;
+    color: gray;
+}
+
+.is-online
+.pi-sec-one-img {
+    border-color: green;
+}
+.is-online
+.pi-sec-one-dot {
+    background-color: green;
+}
+.is-online
+.pi-sec-one-tooltip {
+    color: green;
+}
+
+.is-offline
+.pi-sec-one-img {
+    border-color: #FF4343;
+}
+.is-offline
+.pi-sec-one-dot {
+    background-color: #FF4343;
+}
+.is-offline
+.pi-sec-one-tooltip {
     color: #FF4343;
 }
 
-.is-online {
-
-    .pi-sec-one-img {
-        border-color: green;
-    }
-    .pi-sec-one-dot {
-        background-color: green;
-    }
-    .pi-sec-one-tooltip {
-        color: green;
-    }
-        
+.is-playing
+.pi-sec-one-img {
+    border-color: #D0D310;
 }
-
-.is-playing {
-
-    .pi-sec-one-img {
-        border-color: #D0D310;
-    }
-    .pi-sec-one-dot {
-        background-color: #D0D310;
-    }
-    .pi-sec-one-tooltip {
-        color: #D0D310;
-    }
-        
+.is-playing
+.pi-sec-one-dot {
+    background-color: #D0D310;
 }
+.is-playing
+.pi-sec-one-tooltip {
+    color: #D0D310;
+}
+    
 
 
 .pi-sec-one-icon {

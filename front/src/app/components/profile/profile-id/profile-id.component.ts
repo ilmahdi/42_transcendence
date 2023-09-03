@@ -1,8 +1,9 @@
-import { Component, Input, OnChanges, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild, ViewContainerRef,  } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscriber, Subscription, firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { MenuBarService } from 'src/app/services/menu-bar.service';
+import { ConfirmService } from 'src/app/services/modals/confirm.service';
 import { UserService } from 'src/app/services/user.service';
 import { IFriendship } from 'src/app/utils/interfaces/friendship.interface';
 import { INotification } from 'src/app/utils/interfaces/notify-data.interface';
@@ -22,6 +23,7 @@ export class ProfileIdComponent implements OnChanges {
     private userService: UserService,
     private menuBarService: MenuBarService,
     private socket: CustomSocket,
+    private confirmService: ConfirmService,
   ) { }
 
 
@@ -47,7 +49,10 @@ export class ProfileIdComponent implements OnChanges {
   };
   @Input() isUserDataRecieved :boolean = false
 
-  public connection :string = "offline";
+  @ViewChild('confirmModal', { read: ViewContainerRef })
+  entry!: ViewContainerRef;
+
+  public connection :string = "";
   public showTooltip :boolean = false;
 
   onShowTooltip() {
@@ -67,25 +72,29 @@ export class ProfileIdComponent implements OnChanges {
     this.socket.on('refreshUser', () => {  
       this.checkFriendshipStatus(this.getFriendship(this.loggedInUserId, this.userData.id));
     });
-    this.socket.on('online', () => {  
+    this.socket.on('online', () => {
+
       this.connection = "online";
+    });
+    this.socket.on('offline', () => {
+      this.connection = "offline";
+    });
+    this.socket.on('playing', () => {
+      this.connection = "playing";
     });
   }
 
 
   ngOnChanges(changes :any): void {
+
     if (!this.isOwnProfile)
-    {
-      
-      if (changes.userData && changes.userData.currentValue) {
+      if (changes.userData && changes.userData.currentValue && this.userData.id) {
         
-        this.checkFriendshipStatus(this.getFriendship(this.loggedInUserId, this.userData.id));
-        
-        this.menuBarService.sendEvent("connection", this.userData.id)
+          this.checkFriendshipStatus(this.getFriendship(this.loggedInUserId, this.userData.id));
+          
+          this.menuBarService.sendEvent("connectionStatus", this.userData.id)
+          this.menuBarService.sendEvent("watchConnection", this.userData.id)
       }
-    }
-    else
-      this.menuBarService.sendEvent("connection", this.loggedInUserId)
       
   }
 
@@ -138,13 +147,13 @@ export class ProfileIdComponent implements OnChanges {
 
   async handleBlockClick() {
 
-    if (this.friendshipId < 0)
+    if (this.friendshipId <= 0)
       await this.addFriend(this.getFriendship(this.loggedInUserId, this.userData.id, "BLOCKED"));
     
     else {
-      await this.blockFriend(this.friendshipId, this.getFriendship(this.loggedInUserId, this.userData.id, "BLOCKED"))
       if (this.friendshipStatus == 'WAITING')
         await this.deleteFriendshipNotification(this.getNotification(this.loggedInUserId, this.userData.id, this.friendshipId));
+      await this.blockFriend(this.friendshipId, this.getFriendship(this.loggedInUserId, this.userData.id, "BLOCKED"))
       
       
       this.menuBarService.sendEvent("unNotifyFriendRequest", this.userData.id)
@@ -153,11 +162,25 @@ export class ProfileIdComponent implements OnChanges {
     this.menuBarService.sendEvent("refreshUser", this.userData.id)
   }
 
-  async onUnblockClick() {
+  async handleUnblockClick() {
       await this.unbBlockFriend(this.friendshipId)
       this.menuBarService.sendEvent("refreshUser", this.userData.id)
   }
   
+
+  openConfirmModal(emiter :string) {
+    const subscription = this.confirmService
+      .open(this.entry, `Are you sure you want to ${emiter} ${this.userData.username}?`, 'click confirme to continue')
+      .subscribe(() => {
+        if(emiter === 'block')
+          this.handleBlockClick()
+        else if(emiter === 'unfriend')
+          this.handleUnfriendClick()
+        else if(emiter === 'unblock')
+          this.handleUnblockClick()
+      });
+      this.subscriptions.push(subscription);
+  }
   
   
   

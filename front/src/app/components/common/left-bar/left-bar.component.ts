@@ -29,10 +29,10 @@ export class LeftBarComponent implements OnInit {
   ngOnInit(): void {
     this.username = this.authService.getLoggedInUser();
   }
-  openModal() {
+  openConfirmModal() {
     this.sub = this.confirmService
       .open(this.entry, 'Are you sure you want to Sign Out?', 'click confirme to continue')
-      .subscribe((v) => {
+      .subscribe(() => {
         this.authService.logout();
         this.router.navigate(['/login']);
       });

@@ -1,4 +1,4 @@
-import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { TokenService } from '../services/token.service';
 
@@ -20,6 +20,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
 
   connectedUsersBySocket: { [socketId: string]: string } = {}; 
   connectedUsersById: { [userId: string]: string[] } = {}; 
+  userUserListeners: { [userId: string]: string[] } = {}; 
 
 
   handleConnection(client: Socket) {
@@ -31,40 +32,96 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
       return client.disconnect();
     }
     const socketId = client.id;
-
+    
     this.connectedUsersBySocket[socketId] = decodedToken.sub;
-
+    
     if (!this.connectedUsersById[decodedToken.sub]) {
       this.connectedUsersById[decodedToken.sub] = [];
     }
     this.connectedUsersById[decodedToken.sub].push(socketId);
-
+    
     console.log(`User ${decodedToken.username} connected with socket ID ${socketId}`);
     // console.log(this.connectedUsersById)
     // console.log(this.connectedUsersBySocket)
   }
-
+  
   handleDisconnect(client: Socket) {
+    
     const socketId = client.id;
     const userId = this.connectedUsersBySocket[socketId];
-
+    
     if (userId) {
       delete this.connectedUsersBySocket[socketId];
       console.log(`User ${userId} disconnected from socket ID ${socketId}`);
     }
 
     
-    const userId2 = Object.keys(this.connectedUsersById).find(
-      (key) => this.connectedUsersById[key].includes(client.id),
-    );
-    if (userId2) {
-      this.connectedUsersById[userId2] = this.connectedUsersById[userId2].filter(
-        (id) => id !== client.id,
-      );
-      if (this.connectedUsersById[userId2].length === 0) {
-        delete this.connectedUsersById[userId2];
-      }
-    }
+    if (this.removeItemFromArray(this.connectedUsersById, client.id))
+    this.broadcastOffline(userId)
+  
+  this.removeItemFromArray(this.userUserListeners, client.id)
+    
 
   }
+
+
+  @SubscribeMessage('watchConnection')
+  watchConnection(client: Socket, userId: string) {
+    
+    if (!this.userUserListeners[userId])
+      this.userUserListeners[userId] = [];
+    this.userUserListeners[userId].push(client.id);
+
+  }
+
+  @SubscribeMessage('broadcastOnline')
+  broadcastOnline(client: Socket, userId: string) {
+
+    const userSocketIds = this.userUserListeners[userId];
+
+    if (userSocketIds) {
+      userSocketIds.forEach((socketId) => {
+
+        this.server.to(socketId).emit('online');
+      });
+    }
+  }
+
+
+
+
+  /****************************************************8 */
+
+  removeItemFromArray(dictionary: { [key: string]: string[] }, socketId :string) :boolean {
+
+    const userId = Object.keys(dictionary).find(
+      (key) => dictionary[key].includes(socketId),
+    );
+    if (userId) {
+      dictionary[userId] = dictionary[userId].filter(
+        (id) => id !== socketId,
+      );
+      if (dictionary[userId].length === 0) {
+        delete dictionary[userId];
+        return true;
+      }
+    }
+    return false;
+    
+  }
+
+  broadcastOffline(userId: string) {
+  
+    const userSocketIds = this.userUserListeners[userId];
+
+    if (userSocketIds) {
+      userSocketIds.forEach((socketId) => {
+
+        this.server.to(socketId).emit('offline');
+      });
+    }
+  }
+
+
+  
 }

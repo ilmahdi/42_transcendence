@@ -19,7 +19,6 @@ export class UserGateway  {
     private readonly connectionGateway :ConnectionGateway,
   ) {}
 
-
   @WebSocketServer()
   server: Server
 
@@ -58,24 +57,20 @@ export class UserGateway  {
       });
     }
   }
-  @SubscribeMessage('connection')
-  connection(client: Socket, userId: string) {
-
+  @SubscribeMessage('connectionStatus')
+  connectionStatus(client: Socket, userId: string) {
+    
     const userSocketIds = this.connectionGateway.connectedUsersById[userId];
     
     if (userSocketIds) {
-        this.server.to(client.id).emit('online');
+      this.server.to(client.id).emit('online');
     }
+    else
+      this.server.to(client.id).emit('offline');
   }
-  @SubscribeMessage('watchConnection')
-  addToWatchConnection(client: Socket, userId: string) {
+  
 
-    const userSocketIds = this.connectionGateway.connectedUsersById[userId];
-
-    if (userSocketIds) {
-        this.server.to(client.id).emit('connection');
-    }
-  }
+  
   
 }
 

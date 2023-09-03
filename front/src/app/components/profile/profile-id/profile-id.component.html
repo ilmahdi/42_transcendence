@@ -1,10 +1,12 @@
+<div #confirmModal></div>
 
 <div class="profile-id">
     
-    <div class="pi-sec-one" 
-        (mouseenter)="onShowTooltip()" (mouseleave)="hideTooltip()"  
-        [class.is-online]="connection === 'online'"
-        [class.is-playing]="connection === 'playing'">
+    <div class="pi-sec-one"
+        (mouseenter)="onShowTooltip()" (mouseleave)="hideTooltip()"
+        [class.is-online]="!isOwnProfile && connection === 'online' || isOwnProfile"
+        [class.is-offline]="!isOwnProfile && connection === 'offline'"
+        [class.is-playing]="!isOwnProfile && connection === 'playing'">
         <img class="pi-sec-one-img" [src]="userData.avatar" 
             style="display: none" onload="this.style.display=''"
             onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
@@ -61,8 +63,8 @@
                         [friendshipStatus]="friendshipStatus"
                         [friendshipId]="friendshipId" 
                         [isRequestInitiator]="isRequestInitiator" 
-                        (unfriendClick)="handleUnfriendClick()"
-                        (blockClick)="handleBlockClick()"
+                        (unfriendClick)="openConfirmModal('unfriend')"
+                        (blockClick)="openConfirmModal('block')"
                         (cancelClick)="onCancelClick()">
                     </app-more-opts>
                 </div>
@@ -71,7 +73,7 @@
     </ng-template>
 
     <ng-template #isBlocked>
-        <button class="pi-sec-three" *ngIf="isRequestInitiator" (click)="onUnblockClick()">
+        <button class="pi-sec-three" *ngIf="isRequestInitiator" (click)="openConfirmModal('unblock')">
             <span> unblock </span>
         </button>
         <div class="pi-sec-three" *ngIf="!isRequestInitiator">
