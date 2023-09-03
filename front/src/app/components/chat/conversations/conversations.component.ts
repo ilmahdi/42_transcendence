@@ -3,7 +3,7 @@ import { FormControl, FormGroup, NgForm } from '@angular/forms';
 import * as _ from 'lodash';
 import { Socket } from 'ngx-socket-io';
 import Pusher from 'pusher-js';
-import { Observable, take } from 'rxjs';
+import { Observable, take, Subscription } from 'rxjs';
 import { Message } from 'src/app/models/message.model';
 import { Room } from 'src/app/models/room.model';
 import { User } from 'src/app/models/user.model';
@@ -16,6 +16,14 @@ import { LoginService } from 'src/app/services/login.service';
   styleUrls: ['./conversations.component.css']
 })
 export class ConversationsComponent implements OnInit, OnDestroy {
+  private subsciption1?:Subscription
+  private subsciption2?:Subscription
+  private subsciption3?:Subscription
+  private subsciption4?:Subscription
+  private subsciption5?:Subscription
+  private subsciption6?:Subscription
+  private subsciption7?:Subscription
+  private subsciption8?:Subscription
 
   @Input() userEmitted:any
   @Input() conversationEmitted:Message[] = [];
@@ -32,24 +40,23 @@ export class ConversationsComponent implements OnInit, OnDestroy {
 
   displayConversation:boolean = true
   options:boolean = false
+  addMember:boolean = false
+
   constructor(private chatService: ChatService, private loginService:LoginService) {
     this.chatService.optionsSource.next(false)
-    this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
+    this.subsciption1 = this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
     })
 
-    loginService.user.pipe(take(1)).subscribe((data?:any) => {
-      this.user = data;
-    })
-
-    chatService.displayConversation$.subscribe(data=>this.displayConversation = data)
-    this.chatService.options$.subscribe(data=>this.options = data)
+    this.subsciption3 = chatService.displayConversation$.subscribe(data=>this.displayConversation = data)
+    this.subsciption4 = this.chatService.options$.subscribe(data=>this.options = data)
+    this.subsciption2 = chatService.addMember$.subscribe(data=>this.addMember = data)
   }
 
   ngOnInit() {
     // FOR PRIVATE MESSAGE
-    this.chatService.conversation$.subscribe(data=> this.messages = data)
-    this.chatService.getNewMessage().subscribe(data=>{
+    this.subsciption5 = this.chatService.conversation$.subscribe(data=> this.messages = data)
+    this.subsciption6 = this.chatService.getNewMessage().subscribe(data=>{
         this.chatService.updateLastMessage(data);
        this.messages.push(data)
       //  this.messages = _.sortBy(this.messages, 'date');
@@ -57,10 +64,10 @@ export class ConversationsComponent implements OnInit, OnDestroy {
       })
     
     // FOR ROOM MESSAGE
-    this.chatService.roomConversation$.subscribe(data=>{
+    this.subsciption7 = this.chatService.roomConversation$.subscribe(data=>{
       this.roomMessage = data;
     })
-    this.chatService.getRoomMessage().subscribe(data=>{
+    this.subsciption8 = this.chatService.getRoomMessage().subscribe(data=>{
       this.chatService.updateRoomLastMessage(data);
       this.roomMessage.push(data)
       this.messages = _.sortBy(this.messages, 'date');
@@ -70,11 +77,11 @@ export class ConversationsComponent implements OnInit, OnDestroy {
 
   openOptions() {
     // this.chatService.roomOptionsSource.next(this.roomConvers[0])
-    this.chatService.displayComponents(false, false, false, true, true, true)
+    this.chatService.displayComponents(false, false, false, true, true, true, false)
   }
 
   getConversEvent() {
-    this.chatService.displayComponents(false, false, false, false, false, false)
+    this.chatService.displayComponents(false, false, false, false, false, false, false)
   }
 
   sendPrivateMessage() {
@@ -105,5 +112,13 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.subsciption1?.unsubscribe()
+    this.subsciption2?.unsubscribe()
+    this.subsciption3?.unsubscribe()
+    this.subsciption4?.unsubscribe()
+    this.subsciption5?.unsubscribe()
+    this.subsciption6?.unsubscribe()
+    this.subsciption7?.unsubscribe()
+    this.subsciption8?.unsubscribe()
   }
 }

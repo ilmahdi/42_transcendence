@@ -14,6 +14,7 @@ import { ChatService } from 'src/app/services/chat.service';
 import { CreatingRoomsComponent } from './creating-rooms/creating-rooms.component';
 import { OtherRoomsComponent } from './other-rooms/other-rooms.component';
 import { RoomOptionsComponent } from './room-options/room-options.component';
+import { AddMemberComponent } from './add-member/add-member.component';
 
 const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
 
@@ -27,6 +28,7 @@ const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
     CreatingRoomsComponent,
     OtherRoomsComponent,
     RoomOptionsComponent,
+    AddMemberComponent,
   ],
   exports: [ChatComponent],
   imports: [

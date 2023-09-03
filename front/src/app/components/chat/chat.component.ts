@@ -100,7 +100,7 @@ export class ChatComponent implements OnInit {
 
   displayFormRoom() {
     this.chatService.add$.subscribe(data=>this.addRoom = data)
-    this.chatService.displayComponents(true, false, false, true, true, false)
+    this.chatService.displayComponents(true, false, false, true, true, false, false)
   }
 
   addToRoom(user:{user:User, added:boolean, admin:boolean}) {
@@ -115,7 +115,7 @@ export class ChatComponent implements OnInit {
   getConversations() {
     this.resetRoomFormular()
     this.addRoom = false
-    this.chatService.displayComponents(false, false, false, true, false, false)
+    this.chatService.displayComponents(false, false, false, true, false, false, false)
   }
 
   handleFileChange(event: any): void {

@@ -63,6 +63,9 @@ export class ChatService {
   optionsSource = new BehaviorSubject<boolean>(false);
   options$ = this.optionsSource.asObservable()
 
+  addMemberSource = new BehaviorSubject<boolean>(false);
+  addMember$ = this.addMemberSource.asObservable();
+
   otherRoomSource = new BehaviorSubject<Room[]>([])
   otherRoom$ = this.otherRoomSource.asObservable()
 
@@ -89,13 +92,14 @@ export class ChatService {
     })
   }
 
-  displayComponents(formular:boolean, conversation:boolean, otherRooms:boolean, backto:boolean, convers:boolean, options:boolean) {
+  displayComponents(formular:boolean, conversation:boolean, otherRooms:boolean, backto:boolean, convers:boolean, options:boolean, addMember:boolean) {
     this.roomFormular(formular)
     this.displayConversationSource.next(conversation);
     this.displayOtherRoomsSource.next(otherRooms);
     this.backToRoomFormularSource.next(backto);
     this.displayConversSource.next(convers)
     this.optionsSource.next(options)
+    this.addMemberSource.next(addMember)
   }
 
   updateRooms(rooms:Room[]) {

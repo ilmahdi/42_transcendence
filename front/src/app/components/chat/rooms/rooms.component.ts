@@ -106,7 +106,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
   }
 
   displayOtherRooms() {
-    this.chatService.displayComponents(false, false, true, true, true, false);
+    this.chatService.displayComponents(false, false, true, true, true, false, false);
   }
 
   openRoom(room:Room) {
@@ -131,7 +131,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
       })
     })
     this.chatService.updateRoomConversation(this.messages);
-    this.chatService.displayComponents(false, true, false, true, true, false);
+    this.chatService.displayComponents(false, true, false, true, true, false, false);
     this.chatService.roomOptionsSource.next(room);////////////
     this.conversData.emit(room);
   }

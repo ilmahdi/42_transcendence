@@ -63,7 +63,7 @@ export class OtherRoomsComponent implements OnInit{
   }
 
   hideOtherRooms() {
-    this.chatService.displayComponents(false, false, false, false, false, false)
+    this.chatService.displayComponents(false, false, false, false, false, false, false)
   }
 
   updateRoomsConversations() {
