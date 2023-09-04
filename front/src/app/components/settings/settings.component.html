@@ -1,8 +1,10 @@
 <app-online-friends></app-online-friends>
 
+<div #confirmModal></div>
 
 <div class="wrap-component">
     <form class="container-form" [formGroup]="myformGroup" (ngSubmit)="onSubmitForm()">
+            
         <div class="cf-sec-one">
             <label for="imageInput" class="cf-sec-one-label">
                 <img class="cf-sec-one-img" [src]="selectedImage" 
@@ -19,52 +21,64 @@
                 (change)="onImageSelected($event)" 
             >
         </div>
-        <div class="cf-sec-two">
-            <div class="cf-sec-two-input">
-                <label class="cf-sec-two-label"  for="username">
-                    <svg class="cf-sec-two-icon i1" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="./assets/icons/modify_linear.svg#icon-modify_linear"></use>
-                    </svg>
-                </label>
-                <input class="cf-sec-two-text" type="text" formControlName="username" id="username" placeholder="Username">
-            </div>
-            <div class="cf-sec-two-alert" [class.cf-sec-two-alert-hide]="!isUsernameTaken">
-                <svg class="cf-sec-two-icon i2" xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="./assets/icons/warn.svg#icon-warn"></use>
-                </svg>
-                username already taken ! 
-            </div>
+            <div class="cf-sec-two">
+                <div class="cf-sec-two-input">
+                    <label class="cf-sec-two-label"  for="username">
+                        <svg class="cf-sec-two-icon i1" xmlns="http://www.w3.org/2000/svg">
+                            <use xlink:href="./assets/icons/modify_linear.svg#icon-modify_linear"></use>
+                        </svg>
+                    </label>
+                    <input class="cf-sec-two-text" type="text" formControlName="username" id="username" placeholder="Username" autocomplete="off">
+                </div>
             
-            <div class="cf-sec-two-message" *ngIf="myformGroup.get('username')?.hasError('required')">
-                <svg class="cf-sec-two-icon i3" xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="./assets/icons/warn.svg#icon-warn"></use>
-                </svg>
-                Username is required !
-            </div>
-            <div class="cf-sec-two-message" *ngIf="myformGroup.get('username')?.hasError('minlength')">
-                <svg class="cf-sec-two-icon i3" xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="./assets/icons/warn.svg#icon-warn"></use>
-                </svg>
-                Invalid length: less than 4 !            
-            </div>
-            <div class="cf-sec-two-message" *ngIf="myformGroup.get('username')?.hasError('maxlength')">
-                <svg class="cf-sec-two-icon i3" xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="./assets/icons/warn.svg#icon-warn"></use>
-                </svg>
-                Invalid length: more than 20 !    
-            </div>
-            <div class="cf-sec-two-message" *ngIf="myformGroup.get('username')?.hasError('pattern')">
-                <svg class="cf-sec-two-icon i3" xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="./assets/icons/warn.svg#icon-warn"></use>
-                </svg>
-                Invalid character !
-            </div>
+                <div class="cf-sec-two-alert" [class.cf-sec-two-alert-hide]="!isUsernameTaken">
+                    <svg class="cf-sec-two-icon i2" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/warn.svg#icon-warn"></use>
+                    </svg>
+                    username already taken ! 
+                </div>
+                
+                <div class="cf-sec-two-message" *ngIf="myformGroup.get('username')?.hasError('required')">
+                    <svg class="cf-sec-two-icon i3" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/warn.svg#icon-warn"></use>
+                    </svg>
+                    Username is required !
+                </div>
+                <div class="cf-sec-two-message" *ngIf="myformGroup.get('username')?.hasError('minlength')">
+                    <svg class="cf-sec-two-icon i3" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/warn.svg#icon-warn"></use>
+                    </svg>
+                    Invalid length: less than 4 !            
+                </div>
+                <div class="cf-sec-two-message" *ngIf="myformGroup.get('username')?.hasError('maxlength')">
+                    <svg class="cf-sec-two-icon i3" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/warn.svg#icon-warn"></use>
+                    </svg>
+                    Invalid length: more than 20 !    
+                </div>
+                <div class="cf-sec-two-message" *ngIf="myformGroup.get('username')?.hasError('pattern')">
+                    <svg class="cf-sec-two-icon i3" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/warn.svg#icon-warn"></use>
+                    </svg>
+                    Invalid character !
+                </div>
 
-
-
+        
         </div>
+
+        <button type="button" class="cf-sec-two-tfa" (click)="activateTwoFactorAuth()">
+            <div class="cf-sec-two-icon-contain">    
+                <svg class="cf-sec-two-icon i4" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="./assets/icons/qr_code.svg#icon-qr_code"></use>
+                </svg>
+            </div>
+            <span class="cf-sec-two-title">
+                Disable TwoFA
+            </span>
+        </button>
         
         <button type="submit" class="cf-sec-two-btn" [disabled]="myformGroup.invalid">Submit</button>
         
     </form>
 </div>
+

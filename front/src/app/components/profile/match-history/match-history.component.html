@@ -21,13 +21,13 @@
 
             </div>
             <div class="mh-sec-main-nb">
-                <span> {{match.player1.score}} - {{match.player2.score}} </span>
+                 {{match.player1.score}} <span class="mh-sec-main-vs"> vs </span> {{match.player2.score}}
             </div>
             <div class="mh-sec-main-user u2">
 
                 <div class="mh-sec-info">
                     <span class="mh-sec-info-name"> {{ match.player2.username }} </span>
-                    <div class="mh-sec-info-rate">
+                    <div class="mh-sec-info-rate left">
                         <span class="mh-sec-info-rate-score"> {{match.player1.rating}} </span>
                         <span class="mh-sec-info-rate-res" 
                             [ngStyle]="match.player2.points >= 0 ? {'color': '#67E306'} : {'color': '#F35352'}"> 
@@ -48,14 +48,14 @@
                 <svg class="mh-sec-icon" xmlns="http://www.w3.org/2000/svg">
                     <use xlink:href="./assets/icons/timer.svg#icon-timer"></use>
                 </svg>
-                <span class="mh-sec-text"> {{ match.duration.min +" min " + match.duration.sec +" s" }} </span>
+                <span class="mh-sec-text"> <span class="mh-sec-icon-text">duration:</span> {{ match.duration.min +" min " + match.duration.sec +" s" }} </span>
 
             </div>
             <div class="mh-sec-second-item">
                 <svg class="mh-sec-icon" xmlns="http://www.w3.org/2000/svg">
                     <use xlink:href="./assets/icons/clock.svg#icon-clock"></use>
                 </svg>
-                <span class="mh-sec-text"> {{ match.date | relativeTime  }} </span>
+                <span class="mh-sec-text">  <span class="mh-sec-icon-text">date:</span>  {{ match.date | relativeTime  }} </span>
 
             </div>
 

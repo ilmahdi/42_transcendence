@@ -20,7 +20,8 @@
                     (keydown)="onSearchInputKeyDown($event)"
                     (keydown.enter)="onUserItemEnter($event)"
                     name="look" type="search" placeholder="search..."
-                    appClickOutside (appClickOutside)="searchQuery && onClickedOutside1()" >
+                    appClickOutside (appClickOutside)="searchQuery && onClickedOutside1()" 
+                    autocomplete="off">
             </li>
             <div class="tb-results" *ngIf="searchResults.length">
                 <button class="tb-result-item" 

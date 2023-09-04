@@ -1,12 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, Subscription, firstValueFrom } from 'rxjs';
+import { ConfirmService } from 'src/app/services/modals/confirm.service';
 import { UserService } from 'src/app/services/user.service';
 import { JWT_TOKEN } from 'src/app/utils/constants';
 import { IUserData, IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 import { environment } from 'src/environments/environment';
+import { TwoFAComponent } from '../modals/two-fa/two-fa.component';
 
 @Component({
   selector: 'app-settings',
@@ -19,6 +21,7 @@ export class SettingsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private router: Router,
+    private confirmService: ConfirmService,
     ) {
       this.myformGroup = this.formBuilder.group({
         username: [
@@ -34,14 +37,21 @@ export class SettingsComponent implements OnInit {
   public isUsernameTaken :boolean = false;
 
 
+  private subscriptions: Subscription[] = [];
+
+
+  @ViewChild('confirmModal', { read: ViewContainerRef })
+  entry!: ViewContainerRef;
+
+
   ngOnInit(): void {
     this.userService.getUserData().subscribe((data: IUserData) => {
-
+      
       this.selectedImage = data.avatar;
       this.userDataShort.id = data.id;
       this.userDataShort.username = data.username;
       this.userDataShort.avatar = data.avatar;
-
+      
       this.myformGroup.patchValue({
         username: this.userDataShort.username,
       });
@@ -76,6 +86,20 @@ export class SettingsComponent implements OnInit {
     this.updateUser();
   
   }
+
+
+  activateTwoFactorAuth() {
+    this.openConfirmModal()
+  }
+
+  openConfirmModal() {
+    const subscription = this.confirmService
+      .open(this.entry, TwoFAComponent, "Scan the QR code")
+      .subscribe(() => {
+      });
+      this.subscriptions.push(subscription);
+  }
+  
 
   // private functions
   /******************************************************* */

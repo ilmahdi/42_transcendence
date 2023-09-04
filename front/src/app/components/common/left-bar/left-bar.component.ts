@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { ConfirmService } from 'src/app/services/modals/confirm.service';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 
 @Component({
@@ -31,7 +32,7 @@ export class LeftBarComponent implements OnInit {
   }
   openConfirmModal() {
     this.sub = this.confirmService
-      .open(this.entry, 'Are you sure you want to Sign Out?', 'click confirme to continue')
+      .open(this.entry, ConfirmComponent, 'Are you sure you want to Sign Out?', 'click confirme to continue')
       .subscribe(() => {
         this.authService.logout();
         this.router.navigate(['/login']);

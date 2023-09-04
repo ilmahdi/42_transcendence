@@ -10,14 +10,14 @@ export class TemporariusService {
       const matchs : IHistory[]  = [
         {
           player1: {
-          username : "imahdi",
+          username : "eabdelha",
           avatar : "https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg",
           rating: 1245,
           score: 9,
           points: 12,
         },
         player2: {
-          username : "imahdi",
+          username : "eabdelha",
           avatar : "https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg",
           rating: 1245,
           score: 7,
@@ -31,14 +31,14 @@ export class TemporariusService {
       },
         {
           player1: {
-          username : "imahdi",
+          username : "eabdelha",
           avatar : "https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg",
           rating: 1245,
           score: 7,
           points: -12,
         },
         player2: {
-          username : "imahdi",
+          username : "eabdelha",
           avatar : "https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg",
           rating: 1245,
           score: 9,
@@ -52,14 +52,14 @@ export class TemporariusService {
       },
         {
           player1: {
-          username : "imahdi",
+          username : "eabdelha",
           avatar : "https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg",
           rating: 1245,
           score: +9,
           points: 12,
         },
         player2: {
-          username : "imahdi",
+          username : "eabdelha",
           avatar : "https://cdn.intra.42.fr/users/0f4ab189b6f733fe558dea7254f1212a/eabdelha.jpg",
           rating: 1245,
           score: 7,

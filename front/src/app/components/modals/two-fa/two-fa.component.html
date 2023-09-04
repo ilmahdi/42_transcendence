@@ -1,0 +1,46 @@
+
+<div class="wraper">
+
+    <div class="overlay" (click)="closeMe()"></div>
+    <div class="confirm-modal">
+      <h2 class="cm-title">{{ title }}</h2>
+      <img class="cm-img" src="https://upload.wikimedia.org/wikipedia/commons/7/78/Qrcode_wikipedia_fr_v2clean.png">
+      <form [formGroup]="twoFACodeForm" (ngSubmit)="submitForm()">
+        <div class="cm-form-group">
+          <input type="code" class="cm-form-input" id="twoFACode" formControlName="twoFACode" placeholder="code" autocomplete="off">
+
+
+
+
+          <div class="cm-alert cm-alert-danger"
+            *ngIf="twoFACodeForm.get('twoFACode')?.invalid && 
+            (twoFACodeForm.get('twoFACode')?.dirty || 
+            twoFACodeForm.get('twoFACode')?.touched)" 
+            >
+            
+            <div class="cm-sec-two-message" *ngIf="twoFACodeForm.get('twoFACode')?.hasError('required')">
+              <svg class="cm-sec-two-icon i3" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="./assets/icons/warn.svg#icon-warn"></use>
+              </svg>
+              2FA code is required.
+            </div>
+            
+            
+            
+            <div class="cm-sec-two-message" *ngIf="twoFACodeForm.get('twoFACode')?.hasError('pattern')">
+              <svg class="cm-sec-two-icon i3" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="./assets/icons/warn.svg#icon-warn"></use>
+              </svg>
+              Invalid 2FA code format.
+            </div>
+            
+          </div>
+        </div>
+      </form>
+      <div class="cm-btns">
+        <button class="cm-btn b1" (click)="closeMe()">close</button>
+        <button class="cm-btn b2" (click)="confirm()" [disabled]="twoFACodeForm.invalid">Submit</button>
+      </div>
+    </div>
+    
+  </div>

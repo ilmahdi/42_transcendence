@@ -1,21 +1,24 @@
-import {
-  ComponentRef,
-  Injectable,
-  ViewContainerRef,
-} from '@angular/core';
+import { ComponentRef, Injectable, Type, ViewContainerRef } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ConfirmComponent } from 'src/app/components/modals/confirm/confirm.component';
 
 @Injectable({ providedIn: 'root' })
 export class ConfirmService {
-  private componentRef!: ComponentRef<ConfirmComponent>;
+  private componentRef!: ComponentRef<any>;
   private componentSubscriber!: Subject<string>;
+
   constructor() {}
 
-  open(entry: ViewContainerRef, modalTitle: string, modalBody: string) {
-    this.componentRef = entry.createComponent(ConfirmComponent);
-    this.componentRef.instance.title = modalTitle;
-    this.componentRef.instance.body = modalBody;
+  open(
+    entry: ViewContainerRef,
+    modalComponent: Type<any>, // Pass the component type as an argument
+    modalTitle?: string,
+    modalBody?: string
+  ) {
+    this.componentRef = entry.createComponent(modalComponent); // Use the passed component type
+    if (modalTitle)
+      this.componentRef.instance.title = modalTitle;
+    if (modalBody)
+      this.componentRef.instance.body = modalBody;
     this.componentRef.instance.closeMeEvent.subscribe(() => this.close());
     this.componentRef.instance.confirmEvent.subscribe(() => this.confirm());
     this.componentSubscriber = new Subject<string>();

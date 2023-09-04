@@ -9,6 +9,7 @@ import { IFriendship } from 'src/app/utils/interfaces/friendship.interface';
 import { INotification } from 'src/app/utils/interfaces/notify-data.interface';
 import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
+import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 
 @Component({
   selector: 'app-profile-id',
@@ -170,7 +171,7 @@ export class ProfileIdComponent implements OnChanges {
 
   openConfirmModal(emiter :string) {
     const subscription = this.confirmService
-      .open(this.entry, `Are you sure you want to ${emiter} ${this.userData.username}?`, 'click confirme to continue')
+      .open(this.entry, ConfirmComponent, `Are you sure you want to ${emiter} ${this.userData.username}?`, 'click confirme to continue')
       .subscribe(() => {
         if(emiter === 'block')
           this.handleBlockClick()

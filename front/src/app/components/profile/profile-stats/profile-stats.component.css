@@ -65,6 +65,11 @@ app-profile-id {
     font-size:medium;
     font-weight: 300;
     padding: 0 0.6rem;
+    color: var(--primary-text-color);
+}
+
+.ps-sec-two-item-nb {
+    color: white;
 }
 
 .ps-sec-two-item:nth-last-child(2) {

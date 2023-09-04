@@ -56,6 +56,20 @@ export class UserService {
         })
         return users;
     }
+
+    async updateUserAny(id: number, data: any) {
+        const updatedUser = await this.prismaService.userAccount.update({
+            where: { id },
+            ...data,
+        });
+        return updatedUser;
+    }
+
+
+
+
+
+
     async addUser(createUserDto: CreateUserDto) {
         const user = await this.prismaService.userAccount.create({
             data: {

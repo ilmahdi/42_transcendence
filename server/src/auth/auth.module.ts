@@ -6,11 +6,13 @@ import { PassportModule } from '@nestjs/passport';
 import { UserModule } from 'src/user/user.module';
 import { JwtStrategy } from './utils/strategies/jwt.strategy';
 import { TokenService } from 'src/common/services/token.service';
+import { TwoFaModule } from './two-fa/two-fa.module';
 
 @Module({
     imports: [
         PassportModule,
         UserModule,
+        TwoFaModule,
     ],
     controllers: [AuthController],
     providers: [AuthService, FtLoginSrategy, JwtStrategy, TokenService],
