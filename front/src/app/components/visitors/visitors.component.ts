@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { JWT_TOKEN } from '../../utils/constants';
 import { SocketService } from 'src/app/utils/socket/socket.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-visitors',
@@ -15,10 +16,14 @@ export class VisitorsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private socketService: SocketService,
+    private authService: AuthService,
   ) { }
 
   private apiUrlAuth :string = environment.apiUrlAuth;
   public firstLogin :boolean = false;
+
+  public isTwoFaEnabled :boolean = false;
+  private  loggedInUserId:number = -1;
 
 
   ngOnInit(): void {
@@ -26,10 +31,27 @@ export class VisitorsComponent implements OnInit {
     const accessToken = this.route.snapshot.queryParamMap.get('access_token');
     if (accessToken) 
       localStorage.setItem(JWT_TOKEN, accessToken);
+      
+    this.loggedInUserId =  this.authService.getLoggedInUserId()
     
-    if (!this.firstLogin)
-      this.router.navigate(["/home"]);
-      this.socketService.initSocketConnection();
+    if (this.firstLogin == false)
+    {
+      this.authService.checkTwofa(this.loggedInUserId).subscribe({
+        next: response => {
+         
+          if (response.is_tfa_enabled)
+            this.router.navigate(["/login/twofa"]);
+          else
+            this.router.navigate(["/home"]);
+
+        },
+        error: error => {
+          console.error('Error:', error.error.message); 
+        }
+      });
+    }
+
+    this.socketService.initSocketConnection();
   }
 
   redirectToLogin() {

@@ -7,8 +7,6 @@ import { HomeModule } from './components/home/home.module';
 import { NavBarModule } from './components/nav-bar/nav-bar.module';
 import { VisitorsModule } from './components/visitors/visitors.module'
 // import { ChatModule } from './components/chat/chat.module';
-import { OnlineModule } from './components/right-bar/online/online.module';
-import { MapsModule } from './components/right-bar/maps/maps.module';
 import { FriendsModule } from './components/friends/friends.module';
 import { LeaderboardModule } from './components/leaderboard/leaderboard.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,7 +19,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { SocketModule } from './utils/socket/socket.module';
 import { MenuBarModule } from './components/common/menu-bar.module';
-import { PipesModule } from './utils/pipes/pipes.module';
 
 
 @NgModule({
@@ -36,11 +33,8 @@ import { PipesModule } from './utils/pipes/pipes.module';
     GameModule,
     HomeModule,
     ProfileModule,
-    NavBarModule,
     VisitorsModule,
     // ChatModule,
-    OnlineModule,
-    MapsModule,
     FriendsModule,
     LeaderboardModule,
     ModalsModule,

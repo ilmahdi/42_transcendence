@@ -66,15 +66,19 @@
         
         </div>
 
-        <button type="button" class="cf-sec-two-tfa" (click)="activateTwoFactorAuth()">
+        <button type="button" class="cf-sec-two-tfa" (click)="toggleTwoFactorAuth()"
+        [class.is-enabled]="isTwoFaEnabled">
             <div class="cf-sec-two-icon-contain">    
                 <svg class="cf-sec-two-icon i4" xmlns="http://www.w3.org/2000/svg">
                     <use xlink:href="./assets/icons/qr_code.svg#icon-qr_code"></use>
                 </svg>
             </div>
-            <span class="cf-sec-two-title">
-                Disable TwoFA
+            <span class="cf-sec-two-title" *ngIf="!isTwoFaEnabled; else disableTwoFa">
+                Enable 2FA
             </span>
+            <ng-template class="cf-sec-two-title" #disableTwoFa>
+                Disable 2FA
+            </ng-template>
         </button>
         
         <button type="submit" class="cf-sec-two-btn" [disabled]="myformGroup.invalid">Submit</button>

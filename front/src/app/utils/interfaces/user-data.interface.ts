@@ -7,6 +7,7 @@ export interface IUserData {
     draws:  number,
     games: number,
     rating: number,
+    is_tfa_enabled?: boolean,
 }
 
 

@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -9,6 +8,7 @@ import { JWT_TOKEN } from 'src/app/utils/constants';
 import { IUserData, IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 import { environment } from 'src/environments/environment';
 import { TwoFAComponent } from '../modals/two-fa/two-fa.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-settings',
@@ -22,11 +22,17 @@ export class SettingsComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private confirmService: ConfirmService,
+    private authService :AuthService,
     ) {
       this.myformGroup = this.formBuilder.group({
         username: [
           this.userDataShort.username, 
-          [Validators.required, Validators.minLength(4), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z0-9_-]*$/)],
+          [
+            Validators.required, 
+            Validators.minLength(4), 
+            Validators.maxLength(20), 
+            Validators.pattern(/^[a-zA-Z0-9_-]*$/)
+          ],
         ],
       })
     }
@@ -35,8 +41,10 @@ export class SettingsComponent implements OnInit {
   public myformGroup! :FormGroup;
   public userDataShort: IUserDataShort = {}
   public isUsernameTaken :boolean = false;
+  public isTwoFaEnabled :boolean = false;
 
 
+  private loggedInUserId :number = this.authService.getLoggedInUserId();
   private subscriptions: Subscription[] = [];
 
 
@@ -51,6 +59,7 @@ export class SettingsComponent implements OnInit {
       this.userDataShort.id = data.id;
       this.userDataShort.username = data.username;
       this.userDataShort.avatar = data.avatar;
+      this.isTwoFaEnabled = data.is_tfa_enabled!;
       
       this.myformGroup.patchValue({
         username: this.userDataShort.username,
@@ -88,14 +97,27 @@ export class SettingsComponent implements OnInit {
   }
 
 
-  activateTwoFactorAuth() {
-    this.openConfirmModal()
+  toggleTwoFactorAuth() {
+    if (this.isTwoFaEnabled) {
+      this.authService.disableTwoFa(this.loggedInUserId).subscribe({
+        next: response => {
+         
+          this.isTwoFaEnabled = false;
+        },
+        error: error => {
+          console.error('Error:', error.error.message); 
+        }
+      });
+    }
+    else
+      this.openConfirmModal()
   }
 
   openConfirmModal() {
     const subscription = this.confirmService
       .open(this.entry, TwoFAComponent, "Scan the QR code")
       .subscribe(() => {
+        this.isTwoFaEnabled = true
       });
       this.subscriptions.push(subscription);
   }

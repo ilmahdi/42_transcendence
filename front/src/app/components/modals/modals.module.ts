@@ -5,7 +5,6 @@ import { TwoFAComponent } from './two-fa/two-fa.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
-
 @NgModule({
   declarations: [ ConfirmComponent, TwoFAComponent,],
   imports: [

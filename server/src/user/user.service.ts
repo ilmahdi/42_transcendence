@@ -60,9 +60,24 @@ export class UserService {
     async updateUserAny(id: number, data: any) {
         const updatedUser = await this.prismaService.userAccount.update({
             where: { id },
-            ...data,
+            data: {
+                ...data,
+            }
         });
         return updatedUser;
+    }
+
+    async twofaCheck(userId :number) {
+        const user = await this.findUserById(userId);
+
+        if (!user)
+            throw new HttpException('User not found', HttpStatus.CONFLICT);
+        
+
+        return { 
+            is_tfa_enabled: user.is_tfa_enabled 
+        };
+
     }
 
 

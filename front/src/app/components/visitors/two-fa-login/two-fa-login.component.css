@@ -22,14 +22,14 @@
     z-index: 19;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(11, 11, 11, 0.7);
+    background-color: var(--primary-background-color);
     z-index: 14;
 }
 
 .confirm-modal {
     position: fixed;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     flex-shrink: 1;
     flex-direction: column;
     position: absolute;
@@ -37,17 +37,25 @@
     top: 50%;
     left: 50%;
     width: min(90%, 30rem);
+    height: 20rem;
     min-width: min-content;
     transform: translate(-50%, -50%);
-    padding: 1rem 1.2rem;
+    padding: 1rem 1.6rem;
     border-radius: 0.6rem;
     z-index: 15;
     color: var(--modal-text-color);
 
+
 }
+
 .cm-title {
     font-size: 1.6rem;
     margin-bottom: 1rem;
+}
+.cm-body {
+    font-size: 1.16rem;
+    flex: 1;
+
 }
 .cm-img {
     width: 16rem;
@@ -56,15 +64,13 @@
     border-radius: 1.6rem;
 }
 
-.cm-indent {
-    flex-grow: 1;
-}
 
 .cm-btns {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 0.8rem;
+    margin-top: 1rem;
 
 }
 .cm-btn {
@@ -111,7 +117,7 @@
     justify-content: flex-start;
     width: 16rem;
     height: 6rem;
-    padding-top: 1.2rem;
+    padding-top: 0.6rem;
 }
 
 .cm-form-input {
@@ -128,9 +134,14 @@
 }
 
 
-  .cm-alert-danger {
-    color: #d9534f;
-  }
+.cm-alert-danger {
+   color: #d9534f;
+}
+
+.cm-input-title {
+    font-size: 1rem;
+    font-weight: 600;
+}
   
 
 

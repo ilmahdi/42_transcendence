@@ -33,6 +33,10 @@ export class AuthService {
         return { token, firstLogin }
     }
 
+    async twofaCheck(userId :number) {
+        return await this.userService.twofaCheck(userId);
+    }
+
 }
     
 

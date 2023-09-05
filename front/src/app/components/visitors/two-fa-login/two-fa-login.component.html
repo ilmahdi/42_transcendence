@@ -1,12 +1,14 @@
 
 <div class="wraper">
 
-    <div class="overlay" (click)="closeMe()"></div>
+    <div class="overlay"></div>
     <div class="confirm-modal">
-      <h2 class="cm-title">{{ title }}</h2>
-      <img class="cm-img" [src]="qrCode">
-      <form [formGroup]="twoFACodeForm" (ngSubmit)="submitForm()">
+      <h2 class="cm-title"> Welcome, {{ loggedInUserusername }}! </h2>
+      <p class="cm-body">For added security, please enter the verification code from your authenticator app.</p>
+      <form class="cm-form" [formGroup]="twoFACodeForm" (ngSubmit)="submitForm()">
         <div class="cm-form-group">
+
+          <label class="cm-input-title" for="twoFACode"> OTP Code: </label>
           <input type="code" class="cm-form-input" id="twoFACode" 
           formControlName="twoFACode" placeholder="code" autocomplete="off"
           (focus)="onInputFocus()">
@@ -44,8 +46,8 @@
           </div>
         </div>
         <div class="cm-btns">
-          <button type="button" class="cm-btn b1" (click)="closeMe()">close</button>
           <button type="submit" class="cm-btn b2" [disabled]="twoFACodeForm.invalid">Submit</button>
+          <button type="button" class="cm-btn b1" (click)="onLogoutClick()">logout</button>
         </div>
       </form>
     </div>

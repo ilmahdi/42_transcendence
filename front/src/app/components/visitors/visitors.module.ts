@@ -5,12 +5,14 @@ import { VisitorsRoutingModule } from './visitors-routing.module';
 import { VisitorsComponent } from './visitors.component';
 import { FirstLoginComponent } from './first-login/first-login.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TwoFaLoginComponent } from './two-fa-login/two-fa-login.component';
 
 
 @NgModule({
   declarations: [
     VisitorsComponent,
-    FirstLoginComponent
+    FirstLoginComponent,
+    TwoFaLoginComponent
   ],
   imports: [
     CommonModule,

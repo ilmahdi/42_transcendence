@@ -11,13 +11,13 @@ import { JwtGuard } from './utils/guards/jwt.guard';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authServie: AuthService){
+    constructor(private readonly authService: AuthService){
     }
-    @Get("hello")
-    testLink() {
-        return { 
-            msg: "hello form nest",
-        }
+    @Get("twofa/ckeck/:userId")
+    @UseGuards(JwtGuard)
+    twofaCheck(@Param('userId') userId: number) {
+
+        return this.authService.twofaCheck(userId)
 
     }
     @Get("login/42")
@@ -42,7 +42,7 @@ export class AuthController {
     @UseGuards(JwtGuard)
     async ftLogout() {
         return "logged out"
-        // return this.authServie.ftLogout()
+        // return this.authService.ftLogout()
     }
 
 }

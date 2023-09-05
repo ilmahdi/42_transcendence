@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard, AuthGuardReversed } from './guards/auth.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { TwoFaLoginComponent } from './components/visitors/two-fa-login/two-fa-login.component';
 
 const routes: Routes = [
   {
@@ -56,6 +57,11 @@ const routes: Routes = [
     path: 'settings',
     loadChildren: () =>
     import('./components/settings/settings.module').then((m) => m.SettingsModule),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'login/twofa',
+    component: TwoFaLoginComponent,
     canActivate: [AuthGuard],
   },
 
