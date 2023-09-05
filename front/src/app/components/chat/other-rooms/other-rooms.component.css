@@ -3,7 +3,7 @@
     margin-top: 90px;
     right: 270px;
     height: calc(100px + 65%);
-    width: 500px;
+    width: 572px;
     background-color: #231C1C;
     border-radius: 15px 15px 15px 15px;
     overflow-y: hidden;
@@ -130,6 +130,19 @@ img {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+@media (min-width: 2000px) {
+    .otehrRooms {
+        right: 470px;
+        width: 672px;
+    }
+}
+
+@media (max-width: 1366px) {
+    .otehrRooms {
+        width: 490px;
+    }
+}
+
 @media (max-width: 1324px) {
     .otehrRooms {
         right: 20px;
@@ -148,6 +161,8 @@ img {
 
 @media (max-width: 660px) {
     .otehrRooms {
+        width: 65%;
+        right: 30px;
         height: 80%;
     }
 }

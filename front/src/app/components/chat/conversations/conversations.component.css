@@ -152,7 +152,7 @@ p {
     height: calc(100% - 120px);
     width: 100%;
     /* background-color: white; */
-    /* overflow: hidden; */
+    overflow: auto;
     scrollbar-color: #5e6147 var(--second-background-color);
     scrollbar-width: 0.4rem;
 }
@@ -191,15 +191,9 @@ p {
 
 @media (max-width: 934px) {
     .body {
-        right: 80px;
+        right: 9%;
         width: 70%;
     }
-    /* #typing {
-        width: 60%;
-    } */
-    /* .send {
-        margin-left: 60%;
-    } */
     .fa-angle-double-left {
         display: block;
     }
@@ -208,19 +202,12 @@ p {
 @media (max-width: 660px) {
     .body {
         width: 65%;
-        right: 50px;
+        right: 30px;
         height: 80%;
     }
     .messages {
         height: calc(100% - 120px);
     }
-    /* #typing {
-        margin-left: 10px;
-        width: 53%;
-    } */
-    /* .send {
-        margin-left: 53%;
-    } */
     img {
         margin-left: 50px;
     }

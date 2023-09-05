@@ -102,6 +102,21 @@ export class ChatService {
     this.addMemberSource.next(addMember)
   }
 
+  calculatTimeBetweenMessages(messages:Message[]) {
+    let i:number = 0
+    let lateMessage:{late:boolean, time:string, msg:Message}[] = []
+    while (messages.length > i + 1){
+      const t1 = new Date(messages[i + 1].date!).getMinutes()
+      const t2 = new Date(messages[i].date!).getMinutes()
+      if (t1 - t2 >= 1) {
+        let saad = {late:true, time:`${new Date(messages[i + 1].date!).getHours()}:${new Date(messages[i + 1].date!).getMinutes()}`, msg:messages[i + 1]}
+        lateMessage.push(saad)
+      }
+      ++i;
+    }
+    return lateMessage
+  }
+
   updateRooms(rooms:Room[]) {
     this.roomsSource.next(rooms)
   }

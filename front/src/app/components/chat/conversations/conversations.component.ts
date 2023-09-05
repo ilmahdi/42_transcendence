@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
 import * as _ from 'lodash';
 import { Socket } from 'ngx-socket-io';
@@ -15,7 +15,7 @@ import { LoginService } from 'src/app/services/login.service';
   templateUrl: './conversations.component.html',
   styleUrls: ['./conversations.component.css']
 })
-export class ConversationsComponent implements OnInit, OnDestroy {
+export class ConversationsComponent implements OnInit, OnDestroy, AfterViewChecked  {
   private subsciption1?:Subscription
   private subsciption2?:Subscription
   private subsciption3?:Subscription
@@ -28,6 +28,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   @Input() userEmitted:any
   @Input() conversationEmitted:Message[] = [];
   @Input() roomConvers?:any
+  @ViewChild('scrollContainer') myScrollContainer?: ElementRef;
   userId?:number
   user?:User
 
@@ -41,6 +42,8 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   displayConversation:boolean = true
   options:boolean = false
   addMember:boolean = false
+  lateMessage:{late:boolean, time:string, msg:Message}[] = []
+  lateRoomMessage:{late:boolean, time:string, msg:Message}[] = []
 
   constructor(private chatService: ChatService, private loginService:LoginService) {
     this.chatService.optionsSource.next(false)
@@ -48,35 +51,41 @@ export class ConversationsComponent implements OnInit, OnDestroy {
       this.userId = id;
     })
 
-    this.subsciption3 = chatService.displayConversation$.subscribe(data=>this.displayConversation = data)
-    this.subsciption4 = this.chatService.options$.subscribe(data=>this.options = data)
-    this.subsciption2 = chatService.addMember$.subscribe(data=>this.addMember = data)
+    this.subsciption2 = chatService.displayConversation$.subscribe(data=>this.displayConversation = data)
+    this.subsciption3 = this.chatService.options$.subscribe(data=>this.options = data)
+    this.subsciption4 = chatService.addMember$.subscribe(data=>this.addMember = data)
   }
 
   ngOnInit() {
-    // FOR PRIVATE MESSAGE
-    this.subsciption5 = this.chatService.conversation$.subscribe(data=> this.messages = data)
+    /////////////////////////// FOR PRIVATE MESSAGE \\\\\\\\\\\\\\\\\\\\\\\\
+    this.subsciption5 = this.chatService.conversation$.subscribe((data)=> {
+      this.messages = data
+
+      // CHECK IF THE NEW MESSAGE IS SENT AFTER 10 MINUTES AFTER THE LAST MESSAGE
+      this.lateMessage = []
+      this.lateMessage = this.chatService.calculatTimeBetweenMessages(this.messages);
+    })
+
     this.subsciption6 = this.chatService.getNewMessage().subscribe(data=>{
-        this.chatService.updateLastMessage(data);
-       this.messages.push(data)
-      //  this.messages = _.sortBy(this.messages, 'date');
-       this.chatService.sendToGetLastMessage(this.userId!)
-      })
-    
-    // FOR ROOM MESSAGE
+      this.messages.push(data)
+
+      // CHECK IF THE NEW MESSAGE IS SENT AFTER 10 MINUTES AFTER THE LAST MESSAGE
+      this.lateMessage = this.chatService.calculatTimeBetweenMessages(this.messages);
+    })
+
+    /////////////////////////// FOR ROOM MESSAGE \\\\\\\\\\\\\\\\\\\\\\\\
     this.subsciption7 = this.chatService.roomConversation$.subscribe(data=>{
-      this.roomMessage = data;
+      this.roomMessage = data
+      this.lateRoomMessage = []
+      this.lateRoomMessage = this.chatService.calculatTimeBetweenMessages(this.roomMessage);
     })
     this.subsciption8 = this.chatService.getRoomMessage().subscribe(data=>{
-      this.chatService.updateRoomLastMessage(data);
       this.roomMessage.push(data)
-      this.messages = _.sortBy(this.messages, 'date');
-      this.chatService.sendToGetRoomLastMessage(this.userId!)
+      this.lateRoomMessage = this.chatService.calculatTimeBetweenMessages(this.roomMessage);
     })
   }
 
   openOptions() {
-    // this.chatService.roomOptionsSource.next(this.roomConvers[0])
     this.chatService.displayComponents(false, false, false, true, true, true, false)
   }
 
@@ -95,9 +104,6 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     this.chatService.updateSocketId(this.userId!)
     this.chatService.sendNewMessage(msg, this.userEmitted[0])
     this.msg.reset();
-    this.chatService.sendToGetLastMessage(this.userId!)
-    this.chatService.updateLastMessage(msg)
-    this.messages = _.sortBy(this.messages, 'date');
   }
 
   sendRoomMessage() {
@@ -106,9 +112,12 @@ export class ConversationsComponent implements OnInit, OnDestroy {
     this.chatService.updateSocketId(this.userId!)
     this.chatService.sendRoomMessage(this.userId!, this.roomConvers[0], msg)
     this.msg.reset();
-    this.chatService.sendToGetRoomLastMessage(this.userId!);
-    this.chatService.updateRoomLastMessage(msg)
-    this.messages = _.sortBy(this.messages, 'date');
+  }
+
+  ngAfterViewChecked() {        
+    if (this.myScrollContainer) {
+      this.myScrollContainer!.nativeElement.scrollTop = this.myScrollContainer?.nativeElement.scrollHeight
+    }
   }
 
   ngOnDestroy(): void {

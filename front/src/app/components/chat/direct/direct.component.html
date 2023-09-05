@@ -4,8 +4,7 @@
         <p id="name">{{f.firstName}}</p>
 
         <!-- <span *ngFor="let item of lastMessages">
-            <span *ngIf="!item.readed && item.senderId === userId" class="fa fa-check-circle-o"></span>
-            <img *ngIf="item.readed && item.senderId === userId" src="../../../../assets/sghajdao.jpg" id="readedMsg">
+            <span *ngIf="item.senderId === userId" class="fa fa-check-circle-o"></span>
         </span> -->
 
         <span *ngFor="let item of notReaded">

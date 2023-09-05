@@ -172,15 +172,22 @@ button span {
     right: 0;
   }
 
-@media (max-width: 1324px) {
+@media (min-width: 2000px) {
     .createRoom {
-        right: 20px;
+        right: 470px;
+        width: 672px;
+    }
+}
+
+@media (max-width: 1366px) {
+    .createRoom {
+        width: 490px;
     }
 }
 
 @media (max-width: 1324px) {
     .createRoom {
-        right: 40px;
+        right: 20px;
     }
 }
 
@@ -196,7 +203,8 @@ button span {
 
 @media (max-width: 660px) {
     .createRoom {
-        /* width: 65%; */
+        width: 65%;
         height: 80%;
+        right: 30px;
     }
 }

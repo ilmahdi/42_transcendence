@@ -188,14 +188,14 @@
 
 @media (max-width: 934px) {
     .add {
-        right: 80px;
+        right: 9%;
         width: 70%;
     }
 }
 
 @media (max-width: 660px) {
     .add {
-        width: 73%;
+        width: 65%;
         right: 30px;
         height: 80%;
     }
