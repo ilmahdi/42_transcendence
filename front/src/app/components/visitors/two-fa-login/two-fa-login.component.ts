@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { SocketService } from 'src/app/utils/socket/socket.service';
 
 
 @Component({
@@ -13,7 +14,8 @@ export class TwoFaLoginComponent {
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private authService :AuthService
+    private authService :AuthService,
+    private socketService: SocketService,
     ) {
     this.twoFACodeForm = this.formBuilder.group({
       twoFACode: [
@@ -36,6 +38,7 @@ export class TwoFaLoginComponent {
   public tfaSecret: string = "";
   public twoFACode: string = ""
   public isIncorrectCode: boolean = false
+  public isLeavingPage: boolean = true
 
   @Input() title: string = '';
   @Input() body: string = '';
@@ -47,19 +50,27 @@ export class TwoFaLoginComponent {
     this.isIncorrectCode = false;
   }
   onLogoutClick() {
-
+    
     this.authService.logout();
     this.router.navigate(['/login']);
   }
-
-
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload() {
+    if (this.isLeavingPage)
+      this.authService.logout()
+  }
+  
+  
   submitForm() {
     
     this.twoFACode = this.twoFACodeForm.get('twoFACode')?.value;
     this.authService.validateTwoFa(this.loggedInUserId, this.twoFACode).subscribe({
       next: response => {
-        if (response.is_tfa_validated)
+        if (response.is_tfa_validated) {
+          this.isLeavingPage = false;
+          this.socketService.initSocketConnection();
           this.router.navigate(["/home"]);
+        }
         else
         {
           this.twoFACodeForm.get('twoFACode')?.setValue('');
@@ -71,6 +82,9 @@ export class TwoFaLoginComponent {
       }
     });
   }
-
+  ngOnDestroy() {
+    if (this.isLeavingPage)
+      this.authService.logout()
+  }
 
 }

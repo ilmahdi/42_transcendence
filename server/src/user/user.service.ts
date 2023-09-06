@@ -57,6 +57,47 @@ export class UserService {
         return users;
     }
 
+    async findFiendList(userId :number) {
+
+        const user = await this.prismaService.userAccount.findUnique({
+            where: { id: userId },
+            include: {
+                friendship_from: {
+                    where: { friendship_status: FriendshipStatus.ACCEPTED },
+                    select: {
+                        friend: {
+                          select: {
+                            id: true,
+                            username: true,
+                            avatar: true,
+                          },
+                        },
+                      },
+                    },
+                friendship_to: {
+                    where: { friendship_status: FriendshipStatus.ACCEPTED },
+                    select: {
+                        user: {
+                          select: {
+                            id: true,
+                            username: true,
+                            avatar: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                });
+
+            const friends = user.friendship_from.map((friendship) => friendship.friend);
+            const friendsFromOtherSide = user.friendship_to.map((friendship) => friendship.user);
+
+            const friendList = [...friends, ...friendsFromOtherSide];
+
+            return friendList;
+
+    }
+
     async updateUserAny(id: number, data: any) {
         const updatedUser = await this.prismaService.userAccount.update({
             where: { id },

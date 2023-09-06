@@ -71,3 +71,33 @@ export class AuthGuardReversed implements CanActivate {
   }
   
 }
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TwoFaGuard implements CanActivate {
+  
+  constructor (
+    private router: Router,
+    public jwtHelper: JwtHelperService,
+    ) {
+  }
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+      
+      
+      const accessToken = localStorage.getItem(JWT_TOKEN);
+      const isAuthenticated = !this.jwtHelper.isTokenExpired(accessToken);
+      
+      if (isAuthenticated)
+        return true;
+      else
+        return this.router.createUrlTree(['/login']);
+      
+      return false;
+        
+    }
+  
+}

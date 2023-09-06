@@ -21,12 +21,30 @@ export class UserController {
 
     }
 
-    @UseGuards(JwtGuard)
     @Get("me")
+    @UseGuards(JwtGuard)
     getMyData(@Req() req :Request) : any {
-        // console.log(req.user)
         return req.user;
         
+    }
+
+    @Get("short")
+    @UseGuards(JwtGuard)
+    getMyDataShort(@Req() req :any) : any {
+        return {
+          id: req.user.id,
+          username: req.user.username,
+          avatar: req.user.avatar
+        };
+        
+    }
+
+    // @UseGuards(JwtGuard)
+    @Get("friend-list/:userId")
+    async getFiendList(@Param('userId') userId: number) {
+        const friendList =  await this.userService.findFiendList(userId);
+
+        return friendList;
     }
 
     @UseGuards(JwtGuard)

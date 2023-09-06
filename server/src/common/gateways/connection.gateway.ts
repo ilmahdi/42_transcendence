@@ -74,6 +74,18 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
 
   }
 
+  @SubscribeMessage('watchConnectionMany')
+  watchConnectionMany(client: Socket, userIds: string[]) {
+    
+    for (const userId of userIds) {
+      if (!this.userUserListeners[userId]) {
+          this.userUserListeners[userId] = [];
+      }
+      this.userUserListeners[userId].push(client.id);
+    }
+
+  }
+
   @SubscribeMessage('broadcastOnline')
   broadcastOnline(client: Socket, userId: string) {
 
@@ -82,7 +94,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
     if (userSocketIds) {
       userSocketIds.forEach((socketId) => {
 
-        this.server.to(socketId).emit('online');
+        this.server.to(socketId).emit('online', userId);
       });
     }
   }
@@ -117,7 +129,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
     if (userSocketIds) {
       userSocketIds.forEach((socketId) => {
 
-        this.server.to(socketId).emit('offline');
+        this.server.to(socketId).emit('offline', userId);
       });
     }
   }

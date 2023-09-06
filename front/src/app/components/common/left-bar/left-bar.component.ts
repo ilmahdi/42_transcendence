@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { ConfirmService } from 'src/app/services/modals/confirm.service';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
+import { SocketService } from 'src/app/utils/socket/socket.service';
 
 
 @Component({
@@ -17,6 +18,7 @@ export class LeftBarComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private confirmService: ConfirmService,
+    private socketService: SocketService,
   ) { }
   
   @ViewChild('confirmModal', { read: ViewContainerRef })
@@ -24,27 +26,23 @@ export class LeftBarComponent implements OnInit {
 
   sub!: Subscription;
   
-  public username :string = "";
+  public get username(): string {
+    return this.authService.getLoggedInUser();
+  }
 
 
   ngOnInit(): void {
-    this.username = this.authService.getLoggedInUser();
   }
   openConfirmModal() {
     this.sub = this.confirmService
       .open(this.entry, ConfirmComponent, 'Are you sure you want to Sign Out?', 'click confirme to continue')
       .subscribe(() => {
         this.authService.logout();
+
+        this.socketService.endSocketConnection();
         this.router.navigate(['/login']);
       });
   }
-
-
-
-
-
-
-
 
 
 

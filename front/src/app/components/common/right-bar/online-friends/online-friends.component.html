@@ -4,26 +4,27 @@
     >
 
     <div class="rb-sec-one">
-        <img class="rb-sec-one-img" [src]="imgUrl"
+        <img class="rb-sec-one-img" [src]="userData.avatar"
             style="display: none" onload="this.style.display=''"
             onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
         />
-        <span class="rb-sec-one-text">ilmahdi</span>
+        <span class="rb-sec-one-text" [routerLink]="['/profile', userData.username]">{{userData.username}}</span>
     </div>
-    <!-- <span class="rb-sec-all-hr"></span> -->
+    
     <div class="rb-sec-two">
         <span class="rb-sec-two-text">Online friends</span>
     </div>
-    <!-- <span class="rb-sec-all-hr"></span> -->
-    <div class="rb-sec-three" *ngFor="let i of users">
-        <div class="rb-sec-three-item" >    
-            <img class="rb-sec-three-img"  [src]="imgUrl2" 
+
+    <div class="rb-sec-three" *ngFor="let friend of friendList">
+        <div class="rb-sec-three-item" *ngIf="connectedFriendsById[friend.id!]" [routerLink]="['/profile', friend.username]">    
+            <img class="rb-sec-three-img"  [src]="friend.avatar" 
                 style="display: none" onload="this.style.display=''"
                 onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
             />
             <span class="rb-sec-three-g-dot"></span>
-            <span class="rb-sec-three-text">{{i.name}}</span>
+            <span class="rb-sec-three-text">{{friend.username}}</span>
         </div>
         <span class="rb-sec-all-hr"></span>
     </div>
+
 </div>

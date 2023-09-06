@@ -42,7 +42,10 @@ export class VisitorsComponent implements OnInit {
           if (response.is_tfa_enabled)
             this.router.navigate(["/login/twofa"]);
           else
+          {
+            this.socketService.initSocketConnection();
             this.router.navigate(["/home"]);
+          }
 
         },
         error: error => {
@@ -51,7 +54,6 @@ export class VisitorsComponent implements OnInit {
       });
     }
 
-    this.socketService.initSocketConnection();
   }
 
   redirectToLogin() {

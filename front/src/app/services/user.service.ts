@@ -25,8 +25,15 @@ export class UserService {
   getUserData () : Observable<IUserData> {
     return this.http.get<IUserData>(`${this.apiUrl}/api/user/me` ,this.getHeaders());
   }
+  getUserDataShort () : Observable<IUserDataShort> {
+    return this.http.get<IUserDataShort>(`${this.apiUrl}/api/user/short` ,this.getHeaders());
+  }
   getUserDataByUsername (username :string) : Observable<IUserData> {
     return this.http.get<IUserData>(`${this.apiUrl}/api/user/data/${username}` ,this.getHeaders());
+  }
+
+  getfriendList (userId :number) : Observable<IUserDataShort[]> {
+    return this.http.get<IUserDataShort[]>(`${this.apiUrl}/api/user/friend-list/${userId}` ,this.getHeaders());
   }
 
   uploadImage (formData :FormData) : Observable<any> {

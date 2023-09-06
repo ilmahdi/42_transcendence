@@ -14,7 +14,6 @@
   right: 0; 
   bottom: 0; 
   left: 0; 
-  z-index: 13;
 }
 
 .overlay {
@@ -37,7 +36,7 @@
     top: 50%;
     left: 50%;
     width: min(90%, 30rem);
-    height: 20rem;
+    min-height: 20rem;
     min-width: min-content;
     transform: translate(-50%, -50%);
     padding: 1rem 1.6rem;
@@ -171,3 +170,26 @@
 .cm-sec-two-icon.i3 {
     stroke: red;
 }
+
+
+
+
+
+.cm-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    height: var(--top-bar-hieght);
+    width: 100%; 
+    padding-left: 1rem;
+    color: var(--primary-text-color);
+}
+.cm-item-icon {
+    width: 2.6rem;
+    height: 2.6rem;
+    fill: var(--primary-text-color);
+}
+
+.cm-item-text {
+    font-size: 1.6rem;
+  }

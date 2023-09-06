@@ -29,6 +29,7 @@ export class SocketService {
   }
   
   endSocketConnection() {
+    this.socket.disconnect();
     this.socket.on('disconnect', () => {
       console.log('Disconnected from WebSocket server');
       
