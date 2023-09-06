@@ -50,12 +50,15 @@
     margin-left: 60%;
 }
 
-#message {
+.message {
     position: absolute;
     color: #ABABAB;
     font-size: small;
     margin-top: 33px;
     margin-left: 72px;
+    max-width: 100px;
+    max-height: 20px;
+    overflow: hidden;
 }
 
 .fa-check-circle-o {

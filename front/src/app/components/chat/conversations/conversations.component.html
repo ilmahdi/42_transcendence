@@ -10,14 +10,13 @@
             <div *ngFor="let message of messages">
                 <br>
                 <div *ngFor="let msg of lateMessage">
-                    <p *ngIf="msg.late && msg.msg === message" style="position: relative;color: white;text-align: center;">{{msg.time}}</p>
+                    <div class="time" *ngIf="msg.late && msg.msg === message">{{msg.time}}</div>
                 </div>
-                <!-- <p *ngIf="lateMessage.late && lateMessage.msg === message" style="position: relative;color: white;text-align: center;">{{lateMessage.time}}</p> -->
                 <div *ngIf="message.senderId === userId && message.receiverId === userEmitted[0].id" class="sentMessage">
-                    <p>&emsp;{{message.message}}&emsp;</p>
+                    {{message.message}}
                 </div>
                 <div *ngIf="message.receiverId === userId && message.senderId === userEmitted[0].id" class="receivedMessage">
-                    <p>&emsp;{{message.message}}&emsp;</p>
+                    {{message.message}}
                 </div>
                 <br>
             </div>
@@ -54,14 +53,16 @@
             <div *ngFor="let message of roomMessage">
                 <br>
                 <div *ngFor="let msg of lateRoomMessage">
-                    <p *ngIf="msg.late && msg.msg === message" style="position: relative;color: white;text-align: center;">{{msg.time}}</p>
+                    <div class="time" *ngIf="msg.late && msg.msg === message">{{msg.time}}</div>
                 </div>
                 <div *ngIf="message.senderId === userId" class="sentMessage">
-                    <p>&emsp;{{message.message}}&emsp;</p>
+                    {{message.message}}
                 </div>
-                <img src="../../../../assets/sghajdao.jpg" *ngIf="message.senderId !== userId" style="font-size: 25px; margin-left: 10px;margin-top: 0px;">
+                <div class="senderImg">
+                    <img src="../../../../assets/sghajdao.jpg" *ngIf="message.senderId !== userId">
+                </div>
                 <div *ngIf="message.senderId !== userId" class="receivedMessage" style="left:50px;">
-                    <p>&emsp;{{message.message}}&emsp;</p>
+                    {{message.message}}
                 </div>
                 <br>
             </div>

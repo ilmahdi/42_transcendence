@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Message } from 'src/app/models/message.model';
 import { User } from 'src/app/models/user.model';
 import { ChatService } from 'src/app/services/chat.service';
 import { LoginComponent } from '../login/login.component';
 import { LoginService } from 'src/app/services/login.service';
-import { take } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -15,7 +15,16 @@ import { Room } from 'src/app/models/room.model';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
+  private subscription1?:Subscription
+  private subscription2?:Subscription
+  private subscription3?:Subscription
+  private subscription4?:Subscription
+  private subscription5?:Subscription
+  private subscription6?:Subscription
+  private subscription7?:Subscription
+  private subscription8?:Subscription
+  private subscription9?:Subscription
 
   room = new FormGroup({name: new FormControl, imagePath: new FormControl})
 
@@ -45,33 +54,33 @@ export class ChatComponent implements OnInit {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
 
-    this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
+    this.subscription1 = this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
     })
     chatService.sendToGetLastMessage(this.userId!)
     chatService.sendToGetRoomLastMessage(this.userId!)
 
     // chatService.sendToGetNotReadedRoomMessages(this.userId!);
-    chatService.getNotReadedRoomMessages().subscribe(data=>{
-      chatService.updateReadedRoomBehav(data)
+    this.subscription2 = chatService.getNotReadedRoomMessages().subscribe(data=>{
+      chatService.updateReadRoomBehav(data)
     })
 
     // RESET FORMULAR IF USER OPEN CONVERSATION
-    chatService.displayConversation$.subscribe(data=> {
+    this.subscription3 = chatService.displayConversation$.subscribe(data=> {
       if (data)
         this.resetRoomFormular()
     })
   }
 
   ngOnInit(): void {
-    this.chatService.getUsers().subscribe((data) => {
+    this.subscription4 = this.chatService.getUsers().subscribe((data) => {
       data.forEach((user)=>{
         if (user.id != this.userId) {
           this.users?.push({user:user, added:false, admin:false})
         }
       })
     });
-    this.chatService.displayConvers$.subscribe(data=> this.displayConvers = data)
+    this.subscription5 = this.chatService.displayConvers$.subscribe(data=> this.displayConvers = data)
   }
 
   onResize() {
@@ -99,7 +108,7 @@ export class ChatComponent implements OnInit {
   }
 
   displayFormRoom() {
-    this.chatService.add$.subscribe(data=>this.addRoom = data)
+    this.subscription6 = this.chatService.add$.subscribe(data=>this.addRoom = data)
     this.chatService.displayComponents(true, false, false, true, true, false, false)
   }
 
@@ -139,7 +148,7 @@ export class ChatComponent implements OnInit {
 
     const formData = new FormData();
     formData.append('file', this.selectedFile!)
-    this.chatService.uploadImage(formData).subscribe()
+    this.subscription7 = this.chatService.uploadImage(formData).subscribe()
     let path:string = this.room.value.imagePath
     let imageName = path.split('\\')
 
@@ -175,33 +184,15 @@ export class ChatComponent implements OnInit {
     this.roomData = [room, true]
   }
 
-  searchConvers() {
-    this.chatService.searchConvers(this.searchQuery).subscribe(data=>{
-      this.searchResults = data
-      this.chatService.updateUsers(data)
-    })
-  }
-
   searchQueryConvers() {
-    this.chatService.searchConvers(this.searchQuery).subscribe(data=>{
+    this.subscription8 = this.chatService.searchConvers(this.searchQuery).subscribe(data=>{
       this.searchResults = data
       this.chatService.updateUsers(data)
-    })
-  }
-
-  searchRooms() {
-    this.chatService.searchRooms(this.searchQuery).subscribe(data=>{
-      this.searchResults = []
-      data.forEach(room=> {
-        if (room.usersId?.includes(this.userId!))
-          this.searchResults.push(room)
-      })
-      this.chatService.updateRooms(this.searchResults)
     })
   }
 
   searchQueryRooms() {
-    this.chatService.searchRooms(this.searchQuery).subscribe(data=>{
+    this.subscription9 = this.chatService.searchRooms(this.searchQuery).subscribe(data=>{
       this.searchResults = []
       data.forEach(room=> {
         if (room.usersId?.includes(this.userId!))
@@ -209,5 +200,17 @@ export class ChatComponent implements OnInit {
       })
       this.chatService.updateRooms(this.searchResults)
     })
+  }
+
+  ngOnDestroy(): void {
+    this.subscription1?.unsubscribe()
+    this.subscription2?.unsubscribe()
+    this.subscription3?.unsubscribe()
+    this.subscription4?.unsubscribe()
+    this.subscription5?.unsubscribe()
+    this.subscription6?.unsubscribe()
+    this.subscription7?.unsubscribe()
+    this.subscription8?.unsubscribe()
+    this.subscription9?.unsubscribe()
   }
 }

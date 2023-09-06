@@ -120,23 +120,50 @@ img {
 
 .sentMessage {
     color: white;
-    position: absolute;
-    right: 10px;
+    position: relative;
     border-radius: 20px 3px 20px 20px;
-    height: 40px;
     background-color: #D38146;
     max-width: 60%;
+    min-height: 40px;
+    min-width: 50px;
+    padding: 5px 10px 5px 10px;
+    text-align: center;
+    display: inline-block;
+
+    float: right; /* Align the message to the right */
+    clear: both; /* Ensure proper clearing of floated elements */
+    right: 10px;
+    margin-top: 10px;
 }
 
 .receivedMessage {
     color: white;
     left: 10px;
-    position: absolute;
+    position: relative;
     border-radius: 3px 20px 20px 20px;
-    height: 40px;
     background-color: #584747;
     max-width: 60%;
-    max-height: 100%;
+    min-height: 40px;
+    min-width: 50px;
+    padding: 5px 10px 5px 10px;
+    text-align: center;
+    display: inline-block;
+
+    float: left; /* Align the message to the right */
+    clear: both; /* Ensure proper clearing of floated elements */
+    margin-top: 10px;
+}
+
+.time {
+    position: relative;
+    color: white;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+    float: right; /* Align the message to the right */
+    clear: both; /* Ensure proper clearing of floated elements */
+    margin-right: 35%;
 }
 
 p {
@@ -161,13 +188,24 @@ p {
  {
     width: 0.4rem;
     background-color: var(--second-background-color);
-} 
+}
 .messages::-webkit-scrollbar-thumb  {
     border-radius: 0.4rem;
     background-color: #5e6147;
 }
 .messages::-webkit-scrollbar-thumb:hover  {
     background-color: #555;
+}
+
+.senderImg {
+    position: relative;
+    font-size: 25px;
+    left: -50px;
+    display: inline-block;
+
+    float: left; /* Align the message to the right */
+    clear: both; /* Ensure proper clearing of floated elements */
+    margin-top: 10px;
 }
 
 @media (min-width: 2000px) {
@@ -214,6 +252,9 @@ p {
     #conv {
         font-size: 14px;
         margin-left: 98px;
+    }
+    .time {
+        margin-right: 25%;
     }
 }
 

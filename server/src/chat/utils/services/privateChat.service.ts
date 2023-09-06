@@ -52,7 +52,7 @@ export class PrivateChatService {
         }
     }
 
-    // updateReaded(receiverId:number, senderId:number) {
+    // updateRead(receiverId:number, senderId:number) {
     //     const message = this.messageRepository.find({
     //         where: {
     //           senderId: senderId, receiverId: receiverId
@@ -66,7 +66,7 @@ export class PrivateChatService {
     //     })
     // }
 
-    updateReaded(message:Message) {
+    updateRead(message:Message) {
       let msg = {id:message.id, senderId:message.senderId, receiverId:message.receiverId, message:message.message, date:message.date, readed:true}
       this.messageRepository.update(msg.id, msg);
     }

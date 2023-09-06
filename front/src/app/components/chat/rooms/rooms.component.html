@@ -11,11 +11,11 @@
             </div>
         </span>
 
-        <span *ngFor="let item of lastMessages" id="message">
-            <span *ngIf="item">
+        <div *ngFor="let item of lastMessages" class="message">
+            <div *ngIf="item">
                 <p *ngIf="item && item.roomId === room.id">{{item.message}}</p>
-            </span>
-        </span>
+            </div>
+        </div>
 
         <span *ngFor="let item of lastMessages" id="date">
             <span *ngIf="item">

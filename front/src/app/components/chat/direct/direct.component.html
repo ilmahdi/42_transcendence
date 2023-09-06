@@ -3,9 +3,10 @@
         <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="img">
         <p id="name">{{f.firstName}}</p>
 
-        <!-- <span *ngFor="let item of lastMessages">
-            <span *ngIf="item.senderId === userId" class="fa fa-check-circle-o"></span>
-        </span> -->
+        <span *ngFor="let item of readSymbol">
+            <span *ngIf="item.receiverId=== f.id && !item.read" class="fa fa-check-circle-o"></span>
+            <img *ngIf="item.receiverId === f.id && item.read" src="../../../../assets/sghajdao.jpg" id="readedMsg">
+        </span>
 
         <span *ngFor="let item of notReaded">
             <div class="notReaded" *ngIf="f.id === item.senderId">
@@ -13,11 +14,11 @@
             </div>
         </span>
 
-        <span *ngFor="let item of lastMessages" id="message">
-            <span *ngIf="item">
+        <div *ngFor="let item of lastMessages" class="message">
+            <div *ngIf="item">
                 <p *ngIf="item && item.senderId === f.id || item.receiverId === f.id">{{item.message}}</p>
-            </span>
-        </span>
+            </div>
+        </div>
 
         <span *ngFor="let item of lastMessages" id="date">
             <span *ngIf="item">

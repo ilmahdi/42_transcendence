@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { Room } from 'src/app/models/room.model';
 import { RoomType } from 'src/app/models/roomType.enum';
 import { ChatService } from 'src/app/services/chat.service';
@@ -9,7 +10,10 @@ import { ChatService } from 'src/app/services/chat.service';
   templateUrl: './creating-rooms.component.html',
   styleUrls: ['./creating-rooms.component.css']
 })
-export class CreatingRoomsComponent implements OnInit {
+export class CreatingRoomsComponent implements OnInit, OnDestroy {
+  private subscription1?:Subscription
+  private subscription2?:Subscription
+
   @Input() roomFormular:any
   types:{type:RoomType, select:boolean}[] = [{type:RoomType.PUBLIC, select:false}, {type:RoomType.PRIVATE, select:false}, {type:RoomType.PROTECTED, select:false}]
   room = new FormGroup({password: new FormControl})
@@ -17,7 +21,7 @@ export class CreatingRoomsComponent implements OnInit {
   error:boolean = false
 
   constructor(private chatService:ChatService) {
-    chatService.backToRoomFormular$.subscribe(data=>this.backToRoomFormular = data)
+    this.subscription1 = chatService.backToRoomFormular$.subscribe(data=>this.backToRoomFormular = data)
   }
 
   ngOnInit(): void {
@@ -48,7 +52,7 @@ export class CreatingRoomsComponent implements OnInit {
       let room:Room;
       let type = this.types.filter(type=> type.select === true)
       room = {adminId:this.roomFormular.adminId, name:this.roomFormular.name, usersId:this.roomFormular.usersId, type:type[0].type, password:this.room.value.password, imagePath:this.roomFormular.imagePath};
-      this.chatService.createRoom(room).subscribe();
+      this.subscription2 = this.chatService.createRoom(room).subscribe();
       this.types[0].select = false
       this.types[1].select = false
       this.types[2].select = false
@@ -62,5 +66,10 @@ export class CreatingRoomsComponent implements OnInit {
   back() {
     this.chatService.displayComponents(true, false, false, true, true, false, false)
     // this.chatService.backToRoomFormularSource.next(true);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription1?.unsubscribe()
+    this.subscription2?.unsubscribe()
   }
 }

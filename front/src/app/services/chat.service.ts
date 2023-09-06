@@ -66,6 +66,9 @@ export class ChatService {
   addMemberSource = new BehaviorSubject<boolean>(false);
   addMember$ = this.addMemberSource.asObservable();
 
+  readSymbolSource = new BehaviorSubject<{senderId:number, receiverId:number, read:boolean}[]>([])
+  readSymbol$ = this.readSymbolSource.asObservable()
+
   otherRoomSource = new BehaviorSubject<Room[]>([])
   otherRoom$ = this.otherRoomSource.asObservable()
 
@@ -83,12 +86,12 @@ export class ChatService {
 
     this.sendToGetNotReadedMessages(this.userId!);
     this.getNotReadedMessages().subscribe(data=>{
-      this.updateReadedBehav(data);
+      this.updateReadBehav(data);
     })
 
     this.sendToGetNotReadedRoomMessages(this.userId!);
     this.getNotReadedRoomMessages().subscribe(data=>{
-      this.updateReadedRoomBehav(data)
+      this.updateReadRoomBehav(data)
     })
   }
 
@@ -109,7 +112,7 @@ export class ChatService {
       const t1 = new Date(messages[i + 1].date!).getMinutes()
       const t2 = new Date(messages[i].date!).getMinutes()
       if (t1 - t2 >= 1) {
-        let saad = {late:true, time:`${new Date(messages[i + 1].date!).getHours()}:${new Date(messages[i + 1].date!).getMinutes()}`, msg:messages[i + 1]}
+        let saad = {late:true, time:`${new Date(messages[i + 1].date!).getDay()}/${new Date(messages[i + 1].date!).getMonth()}/${new Date(messages[i + 1].date!).getFullYear()}, ${new Date(messages[i + 1].date!).getHours()}:${new Date(messages[i + 1].date!).getMinutes()}`, msg:messages[i + 1]}
         lateMessage.push(saad)
       }
       ++i;
@@ -134,11 +137,11 @@ export class ChatService {
     this.addRoom.next(statue);
   }
 
-  updateReadedBehav(data:{ senderId: number; unreadCount: number }[]) {
+  updateReadBehav(data:{ senderId: number; unreadCount: number }[]) {
     this.notReadedMessageSource.next(data)
   }
 
-  updateReadedRoomBehav(data:{senderId:number, roomId: number; unreadCount: number }[]) {
+  updateReadRoomBehav(data:{senderId:number, roomId: number; unreadCount: number }[]) {
     this.notReadedRoomMessageSource.next(data)
   }
 
@@ -255,6 +258,14 @@ export class ChatService {
     return this.socket.fromEvent<Room>('recRoomById');
   }
 
+  sendReadSignal() {
+    this.socket.emit('readSignal');
+  }
+
+  getReadSignal() {
+    return this.socket.fromEvent<boolean>('recReadSignal');
+  }
+
   token:string|null = localStorage.getItem('token');
   
   private httpOptions: { headers: HttpHeaders } = {
@@ -265,8 +276,8 @@ export class ChatService {
     return this.http.get<User[]>('http://localhost:3000/api/auth/allUsers', this.httpOptions).pipe(take(1));
   }
 
-  updateReaded(message:Message) {
-    this.socket.emit('updateReaded', message)
+  updateRead(message:Message) {
+    this.socket.emit('updateRead', message)
   }
 
   createRoom(room:Room): Observable<Room> {

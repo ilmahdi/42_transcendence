@@ -67,9 +67,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
     });
   }
 
-  @SubscribeMessage('updateReaded')
-  updateReaded(client:Socket, message:Message) {
-    this.privateChatService.updateReaded(message);
+  @SubscribeMessage('updateRead')
+  updateRead(client:Socket, message:Message) {
+    this.privateChatService.updateRead(message);
   }
 
   @SubscribeMessage('getNotReadedMessages')
@@ -145,5 +145,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   @SubscribeMessage('updateRoom')
   updateRoom(client:Socket, room:Room) {
     this.roomChatService.changeRoomType(room);
+  }
+
+  @SubscribeMessage('readSignal')
+  readSignal(client:Socket) {
+    this.server.emit('recReadSignal', true);
   }
 }
