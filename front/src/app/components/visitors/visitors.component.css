@@ -7,17 +7,54 @@
   color: var(--primary-text-color);
 }
 
+
 /* login page  */
 /******/
 
 .login-page {
   position: fixed;
-  height: 100%;
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
   
+}
+
+.lp-footer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 0.6rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 00;
+
+}
+
+.lp-bg {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+}
+.lp-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(3rem);
+}
+
+.lp-bg-cover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(35, 28, 28, 0.5); 
+
 }
 
 
@@ -26,33 +63,59 @@
 
 .lp-sec-one {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  flex-direction: column;
   flex-shrink: 0;
   height: 100%;
-  width: 40%;
-  /* gap: 37%; */
-  min-width: 400px;
-  /* justify-content: center; */
-
+  width: min(40%, 440px);
+  left: 0;
+  right: 0;
+  min-width: max-content;
+  z-index: 1;
+  background-color: rgba(35, 28, 28, 0.2); 
   
-  background-image: url("../../../assets/icons/login_bg.svg");
-  background-size: cover; 
-  background-repeat: no-repeat; 
-  background-position: center;
 }
 
+
 .lp-sec-two {
-  position: relative;
-  height: 100%;
-  width: 60%;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: black;
-  /* border-radius: 1rem 0 0 1rem; */
+  height: 50%;
+
 }
+
+
+.lp-sec-two-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  max-width: 70rem;
+  border-radius: 1rem;
+  padding: 1rem;
+  gap: 2.6rem;
+}
+
+.lp-sec-img {
+  width: 60%;
+  object-fit: cover;
+}
+
+.lp-sec-text {
+  font-size: 1.6rem;
+  font-weight: 300;
+  text-align: center;
+}
+
+
+
+
+
 
 .lp-sec-two-cover {
   position: absolute;
@@ -70,7 +133,7 @@
   align-items: center;
   gap: 0.8rem;
   height: var(--top-bar-hieght);
-  width: 100%; 
+  align-self: flex-start;
   padding-left: 1rem;
   
 }
@@ -90,12 +153,14 @@
 .lp-sec-login {
   display: flex;
 
-  flex-shrink: 0;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  height: 100%;
+  padding-top: 30vh;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 
@@ -131,22 +196,25 @@
 /******/
 
 .lp-sec-login-t1 {
-  font-size: 2rem;
-  font-weight: 500;
-  width: 100%;
+  font-size: 2.6rem;
+  font-weight: 400;
+  width: 19.6rem;
+  margin-bottom: 1rem;
   /* padding-left: 16%; */
 }
 
 .lp-sec-login-t2 {
   font-size: 1rem;
-  font-weight: 300;
-  width: 100%;
+  font-weight: 500;
+  width: 19.6rem;
   /* padding-left: 16%; */
 }
 
 .lp-sec-login-item {
   width: 100%;
-  margin-top: 1.6rem;
+  margin-top: 2.6rem;
+  display: flex;
+  justify-content: center;
   /* padding-left: 16%; */
 }
 
@@ -156,11 +224,11 @@
   justify-content: center;
   align-items: center;
 
-  height: 3rem;
+  height: 2.6rem;
   width: 20rem;
   gap: 1rem;
   border: solid 0.12rem var(--primary-border-color);
-  border-radius: 1rem;
+  border-radius: 0.6rem;
 
   background-color: var(--primary-text-color);
 }
@@ -183,12 +251,17 @@
 /*                Media Queries                */
 /***********************************************/
 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
 
   .lp-sec-one {
     width: 100%;
   }
   .lp-sec-two {
     display: none;
+  }
+  .lp-sec-login {
+    margin-left: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { SocketService } from './utils/socket/socket.service';
 import { AuthService } from './services/auth.service';
 

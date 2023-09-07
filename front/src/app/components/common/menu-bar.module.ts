@@ -12,6 +12,7 @@ import { SharedModule } from 'src/app/utils/shared/shared.module';
 import { NotifyComponent } from './top-bar/notify/notify.component';
 import { RelativeTimePipe } from 'src/app/utils/pipes/relative-time.pipe';
 import { PipesModule } from 'src/app/utils/pipes/pipes.module';
+import { LoadingComponent } from './loading/loading.component';
 
 
 
@@ -23,6 +24,7 @@ import { PipesModule } from 'src/app/utils/pipes/pipes.module';
     TopBarComponent,
     OnlineFriendsComponent,
     NotifyComponent,
+    LoadingComponent,
   ],
   imports: [
     CommonModule,
@@ -38,6 +40,7 @@ import { PipesModule } from 'src/app/utils/pipes/pipes.module';
     LeftBarSecondComponent,
     TopBarComponent,
     OnlineFriendsComponent,
+    LoadingComponent,
    ]
 })
 export class MenuBarModule { 

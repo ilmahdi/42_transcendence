@@ -63,10 +63,10 @@ export class UserGateway  {
     const userSocketIds = this.connectionGateway.connectedUsersById[userId];
     
     if (userSocketIds) {
-      this.server.to(client.id).emit('online');
+      this.server.to(client.id).emit('online', userId);
     }
     else
-      this.server.to(client.id).emit('offline');
+      this.server.to(client.id).emit('offline', userId);
   }
   @SubscribeMessage('connectionStatusMany')
   connectionStatusMany(client: Socket, userIds: string[]) {

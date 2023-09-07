@@ -73,15 +73,17 @@ export class ProfileIdComponent implements OnChanges {
     this.socket.on('refreshUser', () => {  
       this.checkFriendshipStatus(this.getFriendship(this.loggedInUserId, this.userData.id));
     });
-    this.socket.on('online', () => {
-
-      this.connection = "online";
+    this.socket.on('online', (userId :number) => {
+      if (userId == this.userData.id)
+        this.connection = "online";
     });
-    this.socket.on('offline', () => {
-      this.connection = "offline";
+    this.socket.on('offline', (userId :number) => {
+      if (userId == this.userData.id)
+        this.connection = "offline";
     });
-    this.socket.on('playing', () => {
-      this.connection = "playing";
+    this.socket.on('playing', (userId :number) => {
+      if (userId == this.userData.id)
+        this.connection = "playing";
     });
   }
 

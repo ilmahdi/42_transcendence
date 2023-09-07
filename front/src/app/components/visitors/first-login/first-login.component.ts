@@ -6,6 +6,7 @@ import { Observable, firstValueFrom } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 import { JWT_TOKEN } from 'src/app/utils/constants';
 import { IUserData, IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
+import { SocketService } from 'src/app/utils/socket/socket.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -21,6 +22,7 @@ export class FirstLoginComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private route: ActivatedRoute,
+    private socketService: SocketService,
     ) {
       this.myformGroup = this.formBuilder.group({
         username: [
@@ -96,6 +98,7 @@ export class FirstLoginComponent implements OnInit {
         // console.log('Received data:', response);
         if (response.token) 
           localStorage.setItem(JWT_TOKEN, response.token);
+        this.socketService.initSocketConnection();
         this.router.navigate(["/home"]);
       },
       error: error => {

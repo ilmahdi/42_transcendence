@@ -13,7 +13,9 @@ export class SocketService {
   ) {
   }
 
-  public loggedInUserId :number = this.authService.getLoggedInUserId();
+  public get loggedInUserId(): number {
+    return this.authService.getLoggedInUserId();
+  }
 
   initSocketConnection() {
     
@@ -23,6 +25,7 @@ export class SocketService {
 
     this.socket.on('connect', () => {
       console.log('Connected to WebSocket server');
+      console.log("---->>>>", this.loggedInUserId)
       this.socket.emit("broadcastOnline", this.loggedInUserId);
 
     });

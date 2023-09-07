@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
   ) { 
 
   }
+  public isLoading: boolean = true;
   public userData: IUserData = { 
     id:0,
     username: '',
@@ -34,7 +35,7 @@ export class HomeComponent implements OnInit {
   getUserData() {
      this.userService.getUserData().subscribe((data: IUserData) => {
        this.userData = data;
-      //  console.log(this.userData);
+       this.isLoading = false;
     });
 
   }

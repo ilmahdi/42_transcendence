@@ -31,12 +31,10 @@ export class OnlineFriendsComponent implements OnInit {
     this.socket.on('online', (userId :number) => {
     
       this.connectedFriendsById[userId] = true
-      console.log("online",this.connectedFriendsById)
     });
     this.socket.on('offline', (userId :number) => {
       
       this.connectedFriendsById[userId] = false
-      console.log("offline",this.connectedFriendsById)
     });
   }
 

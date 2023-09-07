@@ -1,3 +1,9 @@
+
+<div class="lp-bg" >
+    <img class="lp-bg-img"  src="./assets/imgs/pong_login.png" >
+    <div class="lp-bg-cover"></div>
+
+</div>
 <div #firstLoginModal *ngIf="firstLogin">
     <app-first-login></app-first-login>
 </div>
@@ -15,7 +21,7 @@
 
             <div class="lp-sec-login">
                 <span class="lp-sec-login-t1">Welcome Back</span>
-                <span class="lp-sec-login-t2">login with intranet 42 to start playing</span>
+                <span class="lp-sec-login-t2">login with intranet 42 and start playing</span>
                 <div class="lp-sec-login-item">
                     
                     <div class="lp-sec-login-button" (click)="redirectToLogin()">
@@ -27,10 +33,20 @@
         </div
         >
     </div>
-    
     <div class="lp-sec-two">
-        <div class="lp-sec-two-cover"></div>
-        <img id="icon-42-logo" class="lp-sec-gif"  src="./assets/gifs/pong_game.gif" />
+        <div class="lp-sec-two-wrap" >
+
+            <img class="lp-sec-img"  src="./assets/icons/pong_game.svg" />
+                
+            <div class="lp-sec-text">
+                Ping Pong is not just a game, it's a fantastic way to connect with others and build lasting friendships. So, what are you waiting for? Log in, grab your paddle, and get ready for some Ping Pong action.
+            </div>
+            
+        </div>
     </div>
+    <footer class="lp-footer">
+        <p>&copy; 2023 ft_transcendance. All rights reserved.</p>
+    </footer>
     
 </div>
+
