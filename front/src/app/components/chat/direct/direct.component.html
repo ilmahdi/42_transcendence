@@ -3,10 +3,10 @@
         <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="img">
         <p id="name">{{f.firstName}}</p>
 
-        <span *ngFor="let item of readSymbol">
+        <div *ngFor="let item of readSymbol">
             <span *ngIf="item.receiverId=== f.id && !item.read" class="fa fa-check-circle-o"></span>
-            <img *ngIf="item.receiverId === f.id && item.read" src="../../../../assets/sghajdao.jpg" id="readedMsg">
-        </span>
+            <img *ngIf="item.receiverId === f.id && item.read" src="../../../../assets/sghajdao.jpg" id="readMsg">
+        </div>
 
         <span *ngFor="let item of notReaded">
             <div class="notReaded" *ngIf="f.id === item.senderId">

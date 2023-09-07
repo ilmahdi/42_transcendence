@@ -112,8 +112,14 @@ export class ChatService {
       const t1 = new Date(messages[i + 1].date!).getMinutes()
       const t2 = new Date(messages[i].date!).getMinutes()
       if (t1 - t2 >= 1) {
-        let saad = {late:true, time:`${new Date(messages[i + 1].date!).getDay()}/${new Date(messages[i + 1].date!).getMonth()}/${new Date(messages[i + 1].date!).getFullYear()}, ${new Date(messages[i + 1].date!).getHours()}:${new Date(messages[i + 1].date!).getMinutes()}`, msg:messages[i + 1]}
-        lateMessage.push(saad)
+        const options: Intl.DateTimeFormatOptions = {
+          day: '2-digit',   // Two-digit day
+          month: '2-digit', // Two-digit month
+          year: 'numeric'   // Full year
+        };
+        const formattedDate: string = new Date(messages[i + 1].date!).toLocaleDateString('en-GB', options);
+        let date = {late:true, time:`${formattedDate}, ${new Date(messages[i + 1].date!).getHours()}:${new Date(messages[i + 1].date!).getMinutes()}`, msg:messages[i + 1]}
+        lateMessage.push(date)
       }
       ++i;
     }

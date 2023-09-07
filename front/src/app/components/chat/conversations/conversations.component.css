@@ -179,7 +179,8 @@ p {
     height: calc(100% - 120px);
     width: 100%;
     /* background-color: white; */
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     scrollbar-color: #5e6147 var(--second-background-color);
     scrollbar-width: 0.4rem;
 }
@@ -255,6 +256,13 @@ p {
     }
     .time {
         margin-right: 25%;
+        font-size: 15px;
+    }
+    .sentMessage{
+        font-size: 15px;
+    }
+    .receivedMessage {
+        font-size: 15px;
     }
 }
 
