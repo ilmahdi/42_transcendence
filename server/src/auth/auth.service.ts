@@ -1,26 +1,22 @@
-import { ConflictException, HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-// import * as bcrypt from "bcryptjs"
-import * as jwt from "jsonwebtoken"
 import { Observable, catchError, from, map, of, retry, switchMap } from 'rxjs';
-import { brotliCompress } from 'zlib';
-import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from 'src/common/interfaces';
-import { UserEntity } from 'src/user/utils/models/user.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt'
 import { User } from 'src/user/utils/models/user.class';
 
 
 @Injectable()
 export class AuthService {
-    constructor(@InjectRepository(UserEntity) private readonly userRepository:Repository<UserEntity>, private jwtService: JwtService){
+    constructor(
+        // @InjectRepository(UserEntity) private readonly userRepository:Repository<UserEntity>,
+        private prismaService: PrismaService,
+        private jwtService: JwtService
+        ){
     }
 
     getAllUsers() {
-        return from(this.userRepository.find())
+        return from(this.prismaService.user.findMany())
     }
     
     hashPassword(password: string): Observable<string> {
@@ -28,20 +24,19 @@ export class AuthService {
     }
 
     registerAccount(user: User): Observable<User> {
-        const {firstName, lastName, email, password} = user;
+        const {firstName, lastName, email, password, imagePath} = user;
         return this.hashPassword(password).pipe(
             switchMap((hashedPassword: string) => {
-                return from(this.userRepository.save({firstName, lastName, email, password: hashedPassword}))
+                return from(this.prismaService.user.create({data:{firstName, lastName, email, password: hashedPassword, imagePath}}))
                 .pipe(map((user:User) => {delete user.password; return user}))
             })
         )
     }
 
     validaorUser(email:string, password:string):Observable<User> {
-        return from(this.userRepository
-            .createQueryBuilder('user')
-            .where('user.email = :email', { email })
-            .getOne());
+        return from(this.prismaService.user.findFirst({
+            where:{email}
+        }))
     }
 
     login(user:User):Observable<string> {

@@ -9,35 +9,21 @@ import { from } from "rxjs";
 @Injectable()
 export class UserService {
     constructor(
-        // private readonly prismaService: PrismaService,
-        @InjectRepository(UserEntity) private readonly userRepository:Repository<UserEntity>
+        private readonly prismaService: PrismaService,
+        // @InjectRepository(UserEntity) private readonly userRepository:Repository<UserEntity>
         ){
     }
 
-    // async findUserById(id: number) {
-    //     const user = await this.prismaService.userAccount.findUnique({
-    //         where: {
-    //             id,
-    //         },
-    //     })
-    //     return user;
-    // }
-    // async findUserByUsername(username: string) {
-    //     const user = await this.prismaService.userAccount.findUnique({
-    //         where: {
-    //             username,
-    //         },
-    //     })
-    //     return user;
-    // }
-
-    updateUser(userId:number, socketId:string) {
-        this.userRepository.update(userId, {socketId})
+    async updateUser(userId:number, socketId:string) {
+        await this.prismaService.user.update({
+            where:{id:userId},
+            data:{socketId}
+        })
     }
 
     getUserById(id:number) {
         try {
-            const user = this.userRepository.findOne({
+            const user = this.prismaService.user.findFirst({
               where: {
                 id:id
               }

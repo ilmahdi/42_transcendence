@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Param, Patch, Post, Put, Query, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
-import { ChatService } from './chat.service';
 import { Message } from './utils/models/message.interface';
 import { MessageBody } from '@nestjs/websockets';
 import { Observable, from, of } from 'rxjs';
@@ -15,7 +14,7 @@ export const storage = {
   storage:diskStorage({
     destination: './uploads/images',
     filename: (req, file, cb)=> {
-      const originalname = file.originalname || 'default.jpg'; 
+      const originalname = file.originalname || 'default.png'; 
       const filename: string = path.parse(originalname).name.replace(/\s/g, '');
       const extension: string = path.parse(originalname).ext;
 
@@ -59,8 +58,8 @@ export class ChatController {
   ////////////////////////////////////////// ROMMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
   @Post('createRoom')
-  createRoom(@Body() room:Room) {
-    this.roomChatService.createRoom(room);
+  async createRoom(@Body() room:Room) {
+    await this.roomChatService.createRoom(room);
     return room
   }
 
@@ -103,7 +102,7 @@ export class ChatController {
   uploadFile(@UploadedFile() file): Observable<string> {
     if (file)
       return from(file.filename as string);
-    return from('default.jpg')
+    return from('default.png')
   }
 
   @Get('image/:imagePath')

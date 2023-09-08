@@ -8,22 +8,18 @@ import { ChatModule } from './chat/chat.module';
 import { GameModule } from './game/game.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({isGlobal: true}),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: parseInt(<string>process.env.POSTGRES_PORT),
-      username: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DATABASE,
-      autoLoadEntities: true,
-      synchronize: true}),
-    UserModule, PrismaModule, AuthModule, ChatModule, GameModule, 
+    ConfigModule.forRoot({ isGlobal: true }),
+    PrismaModule, // Include PrismaModule
+    UserModule,
+    AuthModule,
+    ChatModule,
+    GameModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [PrismaService], // Add PrismaService to providers
 })
 export class AppModule {}

@@ -1,4 +1,6 @@
-import { RoomType } from "./roomType.enum";
+// import { RoomType } from "./roomType.enum";
+
+import { RoomType } from "@prisma/client";
 
 export interface Room {
     id?:number;

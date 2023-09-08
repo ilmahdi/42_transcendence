@@ -1,5 +1,5 @@
 export enum RoomType {
-    PUBLIC = 'public',
-    PRIVATE = 'private',
-    PROTECTED = 'protected'
+    PUBLIC = 'PUBLIC',
+    PROTECTED = 'PROTECTED',
+    PRIVATE = 'PRIVATE'
 }

@@ -1,112 +1,123 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { MessageEntity } from "../models/message.entity";
-import { UserEntity } from "src/user/utils/models/user.entity";
-import { Repository } from "typeorm";
-import { AuthService } from "src/auth/auth.service";
 import { from, map } from "rxjs";
 import { Message } from "../models/message.interface";
+import { User } from "src/user/utils/models/user.interface";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class PrivateChatService {
     constructor(
-        @InjectRepository(MessageEntity) private readonly messageRepository:Repository<MessageEntity>,
-        @InjectRepository(UserEntity) private readonly userRepository:Repository<UserEntity>,
-        private authService:AuthService
+        private prismaService:PrismaService
     ) {}
 
-    saveMessage(message: Message) {
-        return from(this.messageRepository.save(message));
+    async saveMessage(message: Message) {
+      return await this.prismaService.message.create({data:{senderId:message.senderId, date:message.date, message:message.message, receiverId:message.receiverId, readed:false, roomId:message.roomId}})
     }
 
     getMessages() {
-        return from(this.messageRepository.find())
+        return from(this.prismaService.message.findMany())
     }
 
-    getConversation(senderId:number, receiverId:number) {
-        try {
-            const messages = this.messageRepository.find({
-              where: [
-                {senderId: senderId, receiverId: receiverId},
-                {senderId: receiverId, receiverId: senderId}
-              ],
-            });
-            return from(messages).pipe(map((messages: Message[]) => messages.filter(item => item.roomId === -1)));;
-        } catch (error) {
-            // Handle errors (e.g., database connection errors)
-            throw new Error('Could not retrieve messages');
-        }
-    }
-
-    getLastMessage(id:number) {
-        try {
-            const messages = this.messageRepository.find({
-              where: [
-                {senderId: id},
-                {receiverId: id}
-              ],
-            });
-            return from(messages).pipe(map((messages: Message[]) => messages.filter(item => item.roomId === -1)));;
-        } catch (error) {
-            throw new Error('Could not retrieve messages');
-        }
-    }
-
-    // updateRead(receiverId:number, senderId:number) {
-    //     const message = this.messageRepository.find({
-    //         where: {
-    //           senderId: senderId, receiverId: receiverId
-    //         },
-    //     });
-    //     from(message).subscribe(data=>{
-    //         data.forEach(data=>{
-    //             const msg = {id:data.id, senderId:data.senderId, receiverId:data.receiverId, message:data.message, date:data.date, readed:true}
-    //             this.messageRepository.update(msg.id, msg);
-    //         })
-    //     })
-    // }
-
-    updateRead(message:Message) {
-      let msg = {id:message.id, senderId:message.senderId, receiverId:message.receiverId, message:message.message, date:message.date, readed:true}
-      this.messageRepository.update(msg.id, msg);
-    }
-
-    // getUnreadMessageCountsBySenderId(receiverId: number): Observable<{ senderId: number; unreadCount: number; }[]> {
-    //   const query = `
-    //     SELECT "senderId", COUNT(*) AS "unreadCount"
-    //     FROM "message"
-    //     WHERE "receiverId" = $1 AND "readed" = false
-    //     GROUP BY "senderId"
-    //   `;
+    async getConversation(senderId: number, receiverId: number): Promise<Message[]> {
+      try {
+        const messages = await this.prismaService.message.findMany({
+          where: {
+            OR: [
+              { senderId: senderId, receiverId: receiverId },
+              { senderId: receiverId, receiverId: senderId },
+            ],
+          },
+        });
   
-    //   return from(this.messageRepository.query(query, [receiverId])).pipe(
-    //     map(unreadMessages => unreadMessages as { senderId: number; unreadCount: number }[])
-    //   );
-    // }
+        // Filter messages with a valid 'roomId' (not -1)
+        const filteredMessages = messages.filter((message) => message.roomId === -1);
+  
+        return filteredMessages;
+      } catch (error) {
+        // Handle errors (e.g., database connection errors)
+        throw new Error('Could not retrieve messages');
+      }
+    }
+
+    async getLastMessage(id: number): Promise<Message[]> {
+      try {
+        const messages = await this.prismaService.message.findMany({
+          where: {
+            OR: [
+              { senderId: id },
+              { receiverId: id },
+            ],
+          },
+        });
+  
+        // Filter messages with a valid 'roomId' (not -1)
+        const filteredMessages = messages.filter((message) => message.roomId === -1);
+  
+        return filteredMessages;
+      } catch (error) {
+        // Handle errors (e.g., database connection errors)
+        throw new Error('Could not retrieve messages');
+      }
+    }
+
+    async updateRead(message: Message): Promise<void> {
+      const updatedMessage = await this.prismaService.message.update({
+        where: { id: message.id },
+        data: {
+          readed: true,
+        },
+      });
+    }
 
     async getUnreadMessageCountsBySenderId(receiverId: number): Promise<{ senderId: number; unreadCount: number }[]> {
-      const query = `
-        SELECT "senderId", COUNT(*) AS "unreadCount"
-        FROM "message"
-        WHERE "receiverId" = $1 AND "readed" = false AND "roomId" = -1
-        GROUP BY "senderId"
-      `;
-    
       try {
-        const unreadMessages = await this.messageRepository.query(query, [receiverId]);
-        return unreadMessages as { senderId: number; unreadCount: number }[];
+        // Retrieve all relevant messages
+        const messages = await this.prismaService.message.findMany({
+          where: {
+            receiverId: receiverId,
+            readed: false,
+            roomId: -1,
+          },
+          select: {
+            senderId: true,
+          },
+        });
+  
+        // Count unread messages for each sender using JavaScript
+        const unreadCounts = messages.reduce((countMap, message) => {
+          const senderId = message.senderId;
+          countMap.set(senderId, (countMap.get(senderId) || 0) + 1);
+          return countMap;
+        }, new Map<number, number>());
+  
+        // Convert the map to an array of { senderId, unreadCount }
+        const result = Array.from(unreadCounts).map(([senderId, unreadCount]) => ({
+          senderId,
+          unreadCount,
+        }));
+  
+        return result;
       } catch (error) {
         console.error('Error querying unread messages:', error);
         throw error; // Re-throw the error to be handled at a higher level
       }
     }
 
-    async searchConversation(query:string) {
-      const users = await this.userRepository
-      .createQueryBuilder('user')
-      .where('user.firstName LIKE :query OR user.lastName LIKE :query', { query: `%${query}%` })
-      .getMany();
-
-      return users;
+    async searchConversation(query: string): Promise<User[]> {
+      try {
+        const users = await this.prismaService.user.findMany({
+          where: {
+            OR: [
+              { firstName: { contains: query, mode: 'insensitive' } },
+              { lastName: { contains: query, mode: 'insensitive' } },
+            ],
+          },
+        });
+  
+        return users;
+      } catch (error) {
+        console.error('Error searching conversation:', error);
+        throw error; // Re-throw the error to be handled at a higher level
+      }
     }
 }

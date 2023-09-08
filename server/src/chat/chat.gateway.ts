@@ -1,5 +1,4 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
-import { ChatService } from './chat.service';
 import { Server, Socket } from 'socket.io';
 import { Message } from './utils/models/message.interface';
 import { Body, UseGuards } from '@nestjs/common';
@@ -52,19 +51,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
 
   @SubscribeMessage('getConversation')
   async getConversation(client: Socket, data:any) {
-    // const messages = await this.chatService.getConversation(data.senderId, data.receiverId).toPromise();
-    this.privateChatService.getConversation(data.senderId, data.receiverId).subscribe(data=>this.server.to(client.id).emit('getConversation', data))
+    const messages = await this.privateChatService.getConversation(data.senderId, data.receiverId)
+    this.server.to(client.id).emit('getConversation', messages)
     // this.server.to(client.id).emit('getConversation', messages);
   }
 
   @SubscribeMessage('getLastMessage')
-  getLastMessage(client:Socket, id:number) {
-    this.privateChatService.getLastMessage(id).subscribe(data=>{
-      if (!data.length)
-        client.emit('recLastMessage', [{id:0, senderId:id, receiverId:id, message:"Welcome", date:new Date}])
-      else
-        client.emit('recLastMessage', data);
-    });
+  async getLastMessage(client:Socket, id:number) {
+    const data = await this.privateChatService.getLastMessage(id)
+    if (!data.length)
+      client.emit('recLastMessage', [{id:0, senderId:id, receiverId:id, message:"Welcome", date:new Date}])
+    else
+      client.emit('recLastMessage', data);
   }
 
   @SubscribeMessage('updateRead')
@@ -84,17 +82,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   @SubscribeMessage('getUnreadedRoomMessages')
   async getUnreadedRoomMessages(client:Socket, id:number) {
     const data = await this.roomChatService.getUnreadedRoomMessages(id)
-    console.log(data);
-    
-      this.server.to(client.id).emit('recNotReadedRoomMessages', data)
-    
+    this.server.to(client.id).emit('recNotReadedRoomMessages', data)
   }
 
   @SubscribeMessage('getRooms')
-  getRooms(client:Socket, id:number) {
-    this.roomChatService.getRooms(id).subscribe(data=>{
-      client.emit('recRooms', data);
-    })
+  async getRooms(client:Socket, id:number) {
+    const data = await this.roomChatService.getRooms(id)
+    client.emit('recRooms', data);
   }
 
   @SubscribeMessage('getRoomById')
@@ -114,20 +108,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
   }
 
   @SubscribeMessage('roomConversation')
-  roomConversation(client:Socket, room:Room) {
-    this.roomChatService.getRoomConversation(room.id).subscribe(data=>{
-      this.server.to(client.id).emit('recRoomConversation', data)
-    })
+  async roomConversation(client:Socket, room:Room) {
+    const data = await this.roomChatService.getRoomConversation(room.id)
+    this.server.to(client.id).emit('recRoomConversation', data)
   }
 
   @SubscribeMessage('getRoomLastMessage')
-  getRoomLastMessage(client:Socket, id:number) {
-    this.roomChatService.getMessagesByUserId(id).subscribe(data=>{
+  async getRoomLastMessage(client:Socket, id:number) {
+    const data = await this.roomChatService.getMessagesByUserId(id)
       if (!data.length)
         client.emit('recRoomLastMessage', [{id:0, senderId:id, receiverId:id, message:"Welcome", date:new Date(), roomId:1}])
       else
         client.emit('recRoomLastMessage', data)
-    });
   }
 
   @SubscribeMessage('getOtherRooms')

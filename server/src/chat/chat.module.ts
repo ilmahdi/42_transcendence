@@ -7,15 +7,24 @@ import { UserEntity } from '../user/utils/models/user.entity';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
-import { RoomEntity } from './utils/models/room.entity';
 import { PrivateChatService } from './utils/services/privateChat.service';
 import { RoomChatService } from './utils/services/roomChat.service';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-  providers: [AuthService, JwtService, ChatGateway, UserService, PrivateChatService, RoomChatService],
+  providers: [
+    AuthService,
+    JwtService,
+    ChatGateway,
+    UserService,
+    PrivateChatService,
+    RoomChatService,
+    PrismaService, // Include PrismaService
+  ],
   controllers: [ChatController],
   imports: [
-    TypeOrmModule.forFeature([MessageEntity, UserEntity, RoomEntity])
-  ]
+    PrismaModule, // Use PrismaModule instead of TypeOrmModule
+  ],
 })
 export class ChatModule {}
