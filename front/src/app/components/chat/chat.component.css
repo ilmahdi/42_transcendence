@@ -1,6 +1,7 @@
 .direct {
     position: absolute;
-    left: 270px;
+    /* left: 270px; */
+    right: calc(25% + 746px);
     margin-top: 80px;
     width: 144px;
     height: 44px;
@@ -10,7 +11,8 @@
 
 .rooms {
     position: absolute;
-    left: 416px;
+    /* left: 416px; */
+    right: calc(25% + 600px);
     margin-top: 80px;
     width: 144px;
     height: 44px;
@@ -30,7 +32,8 @@
 .headerPart {
     display: flex;
     position: absolute;
-    left: 270px;
+    /* left: 270px; */
+    right: calc(25% + 600px);
     margin-top: 123px;
     width: 290px;
     height: 67px;
@@ -295,37 +298,61 @@
 
 @media (min-width: 2000px) {
     .direct {
-        left: 470px;
+        /* left: 470px; */
+        right: calc(32% + 760px);
         width: 159px;
     }
 
     .rooms {
-        left: 631px;
+        /* left: 631px; */
+        right: calc(32% + 600px);
         width: 159px;
     }
 
     .headerPart {
-        left: 470px;
+        /* left: 470px; */
+        right: calc(32% + 600px);
         width: 320px;
     }
 }
 
-@media (max-width: 1324px) {
-    .createRoom {
-        right: 20px;
-        /* width: 400px; */
+@media (max-width: 1515px) {
+    .direct {
+        right: calc(25% + 674px);
+    }
+    .rooms {
+        right: calc(25% + 530px);
+    }
+
+    .headerPart {
+        /* left: 470px; */
+        right: calc(25% + 530px);
     }
 }
 
-@media (max-width: 1092px) {
+@media (max-width: 1420px) {
     .direct {
-        left: 110px;
+        right: calc(2% + 746px);
     }
     .rooms {
-        left: 256px;
+        right: calc(2% + 600px);
     }
+
     .headerPart {
-        left: 110px;
+        right: calc(2% + 600px);
+    }
+}
+
+@media (max-width: 1160px) {
+    .direct {
+        right: calc(2% + 654px);
+    }
+    .rooms {
+        right: calc(2% + 508px);
+    }
+
+    .headerPart {
+        right: calc(2% + 508px);
     }
 }
 

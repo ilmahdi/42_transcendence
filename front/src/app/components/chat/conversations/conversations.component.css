@@ -1,13 +1,16 @@
 .body {
     position: absolute;
     margin-top: 90px;
-    right: 270px;
+    right: 25%;
     height: calc(100px + 65%);
     width: 572px;
     background-color: #231C1C;
     border-radius: 15px 15px 15px 15px;
     scrollbar-color: #5e6147 var(--second-background-color);
     scrollbar-width: 0.4rem;
+
+    /* padding-left: 14rem;
+    padding-right: 14rem; */
 }
 
 .header {
@@ -15,7 +18,7 @@
     top: 0px;
     width: 100%;
     height: 46px;
-    background-color: #D38146;
+    background-color: #d3814674;
     border-radius: 15px 15px 0px 0px;
 }
 
@@ -211,20 +214,25 @@ p {
 
 @media (min-width: 2000px) {
     .body {
-        right: 470px;
-        width: 672px;
+        right: 32%;
     }
 }
 
-@media (max-width: 1366px) {
+@media (max-width: 1515px) {
     .body {
-        width: 490px;
+        right: calc(25% - 70px);
     }
 }
 
-@media (max-width: 1324px) {
+@media (max-width: 1420px) {
     .body {
-        right: 20px;
+        right: 2%
+    }
+}
+
+@media (max-width: 1160px) {
+    .body {
+        width: 480px;
     }
 }
 
@@ -240,7 +248,7 @@ p {
 
 @media (max-width: 660px) {
     .body {
-        width: 65%;
+        width: 75%;
         right: 30px;
         height: 80%;
     }

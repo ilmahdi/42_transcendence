@@ -142,7 +142,7 @@ export class DirectComponent implements OnInit, OnDestroy {
   openConversation(name:string, friend: User): void {
     //  IF THE SCREEN WIDTH < 934 SO THE CONVERSATION BUTTON COLOR WILL NOT CHANGE WHEN THE USER CLICK IT
     if (this.screenWidth > 934) {
-      this.color = {color:'#D38146', name:name}
+      this.color = {color:'#d3814674', name:name}
     }
     else
       this.color = {color:'', name:''}

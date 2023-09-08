@@ -2,7 +2,8 @@
     display: flex;
     position: absolute;
     flex-direction: column;
-    left: 270px;
+    /* left: 270px; */
+    right: calc(25% + 600px);
     margin-top: 186px;
     width: 290px;
     height: 65%;
@@ -94,14 +95,27 @@
 
 @media (min-width: 2000px) {
     .list {
-        left: 470px;
+        /* left: 470px; */
+        right: calc(32% + 600px);
         width: 320px;
     }
 }
 
-@media (max-width: 1092px) {
+@media (min-width: 1515px) {
     .list {
-        left: 110px;
+        right: calc(25% + 530px);
+    }
+}
+
+@media (max-width: 1420px) {
+    .list {
+        right: calc(2% + 600px);
+    }
+}
+
+@media (max-width: 1160px) {
+    .list {
+        right: calc(2% + 508px);
     }
 }
 

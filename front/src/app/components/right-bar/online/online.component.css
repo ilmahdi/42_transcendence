@@ -83,7 +83,7 @@
     background-color: #D38146;
 }
 
-@media (max-width: 1324px) {
+@media (max-width: 1420px) {
     .rightBar, #profileImg2, #names, #txt, #profileImg2 {
         width: 0;
         font-size: 0;
