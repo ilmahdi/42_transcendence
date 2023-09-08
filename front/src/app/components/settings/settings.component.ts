@@ -9,6 +9,7 @@ import { IUserData, IUserDataShort } from 'src/app/utils/interfaces/user-data.in
 import { environment } from 'src/environments/environment';
 import { TwoFAComponent } from '../modals/two-fa/two-fa.component';
 import { AuthService } from 'src/app/services/auth.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-settings',
@@ -23,6 +24,7 @@ export class SettingsComponent implements OnInit {
     private router: Router,
     private confirmService: ConfirmService,
     private authService :AuthService,
+    public loadingService: LoadingService,
     ) {
       this.myformGroup = this.formBuilder.group({
         username: [
@@ -53,6 +55,7 @@ export class SettingsComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.loadingService.showLoading();
     this.userService.getUserData().subscribe((data: IUserData) => {
       
       this.selectedImage = data.avatar;
@@ -64,6 +67,8 @@ export class SettingsComponent implements OnInit {
       this.myformGroup.patchValue({
         username: this.userDataShort.username,
       });
+
+      this.loadingService.hideLoading()
    });
 
    this.myformGroup.get('username')?.valueChanges.subscribe(newUsername => {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { LoadingService } from 'src/app/services/loading.service';
 import { UserService } from 'src/app/services/user.service';
 import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
 
@@ -14,9 +15,11 @@ export class ProfileComponent implements OnInit {
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
+    public loadingService: LoadingService,
     ) { }
 
   ngOnInit(): void {
+    this.loadingService.showLoading();
     this.getUserData();
   }
   public isClicked :boolean = true;
@@ -40,12 +43,13 @@ export class ProfileComponent implements OnInit {
 
       const subscription = this.userService.getUserDataByUsername(params['username']).subscribe((data: IUserData) => {
         this.userData = data;
+
+       this.loadingService.hideLoading()
      });
      this.subscriptions.push(subscription);
     });
     this.subscriptions.push(subscription);
   }
-
 
 
 

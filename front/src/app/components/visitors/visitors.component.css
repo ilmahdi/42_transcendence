@@ -104,6 +104,8 @@
 .lp-sec-img {
   width: 60%;
   object-fit: cover;
+
+  shape-rendering:geometricPrecision;
 }
 
 .lp-sec-text {

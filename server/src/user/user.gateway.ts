@@ -57,32 +57,7 @@ export class UserGateway  {
       });
     }
   }
-  @SubscribeMessage('connectionStatus')
-  connectionStatus(client: Socket, userId: string) {
-    
-    const userSocketIds = this.connectionGateway.connectedUsersById[userId];
-    
-    if (userSocketIds) {
-      this.server.to(client.id).emit('online', userId);
-    }
-    else
-      this.server.to(client.id).emit('offline', userId);
-  }
-  @SubscribeMessage('connectionStatusMany')
-  connectionStatusMany(client: Socket, userIds: string[]) {
-    
-    for (const userId of userIds) {
-      const userSocketIds = this.connectionGateway.connectedUsersById[userId];
-      
-      if (userSocketIds) {
-          this.server.to(client.id).emit('online', userId);
-
-      } else {
-          this.server.to(client.id).emit('offline', userId);
-      }
-    }
-  }
-  
+ 
 
   
   

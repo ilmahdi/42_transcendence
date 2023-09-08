@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { IUserData } from '../../utils/interfaces/user-data.interface';
 import { Observable } from 'rxjs';
+import { LoadingService } from 'src/app/services/loading.service';
 
 
 @Component({
@@ -14,6 +15,7 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    public loadingService: LoadingService,
   ) { 
 
   }
@@ -30,12 +32,15 @@ export class HomeComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    this.loadingService.showLoading();
     this.getUserData()
   }
   getUserData() {
      this.userService.getUserData().subscribe((data: IUserData) => {
        this.userData = data;
-       this.isLoading = false;
+       
+       this.loadingService.hideLoading();
+
     });
 
   }

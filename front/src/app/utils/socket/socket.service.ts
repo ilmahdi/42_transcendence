@@ -25,7 +25,6 @@ export class SocketService {
 
     this.socket.on('connect', () => {
       console.log('Connected to WebSocket server');
-      console.log("---->>>>", this.loggedInUserId)
       this.socket.emit("broadcastOnline", this.loggedInUserId);
 
     });
