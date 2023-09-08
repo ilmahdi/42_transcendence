@@ -19,8 +19,6 @@ export class AppComponent implements OnInit {
   public isAuthenticated :boolean = false;
 
   ngOnInit(): void {
-
-    this.loadingService.showLoading();
     
     this.socketService.initSocketConnection();
     this.authService.isAuthenticated$.subscribe((value) => {
