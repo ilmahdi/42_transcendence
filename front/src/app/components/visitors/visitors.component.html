@@ -1,52 +1,57 @@
-
-<div class="lp-bg" >
-    <img class="lp-bg-img"  src="./assets/imgs/pong_login.png" >
-    <div class="lp-bg-cover"></div>
-
-</div>
 <div #firstLoginModal *ngIf="firstLogin">
     <app-first-login></app-first-login>
 </div>
 
-<div class="login-page" *ngIf="!firstLogin">
 
-    <div class="lp-sec-one">
-        <div class="lp-sec-logo">
-            <svg id="icon-logo" class="lp-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="./assets/icons/logo.svg#icon-logo"></use>
-            </svg>
-            <span class="lp-sec-item-text"> POING </span>
-        </div>
-        <div class="lp-sec-login-wrap">
+<div class="login-page-wrap">
+    
+    <div class="lp-bg" >
+        <img class="lp-bg-img"  src="./assets/imgs/pong_login.png" >
+        <div class="lp-bg-cover"></div>
 
-            <div class="lp-sec-login">
-                <span class="lp-sec-login-t1">Welcome Back</span>
-                <span class="lp-sec-login-t2">login with intranet 42 and start playing</span>
-                <div class="lp-sec-login-item">
-                    
-                    <div class="lp-sec-login-button" (click)="redirectToLogin()">
-                        <span class="lp-sec-login-button-text">Sign in with</span>
-                        <img id="icon-42-logo" class="lp-sec-item-icon"  src="./assets/icons/42_logo.svg" />
+    </div>
+
+    <div class="login-page" *ngIf="!firstLogin">
+
+        <div class="lp-sec-one">
+            <div class="lp-sec-logo">
+                <svg id="icon-logo" class="lp-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="./assets/icons/logo.svg#icon-logo"></use>
+                </svg>
+                <span class="lp-sec-item-text"> POING </span>
+            </div>
+            <div class="lp-sec-login-wrap">
+
+                <div class="lp-sec-login">
+
+                    <span class="lp-sec-login-t1">Welcome Back</span>
+                    <span class="lp-sec-login-t2">login with intranet 42:</span>
+                    <div class="lp-sec-login-item">
+                        
+                        <div class="lp-sec-login-button" (click)="redirectToLogin()">
+                            <span class="lp-sec-login-button-text">Sign in with</span>
+                            <img id="icon-42-logo" class="lp-sec-item-icon"  src="./assets/icons/42_logo.svg" />
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div
-        >
-    </div>
-    <div class="lp-sec-two">
-        <div class="lp-sec-two-wrap" >
-
-            <img class="lp-sec-img"  src="./assets/icons/pong_game.svg" />
-                
-            <div class="lp-sec-text">
-                Ping Pong is not just a game, it's a fantastic way to connect with others and build lasting friendships. So, what are you waiting for? Log in, grab your paddle, and get ready for some Ping Pong action.
-            </div>
-            
+            </div
+            >
         </div>
-    </div>
-    <footer class="lp-footer">
-        <p>&copy; 2023 ft_transcendance. All rights reserved.</p>
-    </footer>
-    
-</div>
+        <div class="lp-sec-two">
+            <div class="lp-sec-two-wrap" >
 
+                <img class="lp-sec-img"  src="./assets/imgs/pong_table.png" />
+                    
+                <div class="lp-sec-text">
+                    Ping Pong is not just a game, it's a fantastic way to connect with others and build lasting friendships. So, what are you waiting for? Log in, grab your paddle, and get ready for some Ping Pong action.
+                </div>
+                
+            </div>
+        </div>
+        <footer class="lp-footer">
+            <p>&copy; 2023 ft_transcendance. All rights reserved.</p>
+        </footer>
+        
+    </div>
+
+</div>
