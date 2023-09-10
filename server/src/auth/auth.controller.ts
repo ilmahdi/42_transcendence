@@ -1,28 +1,51 @@
-import { Body, Controller, Get, Param, ParseEnumPipe, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseEnumPipe, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UserEntity } from 'src/user/utils/models/user.entity';
-import { Observable, map } from 'rxjs';
-import { User } from 'src/user/utils/models/user.interface';
-import { JwtGuard } from './guards/jwt.guard';
+// import * as bcrypt from "bcryptjs"
+import { FtLoginGuard } from './utils/guards/ft-login.guard';
+import { AuthGuard } from '@nestjs/passport';
+
+import { Request, Response } from "express";
+import { JwtGuard } from './utils/guards/jwt.guard';
+
+
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authServie: AuthService){
+    constructor(private readonly authService: AuthService){
     }
-
-    @Post('register')
-    register(@Body() user: User): Observable<User> {
-        return this.authServie.registerAccount(user);
-    }
-
-    @Post('login')
-    login(@Body() user: User): Observable<{token:string}> {
-        return this.authServie.login(user).pipe(map((jwt: string) => ({token:jwt})))
-    }
-
+    @Get("twofa/ckeck/:userId")
     @UseGuards(JwtGuard)
-    @Get('allUsers')
-    getAllUsers() {
-        return this.authServie.getAllUsers();
+    twofaCheck(@Param('userId') userId: number) {
+
+        return this.authService.twofaCheck(userId)
+
     }
+    @Get("login/42")
+    @UseGuards(FtLoginGuard)
+    ftLogin(){0
+    }
+    
+    @Get("callback/42")
+    @UseGuards(FtLoginGuard)
+    ftCallback(@Req() req :any, @Res() res :Response){
+        // console.log(req.user)
+        let queryUserData = "";
+        if (req.user.firstLogin === "true")
+            queryUserData = `ft_id=${req.user.profile.ft_id}&username=${req.user.profile.username}&avatar=${req.user.profile.avatar}`;
+        else 
+            queryUserData = `access_token=${req.user.token}`;
+        
+
+        res.status(302).redirect(`${process.env.FONTEND_URL}/login?${queryUserData}&first_login=${req.user.firstLogin}`);
+    }
+    @Get("logout/42")
+    @UseGuards(JwtGuard)
+    async ftLogout() {
+        return "logged out"
+        // return this.authService.ftLogout()
+    }
+
 }
+// ft_id
+// username
+// avatar

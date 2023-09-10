@@ -1,2 +1,24 @@
-<app-nav-bar></app-nav-bar>
-<app-online></app-online>
+
+<app-online-friends></app-online-friends>
+    
+<div class="wrap-component">
+    <app-profile-stats [userData]="userData"></app-profile-stats>
+    <div class="profile-buttons">
+        <div class="pb-button" (click)="!isClicked && toggleActive()" [class.active-btn]="isClicked">
+            <svg class="pb-btn-icon" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="./assets/icons/history.svg#icon-history"></use>
+            </svg>
+            <span class="pb-btn-text"> Match History  </span>
+        </div>
+        <div class="pb-button" (click)="isClicked && toggleActive()" [class.active-btn]="!isClicked">
+            <svg class="pb-btn-icon" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="./assets/icons/achieve.svg#icon-achieve"></use>
+            </svg>
+            <span class="pb-btn-text"> Achievements </span>
+        </div>
+
+    </div>
+    <app-match-history *ngIf="isClicked"></app-match-history>
+    <app-achievements *ngIf="!isClicked"></app-achievements>
+    
+</div>

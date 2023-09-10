@@ -2,17 +2,20 @@
     display: flex;
     position: absolute;
     flex-direction: column;
+    margin-left: 82%;
     width: 243px;
+    /* width: 18%; */
     height: 100%;
     background-color: #231C1C;
-    right: 0;
 }
 
 .porfile {
     cursor: pointer;
+    /* position: relative; */
     width: 100%;
     height: 75px;
     transition: 0.3s;
+    /* border-radius: 12px; */
 }
 
 .porfile:hover {
@@ -70,6 +73,7 @@
 
 .onlinePart {
     position: relative;
+    /* margin-top: 132px; */
 }
 
 .users {
@@ -83,20 +87,44 @@
     background-color: #D38146;
 }
 
-@media (max-width: 1420px) {
-    .rightBar, #profileImg2, #names, #txt, #profileImg2 {
-        width: 0;
-        font-size: 0;
+@media (max-width: 1320px) {
+    .rightBar {
+        width: 200px;
+        margin-left: 85%;
     }
-    #profileImg {
-        right: 50px;
+
+    #username  {
+        margin-left: 100px;
+    }
+
+    #profileImg2 {
+        margin-left: 30px;
+    }
+
+    #txt {
+        font-size: 20px;
+    }
+
+    #names {
+        margin-left: 80px;
     }
 }
 
-@media (max-width: 660px) {
+@media (max-width: 1234px) {
+    .rightBar {
+        width: 0px;
+    }
     #profileImg {
-        height: 35px;
-        width: 35px;
-        right: 20px;
+        width: 39px;
+        height: 39px;
+        margin-left: 30px;
+    }
+    #username {
+        margin-left: 80px;
+    }
+    #profileImg2, #names, #txt {
+        font-size: 0px;
+        width: 0px;
+        height: 0px;
     }
 }

@@ -1,10 +1,10 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
 import { BehaviorSubject, Subscription, take } from 'rxjs';
-import { Room } from 'src/app/models/room.model';
-import { RoomType } from 'src/app/models/roomType.enum';
+import { AuthService } from 'src/app/services/auth.service';
 import { ChatService } from 'src/app/services/chat.service';
-import { LoginService } from 'src/app/services/login.service';
+import { Room } from 'src/app/utils/interfaces/room.model';
+import { RoomType } from 'src/app/utils/interfaces/roomType.enum';
 
 @Component({
   selector: 'app-other-rooms',
@@ -33,11 +33,11 @@ export class OtherRoomsComponent implements OnInit, OnDestroy{
   searchResults: Room[] = [];
   screenWidth: number = 1000;
 
-  constructor(private chatService:ChatService, private loginService:LoginService) {
+  constructor(private chatService:ChatService, private authService:AuthService) {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
 
-    this.subscription1 = this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
+    this.subscription1 = this.authService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
     })
 

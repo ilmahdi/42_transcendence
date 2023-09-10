@@ -17,7 +17,7 @@
                 <div class="addAdmin" *ngIf="user.click && user.type === 'user'" (click)="addAdmin(user)" [style.backgroundColor]="user.admin? '#D38146':''"><p style="text-align: center;margin-top: 3px;">Admin</p></div>
                 <div class="remove" *ngIf="user.click && user.type === 'user'" (click)="removeMember(user)" [style.backgroundColor]="user.removed?'#D38146':''"><p style="text-align: center;margin-top: 3px;">Remove</p></div>
                 <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="img">
-                <p id="username">{{user.user.firstName}}</p>
+                <p id="username">{{user.user.username}}</p>
                 <p id="type">{{user.type}}</p>
             </div>
         </div>
@@ -43,7 +43,7 @@
                 <div class="addAdmin" *ngIf="user.click && user.type === 'user'"><p style="text-align: center;margin-top: 3px;">Admin</p></div>
                 <div class="remove" *ngIf="user.click && user.type === 'user'"><p style="text-align: center;margin-top: 3px;">Remove</p></div>
                 <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="img">
-                <p id="username">{{user.user.firstName}}</p>
+                <p id="username">{{user.user.username}}</p>
                 <p id="type">{{user.type}}</p>
             </div>
         </div>
