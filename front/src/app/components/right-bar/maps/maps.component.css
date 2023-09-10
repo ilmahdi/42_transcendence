@@ -1,0 +1,14 @@
+.rightBar {
+    position: absolute;
+    width: 243px;
+    height: 100%;
+    right: 0;
+    background-color: #231C1C;
+}
+
+@media (max-width: 1324px) {
+    .rightBar {
+        width: 0;
+        font-size: 0;
+    }
+}

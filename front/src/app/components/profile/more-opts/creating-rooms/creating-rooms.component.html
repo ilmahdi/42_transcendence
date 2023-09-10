@@ -1,0 +1,24 @@
+<div class="createRoom" *ngIf="!backToRoomFormular">
+    <p id="title" [style.color]="error? 'red': 'white'">Chose a type</p>
+    <div class="public">
+        <div class="publicButton" (click)="onType('PUBLIC')" [style.backgroundColor]="types[0].select? '#D38146' : ''"><p style="top: 4px;position: absolute;left: 22px;">Public</p></div>
+        <p id="publicDescription">If you select public, it is mean that every user in this application can find this room and join it.</p>
+    </div>
+
+    <div class="private">
+        <div class="privateButton" (click)="onType('PRIVATE')" [style.backgroundColor]="types[1].select? '#D38146' : ''"><p style="top: 4px;position: absolute;left: 20px;">Private</p></div>
+        <p id="privateDescription">If you select private, it is mean that no one can find or join this room without invitation.</p>
+    </div>
+
+    <div class="protected">
+        <div class="protectedButton" (click)="onType('PROTECTED')" [style.backgroundColor]="types[2].select? '#D38146' : ''"><p style="top: 4px;position: absolute;left: 10px;">Protected</p></div>
+        <p id="protectedDescription" *ngIf="!types[2].select">If you select public, it is mean that evry user in this application can find this room but no one can join without password.</p>
+        <p id="protectedDescription" *ngIf="types[2].select">Create a password:</p>
+        <form [formGroup]="room">
+            <input type="password" placeholder="Enter a password" *ngIf="types[2].select" id="password" formControlName="password">
+        </form>
+    </div>
+
+    <button id="submit" (click)="createRoom()"><span>Create</span></button>
+    <button id="submit" style="left: 30px;" (click)="back()"><span>Back</span></button>
+</div>

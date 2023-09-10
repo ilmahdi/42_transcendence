@@ -1,3 +1,6 @@
+
+import { Injectable } from "@nestjs/common";
+import { from } from "rxjs";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateUserDto } from "./utils/dtos/update-user.dto";
@@ -14,14 +17,7 @@ export class UserService {
     ) {
     }
 
-    async findUserById(id: number) {
-        const user = await this.prismaService.userAccount.findUnique({
-            where: {
-                id,
-            },
-        })
-        return user;
-    }
+
     // async findUserByFtId(id: number) {
     //     const user = await this.prismaService.userAccount.findUnique({
     //         where: {
@@ -124,16 +120,24 @@ export class UserService {
 
 
 
-
-
     async addUser(createUserDto: CreateUserDto) {
         const user = await this.prismaService.userAccount.create({
             data: {
                 ...createUserDto,
             }
-
         })
-        return user;
+    }
+    getUserById(id:number) {
+        try {
+            const user = this.prismaService.user.findFirst({
+              where: {
+                id:id
+              }
+            });
+            return from(user);
+        } catch (error) {
+            throw new Error('Could not retrieve messages');
+        }
     }
     async updateUserData(id: number, updateUserDto: UpdateUserDto) {
         const updatedUser = await this.prismaService.userAccount.update({
