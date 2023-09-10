@@ -5,13 +5,36 @@
     padding: 0;
     font-family: 'Poppins', sans-serif;
     box-sizing: border-box;
+}
+
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 12;
+    pointer-events: none;
+    background-color: none;
+}
+
+
+.app-notify-containe {
+    position: absolute;
+    top: var(--top-bar-hieght);
+    right: calc(var(--right-bar-width) + 0.4rem);
+    z-index: 11;
+}
+
+/* top bar */
+/******/
+.top-bar {
+    position: relative;
+    user-select: none;
+    box-shadow: 0 0rem 2rem black;
     color: var(--primary-text-color);
 }
 
-/* top bar  */
-/******/
-.top-bar {
-    position: fixed;
+.top-bar-content {
+    position: absolute;
     height: var(--top-bar-hieght);
     width: calc(100% - var(--right-bar-width));
     background-color: var(--top-bar-background-color);
@@ -19,9 +42,23 @@
     list-style-type: none;
     justify-content: space-around;
     align-items: center;
-    /* margin-right: 14rem; */
+    z-index: 5;
+    box-shadow: 0 0rem 0.1rem black;
 }
 
+
+.tb-results {
+    position: absolute;
+    top: var(--top-bar-hieght);
+    /* left: var(--left-bar-width); */
+    display: flex;
+    flex-direction: column;
+    width: 12rem;
+    z-index: 11;
+    /* border-radius: 0.2rem; */
+    box-shadow: 0 0rem 0.08rem black;
+    color: var(--primary-text-color);
+}
 
 /* top bar section */
 /******/
@@ -34,17 +71,21 @@
     justify-content: center;
 }
 .tb-sec-two {
+    /* position: relative; */
     display: flex;
     align-items: center;
     flex-grow: 1;
     min-width: max-content;
     margin-left: 1rem;
+    height: 1rem;
+    gap: 0;
 }
 .tb-sec-three {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
+    align-items:center;
     width: 7rem;
-    gap: 1rem;
+    padding-right: 0.4rem;
 }
 
 
@@ -54,11 +95,58 @@
 
 /* top bar section item */
 /******/
+.tb-sec-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    position: relative;
+}
+
+.tb-sec-item.i2 {
+    justify-content: flex-start;
+}
+
+.tb-result-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: var(--third-background-color);
+    height: 2.2rem;
+    padding: 0.6rem;
+    gap: 0.6rem;
+    border: none;
+    color: var(--primary-text-color);
+}
+.tb-result-item:hover {
+    cursor: pointer;
+    background-color: var(--primary-hover-background-color);
+}
+
+.tb-result-item.active {
+    cursor: pointer;
+    background-color: var(--primary-hover-background-color);
+}
 
 
-
-/* top bar section item specific */
+/* top bar section item indicator */
 /******/
+.tb-sec-item-indic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    background-color: red;
+    position: absolute;
+    right: -0.2rem;
+    top: -0.4rem;
+    z-index: 100;
+    font-weight: 600;
+    color: white;
+}
+
 
 
 /* top bar section item icon */
@@ -68,6 +156,11 @@
     width: 1.8rem;
     height: 1.8rem;
     fill: var(--primary-text-color);
+    flex-shrink: 0;
+}
+
+.tb-sec-item-icon.active {
+    fill: var(--second-hover-background-color);
 }
 
 /**/
@@ -86,6 +179,20 @@
 /******/
 
 
+/* top bar section item img */
+/******/
+.tb-sec-item-img {
+
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    object-fit: cover;
+
+    pointer-events: none;
+}
+
+
+
 /* top bar section item text */
 /******/
 
@@ -96,7 +203,13 @@
     outline: none;
     margin-left: 0.6rem;
     font-size: 0.9rem;
-    width: 10rem;
+    width: 100%;
+    /* background-color: blueviolet; */
+
+    max-width: 12rem;
+    min-width: min-content;
+    height: 1.6rem;
+    color: var(--primary-text-color);
 }
 
 .tb-sec-item-text[type="search"]::-webkit-search-cancel-button{
@@ -114,22 +227,27 @@
 /*                Media Queries                */
 /***********************************************/
 
-@media (max-width: 1200px) {
+/* @media (max-width: 1200px) {
     
+
+    
+} */
+
+@media (max-width: 1000px) {
+    
+    .app-notify-containe {
+        right: 0.4rem;
+    }
     /* top bar  */
     /******/
-    .top-bar {
+    .top-bar-content {
         width: 100%;
     }
-    
-}
-
-@media (max-width: 950px) {
-
-/* top bar section */
-/******/
-.tb-sec-one {
-    width: var(--second-left-bar-width);
-    /* padding-left: 1.5rem; */
-}
+    /* top bar section */
+    /******/
+    .tb-sec-one {
+        /* width: 100%; */
+        width: var(--second-left-bar-width);
+        /* padding-left: 1.5rem; */
+    }
 }

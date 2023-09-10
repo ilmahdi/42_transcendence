@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
-import { MenuBarService } from '../menu-bar.service';
+import { MenuBarService } from 'src/app/services/menu-bar.service';
 
 
 

@@ -1,0 +1,16 @@
+
+<div class="profile-stats">
+    <div class="ps-sec-one">
+        <div class="ps-sec-one-blur"></div>
+
+        <img class="ps-sec-one-img" src="https://cdn.intra.42.fr/coalition/cover/76/Commodore_BG.jpg">
+        <app-profile-id [userData]="userData"></app-profile-id> 
+    </div>
+    <div class="ps-sec-two">
+        <span class="ps-sec-two-item"> <span class="ps-sec-two-item-nb"> {{ userData.games }} </span> games played  </span>
+        <span class="ps-sec-two-item"> <span class="ps-sec-two-item-nb"> {{ userData.wins }} </span> wins  </span>
+        <span class="ps-sec-two-item"> <span class="ps-sec-two-item-nb"> {{ userData.losses }} </span>  losses </span>
+        <span class="ps-sec-two-item"> <span class="ps-sec-two-item-nb"> {{ userData.draws }} </span> draws  </span>
+        <span class="ps-sec-two-item"> <span class="ps-sec-two-item-nb"> {{ userData.rating }} </span> elo rating  </span>
+    </div>
+</div>

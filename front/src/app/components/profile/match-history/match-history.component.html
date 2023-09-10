@@ -1,0 +1,70 @@
+<div class="match-history">
+    <div class="mh-section" *ngFor="let match of matchs">
+        <div class="mh-sec-main">
+            <div class="mh-sec-main-user u1">
+
+                <img class="mh-sec-img" src="{{match.player1.avatar}}"
+                    [ngStyle]="match.player1.points >= 0 ? {'color': '#67E306'} : {'color': '#F35352'}"
+                    style="display: none" onload="this.style.display=''"
+                    onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+                />
+                <div class="mh-sec-info">
+                    <span class="mh-sec-info-name"> {{ match.player1.username }} </span>
+                    <div class="mh-sec-info-rate"> 
+                        <span class="mh-sec-info-rate-score"> {{match.player1.rating}} </span>
+                        <span class="mh-sec-info-rate-res" 
+                            [ngStyle]="match.player1.points >= 0 ? {'color': '#67E306'} : {'color': '#F35352'}"> 
+                            {{match.player1.points | positiveNumberSign}}  
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="mh-sec-main-nb">
+                 {{match.player1.score}} <span class="mh-sec-main-vs"> vs </span> {{match.player2.score}}
+            </div>
+            <div class="mh-sec-main-user u2">
+
+                <div class="mh-sec-info">
+                    <span class="mh-sec-info-name"> {{ match.player2.username }} </span>
+                    <div class="mh-sec-info-rate left">
+                        <span class="mh-sec-info-rate-score"> {{match.player1.rating}} </span>
+                        <span class="mh-sec-info-rate-res" 
+                            [ngStyle]="match.player2.points >= 0 ? {'color': '#67E306'} : {'color': '#F35352'}"> 
+                            {{match.player2.points | positiveNumberSign}}  
+                        </span>
+                    </div>
+                    
+                </div>
+                <img class="mh-sec-img" src="{{match.player2.avatar}}" alt="avatar" 
+                    [ngStyle]="match.player2.points >= 0 ? {'color': '#67E306'} : {'color': '#F35352'}"
+                />
+
+            </div>
+            
+        </div>
+        <div class="mh-sec-second">
+            <div class="mh-sec-second-item">
+                <svg class="mh-sec-icon" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="./assets/icons/timer.svg#icon-timer"></use>
+                </svg>
+                <span class="mh-sec-text"> <span class="mh-sec-icon-text">duration:</span> {{ match.duration.min +" min " + match.duration.sec +" s" }} </span>
+
+            </div>
+            <div class="mh-sec-second-item">
+                <svg class="mh-sec-icon" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="./assets/icons/clock.svg#icon-clock"></use>
+                </svg>
+                <span class="mh-sec-text">  <span class="mh-sec-icon-text">date:</span>  {{ match.date | relativeTime  }} </span>
+
+            </div>
+
+        </div>
+    </div>     
+    <div class="mh-empty" *ngIf="!matchs.length">
+        <img class="mh-empty-img" src="./assets/imgs/death_pong2.jpeg" >
+        <h2 class="mh-empty-h">No Match, no History !</h2>
+        <p class="mh-empty-p"> Record your first match and begin your journey to ping pong victory! </p>
+        <div class="mh-empty-overlay"></div>
+    </div>
+</div>

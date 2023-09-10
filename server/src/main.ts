@@ -12,6 +12,9 @@ async function bootstrap() {
       enableImplicitConversion: true,
     },
   }))
+  app.enableCors({
+    origin: process.env.FONTEND_URL,
+  });
   await app.listen(3000);
 }
 bootstrap();

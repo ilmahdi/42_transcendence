@@ -1,3 +1,43 @@
-<app-left-bar></app-left-bar>
-<app-top-bar></app-top-bar>
 <app-online-friends></app-online-friends>
+
+<div class="wrap-component">
+
+    <div class="leaderboard">
+        <div class="ld-sec-one">
+            <img class="ld-sec-title-icon" src="./assets/icons/ileaderboard.svg" />
+            <h2 class="ld-sec-title-text"> Leaderboard </h2>
+        </div>
+        <div class="ld-sec-two">
+            <div class="ld-sec-header">
+                <span class="ld-sec-head-item">Position</span>
+                <span class="ld-sec-head-item">User</span>
+                <span class="ld-sec-head-item">Avatar</span>
+                <span class="ld-sec-head-item">Rating</span>
+            </div>
+            
+            <div class="ld-sec-table-wrap">
+                <div class="ld-sec-table">
+                    <div class="ld-sec-tb-row" *ngFor="let user of users; let i = index" 
+                    [style.background-color]=" i < 3 ? '#2A1E17': 'var(--primary-background-color)'"
+                    >
+                    <div class="ld-sec-tb-data">
+                        <span class="ld-sec-tb-data-item">{{i + 1}}</span>
+                        <span class="ld-sec-tb-data-item entry">{{user.name}}</span>
+                        <span class="ld-sec-tb-data-item">
+                                <img src="{{user.avatar}}"
+                                    style="display: none" onload="this.style.display=''"
+                                    onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+                                />
+                            </span>
+                            <span class="ld-sec-tb-data-item">{{user.rating}}</span>
+                        </div>
+                        <span class="ld-sec-tb-hr"></span>
+                    </div>
+                </div>
+                <span class="ld-sec-table-scroll"></span>
+            </div>
+
+
+        </div>
+    </div>
+</div>

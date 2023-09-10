@@ -18,24 +18,23 @@
     display: flex;
     flex-direction: column;
     left: calc(100% - var(--right-bar-width));
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow: hidden;
 
     /* for firfox */
     scrollbar-color: #5e6147 var(--second-background-color);
-    scrollbar-width: 0.4rem;
-
+    scrollbar-width: thin;
+    z-index: 10;
 }
 /**/
 /* effect */
 
 .right-bar::-webkit-scrollbar
  {
-    width: 0.4rem;
+    width: 0.3rem;
     background-color: var(--second-background-color);
 } 
 .right-bar::-webkit-scrollbar-thumb  {
-    border-radius: 0.4rem;
+    border-radius: 0.3rem;
     background-color: #5e6147;
 }
 .right-bar::-webkit-scrollbar-thumb:hover  {
@@ -120,16 +119,25 @@
 /* right bar section img  */
 /******/
 
-.rb-sec-one-img,
-.rb-sec-three-img {
+.rb-sec-one-img {
     width: calc(var(--top-bar-hieght) * 0.6);
     height: calc(var(--top-bar-hieght) * 0.6);
     border-radius: 50%;
     object-fit: cover;
+    border: 0.001rem solid var(--primary-text-color);
 
     pointer-events: none;
 }
+.rb-sec-three-img {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    object-fit: cover;
 
+    pointer-events: none;
+    border: 0.001rem solid #089808;
+
+}
 
 /* right bar section img specific */
 /******/
@@ -138,7 +146,7 @@
 /* right bar section text */
 /******/
 .rb-sec-two-text {
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 500;
 
 }
@@ -146,7 +154,7 @@
 .rb-sec-three-text,
 .rb-sec-one-text {
     font-size: 0.9rem;
-    font-weight: lighter;
+    font-weight: 300;
     display: block;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -173,13 +181,13 @@
 /******/
 .rb-sec-three-g-dot {
     position: absolute;
-    bottom: 0.4rem; 
-    left: 2.8rem; 
+    bottom: 0.5rem; 
+    left: 2.6rem; 
     width: 0.5rem; 
     height: 0.5rem; 
     background-color: #089808; 
     border-radius: 50%;
-    border: solid 0.1rem;
+    border: solid 0.1rem transparent;
     border-color: var(--second-background-color);
     pointer-events: none;
   }
@@ -188,7 +196,7 @@
 /*                Media Queries                */
 /***********************************************/
 
-@media (max-width: 1200px) {
+@media (max-width: 1000px) {
 
 
     /* right bar  */

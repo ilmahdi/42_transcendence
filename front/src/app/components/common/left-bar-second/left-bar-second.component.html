@@ -1,3 +1,4 @@
+<div class="overlay" (click)="toggleLeftBar()"></div>
 
 <ul class="left-bar">
     <div class="lb-sec-one">
@@ -9,37 +10,37 @@
         </li>
     </div>
     <div class="lb-sec-two">
-        <li class="lb-sec-item" routerLink="/home">
+        <li class="lb-sec-item" routerLink="/home" (click)="toggleLeftBar()">
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/home.svg#icon-home"></use>
             </svg>
             <span class="lb-sec-item-text"> Home </span>
         </li>
-        <li class="lb-sec-item" routerLink="/profile">
+        <li class="lb-sec-item" routerLink="/profile" (click)="toggleLeftBar()">
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/profile.svg#icon-profile"></use>
             </svg>
             <span class="lb-sec-item-text"> Profile </span>
         </li>
-        <li class="lb-sec-item" routerLink="/game">
+        <li class="lb-sec-item" routerLink="/game" (click)="toggleLeftBar()">
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/play.svg#icon-play"></use>
             </svg>
             <span class="lb-sec-item-text"> Play </span>
         </li>
-        <li class="lb-sec-item" routerLink="/chat">
+        <li class="lb-sec-item" routerLink="/chat" (click)="toggleLeftBar()">
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/chat.svg#icon-chat"></use>
             </svg>
             <span class="lb-sec-item-text"> Chat </span>
         </li>
-        <li class="lb-sec-item" routerLink="/friends">
+        <li class="lb-sec-item" routerLink="/friends" (click)="toggleLeftBar()">
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/friend.svg#icon-friend"></use>
             </svg>
             <span class="lb-sec-item-text"> Friends </span>
         </li>
-        <li class="lb-sec-item" routerLink="/leaderboard">
+        <li class="lb-sec-item" routerLink="/leaderboard" (click)="toggleLeftBar()">
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/leaderboard.svg#icon-leaderboard"></use>
             </svg>
@@ -48,13 +49,13 @@
     </div>
     <div class="lb-sec-all lb-sec-three">
         
-        <li class="lb-sec-item" routerLink="/setting">
+        <li class="lb-sec-item" routerLink="/setting" (click)="toggleLeftBar()">
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/setting.svg#icon-setting"></use>
             </svg>
             <span class="lb-sec-item-text"> Settings </span>
         </li>
-        <li class="lb-sec-item" routerLink="/signout">
+        <li class="lb-sec-item" routerLink="/signout" (click)="toggleLeftBar()">
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/signout.svg#icon-signout"></use>
             </svg>

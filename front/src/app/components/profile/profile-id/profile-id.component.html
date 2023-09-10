@@ -1,0 +1,85 @@
+<div #confirmModal></div>
+
+<div class="profile-id">
+    
+    <div class="pi-sec-one"
+        (mouseenter)="onShowTooltip()" (mouseleave)="hideTooltip()"
+        [class.is-online]="!isOwnProfile && connection === 'online' || isOwnProfile"
+        [class.is-offline]="!isOwnProfile && connection === 'offline'"
+        [class.is-playing]="!isOwnProfile && connection === 'playing'">
+        <img class="pi-sec-one-img" [src]="userData.avatar" 
+            style="display: none" onload="this.style.display=''"
+            onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+        />
+        <div class="pi-sec-one-dot"></div>
+        <div class="pi-sec-one-tooltip" *ngIf="showTooltip">{{connection}}</div>
+    </div>
+    <div class="pi-sec-two">
+        <span> {{ userData.username }} </span>
+    </div>
+
+    <button routerLink="/settings"  class="pi-sec-three" *ngIf="isOwnProfile; else isNotOwnProfile">
+        <span> Edit profile </span>
+    </button>
+
+    <ng-template #isNotOwnProfile>
+        <div class="pi-sec-four" *ngIf="friendshipStatus !== 'BLOCKED'; else isBlocked">
+            
+            <button class="pi-sec-four-btn b1" (click)="onAddClick()" *ngIf="friendshipStatus==='NONE'"> 
+                    <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/add.svg#icon-add"></use>
+                    </svg>
+                <span>Add</span> 
+            </button>
+            <button class="pi-sec-four-btn b1" (click)="onCancelClick()" *ngIf="isRequestInitiator && friendshipStatus==='WAITING'"> 
+                    <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/cancel.svg#icon-cancel"></use>
+                    </svg>
+                <span>Cancel</span> 
+            </button>
+            <button class="pi-sec-four-btn b1" (click)="onAcceptClick()" *ngIf="!isRequestInitiator && friendshipStatus==='WAITING'"> 
+                    <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/add.svg#icon-add"></use>
+                    </svg>
+                <span>Accept</span> 
+            </button>
+            <button class="pi-sec-four-btn b1" *ngIf=" friendshipStatus==='ACCEPTED'"> 
+                    <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/play.svg#icon-play"></use>
+                    </svg>
+                <span>Play</span> 
+            </button>
+            <div class="pi-sec-four-containe">
+
+                <button class="pi-sec-four-btn b2" [class.active]="isMoreClicked" (click)="onMoreClick()"
+                    appClickOutside (appClickOutside)="isMoreClicked && onClickedOutside()"
+                > 
+                    <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/more.svg#icon-more"></use>
+                    </svg>
+                </button>   
+                <div class="pi-sec-four-more" *ngIf="isMoreClicked">
+                    <app-more-opts
+                        [friendshipStatus]="friendshipStatus"
+                        [friendshipId]="friendshipId" 
+                        [isRequestInitiator]="isRequestInitiator" 
+                        (unfriendClick)="openConfirmModal('unfriend')"
+                        (blockClick)="openConfirmModal('block')"
+                        (cancelClick)="onCancelClick()">
+                    </app-more-opts>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #isBlocked>
+        <button class="pi-sec-three" *ngIf="isRequestInitiator" (click)="openConfirmModal('unblock')">
+            <span> unblock </span>
+        </button>
+        <div class="pi-sec-three" *ngIf="!isRequestInitiator">
+            <span> blocked </span>
+        </div>
+    </ng-template>
+     
+</div>
+
