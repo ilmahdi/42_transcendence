@@ -11,13 +11,5 @@ export class FriendsComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  friends:any[] = [
-    {
-      name: 'ossama',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-  ]
-
 
 }

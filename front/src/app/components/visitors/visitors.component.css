@@ -1,269 +1,169 @@
-
-* {
-  margin: 0;
-  padding: 0;
-  font-family: 'Poppins', sans-serif;
-  box-sizing: border-box;
-  color: var(--primary-text-color);
-}
-
-
-/* login page  */
-/******/
-
-.login-page {
-  position: fixed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-  z-index: 1;
-  
-}
-
-.lp-footer {
+.left {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  padding: 0.6rem 1rem;
-  font-size: 0.8rem;
-  font-weight: 00;
-
-}
-
-.lp-bg {
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-
-}
-.lp-bg-img {
-  width: 100%;
+  width: 45%;
   height: 100%;
-  object-fit: cover;
-  filter: blur(3rem);
+  background-color: #231C1C;
 }
 
-.lp-bg-cover {
+.fa-eercast {
   position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(35, 28, 28, 0.5); 
-
+  color: #DEC8C8;
+  font-size: 50px;
+  margin-top: 35px;
+  margin-left: 40px;
 }
 
-
-/* login page section */
-/******/
-
-.lp-sec-one {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  flex-shrink: 0;
-  height: 100%;
-  width: min(40%, 440px);
-  left: 0;
-  right: 0;
-  min-width: max-content;
-  z-index: 1;
-  background-color: rgba(35, 28, 28, 0.2); 
-  
-}
-
-
-.lp-sec-two {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 50%;
-
-}
-
-
-.lp-sec-two-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 90%;
-  max-width: 70rem;
-  border-radius: 1rem;
-  padding: 1rem;
-  gap: 2.6rem;
-}
-
-.lp-sec-img {
-  width: 60%;
-  object-fit: cover;
-
-  shape-rendering:geometricPrecision;
-}
-
-.lp-sec-text {
-  font-size: 1.6rem;
-  font-weight: 300;
-  text-align: center;
-}
-
-
-
-
-
-
-.lp-sec-two-cover {
+#poing {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(70, 47, 39, 0.8);
-  z-index: 10;
+  color: #DEC8C8;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 25px;
+  margin-top: 40px;
+  margin-left: 115px;
 }
 
-
-/* login page section login */
-/******/
-.lp-sec-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  height: var(--top-bar-hieght);
-  align-self: flex-start;
-  padding-left: 1rem;
-  
+#welcome {
+  position: absolute;
+  color: #DEC8C8;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  margin-top: 38%;
+  font-size: 35px;
+  margin-left: 15%;
 }
 
-
-/* login page section login */
-/******/
-
-.lp-sec-login-wrap {
-  flex: 1;
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-
-}
-.lp-sec-login {
-  display: flex;
-
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  height: 100%;
-  padding-top: 30vh;
-  padding-left: 2rem;
-  padding-right: 2rem;
+#txt {
+  position: absolute;
+  color: #DEC8C8;
+  margin-top: 47%;
+  margin-left: 15%;
+  font-size: 20px;
+  font-family: 'Courier New', Courier, monospace;
 }
 
-
-
-/* login page section item icon */
-/******/
-
-.lp-sec-item-icon {
-  width: 2.6rem;
-  height: 2.6rem;
-  fill: var(--primary-text-color);
-}
-
-/* login page section logo item text */
-/******/
-.lp-sec-item-text {
-  font-size: 1.6rem;
-}
-
-/* login page section gif */
-/******/
-.lp-sec-gif {
-  width: 80%;
-
-  overflow: hidden;
-  clip-path: inset(1rem 0 0 0);
-}
-
-
-
-
-/* login page section login items*/
-/******/
-
-.lp-sec-login-t1 {
-  font-size: 2.6rem;
-  font-weight: 400;
-  width: 19.6rem;
-  margin-bottom: 1rem;
-  /* padding-left: 16%; */
-}
-
-.lp-sec-login-t2 {
-  font-size: 1rem;
-  font-weight: 500;
-  width: 19.6rem;
-  /* padding-left: 16%; */
-}
-
-.lp-sec-login-item {
-  width: 100%;
-  margin-top: 2.6rem;
-  display: flex;
-  justify-content: center;
-  /* padding-left: 16%; */
-}
-
-
-.lp-sec-login-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  height: 2.6rem;
-  width: 20rem;
-  gap: 1rem;
-  border: solid 0.12rem var(--primary-border-color);
-  border-radius: 0.6rem;
-
-  background-color: var(--primary-text-color);
-}
-
-.lp-sec-login-button:hover {
+.button {
+  position: absolute;
+  margin-top: 56%;
+  margin-left: 15%;
+  height: 60px;
+  width: 389px;
+  background-color: #DEC8C8;
+  border-color: #6C3636;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 20px;
   cursor: pointer;
-  background-color: var(--second-hover-background-color);
 }
 
-
-.lp-sec-login-button-text {
-  
+#sign {
+  position: absolute;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   color: black;
-  font-size: 1.2rem;
-  font-weight: 500;
+  font-size: 25px;
+  margin-top: 10px;
+  margin-left: 95px;
 }
 
+#logo {
+  position: absolute;
+  height: 48px;
+  width: 48;
+  margin-top: 6px;
+  margin-left: 250px;
+}
 
-/***********************************************/
-/*                Media Queries                */
-/***********************************************/
+.right {
+  position: absolute;
+  height: 100%;
+  width: 57%;
+  background-color: black;
+  margin-left: 43%;
+  border-radius: 30px 0px 0px 30px;
+}
 
-@media (max-width: 800px) {
+#first {
+  position: absolute;
+  margin-top: 20%;
+  margin-left: 10%;
+  width: 13px;
+  height: 75px;
+  background-color: white;
+}
 
-  .lp-sec-one {
+#ball {
+  position: absolute;
+  margin-top: 40%;
+  margin-left: 35%;
+  height: 13px;
+  width: 13px;
+  background-color: white;
+}
+
+#second {
+  position: absolute;
+  margin-top: 55%;
+  margin-left: 90%;
+  height: 75px;
+  width: 13px;
+  background-color: white;
+}
+
+@media (max-width: 700px) {
+
+  .fa-eercast {
+    position: absolute;
+    color: #DEC8C8;
+    font-size: 50px;
+    margin-top: 35px;
+    margin-left: 120px;
+  }
+  
+  #poing {
+    position: absolute;
+    color: #DEC8C8;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 25px;
+    margin-top: 40px;
+    margin-left: 195px;
+  }
+
+  .left {
     width: 100%;
   }
-  .lp-sec-two {
-    display: none;
+  .right {
+    width: 0px;
   }
-  .lp-sec-login {
-    margin-left: 0;
-    padding-left: 1rem;
-    padding-right: 1rem;
+  #welcome {
+    font-size: 23px;
+    margin-left: 120px;
+    margin-top: 150px;
+  }
+  #txt {
+    font-size: 17px;
+    margin-left: 10px;
+    margin-top: 200px;
+  }
+
+  .button {
+    font-size: 14px;
+    height: 40px;
+    width: 260px;
+    margin-top: 260px;
+  }
+
+  #sign {
+    font-size: 20px;
+    margin-top: 3px;
+    margin-left: 50px;
+  }
+
+  #logo {
+    height: 35px;
+    width: 35px;
+    margin-left: 168px;
+    margin-top: 1px;
+  }
+  #first, #ball, #second {
+    height: 0px;
+    width: 0px;
   }
 }

@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { take, Subscription } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
+import { Room } from 'src/app/models/room.model';
+import { User } from 'src/app/models/user.model';
 import { ChatService } from 'src/app/services/chat.service';
-import { Room } from 'src/app/utils/interfaces/room.model';
-import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-add-member',
@@ -20,13 +20,13 @@ export class AddMemberComponent implements OnInit, OnDestroy {
   room:Room = {}
   isAdmin:boolean = false
   display:boolean = false
-  users:{user:IUserData, type:string, click:boolean, admin:boolean, removed:boolean}[] = []
+  users:{user:User, type:string, click:boolean, admin:boolean, removed:boolean}[] = []
   newAdminsId:number[] = []
   searchQuery: string = '';
-  searchResults: IUserData[] = [];
+  searchResults: User[] = [];
 
-  constructor(private chatService:ChatService, private authService:AuthService) {
-    this.subscription1 = this.authService.userId.pipe(take(1)).subscribe((id?:any) => {
+  constructor(private chatService:ChatService, private loginService:LoginService) {
+    this.subscription1 = this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
     })
 
@@ -58,11 +58,11 @@ export class AddMemberComponent implements OnInit, OnDestroy {
     })
   }
 
-  clickOnMember(member:{user:IUserData, type:string, click:boolean, admin:boolean, removed:boolean}) {
+  clickOnMember(member:{user:User, type:string, click:boolean, admin:boolean, removed:boolean}) {
     member.click = !member.click
   }
 
-  addAdmin(member:{user:IUserData, type:string, click:boolean, admin:boolean, removed:boolean}) {
+  addAdmin(member:{user:User, type:string, click:boolean, admin:boolean, removed:boolean}) {
     if (this.room.adminId?.includes(member.user.id!)) return
     member.click = !member.click
     member.admin = !member.admin

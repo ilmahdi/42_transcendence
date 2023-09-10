@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { from, map } from "rxjs";
 import { Message } from "../models/message.interface";
+import { User } from "src/user/utils/models/user.interface";
 import { PrismaService } from "src/prisma/prisma.service";
-import { UserData } from "src/user/utils/interfaces/user-data.interface";
 
 @Injectable()
 export class PrivateChatService {
@@ -103,11 +103,14 @@ export class PrivateChatService {
       }
     }
 
-    async searchConversation(query: string): Promise<UserData[]> {
+    async searchConversation(query: string): Promise<User[]> {
       try {
-        const users = await this.prismaService.userAccount.findMany({
+        const users = await this.prismaService.user.findMany({
           where: {
-               username: { contains: query, mode: 'insensitive' } 
+            OR: [
+              { firstName: { contains: query, mode: 'insensitive' } },
+              { lastName: { contains: query, mode: 'insensitive' } },
+            ],
           },
         });
   

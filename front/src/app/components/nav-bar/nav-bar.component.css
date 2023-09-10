@@ -3,17 +3,19 @@
 .search {
   position: absolute;
   left: 243px;
+  right: 243px;
   height: 75px;
-  width: 954px;
   background-color: #1E1212;
 }
 
 .input {
   background-color: #1E1212;
   color: white;
-  margin-left: 45px;
+  position: absolute;
+  left: 50px;
+  top: 5px;
   height: 80%;
-  width: 650px;
+  width: 72%;
   border: none;
   border-radius: 15px;
   outline: none;
@@ -30,18 +32,20 @@
 }
 
 .fa-commenting {
-  position: relative;
+  position: absolute;
   color: white;
-  font-size: 28px;
-  margin-left: 40px;
+  font-size: 35px;
+  top: 17px;
+  right: 130px;
   cursor: pointer;
 }
 
 .fa-bell {
-  position: relative;
+  position: absolute;
   color: white;
-  font-size: 25px;
-  margin-left: 50px;
+  font-size: 35px;
+  top: 17px;
+  right: 50px;
   cursor: pointer;
 }
 
@@ -67,10 +71,8 @@
   font-size: 23px;
   margin-left: 8px;
   margin-right: 8px;
-  /* margin-bottom: 30px; */
   color: white;
   cursor: pointer;
-  /* background-color: rgb(133, 87, 2); */
   border-radius: 6px;
   padding:9px 10px;
   display:block;
@@ -98,7 +100,7 @@
   color: white;
   padding:8px 10px;
   height: 40px;
-  width: 17%;
+  width: 228px;
   /* display: block; */
   cursor: pointer;
   border-radius: 6px;
@@ -115,7 +117,7 @@
   color: white;
   padding:8px 10px;
   height: 40px;
-  width: 17%;
+  width: 228px;
   /* display:block; */
   cursor: pointer;
   border-radius: 6px;
@@ -126,18 +128,81 @@
   background-color: #D38146;
 }
 
-@media (max-width: 1320px) {
-  .fa-commenting  {
-    margin-left: 15px;
+@media (max-width: 1420px) {
+  .search {
+    right: 0;
   }
-
+  .input {
+    width: 65%;
+  }
+  .fa-commenting {
+    right: 200px;
+  }
   .fa-bell {
-    margin-left: 40px;
+    right: 135px;
   }
 }
 
-@media (max-width: 1234px) {
+@media (max-width: 1092px) {
   .search {
-    width: 990px
+    left: 85px;
+  }
+  .left {
+    width: 85px;
+  }
+  #menu {
+    font-size: 0;
+  }
+  .fa-home, .fa-user-circle, .fa-gamepad, .fa-comments, .fa-address-card, .fa-list-ol {
+    display: flex;
+    padding-left: 20px;
+  }
+  .fa-gear, .fa-sign-out {
+    display: flex;
+    padding-left: 20px;
+    width: 70px;
+  }
+}
+
+@media (max-width: 934px) {
+  .input {
+    width: 50%;
+  }
+}
+
+@media (max-width: 660px) {
+  .search {
+    position: absolute;
+    left: 60px;
+    height: 60px;
+  }
+  .fa-search {
+    bottom: 20px;
+  }
+  .left {
+    width: 60px;
+  }
+  .input {
+    width: 49%;
+  }
+  .fa-commenting {
+    font-size: 27px;
+    right: 105px;
+  }
+  .fa-bell {
+    font-size: 27px;
+    right: 65px;
+  }
+  .fa-eercast {
+    margin-left: 10px;
+  }
+  .fa-home, .fa-user-circle, .fa-gamepad, .fa-comments, .fa-address-card, .fa-list-ol {
+    display: flex;
+    padding-left: 8px;
+  }
+  .fa-gear, .fa-sign-out {
+    display: flex;
+    padding-left: 8px;
+    width: 46px;
   }
 }

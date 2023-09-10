@@ -1,10 +1,14 @@
 import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
+import * as _ from 'lodash';
+import { Socket } from 'ngx-socket-io';
+import Pusher from 'pusher-js';
 import { Observable, take, Subscription } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
+import { Message } from 'src/app/models/message.model';
+import { Room } from 'src/app/models/room.model';
+import { User } from 'src/app/models/user.model';
 import { ChatService } from 'src/app/services/chat.service';
-import { Message } from 'src/app/utils/interfaces/message.model';
-import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-conversations',
@@ -26,14 +30,14 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
   @Input() roomConvers?:any
   @ViewChild('scrollContainer') myScrollContainer?: ElementRef;
   userId?:number
-  user?:IUserData
+  user?:User
 
   msg = new FormGroup({message: new FormControl})
 
   messages: Message[] = [];
   roomMessage:Message[] =[]
   
-  users:IUserData[] = [];
+  users:User[] = [];
 
   displayConversation:boolean = true
   options:boolean = false
@@ -41,9 +45,9 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
   lateMessage:{late:boolean, time:string, msg:Message}[] = []
   lateRoomMessage:{late:boolean, time:string, msg:Message}[] = []
 
-  constructor(private chatService: ChatService, private authService:AuthService) {
+  constructor(private chatService: ChatService, private loginService:LoginService) {
     this.chatService.optionsSource.next(false)
-    this.subsciption1 = this.authService.userId.pipe(take(1)).subscribe((id?:any) => {
+    this.subsciption1 = this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
     })
 
@@ -53,7 +57,6 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
   }
 
   ngOnInit() {
-    this.chatService.displayComponents(false, true, false, true, true, false, false);
     /////////////////////////// FOR PRIVATE MESSAGE \\\\\\\\\\\\\\\\\\\\\\\\
     this.subsciption5 = this.chatService.conversation$.subscribe((data)=> {
       this.messages = data
