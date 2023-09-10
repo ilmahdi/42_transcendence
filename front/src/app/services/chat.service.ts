@@ -1,13 +1,11 @@
-import { Injectable, Input } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription, fromEvent, take } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Message } from '../models/message.model';
-import { User } from '../models/user.model';
-import * as io from 'socket.io-client';
-import { ChatSocketService } from './core/chat-socket.service';
-import { LoginService } from './login.service';
-import { Room } from '../models/room.model';
-import { RoomType } from '../models/roomType.enum';
+import { Socket } from 'ngx-socket-io';
+import { AuthService } from './auth.service';
+import { Message } from '../utils/interfaces/message.model';
+import { IUserData } from '../utils/interfaces/user-data.interface';
+import { Room } from '../utils/interfaces/room.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +17,7 @@ export class ChatService {
   private stringSource = new BehaviorSubject<any>({}); // Initial value is an empty string
   string$ = this.stringSource.asObservable();
 
-  users:User[] = [];
+  users:IUserData[] = [];
 
   lastConversation:any
   last:any[] = []
@@ -45,7 +43,7 @@ export class ChatService {
   notReadedRoomMessageSource = new BehaviorSubject<{senderId:number, roomId: number; unreadCount: number }[]>([]);
   notReadedRoomMessage$ = this.notReadedRoomMessageSource.asObservable()
 
-  usersSource = new BehaviorSubject<User[]>([]);
+  usersSource = new BehaviorSubject<IUserData[]>([]);
   users$ = this.usersSource.asObservable()
 
   roomsSource = new BehaviorSubject<Room[]>([]);
@@ -75,8 +73,8 @@ export class ChatService {
   roomOptionsSource = new BehaviorSubject<Room>({})
   roomOptions$ = this.roomOptionsSource.asObservable();
 
-  constructor(private http:HttpClient, private socket:ChatSocketService, private loginService:LoginService) {
-    this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
+  constructor(private http:HttpClient, private socket:Socket, private authService:AuthService) {
+    this.authService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id
     })
     this.socket.connect()
@@ -130,12 +128,12 @@ export class ChatService {
     this.roomsSource.next(rooms)
   }
 
-  updateUsers(users:User[]) {
+  updateUsers(users:IUserData[]) {
     users = users.filter(item=> item.id !== this.userId)
     this.usersSource.next(users);
   }
 
-  setSocket(socket:ChatSocketService) {
+  setSocket(socket:Socket) {
     this.socket = socket
   }
 
@@ -278,8 +276,8 @@ export class ChatService {
     headers: new HttpHeaders({ 'Authorization': `Bearer ${this.token}` }),
   };
 
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>('http://localhost:3000/api/auth/allUsers', this.httpOptions).pipe(take(1));
+  getUsers(): Observable<IUserData[]> {
+    return this.http.get<IUserData[]>('http://localhost:3000/api/auth/allUsers', this.httpOptions).pipe(take(1));
   }
 
   updateRead(message:Message) {
@@ -299,7 +297,7 @@ export class ChatService {
   }
 
   searchConvers(name:string) {
-    return this.http.get<User[]>('http://localhost:3000/api/chat/search?query=' + name)
+    return this.http.get<IUserData[]>('http://localhost:3000/api/chat/search?query=' + name)
   }
 
   searchRooms(name:string) {
@@ -325,7 +323,7 @@ export class ChatService {
   }
 
   getRoomMembers() {
-    return this.socket.fromEvent<{user:User, type:string}[]>('recRoomMembers');
+    return this.socket.fromEvent<{user:IUserData, type:string}[]>('recRoomMembers');
   }
 
   updateRoom(room:Room) {

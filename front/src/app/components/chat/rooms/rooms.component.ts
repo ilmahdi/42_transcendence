@@ -1,10 +1,9 @@
 import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { Subscription, take } from 'rxjs';
-import { LoginService } from 'src/app/services/login.service';
 import { ChatService } from '../../../services/chat.service';
-import { Room } from 'src/app/models/room.model';
-import { Message } from 'src/app/models/message.model';
-import * as _ from 'lodash';
+import { Room } from 'src/app/utils/interfaces/room.model';
+import { Message } from 'src/app/utils/interfaces/message.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-rooms',
@@ -37,8 +36,8 @@ export class RoomsComponent implements OnInit, OnDestroy {
   selectedRoom?:Room
 
   notReaded:{senderId:number, roomId: number; unreadCount: number }[] = []
-  constructor(private loginService:LoginService, private chatService:ChatService) {
-    this.subscription0 = this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
+  constructor(private authService:AuthService, private chatService:ChatService) {
+    this.subscription0 = this.authService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
     })
 
@@ -106,7 +105,6 @@ export class RoomsComponent implements OnInit, OnDestroy {
       data.forEach(data=> {
         this.lastMessages = this.lastMessages.filter(item => !(item.roomId === data.roomId));
         this.lastMessages.push(data)
-        this.lastMessages = _.sortBy(this.lastMessages, 'date');
       })
     })
   }

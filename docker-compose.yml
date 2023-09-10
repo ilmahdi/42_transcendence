@@ -9,12 +9,10 @@ services:
       env_file:
         - ./docker/postgres.env
       volumes:
-        - /Users/Hp/Desktop/Nouveau dossier (2)/New folder
+        - /goinfre/$USER/docker/Volumes/db/data:/var/lib/postgresql/data
       ports:
         - 5432:5432
       restart: unless-stopped
-      environment:
-        POSTGRES_PASSWORD: saad2000
 
   # server:
   #     build:

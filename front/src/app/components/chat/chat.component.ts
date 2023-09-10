@@ -1,14 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Message } from 'src/app/models/message.model';
-import { User } from 'src/app/models/user.model';
 import { ChatService } from 'src/app/services/chat.service';
-import { LoginComponent } from '../login/login.component';
-import { LoginService } from 'src/app/services/login.service';
 import { Subscription, take } from 'rxjs';
-import { Router } from '@angular/router';
-import * as _ from 'lodash';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Room } from 'src/app/models/room.model';
+import { Message } from 'src/app/utils/interfaces/message.model';
+import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
+import { AuthService } from 'src/app/services/auth.service';
+import { Room } from 'src/app/utils/interfaces/room.model';
 
 @Component({
   selector: 'app-chat',
@@ -40,21 +37,21 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   userId?:number
   addRoom:boolean = false
-  users:{user:User, added:boolean, admin:boolean}[] = []
+  users:{user:IUserData, added:boolean, admin:boolean}[] = []
 
   roomFormularTitles:any[] = [{title:'Give your room a name', error:false}, {title:'Add people to your room', error:false}]
 
   selectedFile?: File
 
   searchQuery: string = '';
-  searchResults: User[] = [];
+  searchResults: Room[] = [];
   nextStep:boolean = false
   roomFormular:any = {}
-  constructor(private chatService:ChatService, private loginService:LoginService) {
+  constructor(private chatService:ChatService, private authService:AuthService) {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
 
-    this.subscription1 = this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
+    this.subscription1 = this.authService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
     })
     chatService.sendToGetLastMessage(this.userId!)
@@ -97,7 +94,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.directClicked = false;
   }
 
-  onCustomEvent(user:User) {
+  onCustomEvent(user:IUserData) {
     this.smallScreen = true
     this.userEvent = [user, true]
     this.roomData = []
@@ -112,11 +109,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.displayComponents(true, false, false, true, true, false, false)
   }
 
-  addToRoom(user:{user:User, added:boolean, admin:boolean}) {
+  addToRoom(user:{user:IUserData, added:boolean, admin:boolean}) {
     user.added = !user.added
   }
 
-  addAdmin(user:{user:User, added:boolean, admin:boolean}) {
+  addAdmin(user:{user:IUserData, added:boolean, admin:boolean}) {
     user.added = !user.added
     user.admin = !user.admin
   }

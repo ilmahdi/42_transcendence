@@ -1,9 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Room } from 'src/app/models/room.model';
-import { RoomType } from 'src/app/models/roomType.enum';
 import { ChatService } from 'src/app/services/chat.service';
+import { Room } from 'src/app/utils/interfaces/room.model';
+import { RoomType } from 'src/app/utils/interfaces/roomType.enum';
 
 @Component({
   selector: 'app-creating-rooms',

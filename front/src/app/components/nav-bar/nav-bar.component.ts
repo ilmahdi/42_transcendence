@@ -7,18 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavBarComponent implements OnInit {
 
-  screenWidth: number = 1000;
-
-  constructor() {
-    this.screenWidth = window.innerWidth;
-    window.addEventListener('resize', this.onResize.bind(this));
-  }
+  constructor() { }
 
   ngOnInit(): void {
-  }
-
-  onResize() {
-    this.screenWidth = window.innerWidth;
   }
 
 }

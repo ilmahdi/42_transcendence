@@ -112,7 +112,7 @@
 .createRoom {
     position: absolute;
     margin-top: 90px;
-    right: 270px;
+    right: 25%;
     height: calc(100px + 65%);
     width: 500px;
     background-color: #231C1C;
@@ -298,7 +298,6 @@
 
 @media (min-width: 2000px) {
     .direct {
-        /* left: 470px; */
         right: calc(32% + 760px);
         width: 159px;
     }
@@ -314,6 +313,9 @@
         right: calc(32% + 600px);
         width: 320px;
     }
+    .createRoom {
+        right: 32%;
+    }
 }
 
 @media (max-width: 1515px) {
@@ -328,6 +330,9 @@
         /* left: 470px; */
         right: calc(25% + 530px);
     }
+    .createRoom {
+        right: calc(25% - 70px);
+    }
 }
 
 @media (max-width: 1420px) {
@@ -341,6 +346,9 @@
     .headerPart {
         right: calc(2% + 600px);
     }
+    .createRoom {
+        right: 2%
+    }
 }
 
 @media (max-width: 1160px) {
@@ -353,6 +361,9 @@
 
     .headerPart {
         right: calc(2% + 508px);
+    }
+    .createRoom {
+        width: 480px;
     }
 }
 
@@ -397,7 +408,11 @@
     #reset {
         width: 80px;
     }
-    
+    .createRoom {
+        width: 75%;
+        height: 80%;
+        right: 30px;
+    }
 }
 
 @media (max-height: 500px) {

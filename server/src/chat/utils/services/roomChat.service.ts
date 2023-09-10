@@ -4,9 +4,9 @@ import { Observable, forkJoin, from, map, switchMap } from "rxjs";
 import { Message } from "../models/message.interface";
 import * as bcrypt from 'bcrypt'
 import { UserService } from "src/user/user.service";
-import { User } from "src/user/utils/models/user.class";
 import { PrismaService } from "src/prisma/prisma.service";
 import { RoomType } from "@prisma/client";
+import { UserData } from "src/user/utils/interfaces/user-data.interface";
 
 @Injectable()
 export class RoomChatService {
@@ -233,7 +233,7 @@ export class RoomChatService {
       const userIds = room.usersId;
       const adminIds = room.adminId;
 
-      const usersWithTypes: Observable<{ user: User; type: string }>[] = [];
+      const usersWithTypes: Observable<{ user: UserData; type: string }>[] = [];
 
       userIds.forEach(async id => {
         const userType = adminIds.includes(id) ? 'admin' : 'user';

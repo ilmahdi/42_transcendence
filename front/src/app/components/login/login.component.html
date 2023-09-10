@@ -1,10 +1,1 @@
-<div>
-    <form [formGroup]="form">
-        <input *ngIf="submissionType === 'join'" type="text" formControlName="firstName" placeholder="First Name">
-        <input *ngIf="submissionType === 'join'" type="text" formControlName="lastName" placeholder="Last Name">
-        <input type="text" formControlName="email" placeholder="Email">
-        <input type="password" formControlName="password" placeholder="Password">
-    </form>
-    <button [disabled]="!form.valid" type="submit" (click)="onSubmit()">{{submissionType === 'login'? 'Sign in' : 'Accept & Join'}}</button>
-    <button (click)="toggleText()">{{submissionType === 'login'? 'Join now' : 'Sing in'}}</button>
-</div>
+<p>login works!</p>

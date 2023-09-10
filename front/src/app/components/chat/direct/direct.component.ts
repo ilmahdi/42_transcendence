@@ -1,11 +1,10 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ChatService } from 'src/app/services/chat.service';
 import { BehaviorSubject, Subscription, finalize, flatMap, last, map, take, tap } from 'rxjs';
-import { Message } from 'src/app/models/message.model';
-import { User } from 'src/app/models/user.model';
-import * as _ from 'lodash';
-import { LoginService } from 'src/app/services/login.service';
 import { ConversationsComponent } from '../conversations/conversations.component';
+import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
+import { Message } from 'src/app/utils/interfaces/message.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-direct',
@@ -14,7 +13,7 @@ import { ConversationsComponent } from '../conversations/conversations.component
 })
 export class DirectComponent implements OnInit, OnDestroy {
 
-  @Output() customEvent = new EventEmitter<User>();
+  @Output() customEvent = new EventEmitter<IUserData>();
   @Output() conversation= new EventEmitter<Message[]>();
 
   private subscription0?: Subscription
@@ -30,7 +29,7 @@ export class DirectComponent implements OnInit, OnDestroy {
   private subscription10?: Subscription
   private subscription11?: Subscription
 
-  users:User[] = [];
+  users:IUserData[] = [];
   screenWidth: number = 1000;
   color:any = {color:'', name:''}
 
@@ -41,8 +40,8 @@ export class DirectComponent implements OnInit, OnDestroy {
 
   notReaded:{ senderId: number; unreadCount: number }[] = []
   readSymbol:{senderId:number, receiverId:number, read:boolean}[] = []
-  constructor(private chatService:ChatService, private loginService:LoginService) {
-    this.subscription0 = this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
+  constructor(private chatService:ChatService, private authService:AuthService) {
+    this.subscription0 = this.authService.userId.pipe(take(1)).subscribe((id?:any) => {
       this.userId = id;
     })
 
@@ -139,7 +138,7 @@ export class DirectComponent implements OnInit, OnDestroy {
     this.screenWidth = window.innerWidth;
   }
 
-  openConversation(name:string, friend: User): void {
+  openConversation(name:string, friend: IUserData): void {
     //  IF THE SCREEN WIDTH < 934 SO THE CONVERSATION BUTTON COLOR WILL NOT CHANGE WHEN THE USER CLICK IT
     if (this.screenWidth > 934) {
       this.color = {color:'#d3814674', name:name}
