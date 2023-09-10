@@ -8,13 +8,9 @@
     border-radius: 15px 15px 15px 15px;
     scrollbar-color: #5e6147 var(--second-background-color);
     scrollbar-width: 0.4rem;
-
-    /* padding-left: 14rem;
-    padding-right: 14rem; */
 }
 
 .header {
-    /* position: fixed; */
     top: 0px;
     width: 100%;
     height: 46px;

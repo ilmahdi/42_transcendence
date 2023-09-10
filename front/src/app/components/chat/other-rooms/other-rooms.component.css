@@ -1,7 +1,7 @@
 .otehrRooms {
     position: absolute;
     margin-top: 90px;
-    right: 270px;
+    right: 25%;
     height: calc(100px + 65%);
     width: 572px;
     background-color: #231C1C;
@@ -132,20 +132,25 @@ img {
 
 @media (min-width: 2000px) {
     .otehrRooms {
-        right: 470px;
-        width: 672px;
+        right: 32%;
     }
 }
 
-@media (max-width: 1366px) {
+@media (max-width: 1515px) {
     .otehrRooms {
-        width: 490px;
+        right: calc(25% - 70px);
     }
 }
 
-@media (max-width: 1324px) {
+@media (max-width: 1420px) {
     .otehrRooms {
-        right: 20px;
+        right: 2%
+    }
+}
+
+@media (max-width: 1160px) {
+    .otehrRooms {
+        width: 480px;
     }
 }
 
@@ -161,7 +166,7 @@ img {
 
 @media (max-width: 660px) {
     .otehrRooms {
-        width: 65%;
+        width: 75%;
         right: 30px;
         height: 80%;
     }

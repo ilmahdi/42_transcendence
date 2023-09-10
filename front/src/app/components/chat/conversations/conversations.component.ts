@@ -57,6 +57,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
   }
 
   ngOnInit() {
+    this.chatService.displayComponents(false, true, false, true, true, false, false);
     /////////////////////////// FOR PRIVATE MESSAGE \\\\\\\\\\\\\\\\\\\\\\\\
     this.subsciption5 = this.chatService.conversation$.subscribe((data)=> {
       this.messages = data
