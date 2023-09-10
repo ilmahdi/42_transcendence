@@ -105,12 +105,9 @@ export class PrivateChatService {
 
     async searchConversation(query: string): Promise<User[]> {
       try {
-        const users = await this.prismaService.user.findMany({
+        const users = await this.prismaService.userAccount.findMany({
           where: {
-            OR: [
-              { firstName: { contains: query, mode: 'insensitive' } },
-              { lastName: { contains: query, mode: 'insensitive' } },
-            ],
+              username: { contains: query, mode: 'insensitive' }
           },
         });
   

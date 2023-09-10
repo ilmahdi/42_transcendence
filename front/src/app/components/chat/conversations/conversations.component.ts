@@ -1,14 +1,11 @@
 import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
 import * as _ from 'lodash';
-import { Socket } from 'ngx-socket-io';
-import Pusher from 'pusher-js';
 import { Observable, take, Subscription } from 'rxjs';
 import { Message } from 'src/app/models/message.model';
-import { Room } from 'src/app/models/room.model';
 import { User } from 'src/app/models/user.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { ChatService } from 'src/app/services/chat.service';
-import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-conversations',
@@ -45,11 +42,12 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
   lateMessage:{late:boolean, time:string, msg:Message}[] = []
   lateRoomMessage:{late:boolean, time:string, msg:Message}[] = []
 
-  constructor(private chatService: ChatService, private loginService:LoginService) {
+  constructor(private chatService: ChatService,
+    private authService: AuthService,
+    ) {
     this.chatService.optionsSource.next(false)
-    this.subsciption1 = this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
-      this.userId = id;
-    })
+    
+    this.userId = this.authService.getLoggedInUserId();
 
     this.subsciption2 = chatService.displayConversation$.subscribe(data=>this.displayConversation = data)
     this.subsciption3 = this.chatService.options$.subscribe(data=>this.options = data)
@@ -100,6 +98,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     let date = new Date()
     
     const msg = {senderId, receiverId, message, date}
+    console.log(msg)
     if (!message) return;
     this.chatService.updateSocketId(this.userId!)
     this.chatService.sendNewMessage(msg, this.userEmitted[0])

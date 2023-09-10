@@ -81,10 +81,6 @@ model UserAccount {
   match_player2       Matches[]           @relation("player2")
   message_sender      Message[]           @relation("sender")
   message_receiver    Message[]           @relation("receiver")
-  channel             Channel[]           @relation()
-  channel_admins      ChannelAdmins[]     @relation()
-  channel_members     ChannelMembers[]    @relation()
-  restricted_members  RestrictedMembers[] @relation()
   notif_to            Notification[]      @relation("notif_to")
   notif_from          Notification[]      @relation("notif_from")
 }
@@ -153,6 +149,10 @@ model Message {
   date                DateTime
   readed              Boolean @default(false)
   roomId              Int     @default(-1)
+
+
+  sender              UserAccount         @relation("sender", fields: [senderId], references: [id])
+  receiver            UserAccount         @relation("receiver", fields: [receiverId], references: [id])
 } 
 
 model Room { 
@@ -162,5 +162,5 @@ model Room {
   usersId   Int[]     @default([])
   type      RoomType  @default(PUBLIC)
   password  String?
-  imagePath String    @default("default.png")
+  imagePath String
 }

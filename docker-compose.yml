@@ -13,8 +13,6 @@ services:
       ports:
         - 5432:5432
       restart: unless-stopped
-      environment:
-        POSTGRES_PASSWORD: saad2000
 
   # server:
   #     build:

@@ -3,9 +3,9 @@ import { ChatService } from 'src/app/services/chat.service';
 import { BehaviorSubject, Subscription, finalize, flatMap, last, map, take, tap } from 'rxjs';
 import { Message } from 'src/app/models/message.model';
 import { User } from 'src/app/models/user.model';
-import * as _ from 'lodash';
-import { LoginService } from 'src/app/services/login.service';
-import { ConversationsComponent } from '../conversations/conversations.component';
+import { UserService } from 'src/app/services/user.service';
+import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-direct',
@@ -30,7 +30,7 @@ export class DirectComponent implements OnInit, OnDestroy {
   private subscription10?: Subscription
   private subscription11?: Subscription
 
-  users:User[] = [];
+  users:IUserDataShort[] = [];
   screenWidth: number = 1000;
   color:any = {color:'', name:''}
 
@@ -41,10 +41,13 @@ export class DirectComponent implements OnInit, OnDestroy {
 
   notReaded:{ senderId: number; unreadCount: number }[] = []
   readSymbol:{senderId:number, receiverId:number, read:boolean}[] = []
-  constructor(private chatService:ChatService, private loginService:LoginService) {
-    this.subscription0 = this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
-      this.userId = id;
-    })
+  constructor(
+    private chatService:ChatService, 
+    private userService: UserService,
+    private authService: AuthService,
+    ) {
+      this.userId = this.authService.getLoggedInUserId();
+    
 
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
@@ -99,16 +102,7 @@ export class DirectComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription6 = this.chatService.getUsers().subscribe((data) => {
-      this.users = []
-      data.forEach((user)=>{
-        if (user.id != this.userId) {
-          this.users?.push(user);
-        }
-      })
-      this.chatService.updateUsers(this.users)
-    });
-
+    this.getfriendList();
     this.subscription7 = this.chatService.users$.subscribe(data=> {
       this.users = data;
     })
@@ -203,4 +197,17 @@ export class DirectComponent implements OnInit, OnDestroy {
     this.subscription10?.unsubscribe()
     this.subscription11?.unsubscribe()
   }
+
+
+  getfriendList() {
+    this.userService.getfriendList(this.userId!).subscribe({
+     next: (response :IUserDataShort[]) => {
+      
+       this.users = response;
+     },
+     error: error => {
+       console.error('Error:', error.error.message); 
+     }
+   });
+ }
 }

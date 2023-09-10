@@ -3,9 +3,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription, take } from 'rxjs';
 import { Room } from 'src/app/models/room.model';
 import { RoomType } from 'src/app/models/roomType.enum';
-import { User } from 'src/app/models/user.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { ChatService } from 'src/app/services/chat.service';
-import { LoginService } from 'src/app/services/login.service';
+import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 
 @Component({
   selector: 'app-room-options',
@@ -22,18 +22,16 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
 
   userId?:number;
   room:Room = {}
-  members:{user:User, type:string, click:boolean, admin:boolean, removed:boolean}[] = []
+  members:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean}[] = []
   form = new FormGroup({password:new FormControl});
   type?:RoomType
-  clickOnUser:{user:User, click:boolean}[] = [];
+  clickOnUser:{user:IUserDataShort, click:boolean}[] = [];
   newAdminsId:number[] = []
   removedId:number[] = []
   isAdmin:boolean = false
 
-  constructor(private chatService:ChatService, private loginService:LoginService) {
-    this.subscription0 = this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
-      this.userId = id;
-    })
+  constructor(private chatService:ChatService, private authService:AuthService) {
+    this.userId = this.authService.getLoggedInUserId();
 
     this.subscription1 = chatService.roomOptions$.subscribe(data=>{
       this.room = data
@@ -66,11 +64,11 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.type = RoomType.PRIVATE
   }
 
-  clickOnMember(member:{user:User, type:string, click:boolean, admin:boolean, removed:boolean}) {
+  clickOnMember(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean}) {
     member.click = !member.click
   }
 
-  addAdmin(member:{user:User, type:string, click:boolean, admin:boolean, removed:boolean}) {
+  addAdmin(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean}) {
     if (this.room.adminId?.includes(member.user.id!)) return
     member.click = !member.click
     member.admin = !member.admin
@@ -80,7 +78,7 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.newAdminsId = this.newAdminsId.filter(id=> id !== member.user.id)
   }
 
-  removeMember(member:{user:User, type:string, click:boolean, admin:boolean, removed:boolean}) {
+  removeMember(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean}) {
     if (this.room.adminId?.includes(member.user.id!)) return
     member.click = !member.click
     member.removed = !member.removed

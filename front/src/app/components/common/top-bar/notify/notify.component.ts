@@ -18,14 +18,17 @@ export class NotifyComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private menuBarService: MenuBarService,
-  ) { }
+  ) {
+
+    this.loggedInUserId  = this.authService.getLoggedInUserId();
+  }
 
   @Input() notifyData: INotifyData[] = [];
 
   @Output() buttonClickEvent :EventEmitter<void> = new EventEmitter<void>();
 
   public NotificationType = NotificationType;
-  public loggedInUserId :number = this.authService.getLoggedInUserId();
+  public loggedInUserId :number;
 
   ngOnInit(): void {
     

@@ -19,21 +19,24 @@ import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 export class ProfileIdComponent implements OnChanges {
 
   constructor(
-    private route: ActivatedRoute,
     private authService: AuthService,
+    private route: ActivatedRoute,
     private userService: UserService,
     private menuBarService: MenuBarService,
     private socket: CustomSocket,
     private confirmService: ConfirmService,
-  ) { }
+  ) { 
 
-
+    this.loggedInUserId  = this.authService.getLoggedInUserId();
+  }
+  
+  
+  public loggedInUserId :number;
   public isOwnProfile: boolean = true;
   public isMoreClicked: boolean = false;
   public friendshipStatus: string = "NONE";
   public friendshipId: number = -1;
   public isRequestInitiator :boolean = true;
-  public loggedInUserId :number = this.authService.getLoggedInUserId();
 
   private subscriptions: Subscription[] = [];
   

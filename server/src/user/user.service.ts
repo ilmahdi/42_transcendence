@@ -1,7 +1,7 @@
 
 import { Injectable } from "@nestjs/common";
 import { from } from "rxjs";
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateUserDto } from "./utils/dtos/update-user.dto";
 import { CreateUserDto } from "./utils/dtos/create-user.dto";
@@ -17,6 +17,15 @@ export class UserService {
     ) {
     }
 
+
+    async findUserById(id: number) {
+        const user = await this.prismaService.userAccount.findUnique({
+            where: {
+                id,
+            },
+        })
+        return user;
+    }
 
     // async findUserByFtId(id: number) {
     //     const user = await this.prismaService.userAccount.findUnique({
@@ -126,10 +135,11 @@ export class UserService {
                 ...createUserDto,
             }
         })
+        return user;
     }
     getUserById(id:number) {
         try {
-            const user = this.prismaService.user.findFirst({
+            const user = this.prismaService.userAccount.findFirst({
               where: {
                 id:id
               }

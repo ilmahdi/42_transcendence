@@ -1,4 +1,3 @@
-<app-nav-bar></app-nav-bar>
 
 <!-- <div [ngClass]="((!smallScreen || screenWidth>934 || displayConvers) && !(addRoom && screenWidth<=934))? '':'small-screen'"> -->
 <div [ngClass]="(displayConvers && screenWidth<=934)? 'small-screen':''">
@@ -39,8 +38,8 @@
     <div class="people">
         <div *ngFor="let user of users" class="users" (click)="addToRoom(user)" [style.backgroundColor]="user.added? '#D38146' : ''" [style.width]="user.added? '74%': '92%'">
             <div class="asAdmin" *ngIf="user.added" (click)="addAdmin(user)" [style.backgroundColor]="user.admin? '#D38146' : ''"><p style="margin-left: 10px;margin-top: 5px;">As Admin</p></div>
-            <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="img">
-            <p id="name">{{user.user.firstName}}</p>
+            <img [src]="user.user.avatar" alt="avatar" id="img">
+            <p id="name">{{user.user.username}}</p>
         </div>
     </div>
     <button id="submit" (click)="createRoom()"><span>Create</span></button>
@@ -51,4 +50,6 @@
 <app-conversations *ngIf="smallScreen" [userEmitted]="userEvent" [conversationEmitted]="conversationEvent" [roomConvers]="roomData"></app-conversations>
 <app-other-rooms></app-other-rooms>
 <!-- <app-add-member></app-add-member> -->
-<app-online></app-online>
+
+
+<app-online-friends></app-online-friends>

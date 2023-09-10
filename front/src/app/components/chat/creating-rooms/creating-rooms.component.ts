@@ -52,6 +52,7 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
       let room:Room;
       let type = this.types.filter(type=> type.select === true)
       room = {adminId:this.roomFormular.adminId, name:this.roomFormular.name, usersId:this.roomFormular.usersId, type:type[0].type, password:this.room.value.password, imagePath:this.roomFormular.imagePath};
+      console.log(room)
       this.subscription2 = this.chatService.createRoom(room).subscribe();
       this.types[0].select = false
       this.types[1].select = false

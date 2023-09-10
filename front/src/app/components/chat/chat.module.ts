@@ -3,11 +3,9 @@ import { CommonModule } from '@angular/common';
 
 import { ChatRoutingModule } from './chat-routing.module';
 import { ChatComponent } from './chat.component';
-import { NavBarModule } from '../nav-bar/nav-bar.module';
 import { ConversationsComponent } from './conversations/conversations.component';
 import { DirectComponent } from './direct/direct.component';
 import { RoomsComponent } from './rooms/rooms.component';
-import { OnlineModule } from '../right-bar/online/online.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { ChatService } from 'src/app/services/chat.service';
@@ -15,6 +13,7 @@ import { CreatingRoomsComponent } from './creating-rooms/creating-rooms.componen
 import { OtherRoomsComponent } from './other-rooms/other-rooms.component';
 import { RoomOptionsComponent } from './room-options/room-options.component';
 import { AddMemberComponent } from './add-member/add-member.component';
+import { MenuBarModule } from '../common/menu-bar.module';
 
 const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
 
@@ -34,9 +33,9 @@ const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}}
   imports: [
     CommonModule,
     ChatRoutingModule,
-    NavBarModule,
-    OnlineModule,
-    FormsModule, ReactiveFormsModule,
+    MenuBarModule,
+    FormsModule, 
+    ReactiveFormsModule,
     SocketIoModule.forRoot(config),
   ]
 })

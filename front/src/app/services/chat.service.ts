@@ -3,11 +3,10 @@ import { BehaviorSubject, Observable, Subscription, fromEvent, take } from 'rxjs
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Message } from '../models/message.model';
 import { User } from '../models/user.model';
-import * as io from 'socket.io-client';
-import { ChatSocketService } from './core/chat-socket.service';
-import { LoginService } from './login.service';
 import { Room } from '../models/room.model';
 import { RoomType } from '../models/roomType.enum';
+import { CustomSocket } from '../utils/socket/socket.module';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -75,10 +74,12 @@ export class ChatService {
   roomOptionsSource = new BehaviorSubject<Room>({})
   roomOptions$ = this.roomOptionsSource.asObservable();
 
-  constructor(private http:HttpClient, private socket:ChatSocketService, private loginService:LoginService) {
-    this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
-      this.userId = id
-    })
+  constructor(
+    private http:HttpClient, 
+    private socket: CustomSocket,
+    private authService:AuthService,
+    ) {
+    this.userId = this.authService.getLoggedInUserId();
     this.socket.connect()
     this.updateSocketId(this.userId!)
     this.sendToGetLastMessage(this.userId!)
@@ -133,10 +134,6 @@ export class ChatService {
   updateUsers(users:User[]) {
     users = users.filter(item=> item.id !== this.userId)
     this.usersSource.next(users);
-  }
-
-  setSocket(socket:ChatSocketService) {
-    this.socket = socket
   }
 
   roomFormular(statue:boolean) {

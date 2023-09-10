@@ -40,10 +40,10 @@ export class RoomChatService {
       async createRoom(room:Room) {
         if (room.password) {
           room.password = await this.hashPassword(room.password)
-          return await this.prismaService.room.create({data:{id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type}})
+          return await this.prismaService.room.create({data:{id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath}})
         }
         else
-          return await this.prismaService.room.create({data:{id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type}})
+          return await this.prismaService.room.create({data:{id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath}})
       }
 
       getRoomById(id:number){
@@ -222,7 +222,7 @@ export class RoomChatService {
       const isPasswordValid = this.comparePasswords(password, room.password);
       if (isPasswordValid) {
         room.usersId.push(id);
-        await this.prismaService.room.create({data:{id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type}});
+        await this.prismaService.room.create({data:{id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath}});
         return true;
       }
 
@@ -249,11 +249,11 @@ export class RoomChatService {
     async changeRoomType(room:Room) {
       if (room.type !== RoomType.PROTECTED) {
         room.password = null
-        this.prismaService.room.create({data:{id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type}});
+        this.prismaService.room.create({data:{id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath}});
       }
       else {
         room.password = await this.hashPassword(room.password)
-        this.prismaService.room.create({data:{id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type}});
+        this.prismaService.room.create({data:{id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath}});
       }
     }
 }

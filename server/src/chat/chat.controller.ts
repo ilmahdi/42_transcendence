@@ -14,7 +14,7 @@ export const storage = {
   storage:diskStorage({
     destination: './uploads/images',
     filename: (req, file, cb)=> {
-      const originalname = file.originalname || 'default.png'; 
+      const originalname = file.originalname 
       const filename: string = path.parse(originalname).name.replace(/\s/g, '');
       const extension: string = path.parse(originalname).ext;
 
@@ -102,7 +102,6 @@ export class ChatController {
   uploadFile(@UploadedFile() file): Observable<string> {
     if (file)
       return from(file.filename as string);
-    return from('default.png')
   }
 
   @Get('image/:imagePath')

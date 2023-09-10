@@ -2,7 +2,6 @@ import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayConnection, O
 import { Server, Socket } from 'socket.io';
 import { Message } from './utils/models/message.interface';
 import { Body, UseGuards } from '@nestjs/common';
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/user/utils/models/user.interface';
 import { UserService } from 'src/user/user.service';
@@ -11,49 +10,47 @@ import { Room } from './utils/models/room.interface';
 import * as jwt from 'jsonwebtoken';
 import { PrivateChatService } from './utils/services/privateChat.service';
 import { RoomChatService } from './utils/services/roomChat.service';
+import { JwtGuard } from 'src/auth/utils/guards/jwt.guard';
+import { ConnectionGateway } from 'src/common/gateways/connection.gateway';
 
 @WebSocketGateway({cors: {origin: 'http://localhost:4200'}})
-export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
+export class ChatGateway{
   @WebSocketServer() server: Server
 
   messages:Message[] = []
   id:string[] = []
 
-  constructor(private privateChatService:PrivateChatService, private roomChatService:RoomChatService, private authService:AuthService, private userService:UserService) {
-  }
-
-  handleDisconnect(client: Socket) {
-    console.log("DISCONNECTED");
-  }
-
-  @UseGuards(JwtGuard)
-  handleConnection(client: Socket, ...args: any[]) 
-  {
-    console.log("CONNECTED  ", client.id);
-    this.id.push(client.id)
-  }
-
-  @SubscribeMessage('updateSocketId')
-  updateSocketId(client:Socket, userId:number) {
-    this.userService.updateUser(userId, client.id)
-    client.emit('updated', client.id);
+  constructor(
+    private privateChatService:PrivateChatService, 
+    private roomChatService:RoomChatService, 
+    private authService:AuthService,
+    private userService:UserService,
+    private readonly connectionGateway :ConnectionGateway,
+    ) {
   }
 
   @SubscribeMessage('privateMessage')
   handlePrivateMessage(client: Socket, data: any) {
-      this.privateChatService.saveMessage(data.message)
-      // console.log("SOCKET ", data.user.socketId);
-      
-      // this.server.to([data.user.socketId, client.id]).emit('recMessage', data.message);
-      this.server.emit('recMessage', data.message);
-      // this.server.to([this.id[0], this.id[1]]).emit('recMessage', data.message);
+    
+    this.privateChatService.saveMessage(data.message)
+    console.log(data.message);
+    const senders = this.connectionGateway.connectedUsersById[data.message.senderId]
+      if (senders)
+        senders.forEach(id=>{
+          this.server.to(id).emit('recMessage', data.message);
+        })
+      const reciver = this.connectionGateway.connectedUsersById[data.message.receiverId]
+      if (reciver)
+        reciver.forEach(id=>{
+          this.server.to(id).emit('recMessage', data.message);
+        })
   }
+
 
   @SubscribeMessage('getConversation')
   async getConversation(client: Socket, data:any) {
     const messages = await this.privateChatService.getConversation(data.senderId, data.receiverId)
     this.server.to(client.id).emit('getConversation', messages)
-    // this.server.to(client.id).emit('getConversation', messages);
   }
 
   @SubscribeMessage('getLastMessage')
@@ -102,7 +99,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
     let usersId:(number[]) = data.room.usersId;
     usersId.forEach(id=> {
       this.userService.getUserById(id).subscribe(user=>{
-        this.server.to(user.socketId).emit('recRoomMessage', data.message);
+
+        this.connectionGateway.connectedUsersById[user.id].forEach(id=>{
+          this.server.to(id).emit('recRoomMessage', data.message);
+        })
       })
     })
   }

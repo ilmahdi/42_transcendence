@@ -10,6 +10,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { ConnectionGateway } from 'src/common/gateways/connection.gateway';
 import { ConnectionModule } from 'src/common/gateways/connection.module';
+import { TokenService } from 'src/common/services/token.service';
 
 @Module({
   providers: [
@@ -19,7 +20,8 @@ import { ConnectionModule } from 'src/common/gateways/connection.module';
     UserService,
     PrivateChatService,
     RoomChatService,
-    PrismaService, // Include PrismaService
+    PrismaService, 
+    TokenService,
   ],
   controllers: [ChatController],
   imports: [

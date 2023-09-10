@@ -6,7 +6,7 @@ import { GameModule } from './components/game/game.module';
 import { HomeModule } from './components/home/home.module';
 import { NavBarModule } from './components/nav-bar/nav-bar.module';
 import { VisitorsModule } from './components/visitors/visitors.module'
-// import { ChatModule } from './components/chat/chat.module';
+import { ChatModule } from './components/chat/chat.module';
 import { FriendsModule } from './components/friends/friends.module';
 import { LeaderboardModule } from './components/leaderboard/leaderboard.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -34,7 +34,7 @@ import { MenuBarModule } from './components/common/menu-bar.module';
     HomeModule,
     ProfileModule,
     VisitorsModule,
-    // ChatModule,
+    ChatModule,
     FriendsModule,
     LeaderboardModule,
     ModalsModule,

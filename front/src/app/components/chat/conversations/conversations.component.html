@@ -2,8 +2,8 @@
     <div class="body" *ngIf="userEmitted && displayConversation" [style.display]="userEmitted[1]? 'block': 'none'">
         <div class="header">
             <span class="fa fa-angle-double-left" (click)="getConversEvent()"></span>
-            <img src="../../../../assets/sghajdao.jpg" alt="avatar">
-            <span id="conv">Conversation with <span style="font-weight: bolder;">{{userEmitted[0].firstName}}</span></span>
+            <img [src]="userEmitted[0].avatar" alt="avatar">
+            <span id="conv">Conversation with <span style="font-weight: bolder;">{{userEmitted[0].username}}</span></span>
         </div>
 
         <div class="messages" #scrollContainer>
@@ -45,7 +45,7 @@
                 <span class="fa fa-ellipsis-v"></span>
             </div>
             <span class="fa fa-angle-double-left" (click)="getConversEvent()"></span>
-            <img [src]="'http://localhost:3000/api/chat/image/' + roomConvers[0].imagePath" alt="avatar">
+            <img [src]="roomConvers[0].imagePath" alt="avatar">
             <span id="conv">Conversation in <span style="font-weight: bolder;">{{roomConvers[0].name}}</span></span>
         </div>
 

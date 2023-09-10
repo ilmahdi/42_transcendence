@@ -2,13 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Message } from 'src/app/models/message.model';
 import { User } from 'src/app/models/user.model';
 import { ChatService } from 'src/app/services/chat.service';
-import { LoginComponent } from '../login/login.component';
-import { LoginService } from 'src/app/services/login.service';
-import { Subscription, take } from 'rxjs';
-import { Router } from '@angular/router';
+import { Subscription, firstValueFrom, take } from 'rxjs';
 import * as _ from 'lodash';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Room } from 'src/app/models/room.model';
+import { UserService } from 'src/app/services/user.service';
+import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-chat',
@@ -40,23 +40,28 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   userId?:number
   addRoom:boolean = false
-  users:{user:User, added:boolean, admin:boolean}[] = []
+  users:{user:IUserDataShort, added:boolean, admin:boolean}[] = []
 
   roomFormularTitles:any[] = [{title:'Give your room a name', error:false}, {title:'Add people to your room', error:false}]
 
   selectedFile?: File
 
   searchQuery: string = '';
-  searchResults: User[] = [];
+  searchResults: IUserDataShort[] = [];
   nextStep:boolean = false
   roomFormular:any = {}
-  constructor(private chatService:ChatService, private loginService:LoginService) {
+  constructor(
+    private chatService:ChatService, 
+    private userService: UserService,
+    private authService: AuthService,
+    ) {
+
+    this.userId = this.authService.getLoggedInUserId();
+
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
 
-    this.subscription1 = this.loginService.userId.pipe(take(1)).subscribe((id?:any) => {
-      this.userId = id;
-    })
+  
     chatService.sendToGetLastMessage(this.userId!)
     chatService.sendToGetRoomLastMessage(this.userId!)
 
@@ -73,13 +78,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription4 = this.chatService.getUsers().subscribe((data) => {
-      data.forEach((user)=>{
-        if (user.id != this.userId) {
-          this.users?.push({user:user, added:false, admin:false})
-        }
-      })
-    });
+    this.getfriendList();
     this.subscription5 = this.chatService.displayConvers$.subscribe(data=> this.displayConvers = data)
   }
 
@@ -97,7 +96,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.directClicked = false;
   }
 
-  onCustomEvent(user:User) {
+  onCustomEvent(user:IUserDataShort) {
     this.smallScreen = true
     this.userEvent = [user, true]
     this.roomData = []
@@ -112,11 +111,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.displayComponents(true, false, false, true, true, false, false)
   }
 
-  addToRoom(user:{user:User, added:boolean, admin:boolean}) {
+  addToRoom(user:{user:IUserDataShort, added:boolean, admin:boolean}) {
     user.added = !user.added
   }
 
-  addAdmin(user:{user:User, added:boolean, admin:boolean}) {
+  addAdmin(user:{user:IUserDataShort, added:boolean, admin:boolean}) {
     user.added = !user.added
     user.admin = !user.admin
   }
@@ -131,7 +130,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.selectedFile = event.target.files[0];
   }
 
-  createRoom() {
+  async createRoom() {
     let usersAdded = this.users.filter(user=> user.added === true)
     let admins = this.users.filter(user=> user.admin === true);
     let usersId: (number)[] = []
@@ -147,18 +146,19 @@ export class ChatComponent implements OnInit, OnDestroy {
     adminsId.push(this.userId!)
 
     const formData = new FormData();
-    formData.append('file', this.selectedFile!)
-    this.subscription7 = this.chatService.uploadImage(formData).subscribe()
+    formData.append('image', this.selectedFile!)
+    const avatar  = await firstValueFrom( this.userService.uploadImage(formData));
     let path:string = this.room.value.imagePath
-    let imageName = path.split('\\')
 
-    let room = {adminId:adminsId, name:this.room.value.name, usersId:usersId, imagePath:imageName[imageName.length - 1]};
+
+    let room = {adminId:adminsId, name:this.room.value.name, usersId:usersId, imagePath:avatar.filename};
     if (usersId.length > 1 && this.room.value.name && this.room.value.imagePath) {
       this.roomFormular = room;
       this.nextStep = true
       this.roomFormularTitles[1].error = false
       this.roomFormularTitles[0].error = false
       this.chatService.backToRoomFormularSource.next(false);
+      this.resetRoomFormular()
     }
     else {
       if (usersId.length <= 1)
@@ -213,4 +213,23 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.subscription8?.unsubscribe()
     this.subscription9?.unsubscribe()
   }
+
+
+  getfriendList() {
+    this.userService.getfriendList(this.userId!).subscribe({
+
+     next: (response :IUserDataShort[]) => {
+
+      response.forEach((user)=>{
+        if (user.id != this.userId) {
+          this.users?.push({user:user, added:false, admin:false})
+        }
+      })
+      
+     },
+     error: error => {
+       console.error('Error:', error.error.message); 
+     }
+   });
+ }
 }
