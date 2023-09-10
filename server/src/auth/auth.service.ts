@@ -1,23 +1,42 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { Observable, catchError, from, map, of, retry, switchMap } from 'rxjs';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt'
-import { User } from 'src/user/utils/models/user.class';
+import { Profile } from './utils/interfaces'
+import { UserService } from 'src/user/user.service';
+import { TokenService } from 'src/common/services/token.service';
 
 
 @Injectable()
 export class AuthService {
     constructor(
-        // @InjectRepository(UserEntity) private readonly userRepository:Repository<UserEntity>,
-        private prismaService: PrismaService,
-        private jwtService: JwtService
+            private readonly userService: UserService,
+            private tokenService: TokenService,
         ){
     }
 
-    getAllUsers() {
-        return from(this.prismaService.user.findMany())
+    async validateFtUser(profile: Profile){
+        let firstLogin :string = "false";
+        // original auth
+        // let user = await this.userService.findUserByFtId(profile.ft_id);
+        let user = await this.userService.findUserByUsername(profile.username);
+        // 
+        if (!user)
+        {
+            // user = await this.userService.addUser(profile);
+            firstLogin = "true";
+            return { profile, firstLogin }
+        }
+        const token =  this.tokenService.generateToken(
+            {
+                sub: user.id,
+                username: user.username,
+            }
+        )
+        return { token, firstLogin }
     }
+
+    async twofaCheck(userId :number) {
+        return await this.userService.twofaCheck(userId);
+    }
+
     
     hashPassword(password: string): Observable<string> {
         return from(bcrypt.hash(password, 12));

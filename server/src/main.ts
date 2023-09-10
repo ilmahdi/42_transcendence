@@ -11,8 +11,17 @@ async function bootstrap() {
     credentials: true,
   });
   app.setGlobalPrefix("api");
-  app.useGlobalPipes(new ValidationPipe());
   app.useWebSocketAdapter(new SocketAdapter(app));
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    transform: true,
+    transformOptions: {
+      enableImplicitConversion: true,
+    },
+  }))
+  app.enableCors({
+    origin: process.env.FONTEND_URL,
+  });
   await app.listen(3000);
 }
 bootstrap();

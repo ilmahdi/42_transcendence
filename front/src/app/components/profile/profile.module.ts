@@ -4,24 +4,34 @@ import { CommonModule } from '@angular/common';
 import { ProfileRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { NavBarModule } from '../nav-bar/nav-bar.module';
-import { OwnedComponent } from './owned/owned.component';
-import { VisitedComponent } from './visited/visited.component';
-import { MapsModule } from '../right-bar/maps/maps.module';
-import { OnlineModule } from '../right-bar/online/online.module';
+import { MenuBarModule } from '../common/menu-bar.module';
+import { ProfileStatsComponent } from './profile-stats/profile-stats.component';
+import { ProfileIdComponent } from './profile-id/profile-id.component';
+import { MatchHistoryComponent } from './match-history/match-history.component';
+import { AchievementsComponent } from './achievements/achievements.component';
+import { MoreOptsComponent } from './more-opts/more-opts.component';
+import { SharedModule } from 'src/app/utils/shared/shared.module';
+import { PipesModule } from 'src/app/utils/pipes/pipes.module';
+
 
 
 @NgModule({
   declarations: [
     ProfileComponent,
-    OwnedComponent,
-    VisitedComponent
+    ProfileStatsComponent,
+    ProfileIdComponent,
+    MatchHistoryComponent,
+    AchievementsComponent,
+    MoreOptsComponent,
   ],
   exports: [ProfileComponent],
   imports: [
     CommonModule,
     ProfileRoutingModule,
     NavBarModule,
-    OnlineModule
+    MenuBarModule,
+    SharedModule,
+    PipesModule,
   ]
 })
 export class ProfileModule { }

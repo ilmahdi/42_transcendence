@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { LeaderboardRoutingModule } from './leaderboard-routing.module';
 import { LeaderboardComponent } from './leaderboard.component';
 import { NavBarModule } from '../nav-bar/nav-bar.module';
-import { OnlineModule } from '../right-bar/online/online.module';
+import { MenuBarModule } from '../common/menu-bar.module';
 
 
 @NgModule({
@@ -16,7 +16,7 @@ import { OnlineModule } from '../right-bar/online/online.module';
     CommonModule,
     LeaderboardRoutingModule,
     NavBarModule,
-    OnlineModule
+    MenuBarModule,
   ]
 })
 export class LeaderboardModule { }

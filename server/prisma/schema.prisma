@@ -20,7 +20,7 @@ enum FriendshipStatus {
   WAITING
   REFUSED
   ACCEPTED
-  
+  BLOCKED
 }
 enum MatchStatus {
   PLAING
@@ -41,6 +41,11 @@ enum AccessLevels {
   BANNED
   MUTED
 }
+enum NotificationType {
+  FRIEND_REQUEST
+  FRIEND_ACCEPTE
+  GAME_INVITE
+}
 
 enum RoomType {
   PUBLIC
@@ -50,15 +55,95 @@ enum RoomType {
 
 // database models
 //********************************************************************//
-model User {
-  id                  Int         @id @default(autoincrement())
-  socketId            String?
-  firstName           String    
-  lastName            String      
-  email               String?     @unique
-  password            String?
-  imagePath           String?
+model UserAccount {
+  id                  Int                 @id @default(autoincrement())
+  ft_id               Int                 
+  username            String              @unique
+  // email               String              @unique   
+  tfa_secret          String?       
+  is_tfa_enabled      Boolean?            @default(false)
+  avatar              String        
+  status              Status              @default(OFFLINE)
+  wins                Int                 @default(0)          
+  losses              Int                 @default(0)
+  draws               Int                 @default(0)
+  games               Int                 @default(0)
+  rating              Int                 @default(1000)
+
+  win_streak          Int                 @default(0)
+
+  created_at          DateTime            @default(now())
+  updated_at          DateTime            @updatedAt
+
+  friendship_from     Friendship[]        @relation("friendship_from")
+  friendship_to       Friendship[]        @relation("friendship_to")
+  match_player1       Matches[]           @relation("player1")
+  match_player2       Matches[]           @relation("player2")
+  message_sender      Message[]           @relation("sender")
+  message_receiver    Message[]           @relation("receiver")
+  channel             Channel[]           @relation()
+  channel_admins      ChannelAdmins[]     @relation()
+  channel_members     ChannelMembers[]    @relation()
+  restricted_members  RestrictedMembers[] @relation()
+  notif_to            Notification[]      @relation("notif_to")
+  notif_from          Notification[]      @relation("notif_from")
 }
+
+
+model Notification { 
+  id                  Int               @id @default(autoincrement())
+  friendship_id       Int               @default(0)
+  to_id               Int
+  from_id             Int
+  type                NotificationType
+  seen                Boolean           @default(false)
+
+  created_at          DateTime          @default(now())
+  updated_at          DateTime          @updatedAt
+
+
+  notif_to            UserAccount         @relation("notif_to", fields: [to_id], references: [id])
+  notif_from          UserAccount         @relation("notif_from", fields: [from_id], references: [id])
+}
+
+
+model Friendship {
+  id                  Int                 @id @default(autoincrement())
+  user_id             Int
+  friend_id           Int
+  friendship_status   FriendshipStatus
+  created_at          DateTime            @default(now())
+
+  user                UserAccount         @relation("friendship_from", fields: [user_id], references: [id])
+  friend              UserAccount         @relation("friendship_to", fields: [friend_id], references: [id])
+
+}
+
+
+model Matches { 
+  id                  Int  @id @default(autoincrement())
+  player1_id          Int
+  player2_id          Int
+  game_id             Int
+  match_status        MatchStatus
+  created_at          DateTime    @default(now())
+
+  game                Game?
+  player1             UserAccount         @relation("player1", fields: [player1_id], references: [id])
+  player2             UserAccount         @relation("player2", fields: [player2_id], references: [id])
+} 
+
+model Game {  
+  id                  Int @id @default(autoincrement())
+  match_id            Int @unique
+  player1_score       Int
+  player2_score       Int
+  start_time          DateTime    @default(now())
+  end_time            DateTime    @updatedAt
+
+  match               Matches             @relation(fields: [match_id], references: [id])
+} 
+
 
 model Message { 
   id                  Int     @id @default(autoincrement())

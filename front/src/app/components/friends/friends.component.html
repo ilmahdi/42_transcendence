@@ -1,2 +1,45 @@
-<app-nav-bar></app-nav-bar>
-<app-online></app-online>
+<app-online-friends></app-online-friends>
+
+<div class="wrap-component">
+  <div class="leaderboard">
+    <div class="ld-sec-one">
+      <img class="ld-sec-title-icon" src="./assets/icons/ifriend.svg" />
+      <h2 class="ld-sec-title-text"> All friends </h2>
+    </div>
+    <div class="ld-sec-two">
+      <div class="ld-sec-header">
+        <span class="ld-sec-head-item">User</span>
+        <span class="ld-sec-head-item">Avatar</span>
+        <span class="ld-sec-head-item">Rating</span>
+        <span class="ld-sec-head-item">Play</span>
+      </div>
+
+      <div class="ld-sec-table-wrap">
+        <div class="ld-sec-table">
+          <div
+            class="ld-sec-tb-row"
+            *ngFor="let friend of friends; let i = index"
+          >
+            <div class="ld-sec-tb-data">
+              <span class="ld-sec-tb-data-item entry">{{ friend.name }}</span>
+              <span class="ld-sec-tb-data-item">
+                <img src="{{ friend.avatar }}" 
+                  style="display: none" onload="this.style.display=''"
+                  onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+                />
+              </span>
+              <span class="ld-sec-tb-data-item">{{ friend.rating }}</span>
+              <span class="ld-sec-tb-data-item">
+                  <svg class="ld-sec-tb-data-icon" xmlns="http://www.w3.org/2000/svg">
+                      <use xlink:href="./assets/icons/arrow.svg#icon-arrow"></use>
+                  </svg>
+              </span>
+            </div>
+            <span class="ld-sec-tb-hr"></span>
+          </div>
+        </div>
+        <span class="ld-sec-table-scroll"></span>
+      </div>
+    </div>
+  </div>
+</div>

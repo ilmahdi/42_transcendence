@@ -4,7 +4,10 @@
 
 export const environment = {
   production: false,
-  baseApiUrl: 'http://localhost:3000/api'
+  baseApiUrl: 'http://localhost:3000/api',
+  apiUrl: 'http://localhost:3000',
+  apiUrlAuth: 'http://localhost:3000/api/auth/login/42/',
+  uploadUrl: 'http://localhost:3000/api/user/avatar/',
 };
 
 /*

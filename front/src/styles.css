@@ -1,2 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~font-awesome/css/font-awesome.min.css";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
+
+:root {
+    --primary-text-color: #DEC8C8;
+    --primary-background-color: #201717;
+    --primary-hover-background-color: #62402B;
+    --second-text-color: #D38146;
+    --second-background-color: #231C1C;
+    --third-background-color: #3C2A1F;
+    --fourth-background-color: #593A2E;
+    --fifth-background-color: #FFB076;
+    --second-hover-background-color: #D38146;
+    --top-bar-background-color: #1E1212;
+    --primary-border-color: #6C3636;
+    --modal-background-color: #F4E7E7;
+    --modal-text-color: #271406;
+    
+    --primary-transparent-color-background: 32, 23, 23;
+    --second-transparent-color-background: 29, 21, 21, 66%;
+    --ach-transparent-color-background: 35, 28, 28;
+
+
+
+    --primary-left-bar-width: 14rem;
+    --second-left-bar-width: 4.4rem;
+    --right-bar-width: 14rem;
+    --top-bar-hieght: 4rem;
+    
+}   
+
+body {
+    overflow:auto;
+    
+}

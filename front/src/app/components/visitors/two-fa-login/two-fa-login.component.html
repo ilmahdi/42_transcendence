@@ -1,0 +1,66 @@
+
+<div class="wraper">
+
+    <div class="cm-logo">
+      <svg id="icon-logo" class="cm-item-icon" xmlns="http://www.w3.org/2000/svg">
+          <use xlink:href="./assets/icons/logo.svg#icon-logo"></use>
+      </svg>
+      <span class="cm-item-text"> POING </span>
+    </div>
+    <div class="confirm-modal">
+      <h2 class="cm-title"> Welcome, {{ loggedInUserusername }}! </h2>
+      <p class="cm-body">For added security, please enter the verification code from your authenticator app.</p>
+      <form class="cm-form" [formGroup]="twoFACodeForm" (ngSubmit)="submitForm()">
+        <div class="cm-form-group">
+
+          <label class="cm-input-title" for="twoFACode"> OTP Code: </label>
+          <input type="code" class="cm-form-input" id="twoFACode" 
+          formControlName="twoFACode" placeholder="code" autocomplete="off"
+          (focus)="onInputFocus()">
+
+
+
+
+          <div class="cm-alert cm-alert-danger"
+            *ngIf="twoFACodeForm.get('twoFACode')?.invalid && 
+            (twoFACodeForm.get('twoFACode')?.dirty || 
+            twoFACodeForm.get('twoFACode')?.touched)" 
+            >
+            
+            <div class="cm-sec-two-message" *ngIf="twoFACodeForm.get('twoFACode')?.hasError('required')"
+            [class.is-incorrect-code]="isIncorrectCode">
+              <svg class="cm-sec-two-icon i3" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="./assets/icons/warn.svg#icon-warn"></use>
+              </svg>
+              <span *ngIf="!isIncorrectCode">
+                2FA code is required.
+              </span>
+              <span *ngIf="isIncorrectCode">
+                Incorrect 2FA code.
+              </span>
+            </div>
+
+            
+            <div class="cm-sec-two-message" *ngIf="twoFACodeForm.get('twoFACode')?.hasError('pattern')">
+              <svg class="cm-sec-two-icon i3" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="./assets/icons/warn.svg#icon-warn"></use>
+              </svg>
+              Invalid 2FA code format.
+            </div>
+            
+          </div>
+        </div>
+        <div class="cm-btns">
+          <button type="submit" class="cm-btn b2" [disabled]="twoFACodeForm.invalid">Submit</button>
+          <button type="button" class="cm-btn b1" (click)="onLogoutClick()">logout</button>
+        </div>
+      </form>
+    </div>
+    
+  </div>
+
+<div class="lp-bg" >
+    <img class="lp-bg-img"  src="./assets/imgs/pong_login.png" >
+    <div class="lp-bg-cover"></div>
+
+</div>
