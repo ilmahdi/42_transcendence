@@ -1,49 +1,68 @@
+.wrap-component {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    padding-left: calc(var(--primary-left-bar-width));
+    padding-right: calc(var(--primary-left-bar-width));
+
+    padding-top: calc(var(--top-bar-hieght) + 30px);
+    padding-bottom: calc(var(--top-bar-hieght) / 2);
+    
+}
+
+.header {
+    display: flex;
+}
+
 .direct {
-    position: absolute;
-    /* left: 270px; */
-    right: calc(25% + 746px);
-    margin-top: 80px;
+    display: flex;
     width: 144px;
-    height: 44px;
+    height: 40px;
+    background-color: #231C1C;
     border-radius: 10px 10px 0px 0px;
     cursor: pointer;
 }
 
 .rooms {
-    position: absolute;
-    /* left: 416px; */
-    right: calc(25% + 600px);
-    margin-top: 80px;
+    display: flex;
     width: 144px;
-    height: 44px;
+    height: 40px;
+    background-color: #231C1C;
+    margin-left: 5px;
     border-radius: 10px 10px 0px 0px;
     cursor: pointer;
 }
 
-#line {
-    position: absolute;
-    margin-top: 41px;
-    width: 100%;
-    height: 2px;
-    background-color: #D38146;
-    transition: 0.3s;
+.text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    gap: 0.8rem;
+    margin-left: 40px;
 }
 
-.headerPart {
-    display: flex;
+.line {
     position: absolute;
-    /* left: 270px; */
-    right: calc(25% + 600px);
-    margin-top: 123px;
-    width: 290px;
-    height: 67px;
+    margin-top: 38px;
+    width: 144px;
+    height: 2px;
+    background-color: #D38146;
+}
+
+.searchPart {
+    display: flex;
+    /* position: relative; */
+    width: 295px;
+    height: 70px;
     background-color: #231C1C;
+
 }
 
 .search {
-    position: absolute;
-    margin-top: 18px;
-    margin-left: 7%;
     width: 66%;
     height: 40px;
     border: none;
@@ -52,12 +71,12 @@
     outline: none;
     background-color: #5e4a4a;
     color: #DEC8C8;
+    margin-left: 20px;
+    margin-top: 15px;
 }
 
 #rightSerch {
-    position: absolute;
-    margin-top: 18px;
-    margin-left: 73%;
+    margin-top: 15px;
     height: 40px;
     width: 19%;
     background-color: #5e4a4a;
@@ -66,33 +85,8 @@
 
 .fa-search {
     position: absolute;
-    margin-top: 25px;
-    margin-left: 78%;
-    font-size: 25px;
-    color: #DEC8C8;
-    cursor: pointer;
-}
-
-/**************************** FOR ROOMS **************************/
-
-.roomsSearch {
-    position: absolute;
-    margin-top: 18px;
-    margin-left: 3%;
-    width: 94%;
-    height: 40px;
-    border-color: #D38146;
-    border-radius: 10px 10px 10px 10px;
-    text-indent: 20px;
-    outline: none;
-    background-color: #201717;
-    color: #DEC8C8;
-}
-
-.fa-rooms {
-    position: absolute;
-    margin-top: 25px;
-    margin-left: 70%;
+    margin-top: 20px;
+    margin-left: 230px;
     font-size: 25px;
     color: #DEC8C8;
     cursor: pointer;
@@ -100,21 +94,55 @@
 
 .fa-plus-square {
     position: absolute;
-    margin-top: 25px;
-    margin-left: 85%;
+    margin-top: 22px;
+    margin-left: 235px;
     font-size: 25px;
     color: #DEC8C8;
     cursor: pointer;
 }
+
+.fa-rooms {
+    position: absolute;
+    margin-top: 22px;
+    margin-left: 200px;
+    font-size: 25px;
+    color: #DEC8C8;
+    cursor: pointer;
+}
+
+app-direct {
+    display: flex;
+    width: 295px;
+    background-color: #231C1C;
+    height: 540px;
+    border-radius: 0px 0px 15px 15px;
+}
+
+app-rooms {
+    display: flex;
+    width: 295px;
+    background-color: #231C1C;
+    height: 540px;
+    border-radius: 0px 0px 15px 15px;
+}
+
+app-conversations {
+    /* display: flex; */
+    margin-left: 20px;
+}
+
+/**************************** FOR ROOMS **************************/
+
+
 
 /************************** FORMULAR DESIGN *************************/
 
 .createRoom {
     position: absolute;
     margin-top: 90px;
-    right: 270px;
+    right: 25%;
     height: calc(100px + 65%);
-    width: 500px;
+    width: 572px;
     background-color: #231C1C;
     border-radius: 15px 15px 15px 15px;
     overflow-y: hidden;
@@ -174,7 +202,7 @@
 
 .users {
     display: flex;
-    /* position: absolute; */
+    position: absolute;
     height: 56px;
     width: 92%;
     background-color: #201717;
@@ -298,7 +326,6 @@
 
 @media (min-width: 2000px) {
     .direct {
-        /* left: 470px; */
         right: calc(32% + 760px);
         width: 159px;
     }
@@ -314,6 +341,9 @@
         right: calc(32% + 600px);
         width: 320px;
     }
+    .createRoom {
+        right: 32%;
+    }
 }
 
 @media (max-width: 1515px) {
@@ -328,6 +358,9 @@
         /* left: 470px; */
         right: calc(25% + 530px);
     }
+    .createRoom {
+        right: calc(25% - 70px);
+    }
 }
 
 @media (max-width: 1420px) {
@@ -341,6 +374,9 @@
     .headerPart {
         right: calc(2% + 600px);
     }
+    .createRoom {
+        right: 2%
+    }
 }
 
 @media (max-width: 1160px) {
@@ -353,6 +389,9 @@
 
     .headerPart {
         right: calc(2% + 508px);
+    }
+    .createRoom {
+        width: 480px;
     }
 }
 
@@ -397,7 +436,11 @@
     #reset {
         width: 80px;
     }
-    
+    .createRoom {
+        width: 75%;
+        height: 80%;
+        right: 30px;
+    }
 }
 
 @media (max-height: 500px) {

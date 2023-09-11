@@ -1,16 +1,11 @@
 .body {
-    position: absolute;
-    margin-top: 90px;
-    right: 25%;
-    height: calc(100px + 65%);
+    /* display: flex; */
+    height: 650px;
     width: 572px;
     background-color: #231C1C;
-    border-radius: 15px 15px 15px 15px;
+    border-radius: 15px;
     scrollbar-color: #5e6147 var(--second-background-color);
     scrollbar-width: 0.4rem;
-
-    /* padding-left: 14rem;
-    padding-right: 14rem; */
 }
 
 .header {
@@ -43,17 +38,22 @@ img {
 
 #conv {
     color: white;
-    position: absolute;
+    /* position: absolute; */
     margin-top: 10px;
     margin-left: 108px;
 }
 
+.writing {
+    display: flex;
+    width: 100%;
+    height: 60px;
+    border-radius: 0px 0px 15px 15px;
+}
+
 #typing {
-    bottom: 0px;
-    position: absolute;
-    margin-bottom: 3%;
+    margin-top: 5px;
     margin-left: 3%;
-    width: 83%;
+    width: 495px;
     height: 44px;
     border-radius: 23px 0px 0px 23px;
     text-indent: 20px;
@@ -64,11 +64,10 @@ img {
 }
 
 .send {
-    position: absolute;
-    bottom: 0px;
-    margin-bottom: 3%;
-    margin-left: 86%;
-    width: 10%;
+    position: relative;
+    left: 15px;
+    top: 5px;
+    width: 50px;
     height: 44px;
     border-radius: 0px 23px 23px 0px;
     background-color: #584747;
@@ -177,11 +176,11 @@ p {
 }
 
 .messages {
-    position: absolute;
+    /* position: absolute; */
     top: 46px;
-    height: calc(100% - 120px);
+    display: flex;
+    height: 542px;
     width: 100%;
-    /* background-color: white; */
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-color: #5e6147 var(--second-background-color);
@@ -212,7 +211,7 @@ p {
     margin-top: 10px;
 }
 
-@media (min-width: 2000px) {
+/* @media (min-width: 2000px) {
     .body {
         right: 32%;
     }
@@ -272,7 +271,7 @@ p {
     .receivedMessage {
         font-size: 15px;
     }
-}
+} */
 
 p{
     -webkit-user-select:none;

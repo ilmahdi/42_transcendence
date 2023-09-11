@@ -1,12 +1,7 @@
 .list {
     display: flex;
-    position: absolute;
     flex-direction: column;
-    /* left: 270px; */
-    right: calc(25% + 600px);
-    margin-top: 186px;
     width: 290px;
-    height: 65%;
     background-color: #231C1C;
     border-radius: 0px 0px 15px 15px;
 }
@@ -15,7 +10,7 @@
     position: relative;
     height: 40px;
     width: 95%;
-    left: 2%;
+    left: 3%;
     top: 10px;
     margin-bottom: 10px;
 

@@ -1,24 +1,18 @@
 .convers {
     display: flex;
-    position: absolute;
     flex-direction: column;
-    /* left: 270px; */
-    right: calc(25% + 600px);
-    margin-top: 186px;
     width: 290px;
-    height: 65%;
     background-color: #231C1C;
     border-radius: 0px 0px 15px 15px;
 }
 
 .conver {
     display: flex;
-    /* position: absolute; */
     height: 66px;
     width: 92%;
     background-color: #201717;
-    margin-top: 10px;
     margin-left: 4%;
+    margin-top: 10px;
     border-radius: 10px 10px 10px 10px;
     cursor: pointer;
     transition: 0.3s;
