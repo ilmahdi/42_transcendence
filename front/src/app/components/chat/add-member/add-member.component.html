@@ -7,13 +7,13 @@
         <div *ngFor="let user of users" (click)="clickOnMember(user)">
             <div class="user" [style.backgroundColor]="user.click? '#D38146':''" [style.width]="(user.click && user.type === 'user')? '65%':'80%'">
                 <div class="addAdmin" *ngIf="user.click && user.type === 'user'" (click)="addAdmin(user)" [style.backgroundColor]="user.admin? '#D38146':''"><p style="text-align: center;margin-top: 3px;">Admin</p></div>
-                <img src="../../../../assets/sghajdao.jpg" alt="avatar" id="img">
+                <img [src]="user.user.avatar" alt="avatar" id="img">
                 <p id="username">{{user.user.username}}</p>
                 <p id="type">{{user.type}}</p>
             </div>
         </div>
     </div>
 
+    <button id="back" (click)="back()"><span>Back</span></button>
     <button id="submit" (click)="addMembers()"><span>Save</span></button>
-    <button id="back" style="left: 30px;" (click)="back()"><span>Back</span></button>
 </div>

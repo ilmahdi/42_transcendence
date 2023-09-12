@@ -41,12 +41,12 @@
 <div *ngIf="roomConvers[0]">
     <div class="body" *ngIf="roomConvers && displayConversation" [style.display]="roomConvers[1]? 'block': 'none'">
         <div class="header">
-            <div class="options" (click)="openOptions()">
-                <span class="fa fa-ellipsis-v"></span>
-            </div>
             <span class="fa fa-angle-double-left" (click)="getConversEvent()"></span>
             <img [src]="roomConvers[0].imagePath" alt="avatar">
             <span id="conv">Conversation in <span style="font-weight: bolder;">{{roomConvers[0].name}}</span></span>
+            <div class="options" (click)="openOptions()">
+                <div class="fa fa-ellipsis-v"></div>
+            </div>
         </div>
 
         <div class="messages" #scrollContainer>
@@ -70,16 +70,15 @@
 
         <!-- <p *ngFor="let item of roomMessage" style="color: white;">{{item.message}}</p> -->
 
-        <form [formGroup]="msg">
-            <input type="text" id="typing" placeholder="write a message" formControlName="message">
-        </form>
-        <div class="send" (click)="sendRoomMessage()">
-            <div class="disk">
-                <span class="fa fa-send" (click)="sendRoomMessage()"></span>
+        <div class="writing">
+            <form [formGroup]="msg">
+                <input type="text" id="typing" placeholder="write a message" formControlName="message">
+            </form>
+            <div class="send" (click)="sendRoomMessage()">
+                <div class="disk">
+                    <span class="fa fa-send" (click)="sendRoomMessage()"></span>
+                </div>
             </div>
         </div>
     </div>
-
 </div>
-<app-room-options *ngIf="options"></app-room-options>
-<app-add-member *ngIf="addMember"></app-add-member>

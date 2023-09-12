@@ -1,3 +1,32 @@
+<div class="roomFormul" *ngIf="backToRoomFormular">
+    <span class="fa fa-angle-double-left" *ngIf="screenWidth<= 1350" (click)="getConversations()"></span>
+
+    <div [style]="screenWidth<= 1350? 'margin-top: -30px;' : 'margin-top: 10px;'">
+        <form [formGroup]="room">
+            <div style="display: flex;align-items: center;justify-content: center;">
+                <input type="file" id="imageUpload" formControlName="imagePath" (change)="handleFileChange($event)">
+            </div>
+            <p id="giveName" [style]="roomFormularTitles[0].error? 'color: red' : 'color:white'">{{roomFormularTitles[0].title}}</p>
+            <div style="display: flex;align-items: center;justify-content: center;">
+                <input type="text" placeholder="Room name" id="roomName" formControlName="name">
+            </div>
+        </form>
+    </div>
+
+    <br>
+    <p id="addFriends" [style]="roomFormularTitles[1].error? 'color: red' : 'color:white'">{{roomFormularTitles[1].title}}</p>
+    <div class="people">
+        <div *ngFor="let user of users" class="users" (click)="addToRoom(user)" [style.backgroundColor]="user.added? '#D38146' : ''">
+            <img [src]="user.user.avatar" alt="avatar" id="img">
+            <p id="name">{{user.user.username}}</p>
+            <div class="asAdmin" *ngIf="user.added" (click)="addAdmin(user)" [style.backgroundColor]="user.admin? '#D38146' : ''"><p style="margin-left: 10px;margin-top: 5px;">As Admin</p></div>
+        </div>
+    </div>
+    <button id="submit" (click)="nextStep()"><span>Next</span></button>
+    <button id="reset" style="left: 30px;" (click)="resetRoomFormular()"><span>Reset</span></button>
+</div>
+
+
 <div class="createRoom" *ngIf="!backToRoomFormular">
     <p id="title" [style.color]="error? 'red': 'white'">Chose a type</p>
     <div class="public">
@@ -20,5 +49,5 @@
     </div>
 
     <button id="submit" (click)="createRoom()"><span>Create</span></button>
-    <button id="submit" style="left: 30px;" (click)="back()"><span>Back</span></button>
+    <button id="reset" style="left: 30px;" (click)="back()"><span>Back</span></button>
 </div>

@@ -37,8 +37,6 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
   users:User[] = [];
 
   displayConversation:boolean = true
-  options:boolean = false
-  addMember:boolean = false
   lateMessage:{late:boolean, time:string, msg:Message}[] = []
   lateRoomMessage:{late:boolean, time:string, msg:Message}[] = []
 
@@ -50,8 +48,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     this.userId = this.authService.getLoggedInUserId();
 
     this.subsciption2 = chatService.displayConversation$.subscribe(data=>this.displayConversation = data)
-    this.subsciption3 = this.chatService.options$.subscribe(data=>this.options = data)
-    this.subsciption4 = chatService.addMember$.subscribe(data=>this.addMember = data)
+    
   }
 
   ngOnInit() {
@@ -88,7 +85,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
   }
 
   getConversEvent() {
-    this.chatService.displayComponents(false, false, false, false, false, false, false)
+    this.chatService.displayComponents(false, false, false, false, true, false, false)
   }
 
   sendPrivateMessage() {

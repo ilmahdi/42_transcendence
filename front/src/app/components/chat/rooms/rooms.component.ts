@@ -118,8 +118,8 @@ export class RoomsComponent implements OnInit, OnDestroy {
   }
 
   openRoom(room:Room) {
-    //  IF THE SCREEN WIDTH < 934 SO THE CONVERSATION BUTTON COLOR WILL NOT CHANGE WHEN THE USER CLICK IT
-    if (this.screenWidth > 934) {
+    //  IF THE SCREEN WIDTH < 1350 SO THE CONVERSATION BUTTON COLOR WILL NOT CHANGE WHEN THE USER CLICK IT
+    if (this.screenWidth > 1350) {
       this.color = {color:'#D38146', name:room.name}
     }
     else
@@ -140,7 +140,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
       })
     })
     // this.chatService.updateRoomConversation(this.messages);
-    this.chatService.displayComponents(false, true, false, true, true, false, false);
+    this.chatService.displayComponents(false, true, false, true, false, false, false);
     this.chatService.roomOptionsSource.next(room);////////////
     this.conversData.emit(room);
   }

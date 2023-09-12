@@ -7,6 +7,7 @@ import { Room } from '../models/room.model';
 import { RoomType } from '../models/roomType.enum';
 import { CustomSocket } from '../utils/socket/socket.module';
 import { AuthService } from './auth.service';
+import { IUserDataShort } from '../utils/interfaces/user-data.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +57,7 @@ export class ChatService {
   displayConversationSource = new BehaviorSubject<boolean>(false);
   displayConversation$ = this.displayConversationSource.asObservable()
 
-  displayConversSource = new BehaviorSubject<boolean>(false);
+  displayConversSource = new BehaviorSubject<boolean>(true);
   displayConvers$ = this.displayConversSource.asObservable();
 
   optionsSource = new BehaviorSubject<boolean>(false);
@@ -322,7 +323,7 @@ export class ChatService {
   }
 
   getRoomMembers() {
-    return this.socket.fromEvent<{user:User, type:string}[]>('recRoomMembers');
+    return this.socket.fromEvent<{user:IUserDataShort, type:string}[]>('recRoomMembers');
   }
 
   updateRoom(room:Room) {

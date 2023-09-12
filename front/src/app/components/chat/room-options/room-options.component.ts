@@ -112,7 +112,7 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
   }
 
   addMembers() {
-    this.chatService.displayComponents(false, false, false, true, true, false, true)
+    this.chatService.displayComponents(false, false, false, true, false, false, true)
   }
 
   back() {

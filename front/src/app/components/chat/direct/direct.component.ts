@@ -134,8 +134,8 @@ export class DirectComponent implements OnInit, OnDestroy {
   }
 
   openConversation(name:string, friend: User): void {
-    //  IF THE SCREEN WIDTH < 934 SO THE CONVERSATION BUTTON COLOR WILL NOT CHANGE WHEN THE USER CLICK IT
-    if (this.screenWidth > 934) {
+    //  IF THE SCREEN WIDTH < 1350 SO THE CONVERSATION BUTTON COLOR WILL NOT CHANGE WHEN THE USER CLICK IT
+    if (this.screenWidth > 1350) {
       this.color = {color:'#d3814674', name:name}
     }
     else
@@ -161,10 +161,10 @@ export class DirectComponent implements OnInit, OnDestroy {
     })
 
     // SEND A SIGNAL WICH INDICATE THAT THE USER HAVE READ THE MESSAGES
-    if (this.lastMessages[this.lastMessages.length -1].receiverId === this.userId)
+    if (this.lastMessages[this.lastMessages.length - 1].receiverId === this.userId)
       this.chatService.sendReadSignal();
 
-    this.chatService.displayComponents(false, true, false, true, true, false, false);
+    this.chatService.displayComponents(false, true, false, true, false, false, false);
     this.customEvent.emit(friend)
   }
 
