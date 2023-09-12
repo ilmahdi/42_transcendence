@@ -163,22 +163,22 @@ img {
     margin-top: 10px;
     margin-bottom: 10px;
     display: inline-block;
-    float: right; /* Align the message to the right */
-    clear: both; /* Ensure proper clearing of floated elements */
-    margin-right: 35%;
+    float: right;
+    clear: both;
+    margin-right: 37%;
 }
 
 p {
     display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 35px;
+    justify-content: center;
+    align-items: center;
+    height: 35px;
 }
 
 .messages {
     /* position: absolute; */
     top: 46px;
-    display: flex;
+    /* display: flex; */
     height: 542px;
     width: 100%;
     overflow-y: auto;

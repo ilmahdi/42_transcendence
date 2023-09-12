@@ -148,8 +148,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     const formData = new FormData();
     formData.append('image', this.selectedFile!)
     const avatar  = await firstValueFrom( this.userService.uploadImage(formData));
-    let path:string = this.room.value.imagePath
-
 
     let room = {adminId:adminsId, name:this.room.value.name, usersId:usersId, imagePath:avatar.filename};
     if (usersId.length > 1 && this.room.value.name && this.room.value.imagePath) {

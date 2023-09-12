@@ -138,11 +138,12 @@ app-conversations {
 /************************** FORMULAR DESIGN *************************/
 
 .createRoom {
-    position: absolute;
-    margin-top: 90px;
-    right: 25%;
-    height: calc(100px + 65%);
+    /* position: absolute; */
+    /* margin-top: 90px; */
+    /* right: 25%; */
     width: 572px;
+    height: 650px;
+    margin-left: 30px;
     background-color: #231C1C;
     border-radius: 15px 15px 15px 15px;
     overflow-y: hidden;
@@ -152,9 +153,6 @@ app-conversations {
 }
 
 #imageUpload {
-    position: absolute;
-    top: 10%;
-    left: 40%;
     font-size: 20;
     appearance: none;
     border: none;
@@ -164,7 +162,6 @@ app-conversations {
 #giveName {
     position: relative;
     text-align: center;
-    /* left: 35%; */
     margin-top: 130px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color: white;
@@ -173,16 +170,11 @@ app-conversations {
 #addFriends {
     position: relative;
     text-align: center;
-    /* left: 35%; */
-    margin-top: 75px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color: white;
 }
 
 #roomName {
-    position: absolute;
-    left: 20%;
-    top: 35%;
     width: 60%;
     height: 40px;
     border: none;
@@ -194,20 +186,18 @@ app-conversations {
 }
 
 .people {
-    position: absolute;
+    display: flex;
     width: 100%;
-    height: 40%;
-    top: 50%;
+    height: 45%;
+    justify-content: center;
 }
 
 .users {
     display: flex;
-    position: absolute;
     height: 56px;
-    width: 92%;
+    width: 74%;
     background-color: #201717;
     margin-top: 10px;
-    margin-left: 4%;
     border-radius: 10px 10px 10px 10px;
     cursor: pointer;
     transition: 0.3s;
@@ -222,6 +212,7 @@ app-conversations {
 }
 
 #name {
+    flex-grow: 1;
     color: #DEC8C8;
     margin-top: 14px;
     margin-left: 4%;
@@ -229,18 +220,20 @@ app-conversations {
 
 .asAdmin {
     height: 36px;
-    width: 18%;
-    background-color: #201717;;
-    position: absolute;
-    right: 10px;
-    border-radius: 10px;
+    width: 90px;
+    background-color: #201717;
+    border-radius: 50px;
     transition: 0.5s;
     margin-top: 10px;
     color: white;
+    float: right;
+    margin-right: 10px;
 }
 
 #submit {
-    position: absolute;
+    /* position: absolute; */
+    float: right;
+    margin-right: 20px;
     bottom: 10px;
     right: 30px;
     height: 35px;
@@ -278,9 +271,8 @@ app-conversations {
 }
 
 #reset {
-    position: absolute;
-    bottom: 10px;
-    right: 30px;
+    /* position: absolute; */
+    margin-left: 20px;
     height: 35px;
     width: 100px;
     border-radius: 10px;

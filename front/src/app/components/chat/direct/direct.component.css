@@ -38,11 +38,11 @@
 }
 
 #date {
-    position: absolute;
+    position: fixed;
     font-size: small;
     color: #ABABAB;
     margin-top: 10px;
-    margin-left: 60%;
+    margin-left: 180px;
 }
 
 .message {
@@ -73,12 +73,12 @@
 }
 
 .notReaded {
-    position: relative;
+    /* position: absolute; */
     height: 20px;
     width: 20px;
     border-radius: 65px;
     margin-left: 100px;
-    top: 37px;
+    margin-top: 37px;
     background-color: #FF7A00;
     color: white;
 }
