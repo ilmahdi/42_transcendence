@@ -37,8 +37,7 @@ const routes: Routes = [
   {
     path: 'chat',
     loadChildren: () =>
-    // import('./components/chat/chat.module').then((m) => m.ChatModule),
-    import('./components/game/game.module').then((m) => m.GameModule),
+    import('./components/chat/chat.module').then((m) => m.ChatModule),
     canActivate: [AuthGuard],
   },
   {

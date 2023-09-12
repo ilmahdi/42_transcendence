@@ -37,35 +37,6 @@ export class AuthService {
         return await this.userService.twofaCheck(userId);
     }
 
-}
     
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // async ftLogout () {
-    //     const endpoint = 'https://api.intra.42.fr/oauth/revoke';
-  
-    //     try {
-    //         await axios.delete(endpoint, {
-    //         headers: {
-    //             Authorization: `Bearer ${accessToken}`,
-    //         },
-    //         });
-    //     } catch (error) {
-    //         // Handle error if necessary
-    //         console.error('Failed to revoke 42 token:', error.message);
-    //         throw error;
-    //     }
-    // }
+}

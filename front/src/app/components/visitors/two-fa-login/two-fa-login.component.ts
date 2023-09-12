@@ -28,10 +28,13 @@ export class TwoFaLoginComponent {
         ],
       ],
     });
+
+    this.loggedInUserId  = this.authService.getLoggedInUserId();
+    this.loggedInUserusername  = this.authService.getLoggedInUser();
   }
 
-  public loggedInUserId :number = this.authService.getLoggedInUserId();
-  public loggedInUserusername :string = this.authService.getLoggedInUser();
+  public loggedInUserId :number;
+  public loggedInUserusername :string;
 
   public twoFACodeForm: FormGroup;
   public qrCode: string = "";

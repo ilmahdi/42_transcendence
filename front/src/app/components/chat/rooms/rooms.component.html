@@ -1,0 +1,26 @@
+<div class="list">
+    <div class="roomSearch" (click)="displayOtherRooms()"><p style="text-align: center;margin-top: 5px;">Show me more rooms</p></div>
+
+    <div *ngFor="let room of rooms" class="room" (click)="openRoom(room)" [style.backgroundColor]="(color.name === room.name)? color.color : ''">
+        <img [src]="'http://localhost:3000/api/chat/image/' + room.imagePath" alt="avatar" id="image">
+        <p id="roomName">{{room.name}}</p>
+
+        <span *ngFor="let item of notReaded">
+            <div class="notReaded" *ngIf="room.id === item.roomId && item.senderId !== userId">
+                <p style="left: 5px;position: relative;bottom: 2px;">{{item.unreadCount}}</p>
+            </div>
+        </span>
+
+        <div *ngFor="let item of lastMessages" class="message">
+            <div *ngIf="item">
+                <p *ngIf="item && item.roomId === room.id">{{item.message}}</p>
+            </div>
+        </div>
+
+        <span *ngFor="let item of lastMessages" id="date">
+            <span *ngIf="item">
+                <p *ngIf="item && item.roomId === room.id">{{editeDateFormat(item.date)}}</p>
+            </span>
+        </span>
+    </div>
+</div>

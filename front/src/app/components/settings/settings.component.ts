@@ -36,7 +36,10 @@ export class SettingsComponent implements OnInit {
             Validators.pattern(/^[a-zA-Z0-9_-]*$/)
           ],
         ],
-      })
+      });
+
+
+      this.loggedInUserId  = this.authService.getLoggedInUserId();
     }
   public selectedImage: string | ArrayBuffer = '';
   public selectedFile: File | null = null;
@@ -46,7 +49,7 @@ export class SettingsComponent implements OnInit {
   public isTwoFaEnabled :boolean = false;
 
 
-  private loggedInUserId :number = this.authService.getLoggedInUserId();
+  private loggedInUserId :number;
   private subscriptions: Subscription[] = [];
 
 

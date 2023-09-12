@@ -47,6 +47,12 @@ enum NotificationType {
   GAME_INVITE
 }
 
+enum RoomType {
+  PUBLIC
+  PROTECTED
+  PRIVATE
+}
+
 // database models
 //********************************************************************//
 model UserAccount {
@@ -75,10 +81,6 @@ model UserAccount {
   match_player2       Matches[]           @relation("player2")
   message_sender      Message[]           @relation("sender")
   message_receiver    Message[]           @relation("receiver")
-  channel             Channel[]           @relation()
-  channel_admins      ChannelAdmins[]     @relation()
-  channel_members     ChannelMembers[]    @relation()
-  restricted_members  RestrictedMembers[] @relation()
   notif_to            Notification[]      @relation("notif_to")
   notif_from          Notification[]      @relation("notif_from")
 }
@@ -141,63 +143,24 @@ model Game {
 
 model Message { 
   id                  Int     @id @default(autoincrement())
-  channel_id          Int
-  sender_id           Int
-  receiver_id         Int
-  text_message        String
-  sent_at             DateTime    @default(now())
+  senderId            Int
+  receiverId          Int
+  message             String
+  date                DateTime
+  readed              Boolean @default(false)
+  roomId              Int     @default(-1)
 
-  sender              UserAccount         @relation("sender", fields: [sender_id], references: [id])
-  receiver            UserAccount         @relation("receiver", fields: [receiver_id], references: [id])
+
+  sender              UserAccount         @relation("sender", fields: [senderId], references: [id])
+  receiver            UserAccount         @relation("receiver", fields: [receiverId], references: [id])
 } 
 
-model Channel { 
-  id                  Int     @id @default(autoincrement())
-  owner_id            Int
-  name                String
-  channel_type        ChannelTypes        
-  access_type         AccessTypes
-
-  created_at          DateTime    @default(now())
-  updated_at          DateTime    @updatedAt
-
-  owner               UserAccount @relation(fields: [owner_id], references: [id])
-  
-  channel_access      ChannelAccess?
-  channel_admins      ChannelAdmins[]     @relation()
-  channel_members     ChannelMembers[]    @relation()
-  restricted_members  RestrictedMembers[] @relation()
-}
-
-model ChannelAccess {
-  channel_id          Int     @unique
-  password            String
-
-  channel             Channel             @relation(fields: [channel_id], references: [id])
-}
-
-model ChannelAdmins {
-  channel_id          Int     @unique
-  user_id             Int     @unique
-
-  channel             Channel             @relation(fields: [channel_id], references: [id])
-  channel_admins      UserAccount         @relation(fields: [user_id], references: [id])
-}
-
-model ChannelMembers {
-  channel_id          Int     @unique
-  user_id             Int     @unique
-  access_level        AccessLevels
-
-  channel             Channel             @relation(fields: [channel_id], references: [id])
-  channel_members     UserAccount         @relation(fields: [user_id], references: [id])
-}
-
-model RestrictedMembers {
-  channel_id          Int     @unique
-  user_id             Int     @unique
-  time_limit          DateTime    @default(now())
-
-  channel             Channel             @relation(fields: [channel_id], references: [id])
-  restricted_members  UserAccount         @relation(fields: [user_id], references: [id])
+model Room { 
+  id        Int       @id @default(autoincrement())
+  adminId   Int[]     @default([]) // Prisma uses arrays natively for integer arrays
+  name      String    @default("Room")
+  usersId   Int[]     @default([])
+  type      RoomType  @default(PUBLIC)
+  password  String?
+  imagePath String
 }

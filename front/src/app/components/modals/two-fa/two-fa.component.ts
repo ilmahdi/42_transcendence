@@ -24,9 +24,11 @@ export class TwoFAComponent {
         ],
       ],
     });
+
+    this.loggedInUserId  = this.authService.getLoggedInUserId();
   }
 
-  private loggedInUserId :number = this.authService.getLoggedInUserId();
+  private loggedInUserId :number;
 
   public twoFACodeForm: FormGroup;
   public qrCode: string = "";

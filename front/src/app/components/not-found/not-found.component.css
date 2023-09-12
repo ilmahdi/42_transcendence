@@ -1,0 +1,168 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+}
+
+.not-found {
+    height: 100vh;
+    width: 100vw;
+
+    color: var(--primary-text-color);
+}
+
+.nf-sec-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: calc(100% - var(--top-bar-hieght));
+    width: 100%;
+}
+
+.nf-sec-one {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30rem;
+    height: 100%;
+    z-index: 1;
+    padding-left: 1rem;
+}
+.nf-sec-two {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 50rem;
+    height: 100%;
+    padding: 1rem 1.6rem;
+    z-index: 1;
+}
+
+.nf-sec-img {
+    width: 100%;
+}
+.nf-sec-img.i2 {
+    display: none;
+}
+
+
+.nf-sec-t1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+.nf-sec-t2 {
+    font-size: 1.3rem;
+    font-weight: 400;
+}
+
+.nf-sec-btn {
+    background-color: rgba(var(--second-transparent-color-background), 16%);
+    /* background-color: transparent; */
+    border-radius: 0.8rem;
+    height: 2.6rem;
+    width: 12rem;
+    margin-top: 1rem;
+    border: solid 0.16rem var(--second-text-color);
+    font-size: 1rem;
+    font-weight: 600;
+
+    color: var(--primary-text-color);
+}
+.nf-sec-btn:hover {
+
+    background-color: rgba(var(--second-transparent-color-background), 36%);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.lp-sec-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    height: var(--top-bar-hieght);
+    align-self: flex-start;
+    padding-left: 1rem;
+    
+  }
+  .lp-sec-item-icon {
+    width: 2.6rem;
+    height: 2.6rem;
+    fill: var(--primary-text-color);
+    z-index: 1;
+  }
+  .lp-sec-item-text {
+    font-size: 1.6rem;
+    z-index: 1;
+  }
+
+  
+
+
+.lp-bg {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+  
+  }
+  .lp-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(3rem);
+  }
+  
+  .lp-bg-cover {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(35, 28, 28, 0.5); 
+  
+  }
+
+
+
+
+/***********************************************/
+/*                Media Queries                */
+/***********************************************/
+
+@media (max-width: 800px) {
+
+    .nf-sec-two {
+        align-items: center;
+        text-align: center;
+        overflow: auto;
+    }
+    
+    .nf-sec-one {
+        display: none;
+    }
+    .nf-sec-img.i2 {
+        display: block;
+        width: 90%;
+    }
+}
+
+@media (max-height: 800px) {
+
+    .nf-sec-t2 {
+        display: none;
+    }
+}

@@ -38,13 +38,12 @@ export class AuthController {
 
         res.status(302).redirect(`${process.env.FONTEND_URL}/login?${queryUserData}&first_login=${req.user.firstLogin}`);
     }
-    @Get("logout/42")
+
     @UseGuards(JwtGuard)
     async ftLogout() {
         return "logged out"
         // return this.authService.ftLogout()
     }
-
 }
 // ft_id
 // username

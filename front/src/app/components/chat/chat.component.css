@@ -1,0 +1,453 @@
+.wrap-component {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    padding-left: calc(var(--primary-left-bar-width));
+    padding-right: calc(var(--primary-left-bar-width));
+
+    padding-top: calc(var(--top-bar-hieght) + 30px);
+    padding-bottom: calc(var(--top-bar-hieght) / 2);
+    
+}
+
+.header {
+    display: flex;
+}
+
+.direct {
+    display: flex;
+    width: 144px;
+    height: 40px;
+    background-color: #231C1C;
+    border-radius: 10px 10px 0px 0px;
+    cursor: pointer;
+}
+
+.rooms {
+    display: flex;
+    width: 144px;
+    height: 40px;
+    background-color: #231C1C;
+    margin-left: 5px;
+    border-radius: 10px 10px 0px 0px;
+    cursor: pointer;
+}
+
+.text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    gap: 0.8rem;
+    margin-left: 40px;
+}
+
+.line {
+    position: absolute;
+    margin-top: 38px;
+    width: 144px;
+    height: 2px;
+    background-color: #D38146;
+}
+
+.searchPart {
+    display: flex;
+    /* position: relative; */
+    width: 295px;
+    height: 70px;
+    background-color: #231C1C;
+
+}
+
+.search {
+    width: 66%;
+    height: 40px;
+    border: none;
+    border-radius: 10px 0px 0px 10px;
+    text-indent: 20px;
+    outline: none;
+    background-color: #5e4a4a;
+    color: #DEC8C8;
+    margin-left: 20px;
+    margin-top: 15px;
+}
+
+#rightSerch {
+    margin-top: 15px;
+    height: 40px;
+    width: 19%;
+    background-color: #5e4a4a;
+    border-radius: 0px 10px 10px 0px;
+}
+
+.fa-search {
+    position: absolute;
+    margin-top: 20px;
+    margin-left: 230px;
+    font-size: 25px;
+    color: #DEC8C8;
+    cursor: pointer;
+}
+
+.fa-plus-square {
+    position: absolute;
+    margin-top: 22px;
+    margin-left: 235px;
+    font-size: 25px;
+    color: #DEC8C8;
+    cursor: pointer;
+}
+
+.fa-rooms {
+    position: absolute;
+    margin-top: 22px;
+    margin-left: 200px;
+    font-size: 25px;
+    color: #DEC8C8;
+    cursor: pointer;
+}
+
+app-direct {
+    display: flex;
+    width: 295px;
+    background-color: #231C1C;
+    height: 540px;
+    border-radius: 0px 0px 15px 15px;
+}
+
+app-rooms {
+    display: flex;
+    width: 295px;
+    background-color: #231C1C;
+    height: 540px;
+    border-radius: 0px 0px 15px 15px;
+}
+
+app-conversations {
+    /* display: flex; */
+    margin-left: 20px;
+}
+
+/**************************** FOR ROOMS **************************/
+
+
+
+/************************** FORMULAR DESIGN *************************/
+
+.createRoom {
+    position: absolute;
+    margin-top: 90px;
+    right: 25%;
+    height: calc(100px + 65%);
+    width: 572px;
+    background-color: #231C1C;
+    border-radius: 15px 15px 15px 15px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    scrollbar-color: #5e6147 var(--second-background-color);
+    scrollbar-width: 0.4rem;
+}
+
+#imageUpload {
+    position: absolute;
+    top: 10%;
+    left: 40%;
+    font-size: 20;
+    appearance: none;
+    border: none;
+    outline: none;
+}
+
+#giveName {
+    position: relative;
+    text-align: center;
+    /* left: 35%; */
+    margin-top: 130px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: white;
+}
+
+#addFriends {
+    position: relative;
+    text-align: center;
+    /* left: 35%; */
+    margin-top: 75px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: white;
+}
+
+#roomName {
+    position: absolute;
+    left: 20%;
+    top: 35%;
+    width: 60%;
+    height: 40px;
+    border: none;
+    outline: none;
+    text-indent: 20px;
+    border-radius: 10px;
+    background-color: #584747;
+    color: #9D8686;
+}
+
+.people {
+    position: absolute;
+    width: 100%;
+    height: 40%;
+    top: 50%;
+}
+
+.users {
+    display: flex;
+    position: absolute;
+    height: 56px;
+    width: 92%;
+    background-color: #201717;
+    margin-top: 10px;
+    margin-left: 4%;
+    border-radius: 10px 10px 10px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#img {
+    width: 35px;
+    height: 35px;
+    border-radius: 20px;
+    margin-top: 10px;
+    margin-left: 3%;
+}
+
+#name {
+    color: #DEC8C8;
+    margin-top: 14px;
+    margin-left: 4%;
+}
+
+.asAdmin {
+    height: 36px;
+    width: 18%;
+    background-color: #201717;;
+    position: absolute;
+    right: 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+    margin-top: 10px;
+    color: white;
+}
+
+#submit {
+    position: absolute;
+    bottom: 10px;
+    right: 30px;
+    height: 35px;
+    width: 100px;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    background-color: #D38146;
+}
+
+#submit span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+#submit span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: -5px;
+  right: -20px;
+  transition: 0.5s;
+  font-size: 20px;
+}
+
+#submit:hover span {
+  padding-right: 15px;
+}
+
+#submit:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+#reset {
+    position: absolute;
+    bottom: 10px;
+    right: 30px;
+    height: 35px;
+    width: 100px;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    background-color: #D38146;
+  }
+  
+  #reset span {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      transition: 0.5s;
+    }
+    
+    #reset span:after {
+      content: '\00AB';
+      position: absolute;
+      opacity: 0;
+      top: -5px;
+      left: -20px;
+      transition: 0.5s;
+      font-size: 20px;
+    }
+    
+    #reset:hover span {
+      padding-left: 15px;
+    }
+    
+    #reset:hover span:after {
+      opacity: 1;
+      left: 0;
+    }
+
+.fa-angle-double-left {
+    position: absolute;
+    font-size: 40px;
+    color: white;
+    top: 10px;
+    left: 20px;
+    cursor: pointer;
+}
+
+@media (min-width: 2000px) {
+    .direct {
+        right: calc(32% + 760px);
+        width: 159px;
+    }
+
+    .rooms {
+        /* left: 631px; */
+        right: calc(32% + 600px);
+        width: 159px;
+    }
+
+    .headerPart {
+        /* left: 470px; */
+        right: calc(32% + 600px);
+        width: 320px;
+    }
+    .createRoom {
+        right: 32%;
+    }
+}
+
+@media (max-width: 1515px) {
+    .direct {
+        right: calc(25% + 674px);
+    }
+    .rooms {
+        right: calc(25% + 530px);
+    }
+
+    .headerPart {
+        /* left: 470px; */
+        right: calc(25% + 530px);
+    }
+    .createRoom {
+        right: calc(25% - 70px);
+    }
+}
+
+@media (max-width: 1420px) {
+    .direct {
+        right: calc(2% + 746px);
+    }
+    .rooms {
+        right: calc(2% + 600px);
+    }
+
+    .headerPart {
+        right: calc(2% + 600px);
+    }
+    .createRoom {
+        right: 2%
+    }
+}
+
+@media (max-width: 1160px) {
+    .direct {
+        right: calc(2% + 654px);
+    }
+    .rooms {
+        right: calc(2% + 508px);
+    }
+
+    .headerPart {
+        right: calc(2% + 508px);
+    }
+    .createRoom {
+        width: 480px;
+    }
+}
+
+.small-screen {
+    display: none;
+}
+
+@media (max-width: 934px) {
+    .direct {
+        left: 35%;
+        width: 159px;
+    }
+
+    .rooms {
+        left: calc(35% + 161px);
+        width: 159px;
+    }
+
+    .headerPart {
+        left: 35%;
+        width: 320px;
+    }
+    .createRoom {
+        right: 9%;
+        width: 70%;
+    }
+}
+
+@media (max-width: 660px) {
+    .direct {
+        left: 22%;
+    }
+    .rooms {
+        left: calc(22% + 161px)
+    }
+    .headerPart {
+        left: 22%;
+    }
+    #submit {
+        width: 80px;
+    }
+    #reset {
+        width: 80px;
+    }
+    .createRoom {
+        width: 75%;
+        height: 80%;
+        right: 30px;
+    }
+}
+
+@media (max-height: 500px) {
+    #giveName{
+        margin-top: 110px;
+    }
+    #addFriends {
+        margin-top: 55px;
+    }
+}
