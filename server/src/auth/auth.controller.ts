@@ -24,7 +24,7 @@ export class AuthController {
     @UseGuards(FtLoginGuard)
     ftLogin(){0
     }
-    
+    // to see later ************************************************//
     @Get("callback/42")
     @UseGuards(FtLoginGuard)
     ftCallback(@Req() req :any, @Res() res :Response){

@@ -1,1 +1,22 @@
-<app-online-friends></app-online-friends>
+<div class="game-page">
+    <div class="gp-sec-logo">
+        <svg id="icon-logo" class="gp-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
+            <use xlink:href="./assets/icons/logo.svg#icon-logo"></use>
+        </svg>
+        <span class="gp-sec-item-text"> POING </span>
+    </div>
+    <div class="gp-canvas-wrap">
+        <canvas #gameCanvas id="gameCanvas" class="gp-canvas"></canvas>
+    </div>
+</div>
+
+
+<div class="gp-bg" >
+    <img class="gp-bg-img"  src="./assets/imgs/pong_login.png" >
+    <div class="gp-bg-cover"></div>
+</div>
+
+<app-board #gameBoard [ctx]="ctx"></app-board>
+<app-ball #ball [ctx]="ctx" [gameBoard]="gameBoard" [canvas]="canvas" [player1Paddle]="player1Paddle" [player2Paddle]="player2Paddle"></app-ball>
+<app-paddle #player1Paddle [ctx]="ctx" [canvas]="canvas" [gameBoard]="gameBoard" [isOwnPaddle]="true"></app-paddle>
+<app-paddle #player2Paddle [ctx]="ctx" [canvas]="canvas" [gameBoard]="gameBoard" [isOwnPaddle]="false"></app-paddle>

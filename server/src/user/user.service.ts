@@ -47,8 +47,8 @@ export class UserService {
                 username,
             },
         })
-        if (!user)
-            throw new HttpException('User not found', HttpStatus.CONFLICT);
+        // if (!user)
+        //     throw new HttpException('User not found', HttpStatus.CONFLICT);
         return user;
     }
     async findManyUsers(query: string) {
