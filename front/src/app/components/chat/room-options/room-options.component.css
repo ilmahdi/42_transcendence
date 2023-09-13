@@ -1,7 +1,7 @@
 .options {
     margin-left: 20px;
     height: 650px;
-    width: 572px;
+    width: 570px;
     background-color: #231C1C;
     border-radius: 15px 15px 15px 15px;
 }
@@ -275,65 +275,22 @@ input {
     right: 0;
 }
 
-@media (min-width: 2000px) {
+@media (max-width: 1000px) {
     .options {
-        right: 32%;
+        width: 450px;
+        margin-left: -10px;
     }
 }
 
-@media (max-width: 1515px) {
+@media (max-width: 530px) {
     .options {
-        right: calc(25% - 70px);
+        width: 380px;
     }
 }
-
-@media (max-width: 1420px) {
+    
+@media (max-width: 450px) {
     .options {
-        right: 2%
-    }
-}
-
-@media (max-width: 1160px) {
-    .options {
-        width: 480px;
-    }
-}
-
-@media (max-width: 934px) {
-    .options {
-        right: 9%;
-        width: 70%;
-    }
-}
-
-@media (max-width: 660px) {
-    .options {
-        width: 75%;
-        right: 30px;
-        height: 80%;
-    }
-    #submit {
-        width: 80px;
-    }
-    #back {
-        width: 80px;
-    }
-    #addMember {
-        right: 113px;
-        width: 80px;
-    }
-}
-
-@media (max-width: 500px) {
-    #submit {
-        width: 60px;
-    }
-    #back {
-        width: 60px;
-    }
-    #addMember {
-        right: 93px;
-        width: 60px;
+        width: 330px;
     }
 }
 

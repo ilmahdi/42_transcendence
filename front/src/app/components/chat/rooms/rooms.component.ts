@@ -15,15 +15,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
 
   @Output() conversData = new EventEmitter<Room>()
   
-  private subscription0?: Subscription
-  private subscription1?: Subscription
-  private subscription2?: Subscription
-  private subscription3?: Subscription
-  private subscription4?: Subscription
-  private subscription5?: Subscription
-  private subscription6?: Subscription
-  private subscription7?: Subscription
-  private subscription8?: Subscription
+  private subscriptions: Subscription[] = []
 
   smallScreen:boolean = false;
   screenWidth: number = 1000;
@@ -44,15 +36,16 @@ export class RoomsComponent implements OnInit, OnDestroy {
     window.addEventListener('resize', this.onResize.bind(this));
 
     chatService.sendToGetNotReadedRoomMessages(this.userId!);
-    this.subscription1 = this.chatService.getRoomMessage().subscribe(data=>{
+    const subs1:Subscription = this.chatService.getRoomMessage().subscribe(data=>{
       this.chatService.updateRoomLastMessage(data);
-      
     })
-    this.subscription2 = chatService.getNotReadedRoomMessages().subscribe(data=>{
+    this.subscriptions.push(subs1)
+    const subs2:Subscription = chatService.getNotReadedRoomMessages().subscribe(data=>{
       chatService.updateReadRoomBehav(data);
     })
+    this.subscriptions.push(subs2)
 
-    this.subscription3 = chatService.roomLastMessage$.subscribe(data=>{
+    const subs3:Subscription = chatService.roomLastMessage$.subscribe(data=>{
       this.lastMessages = this.lastMessages.filter(item => !(item.roomId === data.roomId));
       this.lastMessages.push(data)
       if (this.notReaded.some(item => item.roomId === data.roomId)) {
@@ -66,6 +59,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
         this.notReaded.push({senderId:data.senderId, roomId:data.roomId, unreadCount:1})
       }
     })
+    this.subscriptions.push(subs3)
   }
 
   editeDateFormat(date:Date) {
@@ -82,24 +76,27 @@ export class RoomsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.chatService.sendToGetRooms(this.userId!);
-    this.subscription4 = this.chatService.getRooms().subscribe(data=>{
+    const subs1:Subscription = this.chatService.getRooms().subscribe(data=>{
       this.rooms = []
       data.forEach(item=> {
         this.rooms.push(item)
       })
       this.chatService.updateRooms(this.rooms)
     })
+    this.subscriptions.push(subs1)
 
-    this.subscription5 = this.chatService.rooms$.subscribe(data=>this.rooms = data)
+    const subs2:Subscription = this.chatService.rooms$.subscribe(data=>this.rooms = data)
+    this.subscriptions.push(subs2)
 
     this.chatService.sendToGetNotReadedRoomMessages(this.userId!);
-    this.subscription6 = this.chatService.notReadedRoomMessage$.subscribe(data=>{
+    const subs3:Subscription = this.chatService.notReadedRoomMessage$.subscribe(data=>{
       this.notReaded = [];
       data.forEach(item=>this.notReaded.push(item));
     })
+    this.subscriptions.push(subs3)
 
     this.chatService.sendToGetRoomLastMessage(this.userId!)
-    this.subscription7 = this.chatService.getRoomLastMessage().subscribe(data=> {
+    const subs4:Subscription = this.chatService.getRoomLastMessage().subscribe(data=> {
       data.sort((a:Message, b:Message)=>a.id! - b.id!)
       data.forEach(data=> {
         this.lastMessages = this.lastMessages.filter(item => !(item.roomId === data.roomId));
@@ -107,6 +104,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
         this.lastMessages = _.sortBy(this.lastMessages, 'date');
       })
     })
+    this.subscriptions.push(subs4)
   }
 
   onResize() {
@@ -114,7 +112,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
   }
 
   displayOtherRooms() {
-    this.chatService.displayComponents(false, false, true, true, true, false, false);
+    this.chatService.displayComponents(false, false, true, true, false, false, false);
   }
 
   openRoom(room:Room) {
@@ -127,7 +125,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
 
     //  GET THE CONVERSATION FROM SERVER
     this.chatService.sendToGetRoomConversation(room)
-    this.subscription8 = this.chatService.getRoomConversation().subscribe((data) => {
+    const subs:Subscription = this.chatService.getRoomConversation().subscribe((data) => {
       data.sort((a:Message, b:Message)=>a.id! - b.id!)
       this.chatService.updateRoomConversation(data);
       this.messages.splice(0, this.messages.length);
@@ -139,7 +137,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
         }
       })
     })
-    // this.chatService.updateRoomConversation(this.messages);
+    this.subscriptions.push(subs)
     this.chatService.displayComponents(false, true, false, true, false, false, false);
     this.chatService.roomOptionsSource.next(room);////////////
     this.conversData.emit(room);
@@ -148,14 +146,6 @@ export class RoomsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.chatService.updateRooms([])
 
-    this.subscription0?.unsubscribe()
-    this.subscription1?.unsubscribe()
-    this.subscription2?.unsubscribe()
-    this.subscription3?.unsubscribe()
-    this.subscription4?.unsubscribe()
-    this.subscription5?.unsubscribe()
-    this.subscription6?.unsubscribe()
-    this.subscription7?.unsubscribe()
-    this.subscription8?.unsubscribe()
+    this.subscriptions.forEach(sub=>sub.unsubscribe())
   }
 }

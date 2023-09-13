@@ -13,12 +13,7 @@ import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
   styleUrls: ['./room-options.component.css']
 })
 export class RoomOptionsComponent implements OnInit, OnDestroy{
-  private subscription0?:Subscription
-  private subscription1?:Subscription
-  private subscription2?:Subscription
-  private subscription3?:Subscription
-  private subscription4?:Subscription
-  private subscription5?:Subscription
+  private subscriptions:Subscription[] = []
 
   userId?:number;
   room:Room = {}
@@ -33,26 +28,29 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
   constructor(private chatService:ChatService, private authService:AuthService) {
     this.userId = this.authService.getLoggedInUserId();
 
-    this.subscription1 = chatService.roomOptions$.subscribe(data=>{
+    const subs:Subscription = chatService.roomOptions$.subscribe(data=>{
       this.room = data
       if (this.room.adminId?.includes(this.userId!))
         this.isAdmin = true
       this.chatService.sendToGetRoomById(this.room.id!);
       // this.chatService.sendToGetRoomMembers(this.room);////////
     })
+    this.subscriptions.push(subs)
     this.type = this.room.type
   }
 
   ngOnInit(): void {
     this.chatService.sendToGetRoomMembers(this.room);
-    this.subscription2 = this.chatService.getRoomById().subscribe(data=>this.chatService.roomOptionsSource.next(data));
-    this.subscription3 = this.chatService.getRoomMembers().subscribe(users=> {
+    const subs1:Subscription = this.chatService.getRoomById().subscribe(data=>this.chatService.roomOptionsSource.next(data));
+    this.subscriptions.push(subs1)
+    const subs2:Subscription = this.chatService.getRoomMembers().subscribe(users=> {
       this.members = []
       users.forEach(user=> {
         if (user.user.id !== this.userId)
           this.members.push({user:user.user, type:user.type, click:false, admin:false, removed:false})
       })
     })
+    this.subscriptions.push(subs2)
   }
 
   changeType(type:string) {
@@ -116,10 +114,11 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
   }
 
   back() {
-    this.chatService.displayComponents(false, true, false, true, true, false, false)
-    this.subscription4 = this.chatService.roomOptions$.subscribe(data=>{
+    this.chatService.displayComponents(false, true, false, true, false, false, false)
+    const subs:Subscription = this.chatService.roomOptions$.subscribe(data=>{
       this.room = data
     })
+    this.subscriptions.push(subs)
   }
 
   exitRoom() {
@@ -128,16 +127,12 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       for(let i:number = 0;i < 10;i++) {
         this.chatService.sendToGetRooms(this.userId!);
       }
-      this.subscription5 = this.chatService.getRooms().subscribe(data=> {this.chatService.updateRooms(data);})
+      const subs:Subscription = this.chatService.getRooms().subscribe(data=> {this.chatService.updateRooms(data);})
+      this.subscriptions.push(subs)
       this.chatService.displayComponents(false, false, false, true, true, false, false)
   }
 
   ngOnDestroy(): void {
-    this.subscription0?.unsubscribe()
-    this.subscription1?.unsubscribe()
-    this.subscription2?.unsubscribe()
-    this.subscription3?.unsubscribe()
-    this.subscription4?.unsubscribe()
-    this.subscription5?.unsubscribe()
+    this.subscriptions.forEach(sub=>sub.unsubscribe())
   }
 }

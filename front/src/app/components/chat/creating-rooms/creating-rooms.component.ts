@@ -14,8 +14,7 @@ import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
   styleUrls: ['./creating-rooms.component.css']
 })
 export class CreatingRoomsComponent implements OnInit, OnDestroy {
-  private subscription1?:Subscription
-  private subscription2?:Subscription
+  private subscriptions:Subscription[] = []
 
   @Input() roomFormular:any
   types:{type:RoomType, select:boolean}[] = [{type:RoomType.PUBLIC, select:false}, {type:RoomType.PRIVATE, select:false}, {type:RoomType.PROTECTED, select:false}]
@@ -38,13 +37,15 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
 
-    this.subscription1 = chatService.backToRoomFormular$.subscribe(data=>this.backToRoomFormular = data)
+    const subs1:Subscription = chatService.backToRoomFormular$.subscribe(data=>this.backToRoomFormular = data)
+    this.subscriptions.push(subs1)
 
     // RESET FORMULAR IF USER OPEN CONVERSATION
-    chatService.displayConversation$.subscribe(data=> {
+    const subs2:Subscription = chatService.displayConversation$.subscribe(data=> {
       if (data)
         this.resetRoomFormular()
     })
+    this.subscriptions.push(subs2)
   }
 
   ngOnInit(): void {
@@ -145,7 +146,8 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
       let type = this.types.filter(type=> type.select === true)
       room = {adminId:this.roomFormular.adminId, name:this.roomFormular.name, usersId:this.roomFormular.usersId, type:type[0].type, password:this.room.value.password, imagePath:this.roomFormular.imagePath};
       console.log(room)
-      this.subscription2 = this.chatService.createRoom(room).subscribe();
+      const subs:Subscription = this.chatService.createRoom(room).subscribe();
+      this.subscriptions.push(subs)
       this.types[0].select = false
       this.types[1].select = false
       this.types[2].select = false
@@ -162,7 +164,7 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
   }
 
   getfriendList() {
-    this.userService.getfriendList(this.userId!).subscribe({
+    const subs:Subscription = this.userService.getfriendList(this.userId!).subscribe({
 
      next: (response :IUserDataShort[]) => {
 
@@ -177,10 +179,10 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
        console.error('Error:', error.error.message); 
      }
    });
+   this.subscriptions.push(subs)
  }
 
   ngOnDestroy(): void {
-    this.subscription1?.unsubscribe()
-    this.subscription2?.unsubscribe()
+    this.subscriptions.forEach(sub=>sub.unsubscribe())
   }
 }

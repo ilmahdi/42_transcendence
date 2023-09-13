@@ -13,14 +13,7 @@ import { ChatService } from 'src/app/services/chat.service';
   styleUrls: ['./conversations.component.css']
 })
 export class ConversationsComponent implements OnInit, OnDestroy, AfterViewChecked  {
-  private subsciption1?:Subscription
-  private subsciption2?:Subscription
-  private subsciption3?:Subscription
-  private subsciption4?:Subscription
-  private subsciption5?:Subscription
-  private subsciption6?:Subscription
-  private subsciption7?:Subscription
-  private subsciption8?:Subscription
+  private subsciptions:Subscription[] = []
 
   @Input() userEmitted:any
   @Input() conversationEmitted:Message[] = [];
@@ -47,41 +40,46 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     
     this.userId = this.authService.getLoggedInUserId();
 
-    this.subsciption2 = chatService.displayConversation$.subscribe(data=>this.displayConversation = data)
-    
+    const subs:Subscription = chatService.displayConversation$.subscribe(data=>this.displayConversation = data)
+    this.subsciptions.push(subs)
   }
 
   ngOnInit() {
     /////////////////////////// FOR PRIVATE MESSAGE \\\\\\\\\\\\\\\\\\\\\\\\
-    this.subsciption5 = this.chatService.conversation$.subscribe((data)=> {
+    const subs1:Subscription = this.chatService.conversation$.subscribe((data)=> {
       this.messages = data
 
       // CHECK IF THE NEW MESSAGE IS SENT AFTER 10 MINUTES AFTER THE LAST MESSAGE
       this.lateMessage = []
       this.lateMessage = this.chatService.calculatTimeBetweenMessages(this.messages);
     })
+    this.subsciptions.push(subs1)
 
-    this.subsciption6 = this.chatService.getNewMessage().subscribe(data=>{
+    const subs2:Subscription = this.chatService.getNewMessage().subscribe(data=>{
       this.messages.push(data)
 
       // CHECK IF THE NEW MESSAGE IS SENT AFTER 10 MINUTES AFTER THE LAST MESSAGE
       this.lateMessage = this.chatService.calculatTimeBetweenMessages(this.messages);
     })
+    this.subsciptions.push(subs2)
 
     /////////////////////////// FOR ROOM MESSAGE \\\\\\\\\\\\\\\\\\\\\\\\
-    this.subsciption7 = this.chatService.roomConversation$.subscribe(data=>{
+    const subs3:Subscription = this.chatService.roomConversation$.subscribe(data=>{
       this.roomMessage = data
       this.lateRoomMessage = []
       this.lateRoomMessage = this.chatService.calculatTimeBetweenMessages(this.roomMessage);
     })
-    this.subsciption8 = this.chatService.getRoomMessage().subscribe(data=>{
+    this.subsciptions.push(subs3)
+
+    const subs4:Subscription = this.chatService.getRoomMessage().subscribe(data=>{
       this.roomMessage.push(data)
       this.lateRoomMessage = this.chatService.calculatTimeBetweenMessages(this.roomMessage);
     })
+    this.subsciptions.push(subs4)
   }
 
   openOptions() {
-    this.chatService.displayComponents(false, false, false, true, true, true, false)
+    this.chatService.displayComponents(false, false, false, true, false, true, false)
   }
 
   getConversEvent() {
@@ -117,13 +115,6 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
   }
 
   ngOnDestroy(): void {
-    this.subsciption1?.unsubscribe()
-    this.subsciption2?.unsubscribe()
-    this.subsciption3?.unsubscribe()
-    this.subsciption4?.unsubscribe()
-    this.subsciption5?.unsubscribe()
-    this.subsciption6?.unsubscribe()
-    this.subsciption7?.unsubscribe()
-    this.subsciption8?.unsubscribe()
+    this.subsciptions.forEach(sub=>sub.unsubscribe())
   }
 }

@@ -1,5 +1,5 @@
 .roomFormul {
-    width: 572px;
+    width: 570px;
     height: 650px;
     margin-left: 20px;
     background-color: #231C1C;
@@ -318,15 +318,29 @@
 /***********************************************/
 
 @media (max-width: 1000px) {
-    .roomFormul{
+    .wrap-component{
+        padding-right: 0;
+        margin-left: calc(var(--second-left-bar-width));
 
+        padding-right: 0.6rem;
+        padding-left: 0.6rem;
+    
+        padding-top: calc(var(--top-bar-hieght));
+    }
+    .roomFormul {
+        width: 450px;
+        margin-left: -10px;
     }
 }
 
 @media (max-width: 530px) {
-
+    .roomFormul {
+        width: 380px;
+    }
 }
     
 @media (max-width: 450px) {
-
+    .roomFormul {
+        width: 330px;
+    }
 }

@@ -1,6 +1,6 @@
 .add {
     height: 650px;
-    width: 572px;
+    width: 570px;
     margin-left: 20px;
     background-color: #231C1C;
     border-radius: 15px 15px 15px 15px;
@@ -168,48 +168,22 @@
     left: 0;
 }
 
-@media (min-width: 2000px) {
+@media (max-width: 1000px) {
     .add {
-        right: 32%;
+        width: 450px;
+        margin-left: -10px;
     }
 }
 
-@media (max-width: 1515px) {
+@media (max-width: 530px) {
     .add {
-        right: calc(25% - 70px);
+        width: 380px;
     }
 }
-
-@media (max-width: 1420px) {
+    
+@media (max-width: 450px) {
     .add {
-        right: 2%
-    }
-}
-
-@media (max-width: 1160px) {
-    .add {
-        width: 480px;
-    }
-}
-
-@media (max-width: 934px) {
-    .add {
-        right: 9%;
-        width: 70%;
-    }
-}
-
-@media (max-width: 660px) {
-    .add {
-        width: 75%;
-        right: 30px;
-        height: 80%;
-    }
-    #submit {
-        width: 80px;
-    }
-    #back {
-        width: 80px;
+        width: 330px;
     }
 }
 

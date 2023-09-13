@@ -3,7 +3,6 @@ import { Message } from 'src/app/models/message.model';
 import { User } from 'src/app/models/user.model';
 import { ChatService } from 'src/app/services/chat.service';
 import { Subscription, firstValueFrom, take } from 'rxjs';
-import * as _ from 'lodash';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Room } from 'src/app/models/room.model';
 import { UserService } from 'src/app/services/user.service';
@@ -16,15 +15,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit, OnDestroy {
-  private subscription1?:Subscription
-  private subscription2?:Subscription
-  private subscription3?:Subscription
-  private subscription4?:Subscription
-  private subscription5?:Subscription
-  private subscription6?:Subscription
-  private subscription7?:Subscription
-  private subscription8?:Subscription
-  private subscription9?:Subscription
+  private subscriptions:Subscription[] = []
 
   room = new FormGroup({name: new FormControl, imagePath: new FormControl})
 
@@ -62,18 +53,22 @@ export class ChatComponent implements OnInit, OnDestroy {
     chatService.sendToGetRoomLastMessage(this.userId!)
 
     // chatService.sendToGetNotReadedRoomMessages(this.userId!);
-    this.subscription2 = chatService.getNotReadedRoomMessages().subscribe(data=>{
+    const subs:Subscription = chatService.getNotReadedRoomMessages().subscribe(data=>{
       chatService.updateReadRoomBehav(data)
     })
+    this.subscriptions.push(subs)
   }
 
   ngOnInit(): void {
     
-    this.subscription5 = this.chatService.displayConvers$.subscribe(data=> this.displayConvers = data)
+    const subs1:Subscription = this.chatService.displayConvers$.subscribe(data=> this.displayConvers = data)
+    this.subscriptions.push(subs1)
 
-    this.chatService.options$.subscribe(data=>this.options = data)
+    const subs2:Subscription = this.chatService.options$.subscribe(data=>this.options = data)
+    this.subscriptions.push(subs2)
 
-    this.chatService.addMember$.subscribe(data=>this.addMember = data)
+    const subs3:Subscription = this.chatService.addMember$.subscribe(data=>this.addMember = data)
+    this.subscriptions.push(subs3)
   }
 
   onResize() {
@@ -101,7 +96,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   displayFormRoom() {
-    this.subscription6 = this.chatService.add$.subscribe(data=>this.addRoom = data)
+    const subs:Subscription = this.chatService.add$.subscribe(data=>this.addRoom = data)
+    this.subscriptions.push(subs)
     this.chatService.displayComponents(true, false, false, true, false, false, false)
   }
 
@@ -113,14 +109,15 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   searchQueryConvers() {
-    this.subscription8 = this.chatService.searchConvers(this.searchQuery).subscribe(data=>{
+    const subs:Subscription = this.chatService.searchConvers(this.searchQuery).subscribe(data=>{
       this.searchResults = data
       this.chatService.updateUsers(data)
     })
+    this.subscriptions.push(subs)
   }
 
   searchQueryRooms() {
-    this.subscription9 = this.chatService.searchRooms(this.searchQuery).subscribe(data=>{
+    const subs:Subscription = this.chatService.searchRooms(this.searchQuery).subscribe(data=>{
       this.searchResults = []
       data.forEach(room=> {
         if (room.usersId?.includes(this.userId!))
@@ -128,20 +125,10 @@ export class ChatComponent implements OnInit, OnDestroy {
       })
       this.chatService.updateRooms(this.searchResults)
     })
+    this.subscriptions.push(subs)
   }
 
   ngOnDestroy(): void {
-    this.subscription1?.unsubscribe()
-    this.subscription2?.unsubscribe()
-    this.subscription3?.unsubscribe()
-    this.subscription4?.unsubscribe()
-    this.subscription5?.unsubscribe()
-    this.subscription6?.unsubscribe()
-    this.subscription7?.unsubscribe()
-    this.subscription8?.unsubscribe()
-    this.subscription9?.unsubscribe()
-  }
-
-
-  
+    this.subscriptions.forEach(sub=>sub.unsubscribe())
+  } 
 }

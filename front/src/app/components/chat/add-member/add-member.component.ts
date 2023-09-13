@@ -12,11 +12,7 @@ import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
   styleUrls: ['./add-member.component.css']
 })
 export class AddMemberComponent implements OnInit, OnDestroy {
-  private subscription1?:Subscription
-  private subscription2?:Subscription
-  private subscription3?:Subscription
-  private subscription4?:Subscription
-  private subscription5?:Subscription
+  private subscriptions:Subscription[] = []
   userId?:number
   room:Room = {}
   isAdmin:boolean = false
@@ -29,25 +25,27 @@ export class AddMemberComponent implements OnInit, OnDestroy {
   constructor(private chatService:ChatService, private authService:AuthService) {
     this.userId = this.authService.getLoggedInUserId();
 
-    this.subscription3 = chatService.roomOptions$.subscribe(data=>{
+    const subs:Subscription = chatService.roomOptions$.subscribe(data=>{
       this.room = data
       if (this.room.adminId?.includes(this.userId!))
         this.isAdmin = true
       this.chatService.sendToGetRoomById(this.room.id!);
     })
+    this.subscriptions.push(subs)
   }
 
   ngOnInit(): void {
-    this.subscription4 = this.chatService.getUsers().subscribe(data=> {
+    const subs:Subscription = this.chatService.getUsers().subscribe(data=> {
       data.forEach(user=>{
         if (user.id !== this.userId && !this.room.usersId?.includes(user.id!))
           this.users.push({user:user, type:'user', click:false, admin:false, removed:false});
       })
     })
+    this.subscriptions.push(subs)
   }
 
   searchQueryUser() {
-    this.subscription5 = this.chatService.searchConvers(this.searchQuery).subscribe(data=>{
+    const subs:Subscription = this.chatService.searchConvers(this.searchQuery).subscribe(data=>{
       this.searchResults = data
       this.users = []
       data.forEach(user=>{
@@ -55,6 +53,7 @@ export class AddMemberComponent implements OnInit, OnDestroy {
           this.users.push({user:user, type:'user', click:false, admin:false, removed:false});
       })
     })
+    this.subscriptions.push(subs)
   }
 
   clickOnMember(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean}) {
@@ -89,10 +88,6 @@ export class AddMemberComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription1?.unsubscribe()
-    this.subscription2?.unsubscribe()
-    this.subscription3?.unsubscribe()
-    this.subscription4?.unsubscribe()
-    this.subscription5?.unsubscribe()
+    this.subscriptions.forEach(sub=>sub.unsubscribe())
   }
 }

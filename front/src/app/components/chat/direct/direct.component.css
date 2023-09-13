@@ -57,23 +57,20 @@
 }
 
 .fa-check-circle-o {
-    position: absolute;
     color: white;
     margin-top: 37px;
-    left: 62px;
+    margin-left: 110px;
 }
 
 #readMsg {
-    position: absolute;
     width: 15px;
     height: 15px;
     border-radius: 10px;
     margin-top: 37px;
-    left: 62px;
+    margin-left: 110px;
 }
 
 .notReaded {
-    /* position: absolute; */
     height: 20px;
     width: 20px;
     border-radius: 65px;
