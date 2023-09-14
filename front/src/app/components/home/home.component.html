@@ -1,4 +1,6 @@
 
+<div #confirmModal></div>
+
 <app-online-friends></app-online-friends>
 
 <div class="wrap-component">
@@ -49,8 +51,8 @@
       </div>
     </div>
     <div class="hp-sec-two">
-        <div class="hp-s-two-button"> Play now </div>
-        <div class="hp-s-two-button"> Choose your opponent </div>
+        <button class="hp-s-two-button" (click)="openConfirmModal()"> Play now </button>
+        <button class="hp-s-two-button"> Choose your opponent </button>
     </div>
   </div>
 </div>

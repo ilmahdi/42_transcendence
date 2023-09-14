@@ -11,8 +11,10 @@ export class BoardComponent implements AfterViewInit {
   ) {
   }
 
-  public width: number = 800;
-  public height: number = 500;
+  public width: number = 680;
+  public height: number = 480;
+  public initialWidth: number = 680;
+  public initialHeight: number = 480;
   public color: string = '#000';
   public objColor: string = '#DEC8C8'
 
@@ -20,6 +22,7 @@ export class BoardComponent implements AfterViewInit {
   @Input() ctx!: CanvasRenderingContext2D;
 
   ngAfterViewInit(): void {
+
   }
 
 
@@ -38,6 +41,7 @@ export class BoardComponent implements AfterViewInit {
 
     this.ctx.restore();
   }
+
 
  
 

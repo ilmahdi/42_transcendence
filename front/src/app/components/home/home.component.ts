@@ -1,7 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { IUserData } from '../../utils/interfaces/user-data.interface';
 import { LoadingService } from 'src/app/services/loading.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { ConfirmService } from 'src/app/services/modals/confirm.service';
+import { CustomizeGameComponent } from '../modals/customize-game/customize-game.component';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -13,8 +18,11 @@ import { LoadingService } from 'src/app/services/loading.service';
 export class HomeComponent implements OnInit {
 
   constructor(
+    private router: Router,
     private userService: UserService,
     public loadingService: LoadingService,
+    private authService: AuthService,
+    private confirmService: ConfirmService,
   ) { 
 
   }
@@ -30,6 +38,11 @@ export class HomeComponent implements OnInit {
     rating: 0,
   };
 
+  @ViewChild('confirmModal', { read: ViewContainerRef })
+  entry!: ViewContainerRef;
+
+  sub!: Subscription;
+
   ngOnInit(): void {
     this.loadingService.showLoading();
     this.getUserData()
@@ -42,6 +55,15 @@ export class HomeComponent implements OnInit {
 
     });
 
+  }
+
+  openConfirmModal() {
+    this.sub = this.confirmService
+      .open(this.entry, CustomizeGameComponent, 'Choose a map:')
+      .subscribe(() => {
+
+        this.router.navigate(['/game']);
+      });
   }
 
 }

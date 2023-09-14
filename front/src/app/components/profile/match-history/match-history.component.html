@@ -38,6 +38,8 @@
                 </div>
                 <img class="mh-sec-img" src="{{match.player2.avatar}}" alt="avatar" 
                     [ngStyle]="match.player2.points >= 0 ? {'color': '#67E306'} : {'color': '#F35352'}"
+                    style="display: none" onload="this.style.display=''"
+                    onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
                 />
 
             </div>

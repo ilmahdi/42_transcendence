@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { BoardComponent } from '../board/board.component';
+import { BallComponent } from '../ball/ball.component';
+import { initial } from 'lodash';
 
 @Component({
   selector: 'app-paddle',
@@ -16,13 +18,16 @@ export class PaddleComponent implements OnInit{
   public y = 2;
   public width = 0;
   public height = 0;
+  public score: number = 0;
   private color = '#DEC8C8';
-  private cornerRadius = 4;
   private paddleMargin = 2;
   private keysPressed: { [key: string]: boolean } = {};
+  private level :number = 0.2;
+  private initialX :number = 10;
 
   @Input() ctx!: CanvasRenderingContext2D;
   @Input() gameBoard!: BoardComponent;
+  @Input() ball!: BallComponent;
   @Input() isOwnPaddle: boolean = false;
   @Input() canvas!: HTMLCanvasElement;
 
@@ -37,35 +42,19 @@ export class PaddleComponent implements OnInit{
   
   public drawPaddle() {
 
-    this.ctx.save();
-
     this.ctx.fillStyle = this.color;
 
-    this.ctx.beginPath();
-    this.ctx.moveTo(this.x + this.cornerRadius, this.y);
-    this.ctx.lineTo(this.x + this.width - this.cornerRadius, this.y);
-    this.ctx.arcTo(this.x + this.width, this.y, this.x + this.width, this.y + this.cornerRadius, this.cornerRadius);
-    this.ctx.lineTo(this.x + this.width, this.y + this.height - this.cornerRadius);
-    this.ctx.arcTo(this.x + this.width, this.y + this.height, this.x + this.width - this.cornerRadius, this.y + this.height, this.cornerRadius);
-    this.ctx.lineTo(this.x + this.cornerRadius, this.y + this.height);
-    this.ctx.arcTo(this.x, this.y + this.height, this.x, this.y + this.height - this.cornerRadius, this.cornerRadius);
-    this.ctx.lineTo(this.x, this.y + this.cornerRadius);
-    this.ctx.arcTo(this.x, this.y, this.x + this.cornerRadius, this.y, this.cornerRadius);
-    this.ctx.closePath();
-
-    this.ctx.fill();
-
-    this.ctx.restore();
+    this.ctx.fillRect(this.x, this.y, this.width, this.height);
 
   }
 
-  private adaptePaddleSize() {
+  public adaptePaddleSize() {
     this.width = this.gameBoard.width / 80;
     this.height = this.gameBoard.height / 6;
   }
-  private adaptePaddleSide() {
+  public adaptePaddleSide() {
     if (this.isOwnPaddle) {
-      this.x = this.gameBoard.width - this.x - this.width;
+      this.x = this.gameBoard.width - this.initialX - this.width;
     }
   }
 
@@ -94,8 +83,7 @@ export class PaddleComponent implements OnInit{
     if (this.y < 0) {
       this.y = this.paddleMargin;
     }
-
-    if (this.y + this.height > this.canvas.height) {
+    else if (this.y + this.height > this.canvas.height) {
       this.y = this.canvas.height - this.height - this.paddleMargin;
     }
   }
@@ -107,6 +95,46 @@ export class PaddleComponent implements OnInit{
 
   public onKeyUp(event: KeyboardEvent): void {
     this.keysPressed[event.key] = false;
+  }
+
+
+
+  public updateAI() {
+    
+    const paddleCenter = this.y + this.height / 2;
+    const targetY = this.ball.y ;
+    
+    
+    const deltaY = targetY - paddleCenter;
+    if (this.ball.velocityX < 0) {
+      this.y += deltaY * this.level / 2;
+    }
+    else {
+      this.y += deltaY * this.level;
+    }
+      
+    if (this.y < 0) {
+      this.y = this.paddleMargin;
+    }
+    else if (this.y + this.height > this.canvas.height) {
+      this.y = this.canvas.height - this.height - this.paddleMargin;
+    }
+  }
+  public dispalyScore() {
+    
+    this.ctx.font = '2.6rem Arial';
+    this.ctx.fillStyle = this.color;
+    
+    const textWidth = this.ctx.measureText(this.score.toString()).width;
+
+    let posX;
+    if (this.isOwnPaddle)
+      posX = (this.gameBoard.width / 2) + 26;
+    else
+      posX = (this.gameBoard.width / 2) - 26 - textWidth;
+
+    this.ctx.fillText(this.score.toString(), posX, this.gameBoard.height / 6);
+
   }
 
 }

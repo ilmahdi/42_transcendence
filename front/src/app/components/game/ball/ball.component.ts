@@ -13,14 +13,16 @@ export class BallComponent implements OnInit{
   ) {
   }
 
-  private x = 0; 
-  private y = 0;
-  private velocityX = 3;
-  private velocityY = 3;
+  public x = 0; 
+  public y = 0;
+  public velocityX = 1;
+  public velocityY = 1;
+  private speed = 10;
   private r = 14;
   private color = '#ED5252';
   
   private isBallSkiped : boolean = false;
+  private isBallOut : boolean = true;
 
 
   @Input() ctx!: CanvasRenderingContext2D;
@@ -35,8 +37,15 @@ export class BallComponent implements OnInit{
   }
 
   ngAfterViewInit(): void {
-    this.initBallPosition()
-    this.adapteBallSize()
+    this.initBallPosition();
+    this.adapteBallSize();
+    this.getInitialVelocity();
+    this.initSpeed()
+  }
+
+  public initSpeed() {
+
+    this.speed = 10 * this.gameBoard.width / this.gameBoard.initialWidth
   }
 
   public drawBall() {
@@ -47,16 +56,23 @@ export class BallComponent implements OnInit{
     this.ctx.fill();
 
   }
-  public updatePosition() {
-    this.x += this.velocityX;
-    this.y += this.velocityY;
+  public async updatePosition() {
+    if (this.isBallOut) {
+
+      this.x += this.velocityX;
+      this.y += this.velocityY;
+    }
     
     if (this.y + this.r > this.canvas.height || this.y - this.r < 0)
       this.velocityY = - this.velocityY
-    if (this.x - this.r > this.canvas.width || this.x + this.r < 0)
-      this.initBallPosition()
+    else if (this.x - this.r > this.canvas.width || this.x + this.r < 0) {
 
-    if (!this.isBallSkiped && this.checkBallToHit())
+      this.isBallOut = false;
+      this.initBallPosition()
+      this.getInitialVelocity();
+    }
+
+    else if (!this.isBallSkiped && this.checkBallToHit())
       this.checkBallPaddlesCollision()
 
   }
@@ -70,9 +86,7 @@ export class BallComponent implements OnInit{
     const paddleLeft = this.player1Paddle.x;
     const paddleRight = this.player2Paddle.x  + this.player2Paddle.width;
 
-    if (
-      ballRight >= paddleLeft || ballLeft <= paddleRight 
-    ) {
+    if (ballRight >= paddleLeft || ballLeft <= paddleRight) {
       return true; 
     }
   
@@ -84,19 +98,25 @@ export class BallComponent implements OnInit{
     if (this.x > this.canvas.width / 2) {
       if (this.checkBallPaddleCollision(this.player1Paddle)) {
 
-        this.velocityX = - this.velocityX;
-        this.velocityY = - this.velocityY;
+        this.calculateVelocity(this.player1Paddle, -1);
       }
-      else
+      else {
+
         this.isBallSkiped = true;
+        ++this.player2Paddle.score;
+
+      }
     } else {
       if (this.checkBallPaddleCollision(this.player2Paddle)) {
 
-        this.velocityX = - this.velocityX
-        this.velocityY = - this.velocityY
+        this.calculateVelocity(this.player2Paddle);
       }
-      else
+      else {
+
         this.isBallSkiped = true;
+        ++this.player1Paddle.score;
+
+      }
     }
   }
   private checkBallPaddleCollision(playerPaddle :PaddleComponent): boolean {
@@ -115,20 +135,45 @@ export class BallComponent implements OnInit{
       return true; 
     }
   
+
     return false;
+  }
+  private calculateVelocity(playerPaddle :PaddleComponent, direction :number = 1) {
+
+
+    const paddleCenterY = playerPaddle.y + playerPaddle.height / 2;
+    const relativeCollisionPoint = (this.y - paddleCenterY) / (playerPaddle.height / 2);
+    const bounceAngle = relativeCollisionPoint * (Math.PI / 4);
+
+    this.velocityX = direction * Math.cos(bounceAngle) * this.speed;
+    this.velocityY = Math.sin(bounceAngle) * this.speed;
+
   }
   
 
   private initBallPosition() {
 
     this.isBallSkiped = false;
+    setTimeout(() => {
+      this.isBallOut = true;
+    }, 200); 
+
     this.x = this.gameBoard.width / 2;
     this.y = this.gameBoard.height / 2;
   }
 
-  private adapteBallSize() {
+  private getInitialVelocity() {
+
+    const randAngle = (Math.random() - 0.5) * 2 * (Math.PI / 6);
+    
+    this.velocityX = Math.abs(Math.cos(randAngle)) * this.speed * 0.6;
+    this.velocityY = Math.sin(randAngle) * this.speed * 0.6;
+  }
+
+  public adapteBallSize() {
     this.r = this.gameBoard.width / 60;
   }
-  
+
+
 
 }
