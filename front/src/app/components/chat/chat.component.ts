@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Message } from 'src/app/models/message.model';
-import { User } from 'src/app/models/user.model';
 import { ChatService } from 'src/app/services/chat.service';
-import { Subscription, firstValueFrom, take } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Room } from 'src/app/models/room.model';
 import { UserService } from 'src/app/services/user.service';
@@ -36,7 +35,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   searchQuery: string = '';
   searchResults: IUserDataShort[] = [];
-  roomFormular:any = {}
   constructor(
     private chatService:ChatService, 
     private userService: UserService,

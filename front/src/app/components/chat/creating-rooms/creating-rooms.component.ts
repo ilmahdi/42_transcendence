@@ -1,12 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Subscription, firstValueFrom } from 'rxjs';
+import { Observable, Subscription, firstValueFrom } from 'rxjs';
 import { Room } from 'src/app/models/room.model';
 import { RoomType } from 'src/app/models/roomType.enum';
 import { AuthService } from 'src/app/services/auth.service';
 import { ChatService } from 'src/app/services/chat.service';
 import { UserService } from 'src/app/services/user.service';
 import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-creating-rooms',
@@ -16,7 +17,7 @@ import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 export class CreatingRoomsComponent implements OnInit, OnDestroy {
   private subscriptions:Subscription[] = []
 
-  @Input() roomFormular:any
+  roomFormular?:Room
   types:{type:RoomType, select:boolean}[] = [{type:RoomType.PUBLIC, select:false}, {type:RoomType.PRIVATE, select:false}, {type:RoomType.PROTECTED, select:false}]
   backToRoomFormular:boolean = false
   error:boolean = false
@@ -30,6 +31,7 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
   selectedFile?: File
   userId?:number
   room = new FormGroup({name: new FormControl, imagePath: new FormControl, password: new FormControl})
+  public selectedImage: string | ArrayBuffer = '';
 
   constructor(private chatService:ChatService, private authService:AuthService, private userService:UserService) {
     this.userId = this.authService.getLoggedInUserId();
@@ -54,6 +56,17 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
 
   onResize() {
     this.screenWidth = window.innerWidth;
+  }
+
+  onImageSelected(event :any) {
+    this.selectedFile = event.target.files[0];
+    if (this.selectedFile) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.selectedImage = e.target?.result!;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
   }
 
   addToRoom(user:{user:IUserDataShort, added:boolean, admin:boolean}) {
@@ -90,12 +103,16 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
     })
     adminsId.push(this.userId!)
 
-    const formData = new FormData();
-    formData.append('image', this.selectedFile!)
-    const avatar  = await firstValueFrom( this.userService.uploadImage(formData));
+    let image
+    if (this.selectedFile) {
+      await firstValueFrom(this.uploadImage())
+        .then((data) => {
+          image = environment.uploadUrl + data.filename;
+        });
+    }
 
-    let room = {adminId:adminsId, name:this.room.value.name, usersId:usersId, imagePath:avatar.filename};
-    if (usersId.length > 1 && this.room.value.name && this.room.value.imagePath) {
+    let room = {adminId:adminsId, name:this.room.value.name, usersId:usersId, imagePath:image};
+    if (usersId.length > 1 && this.room.value.name) {
       this.roomFormular = room;
       this.next = true
       this.roomFormularTitles[1].error = false
@@ -140,12 +157,24 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
     }
   }
 
-  createRoom() {
+  private uploadImage() : Observable<any> {
+    if (this.selectedFile) {
+      const formData = new FormData();
+      formData.append('image', this.selectedFile);
+
+      return this.userService.uploadImage(formData)
+    }
+    return new Observable();
+  }
+
+  async createRoom() {
     if (this.types[0].select || this.types[1].select || this.types[2].select) {
       let room:Room;
       let type = this.types.filter(type=> type.select === true)
-      room = {adminId:this.roomFormular.adminId, name:this.roomFormular.name, usersId:this.roomFormular.usersId, type:type[0].type, password:this.room.value.password, imagePath:this.roomFormular.imagePath};
-      console.log(room)
+
+      
+
+      room = {adminId:this.roomFormular!.adminId, name:this.roomFormular!.name, usersId:this.roomFormular!.usersId, type:type[0].type, password:this.room.value.password, imagePath:this.roomFormular!.imagePath};
       const subs:Subscription = this.chatService.createRoom(room).subscribe();
       this.subscriptions.push(subs)
       this.types[0].select = false

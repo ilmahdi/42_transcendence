@@ -75,10 +75,6 @@
     position: relative;
 }
 
-.cf-sec-two {
-    height: 4rem;
-}
-
 .cf-sec-one-input {
     height: 0;
 }
@@ -122,6 +118,10 @@
 
 }
 
+
+.cf-sec-two {
+    height: 4rem;
+}
 
 .cf-sec-two-input {
     position: relative;

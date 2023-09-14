@@ -2,12 +2,32 @@
     <span class="fa fa-angle-double-left" *ngIf="screenWidth<= 1350" (click)="getConversations()"></span>
 
     <div [style]="screenWidth<= 1350? 'margin-top: -30px;' : 'margin-top: 10px;'">
-        <form [formGroup]="room">
-            <div style="display: flex;align-items: center;justify-content: center;">
-                <input type="file" id="imageUpload" formControlName="imagePath" (change)="handleFileChange($event)">
+        <form [formGroup]="room" style="display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;">
+            
+            <div class="cf-sec-one">
+                <label for="imageInput" class="cf-sec-one-label">
+                    <img class="cf-sec-one-img" [src]="selectedImage" 
+                        style="display: none" onload="this.style.display=''"
+                        onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+                    />
+                    <svg class="cf-sec-one-icon" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="./assets/icons/modify.svg#icon-modify"></use>
+                    </svg>
+                </label>
+                <input 
+                    class="cf-sec-one-input" type="file" id="imageInput" 
+                    accept="image/png, image/gif, image/jpeg, image/jpg"
+                    (change)="onImageSelected($event)" 
+                >
             </div>
+            <!-- <div style="display: flex;align-items: center;justify-content: center;">
+                <input type="file" id="imageUpload" formControlName="imagePath" (change)="handleFileChange($event)">
+            </div> -->
             <p id="giveName" [style]="roomFormularTitles[0].error? 'color: red' : 'color:white'">{{roomFormularTitles[0].title}}</p>
-            <div style="display: flex;align-items: center;justify-content: center;">
+            <div style="display: flex;align-items: center;justify-content: center;width: 60%;">
                 <input type="text" placeholder="Room name" id="roomName" formControlName="name">
             </div>
         </form>

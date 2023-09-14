@@ -197,6 +197,16 @@ p {
     background-color: #555;
 }
 
+.username {
+    color: white;
+    font-size: 13px;
+    margin-left: 55px;
+    display: inline-block;
+    float: left; /* Align the message to the right */
+    clear: both; /* Ensure proper clearing of floated elements */
+    margin-top: 10px;
+}
+
 .senderImg {
     position: relative;
     font-size: 25px;

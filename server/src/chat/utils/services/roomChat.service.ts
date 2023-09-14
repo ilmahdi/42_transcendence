@@ -4,9 +4,10 @@ import { Observable, forkJoin, from, map, switchMap } from "rxjs";
 import { Message } from "../models/message.interface";
 import * as bcrypt from 'bcrypt'
 import { UserService } from "src/user/user.service";
-import { User } from "src/user/utils/models/user.class";
 import { PrismaService } from "src/prisma/prisma.service";
 import { RoomType } from "@prisma/client";
+import { UpdateUser } from "src/user/utils/interfaces/update-user.interface";
+import { UserModel } from "src/user/utils/interfaces/user.model";
 
 @Injectable()
 export class RoomChatService {
@@ -233,7 +234,7 @@ export class RoomChatService {
       const userIds = room.usersId;
       const adminIds = room.adminId;
 
-      const usersWithTypes: Observable<{ user: User; type: string }>[] = [];
+      const usersWithTypes: Observable<{ user: UserModel; type: string }>[] = [];
 
       userIds.forEach(async id => {
         const userType = adminIds.includes(id) ? 'admin' : 'user';
@@ -249,7 +250,11 @@ export class RoomChatService {
     async changeRoomType(room:Room) {
       if (room.type !== RoomType.PROTECTED) {
         room.password = null
-        this.prismaService.room.create({data:{id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath}});
+        this.prismaService.room.update({
+          where: {id:room.id},
+          data:
+            {id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath}
+        });
       }
       else {
         room.password = await this.hashPassword(room.password)

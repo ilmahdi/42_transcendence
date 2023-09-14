@@ -14,7 +14,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class DirectComponent implements OnInit, OnDestroy {
 
-  @Output() customEvent = new EventEmitter<User>();
+  @Output() customEvent = new EventEmitter<IUserDataShort>();
   @Output() conversation= new EventEmitter<Message[]>();
 
   private subscriptions: Subscription[] = []
@@ -124,16 +124,24 @@ export class DirectComponent implements OnInit, OnDestroy {
       })
     })
     this.subscriptions.push(subs3)
+
+    // CHECK IF THE YOUR FRIEND HAVE CLICKED ON YOUR CONVERSATION, IF TRUE THAT IS MEAN HE READ YOUR MESSAGE
+    this.chatService.clickOnConversation$.subscribe(data=>{
+      if (data.click) {
+        this.openConversation(data.user)
+        this.chatService.clickOnConversationSource.next({click:false, user:{}});
+      }
+    })
   }
 
   onResize() {
     this.screenWidth = window.innerWidth;
   }
 
-  openConversation(name:string, friend: User): void {
+  openConversation(friend: IUserDataShort): void {
     //  IF THE SCREEN WIDTH < 1350 SO THE CONVERSATION BUTTON COLOR WILL NOT CHANGE WHEN THE USER CLICK IT
     if (this.screenWidth > 1350) {
-      this.color = {color:'#d3814674', name:name}
+      this.color = {color:'#d3814674', name:friend.username}
     }
     else
       this.color = {color:'', name:''}

@@ -1,7 +1,7 @@
 <div class="otehrRooms" *ngIf="displayList">
-    <div class="fa fa-angle-double-left" *ngIf="screenWidth<= 1350" (click)="hideOtherRooms()"></div>
+    <div class="fa fa-angle-double-left"  (click)="hideOtherRooms()"></div>
     <div class="search">
-        <div style="width: 300px;margin-top: 10px;">
+        <div style="width: 280px;margin-top: 10px;">
             <form [formGroup]="search">
                 <input type="text" formControlName="search" id="searchInput" placeholder="Search..." [(ngModel)]="searchQuery" (ngModelChange)="searchQueryRooms()">
             </form>

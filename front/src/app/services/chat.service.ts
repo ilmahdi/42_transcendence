@@ -66,6 +66,9 @@ export class ChatService {
   addMemberSource = new BehaviorSubject<boolean>(false);
   addMember$ = this.addMemberSource.asObservable();
 
+  clickOnConversationSource = new BehaviorSubject<{click:boolean, user:IUserDataShort}>({click:false, user:{}})
+  clickOnConversation$ = this.clickOnConversationSource.asObservable()
+
   readSymbolSource = new BehaviorSubject<{senderId:number, receiverId:number, read:boolean}[]>([])
   readSymbol$ = this.readSymbolSource.asObservable()
 

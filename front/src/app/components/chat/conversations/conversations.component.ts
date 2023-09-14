@@ -6,6 +6,8 @@ import { Message } from 'src/app/models/message.model';
 import { User } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ChatService } from 'src/app/services/chat.service';
+import { UserService } from 'src/app/services/user.service';
+import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 
 @Component({
   selector: 'app-conversations',
@@ -20,14 +22,14 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
   @Input() roomConvers?:any
   @ViewChild('scrollContainer') myScrollContainer?: ElementRef;
   userId?:number
-  user?:User
+  user?:IUserDataShort
 
   msg = new FormGroup({message: new FormControl})
 
   messages: Message[] = [];
   roomMessage:Message[] =[]
   
-  users:User[] = [];
+  users:IUserDataShort[] = [];
 
   displayConversation:boolean = true
   lateMessage:{late:boolean, time:string, msg:Message}[] = []
@@ -35,6 +37,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
 
   constructor(private chatService: ChatService,
     private authService: AuthService,
+    private userService:UserService
     ) {
     this.chatService.optionsSource.next(false)
     
@@ -76,6 +79,12 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
       this.lateRoomMessage = this.chatService.calculatTimeBetweenMessages(this.roomMessage);
     })
     this.subsciptions.push(subs4)
+
+    this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
+    this.chatService.getRoomMembers().subscribe(data=>{
+      this.users = []
+      data.forEach(member=>this.users.push(member.user));
+    })
   }
 
   openOptions() {
@@ -93,18 +102,25 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     let date = new Date()
     
     const msg = {senderId, receiverId, message, date}
-    console.log(msg)
     if (!message) return;
-    this.chatService.updateSocketId(this.userId!)
-    this.chatService.sendNewMessage(msg, this.userEmitted[0])
+
+    const subs:Subscription = this.userService.getfriendList(this.userId!).subscribe(friends=>{
+      friends.forEach(friend=>{
+        if (friend.id === this.userEmitted[0].id && friend.username === this.userEmitted[0].username) {
+          this.chatService.sendNewMessage(msg, this.userEmitted[0])
+          this.msg.reset();
+          return;
+        }
+      })
+    })
+    this.subsciptions.push(subs);
     this.msg.reset();
   }
 
   sendRoomMessage() {
-    const msg = {senderId:this.userId, receiverId:this.roomConvers[0].id, message:this.msg.value.message, date:new Date(), readed:false, roomId:this.roomConvers[0].id}
+    const msg = {senderId:this.userId, receiverId:this.userId, message:this.msg.value.message, date:new Date(), readed:false, roomId:this.roomConvers[0].id}
     if (!msg.message) return;
-    this.chatService.updateSocketId(this.userId!)
-    this.chatService.sendRoomMessage(this.userId!, this.roomConvers[0], msg)
+    this.chatService.sendRoomMessage(this.userId!, this.roomConvers[0], msg);
     this.msg.reset();
   }
 
@@ -112,6 +128,10 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     if (this.myScrollContainer) {
       this.myScrollContainer!.nativeElement.scrollTop = this.myScrollContainer?.nativeElement.scrollHeight
     }
+  }
+
+  clickOnConversation() {
+    this.chatService.clickOnConversationSource.next({click:true, user:this.userEmitted[0]})
   }
 
   ngOnDestroy(): void {
