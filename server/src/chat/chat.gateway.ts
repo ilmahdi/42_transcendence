@@ -128,10 +128,9 @@ export class ChatGateway{
   }
 
   @SubscribeMessage('getRoomMembers')
-  getRoomMembers(client:Socket, room:Room) {
-    this.roomChatService.getRoomMembers(room).subscribe(data=>{
-      client.emit('recRoomMembers', data)
-    })
+  async getRoomMembers(client:Socket, room:Room) {
+    const data = await this.roomChatService.getRoomMembers(room)
+    client.emit('recRoomMembers', data)
   }
 
   @SubscribeMessage('updateRoom')

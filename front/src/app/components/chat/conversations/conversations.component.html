@@ -1,12 +1,12 @@
 <div *ngIf="!roomConvers[0]">
-    <div class="body" *ngIf="userEmitted && displayConversation" [style.display]="userEmitted[1]? 'block': 'none'" (click)="clickOnConversation()">
+    <div class="body" *ngIf="userEmitted && displayConversation" [style.display]="userEmitted[1]? 'block': 'none'">
         <div class="header">
             <div class="fa fa-angle-double-left" (click)="getConversEvent()"></div>
             <img [src]="userEmitted[0].avatar" alt="avatar">
             <span id="conv">Conversation with <span style="font-weight: bolder;">{{userEmitted[0].username}}</span></span>
         </div>
 
-        <div class="messages" #scrollContainer>
+        <div class="messages" #scrollContainer (click)="clickOnConversation()">
             <div *ngFor="let message of messages">
                 <br>
                 <div *ngFor="let msg of lateMessage">
@@ -22,9 +22,7 @@
             </div>
         </div>
 
-        <!-- <p *ngFor="let item of messages" style="color: white;">{{item.message}}</p> -->
-
-        <div class="writing">
+        <div class="writing" (click)="clickOnConversation()">
             <form [formGroup]="msg" style="width: 100%;">
                 <input type="text" id="typing" placeholder="write a message" formControlName="message">
             </form>
@@ -70,8 +68,6 @@
                 <br>
             </div>
         </div>
-
-        <!-- <p *ngFor="let item of roomMessage" style="color: white;">{{item.message}}</p> -->
 
         <div class="writing">
             <form [formGroup]="msg" style="width: 100%;">

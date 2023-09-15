@@ -49,6 +49,10 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
 
   ngOnInit() {
     /////////////////////////// FOR PRIVATE MESSAGE \\\\\\\\\\\\\\\\\\\\\\\\
+    const subs10:Subscription = this.chatService.getConversation().subscribe((data) => {
+      data.sort((a:Message, b:Message)=>a.id! - b.id!)
+      this.chatService.updateConversation(data);
+    })
     const subs1:Subscription = this.chatService.conversation$.subscribe((data)=> {
       this.messages = data
 
@@ -67,6 +71,10 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     this.subsciptions.push(subs2)
 
     /////////////////////////// FOR ROOM MESSAGE \\\\\\\\\\\\\\\\\\\\\\\\
+    const subs:Subscription = this.chatService.getRoomConversation().subscribe((data) => {
+      data.sort((a:Message, b:Message)=>a.id! - b.id!)
+      this.chatService.updateRoomConversation(data);
+    })
     const subs3:Subscription = this.chatService.roomConversation$.subscribe(data=>{
       this.roomMessage = data
       this.lateRoomMessage = []
@@ -80,11 +88,13 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     })
     this.subsciptions.push(subs4)
 
-    this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
-    this.chatService.getRoomMembers().subscribe(data=>{
-      this.users = []
-      data.forEach(member=>this.users.push(member.user));
-    })
+    if (this.roomConvers.length) {
+      this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
+      this.chatService.getRoomMembers().subscribe(data=>{
+        this.users = []
+        data.forEach(member=>this.users.push(member.user));
+      })
+    }
   }
 
   openOptions() {

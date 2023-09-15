@@ -80,11 +80,11 @@ export class AddMemberComponent implements OnInit, OnDestroy {
     this.room.usersId = this.room.usersId?.concat(newUsers);
     this.room.adminId = this.room.adminId?.concat(this.newAdminsId);
     this.chatService.updateRoom(this.room);
-    this.chatService.displayComponents(false, true, false, true, true, false, false)
+    this.chatService.displayComponents(false, true, false, true, false, false, false)
   }
 
   back() {
-    this.chatService.displayComponents(false, false, false, true, true, true, false)
+    this.chatService.displayComponents(false, false, false, true, false, true, false)
   }
 
   ngOnDestroy(): void {

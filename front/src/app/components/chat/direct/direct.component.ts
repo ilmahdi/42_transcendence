@@ -24,7 +24,6 @@ export class DirectComponent implements OnInit, OnDestroy {
   color:any = {color:'', name:''}
 
   userId?:number;
-  messages: Message[] = [];
 
   lastMessages: any[] = [];
 
@@ -125,44 +124,46 @@ export class DirectComponent implements OnInit, OnDestroy {
     })
     this.subscriptions.push(subs3)
 
-    // CHECK IF THE YOUR FRIEND HAVE CLICKED ON YOUR CONVERSATION, IF TRUE THAT IS MEAN HE READ YOUR MESSAGE
-    this.chatService.clickOnConversation$.subscribe(data=>{
+    // CHECK IF THE YOUR FRIEND HAS CLICKED ON YOUR CONVERSATION, IF TRUE THAT IS MEAN HE READ YOUR MESSAGE
+    const subs4:Subscription = this.chatService.clickOnConversation$.subscribe(data=>{
       if (data.click) {
-        this.openConversation(data.user)
-        this.chatService.clickOnConversationSource.next({click:false, user:{}});
+        console.log("SAAD");
+        
+        this.openConversation(data.user, false)
+        this.chatService.clickOnConversationSource.next({click:false, user:data.user});
       }
     })
+    this.subscriptions.push(subs4)
   }
 
   onResize() {
     this.screenWidth = window.innerWidth;
   }
 
-  openConversation(friend: IUserDataShort): void {
+  openConversation(friend: IUserDataShort, flag:boolean): void {
     //  IF THE SCREEN WIDTH < 1350 SO THE CONVERSATION BUTTON COLOR WILL NOT CHANGE WHEN THE USER CLICK IT
     if (this.screenWidth > 1350) {
       this.color = {color:'#d3814674', name:friend.username}
     }
     else
-      this.color = {color:'', name:''}
-
+    this.color = {color:'', name:''}
+  
     //  GET THE CONVERSATION FROM SERVER
     this.chatService.sendToGetConversation(this.userId!, friend.id!)
     const subs1:Subscription = this.chatService.getConversation().subscribe((data) => {
       data.sort((a:Message, b:Message)=>a.id! - b.id!)
       this.chatService.updateConversation(data);
-      this.messages.splice(0, this.messages.length);
       data.forEach((item)=>{
-        this.messages.push(item);
         if (item.senderId !== this.userId) {
           this.chatService.updateRead(item);
           this.chatService.updateReadBehav(this.notReaded.filter(shit=> shit.senderId !== item.senderId));
         }
+        })
+        if (flag) // HIDE EVERY COMPONENT AND OPEN CONVERSATION COMPONENT 
+          this.chatService.displayComponents(false, true, false, true, false, false, false);
       })
-    })
-    this.subscriptions.push(subs1)
-    this.chatService.roomFormular(false);
-    const subs2:Subscription = this.chatService.getNotReadedMessages().subscribe(data=>{
+      this.subscriptions.push(subs1)
+      const subs2:Subscription = this.chatService.getNotReadedMessages().subscribe(data=>{
       this.chatService.updateReadBehav(data);
     })
     this.subscriptions.push(subs2)
@@ -171,7 +172,6 @@ export class DirectComponent implements OnInit, OnDestroy {
     if (this.lastMessages[this.lastMessages.length - 1].receiverId === this.userId)
       this.chatService.sendReadSignal();
 
-    this.chatService.displayComponents(false, true, false, true, false, false, false);
     this.customEvent.emit(friend)
   }
 
@@ -201,7 +201,7 @@ export class DirectComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.messages = []
+    // this.messages = []
     this.chatService.updateUsers([])
 
     this.subscriptions.forEach(sub=>sub.unsubscribe())

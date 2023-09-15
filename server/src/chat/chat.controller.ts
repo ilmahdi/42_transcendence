@@ -85,15 +85,15 @@ export class ChatController {
     return this.roomChatService.joinProtected(data.id, data.room, data.password)
   }
 
-  // @Post('roomMembers')
-  // getRoomMembers(@Body() room:Room) {
-  //   return this.roomChatService.getRoomMembers(room);
-  // }
-
   @Post('updateRoom')
   updateRoom(@Body() room:Room) {
     this.roomChatService.changeRoomType(room);
     return room
+  }
+
+  @Get("allUsers")
+  getAllUsers() {
+    return this.roomChatService.getAllUsers()
   }
 
   ////////////////////////////////////////// UPLOAD IMAE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

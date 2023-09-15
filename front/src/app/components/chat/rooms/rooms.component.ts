@@ -23,7 +23,6 @@ export class RoomsComponent implements OnInit, OnDestroy {
   userId?:number;
 
   rooms:Room[] = []
-  messages:Message[] = []
   color:any = {color:'', name:''}
   lastMessages: any[] = [];
   selectedRoom?:Room
@@ -118,7 +117,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
   openRoom(room:Room) {
     //  IF THE SCREEN WIDTH < 1350 SO THE CONVERSATION BUTTON COLOR WILL NOT CHANGE WHEN THE USER CLICK IT
     if (this.screenWidth > 1350) {
-      this.color = {color:'#D38146', name:room.name}
+      this.color = {color:'#d3814674', name:room.name}
     }
     else
       this.color = {color:'', name:''}
@@ -128,17 +127,17 @@ export class RoomsComponent implements OnInit, OnDestroy {
     const subs:Subscription = this.chatService.getRoomConversation().subscribe((data) => {
       data.sort((a:Message, b:Message)=>a.id! - b.id!)
       this.chatService.updateRoomConversation(data);
-      this.messages.splice(0, this.messages.length);
       data.forEach((item)=>{
-        this.messages.push(item)
         if (item.senderId !== this.userId) {
           this.chatService.updateRead(item)
           this.chatService.updateReadRoomBehav(this.notReaded.filter(shit=> shit.roomId !== item.roomId));
         }
       })
+      console.log("SAAD");
+      
+      this.chatService.displayComponents(false, true, false, true, false, false, false);
     })
     this.subscriptions.push(subs)
-    this.chatService.displayComponents(false, true, false, true, false, false, false);
     this.chatService.roomOptionsSource.next(room);////////////
     this.conversData.emit(room);
   }

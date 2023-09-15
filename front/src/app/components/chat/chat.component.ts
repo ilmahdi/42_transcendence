@@ -46,20 +46,20 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.screenWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize.bind(this));
 
-  
     chatService.sendToGetLastMessage(this.userId!)
     chatService.sendToGetRoomLastMessage(this.userId!)
 
-    // chatService.sendToGetNotReadedRoomMessages(this.userId!);
     const subs:Subscription = chatService.getNotReadedRoomMessages().subscribe(data=>{
       chatService.updateReadRoomBehav(data)
     })
     this.subscriptions.push(subs)
+
+    this.chatService.displayConversSource.next(true)
   }
 
   ngOnInit(): void {
     
-    const subs1:Subscription = this.chatService.displayConvers$.subscribe(data=> this.displayConvers = data)
+    const subs1:Subscription = this.chatService.displayConvers$.subscribe(data=> {this.displayConvers = data;console.log(data)})
     this.subscriptions.push(subs1)
 
     const subs2:Subscription = this.chatService.options$.subscribe(data=>this.options = data)
@@ -101,7 +101,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   getRoomConvers(room:Room) {
     this.smallScreen = true
-    this.displayConvers = false
+    // this.displayConvers = false
     this.chatService.sendToGetRoomById(room.id!)
     this.roomData = [room, true]
   }

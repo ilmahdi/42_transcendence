@@ -279,8 +279,8 @@ export class ChatService {
     headers: new HttpHeaders({ 'Authorization': `Bearer ${this.token}` }),
   };
 
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>('http://localhost:3000/api/auth/allUsers', this.httpOptions).pipe(take(1));
+  getUsers(): Observable<IUserDataShort[]> {
+    return this.http.get<IUserDataShort[]>('http://localhost:3000/api/chat/allUsers', this.httpOptions).pipe(take(1));
   }
 
   updateRead(message:Message) {

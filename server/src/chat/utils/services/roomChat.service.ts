@@ -26,6 +26,10 @@ export class RoomChatService {
       return bcrypt.compare(plainTextPassword, hashedPassword);
     }
 
+    getAllUsers() {
+      return from(this.prismaService.userAccount.findMany())
+    }
+
     async searchRooms(query: string): Promise<Room[]> {
       const rooms = await this.prismaService.room.findMany({
         where: {
@@ -230,12 +234,12 @@ export class RoomChatService {
       return false;
     }
 
-    getRoomMembers(room:Room) {
+    async getRoomMembers(room: Room): Promise<{ user: UserModel; type: string }[]> {
       const userIds = room.usersId;
       const adminIds = room.adminId;
-
+    
       const usersWithTypes: Observable<{ user: UserModel; type: string }>[] = [];
-
+    
       userIds.forEach(async id => {
         const userType = adminIds.includes(id) ? 'admin' : 'user';
         const userObservable = this.userService.getUserById(id).pipe(
@@ -243,22 +247,22 @@ export class RoomChatService {
         );
         usersWithTypes.push(userObservable);
       });
-
-      return forkJoin(usersWithTypes);
+    
+      const result = await forkJoin(usersWithTypes).toPromise();
+      return result;
     }
 
     async changeRoomType(room:Room) {
       if (room.type !== RoomType.PROTECTED) {
         room.password = null
-        this.prismaService.room.update({
-          where: {id:room.id},
-          data:
-            {id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath}
-        });
       }
       else {
         room.password = await this.hashPassword(room.password)
-        this.prismaService.room.create({data:{id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath}});
       }
+      await this.prismaService.room.update({
+        where: {id:room.id},
+        data:
+          {id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath}
+      });
     }
 }

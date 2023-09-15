@@ -33,7 +33,6 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       if (this.room.adminId?.includes(this.userId!))
         this.isAdmin = true
       this.chatService.sendToGetRoomById(this.room.id!);
-      // this.chatService.sendToGetRoomMembers(this.room);////////
     })
     this.subscriptions.push(subs)
     this.type = this.room.type
