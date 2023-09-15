@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, Input } from '@angular/core';
+import { GameService } from 'src/app/services/game.service';
 
 @Component({
   selector: 'app-board',
@@ -8,7 +9,9 @@ import { AfterViewInit, Component, Input } from '@angular/core';
 export class BoardComponent implements AfterViewInit {
 
   constructor(
+    private gameService : GameService,
   ) {
+    this.adapteCanvasSize();
   }
 
   public width: number = 680;
@@ -42,6 +45,47 @@ export class BoardComponent implements AfterViewInit {
     this.ctx.restore();
   }
 
+  public drawPlayButton() {
+    
+    this.ctx.strokeStyle = this.objColor;
+    this.ctx.lineWidth = 2;
+    this.ctx.strokeRect(this.width / 2 - 50, this.height / 2 - 25, 100, 50);
+  
+    this.ctx.fillStyle = this.objColor;
+    this.ctx.font = '24px Arial';
+
+
+    const textWidth = this.ctx.measureText('Play').width;
+    const textHeight = this.ctx.measureText('Play').actualBoundingBoxAscent ;
+
+
+    this.ctx.fillText('Play', this.width / 2 - (textWidth/2), this.height / 2 + (textHeight / 2)); 
+  }
+
+  public adapteCanvasSize() :boolean {
+
+    const innerWidth = window.innerWidth - 16;
+
+    if (innerWidth < this.initialWidth) {
+      this.width = innerWidth;
+      return true;
+    }
+    else if (this.initialWidth > this.width && 
+      innerWidth > this.initialWidth) {
+      this.width = this.initialWidth;
+      return true;
+    }
+    return false;
+  }
+
+  public adaptMap(mapIndex :number) {
+
+    this.color = this.gameService.maps[mapIndex].boardColor;
+    this.objColor = this.gameService.maps[mapIndex].objColor;
+
+  }
+
+  
 
  
 

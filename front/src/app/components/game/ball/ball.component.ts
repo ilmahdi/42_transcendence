@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BoardComponent } from '../board/board.component';
 import { PaddleComponent } from '../paddle/paddle.component';
+import { GameService } from 'src/app/services/game.service';
 
 @Component({
   selector: 'app-ball',
@@ -10,6 +11,7 @@ import { PaddleComponent } from '../paddle/paddle.component';
 export class BallComponent implements OnInit{
 
   constructor(
+    private gameService : GameService,
   ) {
   }
 
@@ -151,10 +153,10 @@ export class BallComponent implements OnInit{
   }
   
 
-  private initBallPosition() {
+  public initBallPosition() {
 
-    this.isBallSkiped = false;
     setTimeout(() => {
+      this.isBallSkiped = false;
       this.isBallOut = true;
     }, 200); 
 
@@ -172,6 +174,11 @@ export class BallComponent implements OnInit{
 
   public adapteBallSize() {
     this.r = this.gameBoard.width / 60;
+  }
+
+  public adaptMap(mapIndex :number) {
+    
+    this.color = this.gameService.maps[mapIndex].ballColor;
   }
 
 

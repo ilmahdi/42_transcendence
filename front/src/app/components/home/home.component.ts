@@ -59,10 +59,10 @@ export class HomeComponent implements OnInit {
 
   openConfirmModal() {
     this.sub = this.confirmService
-      .open(this.entry, CustomizeGameComponent, 'Choose a map:')
-      .subscribe(() => {
+      .open(this.entry, CustomizeGameComponent)
+      .subscribe((mapId :any) => {
 
-        this.router.navigate(['/game']);
+        this.router.navigate(['/game', mapId]);
       });
   }
 

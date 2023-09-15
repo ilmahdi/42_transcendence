@@ -45,17 +45,17 @@ export class ProfileComponent implements OnInit {
     const subscription = this.route.params.subscribe(params => {
 
       const subscription = this.userService.getUserDataByUsername(params['username']).subscribe({
-      next: (response :IUserData) => {
-       
-        this.userData = response;
-        this.loadingService.hideLoading()
-      },
-      error: error => {
-        this.loadingService.hideLoading();
-        this.authService.setAuthenticated(false)
-        this.router.navigate(["/not-found"]);
-      }
-    });
+          next: (response :IUserData) => {
+          
+            this.userData = response;
+            this.loadingService.hideLoading()
+          },
+          error: error => {
+            this.loadingService.hideLoading();
+            this.authService.setAuthenticated(false)
+            this.router.navigate(["/not-found"]);
+          }
+      });
      this.subscriptions.push(subscription);
     });
     this.subscriptions.push(subscription);

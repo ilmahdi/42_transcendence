@@ -4,6 +4,7 @@ import { PaddleComponent } from './paddle/paddle.component';
 import { BoardComponent } from './board/board.component';
 import { BallComponent } from './ball/ball.component';
 import { IPlayer } from 'src/app/utils/interfaces/history.interface';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -13,6 +14,7 @@ import { IPlayer } from 'src/app/utils/interfaces/history.interface';
 export class GameComponent implements AfterViewInit {
 
   constructor(
+    private route: ActivatedRoute,
     private authService :AuthService,
     private elementRef: ElementRef,
     private renderer: Renderer2,
@@ -37,6 +39,8 @@ export class GameComponent implements AfterViewInit {
     score: 10,
     points: 0,
   };
+  private isGameStarted :boolean = false;
+
 
   @ViewChild('ball') ball!: BallComponent;
   @ViewChild('gameBoard') gameBoard!: BoardComponent;
@@ -51,9 +55,21 @@ export class GameComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
 
+    const subscription = this.route.params.subscribe(params => {
+      const mapIndex = params['mapId'] - 1;
+      this.ball.adaptMap(mapIndex);
+      this.gameBoard.adaptMap(mapIndex);
+      this.player1Paddle.adaptMap(mapIndex);
+      this.player2Paddle.adaptMap(mapIndex);
+    });
 
     this.setCanvas();
-    this.render();
+
+    this.setCanvasBackgroundColor();
+    this.gameBoard.drawPlayButton()
+
+    this.canvas.addEventListener('click', this.handleCanvasClick.bind(this));
+
     this.canvas.addEventListener('mousemove', (event) => this.player1Paddle.onMouseMove(event));
     window.addEventListener('keydown', (event) => this.player1Paddle.onKeyDown(event));
     window.addEventListener('keyup', (event) => this.player1Paddle.onKeyUp(event));
@@ -63,6 +79,23 @@ export class GameComponent implements AfterViewInit {
   @HostListener('window:resize')
   onResize() {
     this.resizeCanvas();
+  }
+
+  handleCanvasClick(event: MouseEvent) {
+    const canvasRect = this.canvas.getBoundingClientRect();
+  
+    const clickX = event.clientX - canvasRect.left;
+    const clickY = event.clientY - canvasRect.top;
+  
+    if (
+      clickX >= this.canvas.width / 2 - 50 &&
+      clickX <= this.canvas.width / 2 + 50 &&
+      clickY >= this.canvas.height / 2 - 25 &&
+      clickY <= this.canvas.height / 2 + 25
+    ) {
+      this.isGameStarted = true;
+      this.render();
+    }
   }
 
 
@@ -78,8 +111,9 @@ export class GameComponent implements AfterViewInit {
   private render(): void {
    
     this.player1Paddle.updateOnKeyDown();
-    this.player2Paddle.updateAI();
-    this.ball.updatePosition()
+    // this.player1Paddle.updateBoot();
+    this.player2Paddle.updateBoot();
+    this.ball.updatePosition();
 
     this.setCanvasBackgroundColor();
     this.gameBoard.drawDashedLine();
@@ -94,23 +128,23 @@ export class GameComponent implements AfterViewInit {
 
 
   private resizeCanvas() {
-    const innerWidth = window.innerWidth - 16;
 
-    if (innerWidth < this.gameBoard.initialWidth) {
-      this.gameBoard.width = innerWidth;
+    if (this.gameBoard.adapteCanvasSize()) {
+
+      this.renderer.setAttribute(this.canvas, 'width', this.gameBoard.width.toString());
+      this.player1Paddle.adaptePaddleSize();
+      this.player1Paddle.adaptePaddleSide();
+      this.player2Paddle.adaptePaddleSize();
+      this.ball.adapteBallSize();
+      this.ball.initSpeed();
+
+      if (!this.isGameStarted) {
+        
+        this.ball.initBallPosition();
+        this.setCanvasBackgroundColor();
+        this.gameBoard.drawPlayButton();
+      }
     }
-    else if (this.gameBoard.initialWidth > this.gameBoard.width && 
-      innerWidth > this.gameBoard.initialWidth) {
-      this.gameBoard.width = this.gameBoard.initialWidth;
-    }
-    else 
-      return
-    this.renderer.setAttribute(this.canvas, 'width', this.gameBoard.width.toString());
-    this.player1Paddle.adaptePaddleSize();
-    this.player1Paddle.adaptePaddleSide();
-    this.player2Paddle.adaptePaddleSize();
-    this.ball.adapteBallSize();
-    this.ball.initSpeed();
     
   }
   

@@ -13,7 +13,11 @@ export class CustomizeGameComponent {
   @Output() closeMeEvent = new EventEmitter();
   @Output() confirmEvent = new EventEmitter();
 
-  @Input() title: string = '';
+  public mapId :number = 1;
+
+  onImgClick(id :number) {
+    this.mapId = id;
+  }
 
   ngOnInit(): void {
   }
@@ -22,6 +26,6 @@ export class CustomizeGameComponent {
     this.closeMeEvent.emit();
   }
   confirm() {
-    this.confirmEvent.emit();
+    this.confirmEvent.emit(this.mapId);
   }
 }

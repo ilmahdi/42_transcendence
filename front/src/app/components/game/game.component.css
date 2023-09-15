@@ -41,7 +41,7 @@
 .gp-sec-item-icon.i2 {
 
   transform: rotate(180deg);
-  fill: var(--second-text-color);
+  fill: #ED5252;
 }
 .gp-sec-item-text.t2 {
   font-size: 1.4rem;

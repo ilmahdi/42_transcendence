@@ -20,7 +20,7 @@ export class ConfirmService {
     if (modalBody)
       this.componentRef.instance.body = modalBody;
     this.componentRef.instance.closeMeEvent.subscribe(() => this.close());
-    this.componentRef.instance.confirmEvent.subscribe(() => this.confirm());
+    this.componentRef.instance.confirmEvent.subscribe((response = "confirm") => this.confirm(response));
     this.componentSubscriber = new Subject<string>();
     return this.componentSubscriber.asObservable();
   }
@@ -30,8 +30,8 @@ export class ConfirmService {
     this.componentRef.destroy();
   }
 
-  confirm() {
-    this.componentSubscriber.next('confirm');
+  confirm(response: any) {
+    this.componentSubscriber.next(response);
     this.close();
   }
 }

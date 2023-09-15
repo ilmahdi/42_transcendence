@@ -39,17 +39,37 @@
     width: min(90%, 30rem);
     min-width: min-content;
     transform: translate(-50%, -50%);
-    padding: 1rem 1.2rem;
+    padding: 2.6rem 1.2rem 1rem 1.2rem;
     border-radius: 0.6rem;
     z-index: 15;
 
 }
 .cm-title {
     font-size: 1.4rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
 }
 .cm-body {
-    font-size: 1.1rem;
+    display: flex;
+    align-items: space;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 0.6rem;
+}
+
+.cm-body-img {
+    width: 10rem;
+    border-radius: 1rem;
+    border: 0.2rem solid transparent;
+}
+.cm-body-img:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.is-selected {
+    border: 0.2rem solid #0038FF;
+    opacity: 0.8;
 }
 
 .cm-indent {

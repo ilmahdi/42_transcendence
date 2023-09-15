@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { BoardComponent } from '../board/board.component';
 import { BallComponent } from '../ball/ball.component';
 import { initial } from 'lodash';
+import { GameService } from 'src/app/services/game.service';
 
 @Component({
   selector: 'app-paddle',
@@ -11,6 +12,7 @@ import { initial } from 'lodash';
 export class PaddleComponent implements OnInit{
 
   constructor(
+    private gameService : GameService,
   ) {
   }
 
@@ -22,7 +24,7 @@ export class PaddleComponent implements OnInit{
   private color = '#DEC8C8';
   private paddleMargin = 2;
   private keysPressed: { [key: string]: boolean } = {};
-  private level :number = 0.2;
+  private level :number = 0.1;
   private initialX :number = 10;
 
   @Input() ctx!: CanvasRenderingContext2D;
@@ -99,15 +101,17 @@ export class PaddleComponent implements OnInit{
 
 
 
-  public updateAI() {
+  public updateBoot() {
     
     const paddleCenter = this.y + this.height / 2;
     const targetY = this.ball.y ;
     
     
     const deltaY = targetY - paddleCenter;
-    if (this.ball.velocityX < 0) {
-      this.y += deltaY * this.level / 2;
+    if (this.ball.velocityX < 0 && this.x > this.gameBoard.width / 2
+    || this.ball.velocityX > 0 && this.x < this.gameBoard.width / 2
+    ) {
+      this.y += deltaY * this.level / 3;
     }
     else {
       this.y += deltaY * this.level;
@@ -135,6 +139,10 @@ export class PaddleComponent implements OnInit{
 
     this.ctx.fillText(this.score.toString(), posX, this.gameBoard.height / 6);
 
+  }
+  public adaptMap(mapIndex :number) {
+
+    this.color = this.gameService.maps[mapIndex].paddleColor;
   }
 
 }
