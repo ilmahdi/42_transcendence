@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { ChatService } from 'src/app/services/chat.service';
 import { MenuBarService } from 'src/app/services/menu-bar.service';
 import { INotifyData } from 'src/app/utils/interfaces/notify-data.interface';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
@@ -18,14 +19,18 @@ export class TopBarComponent implements OnInit {
     public authServece: AuthService,
     private router: Router,
     private socket: CustomSocket,
+    private chatService: ChatService,
   ) {
+    this.userId = this.authServece.getLoggedInUserId();
   }
   
+  public userId: number
   public searchQuery: string = '';
   public searchResults: any[] = [];
   public activeIndex: number = -1;
   public isNotifClicked: boolean = false;
   public isNewNotif: number = 0;
+  public chatNotif: number = 0;
   public notifyData :INotifyData[] = []
 
 
@@ -42,6 +47,13 @@ export class TopBarComponent implements OnInit {
 
     });
     this.getNotifications();
+
+    // this.chatService.sendToGetNotReadedMessages(this.userId);
+    this.chatService.getNotReadedMessages().subscribe(data=>{
+      console.log("SAAD");
+      
+      this.chatNotif = data.length;
+    })
   }
 
   toggleLeftBar() {

@@ -133,8 +133,6 @@ export class RoomsComponent implements OnInit, OnDestroy {
           this.chatService.updateReadRoomBehav(this.notReaded.filter(shit=> shit.roomId !== item.roomId));
         }
       })
-      console.log("SAAD");
-      
       this.chatService.displayComponents(false, true, false, true, false, false, false);
     })
     this.subscriptions.push(subs)

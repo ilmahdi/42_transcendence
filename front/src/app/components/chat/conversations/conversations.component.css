@@ -211,6 +211,7 @@ p {
     position: relative;
     font-size: 25px;
     left: -50px;
+    top: -15px;
     display: inline-block;
 
     float: left; /* Align the message to the right */

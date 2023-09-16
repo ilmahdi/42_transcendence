@@ -57,12 +57,12 @@
                     {{message.message}}
                 </div>
                 <div *ngFor="let user of users">
-                    <div class="username" *ngIf="userId !== message.senderId && user.id !== userId"><div style="position: absolute;">{{user.username}}</div></div>
+                    <div class="username" *ngIf="userId !== message.senderId && user.id !== userId">{{user.username}}</div>
                     <div class="senderImg" *ngIf="userId !== message.senderId && user.id !== userId">
                         <img [src]="user.avatar" alt="avatar">
                     </div>
                 </div>
-                <div *ngIf="message.senderId !== userId" class="receivedMessage" style="left:50px;">
+                <div *ngIf="message.senderId !== userId" class="receivedMessage" style="left:50px;margin-top: -10px;">
                     {{message.message}}
                 </div>
                 <br>

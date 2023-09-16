@@ -19,7 +19,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   room = new FormGroup({name: new FormControl, imagePath: new FormControl})
 
   userEvent:any[] = []
-  conversationEvent!:Message[];
   roomData:any[] = []
 
   directClicked: boolean = true
@@ -54,7 +53,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     })
     this.subscriptions.push(subs)
 
-    this.chatService.displayConversSource.next(true)
+    chatService.displayComponents(false, false, false, false, true, false, false);
   }
 
   ngOnInit(): void {
@@ -87,10 +86,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.smallScreen = true
     this.userEvent = [user, true]
     this.roomData = []
-  }
-
-  getConversation(data:Message[]) {
-    this.conversationEvent = data;
   }
 
   displayFormRoom() {

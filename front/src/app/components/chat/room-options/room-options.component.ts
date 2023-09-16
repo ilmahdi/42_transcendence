@@ -97,14 +97,14 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.chatService.roomOptionsSource.next(this.room)////////////
       this.chatService.sendToGetRoomMembers(this.room);
       this.chatService.updateRoom(this.room);
-      this.chatService.displayComponents(false, true, false, true, true, false, false)
+      this.chatService.displayComponents(false, true, false, true, false, false, false)
     }
     else if (this.type !== RoomType.PROTECTED) {
       const data = this.room
       this.chatService.roomOptionsSource.next(this.room)////////////
       this.chatService.sendToGetRoomMembers(this.room);
       this.chatService.updateRoom(this.room);
-      this.chatService.displayComponents(false, true, false, true, true, false, false)
+      this.chatService.displayComponents(false, true, false, true, false, false, false)
     }
   }
 

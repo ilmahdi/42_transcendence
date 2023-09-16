@@ -16,7 +16,7 @@ export class ChatService {
 
   userId?:number;
 
-  private stringSource = new BehaviorSubject<any>({}); // Initial value is an empty string
+  private stringSource = new BehaviorSubject<Message>({}); // Initial value is an empty string
   string$ = this.stringSource.asObservable();
 
   users:User[] = [];
@@ -45,7 +45,7 @@ export class ChatService {
   notReadedRoomMessageSource = new BehaviorSubject<{senderId:number, roomId: number; unreadCount: number }[]>([]);
   notReadedRoomMessage$ = this.notReadedRoomMessageSource.asObservable()
 
-  usersSource = new BehaviorSubject<User[]>([]);
+  usersSource = new BehaviorSubject<IUserDataShort[]>([]);
   users$ = this.usersSource.asObservable()
 
   roomsSource = new BehaviorSubject<Room[]>([]);

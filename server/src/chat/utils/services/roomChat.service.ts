@@ -235,8 +235,12 @@ export class RoomChatService {
     }
 
     async getRoomMembers(room: Room): Promise<{ user: UserModel; type: string }[]> {
-      const userIds = room.usersId;
-      const adminIds = room.adminId;
+      const updatedRoom = await this.prismaService.room.findFirst({
+        where: {id: room.id}
+      })
+
+      const userIds = updatedRoom.usersId;
+      const adminIds = updatedRoom.adminId;
     
       const usersWithTypes: Observable<{ user: UserModel; type: string }>[] = [];
     

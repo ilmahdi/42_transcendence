@@ -15,7 +15,6 @@ import { AuthService } from 'src/app/services/auth.service';
 export class DirectComponent implements OnInit, OnDestroy {
 
   @Output() customEvent = new EventEmitter<IUserDataShort>();
-  @Output() conversation= new EventEmitter<Message[]>();
 
   private subscriptions: Subscription[] = []
 
@@ -52,7 +51,7 @@ export class DirectComponent implements OnInit, OnDestroy {
 
     const subs3:Subscription = chatService.string$.subscribe(data=>{
       // GET THE NEW UNREAD MESSAGE AND ADD IT IN readSymbolSource WITH FALSE READ SIGNAL
-      let item = {senderId:data.senderId, receiverId:data.receiverId, read:false}
+      let item = {senderId:data.senderId!, receiverId:data.receiverId!, read:false}
       let newArray:{senderId:number, receiverId:number, read:boolean}[] = chatService.readSymbolSource.getValue()
       newArray = newArray.filter(data1=>data1.receiverId !== item.receiverId && !((data1.receiverId === data.receiverId && data1.senderId === data.senderId) || (data1.senderId === data.receiverId && data1.receiverId === data.senderId)))
       newArray.push(item)
@@ -69,7 +68,7 @@ export class DirectComponent implements OnInit, OnDestroy {
         })
       }
       else {
-        this.notReaded.push({senderId:data.senderId, unreadCount:1})
+        this.notReaded.push({senderId:data.senderId!, unreadCount:1})
       }
     })
     this.subscriptions.push(subs3)
@@ -96,10 +95,10 @@ export class DirectComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getfriendList();
-    const subs1:Subscription = this.chatService.users$.subscribe(data=> {
-      this.users = data;
-    })
-    this.subscriptions.push(subs1)
+    // const subs1:Subscription = this.chatService.users$.subscribe(data=> {
+    //   this.users = [];
+    // })
+    // this.subscriptions.push(subs1)
 
     this.chatService.sendToGetNotReadedMessages(this.userId!)//////////
     const subs2:Subscription = this.chatService.notReadedMessage$.subscribe(data=>{
@@ -127,8 +126,6 @@ export class DirectComponent implements OnInit, OnDestroy {
     // CHECK IF THE YOUR FRIEND HAS CLICKED ON YOUR CONVERSATION, IF TRUE THAT IS MEAN HE READ YOUR MESSAGE
     const subs4:Subscription = this.chatService.clickOnConversation$.subscribe(data=>{
       if (data.click) {
-        console.log("SAAD");
-        
         this.openConversation(data.user, false)
         this.chatService.clickOnConversationSource.next({click:false, user:data.user});
       }
@@ -201,7 +198,6 @@ export class DirectComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // this.messages = []
     this.chatService.updateUsers([])
 
     this.subscriptions.forEach(sub=>sub.unsubscribe())

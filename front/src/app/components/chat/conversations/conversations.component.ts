@@ -18,7 +18,6 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
   private subsciptions:Subscription[] = []
 
   @Input() userEmitted:any
-  @Input() conversationEmitted:Message[] = [];
   @Input() roomConvers?:any
   @ViewChild('scrollContainer') myScrollContainer?: ElementRef;
   userId?:number
@@ -130,7 +129,19 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
   sendRoomMessage() {
     const msg = {senderId:this.userId, receiverId:this.userId, message:this.msg.value.message, date:new Date(), readed:false, roomId:this.roomConvers[0].id}
     if (!msg.message) return;
-    this.chatService.sendRoomMessage(this.userId!, this.roomConvers[0], msg);
+    this.chatService.sendToGetRoomMembers(this.roomConvers[0])
+    this.chatService.getRoomMembers().pipe(take(1)).subscribe(data=> {
+      let found:boolean = false
+      data.forEach(item=>{
+        if (item.user.id === this.userId) {
+          found = true
+        }
+      })
+      if (found) {
+        this.chatService.sendRoomMessage(this.userId!, this.roomConvers[0], msg);
+        this.msg.reset();
+      }
+    })
     this.msg.reset();
   }
 
