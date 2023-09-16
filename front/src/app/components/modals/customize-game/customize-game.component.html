@@ -4,17 +4,17 @@
     <div class="overlay" (click)="closeMe()"></div>
     <div class="confirm-modal">
       <div class="cm-body">
-        <img class="cm-body-img" (click)="onImgClick(1)" src="./assets/imgs/default.png"
+        <img class="cm-body-img" (click)="onImgClick(0)" src="./assets/imgs/default.png"
+          [class.is-selected]="mapId === 0"
+        >
+        <img class="cm-body-img" (click)="onImgClick(1)" src="./assets/imgs/salon_villa.png"
           [class.is-selected]="mapId === 1"
         >
-        <img class="cm-body-img" (click)="onImgClick(2)" src="./assets/imgs/salon_villa.png"
+        <img class="cm-body-img" (click)="onImgClick(2)" src="./assets/imgs/hawai_summer.png"
           [class.is-selected]="mapId === 2"
         >
-        <img class="cm-body-img" (click)="onImgClick(3)" src="./assets/imgs/hawai_summer.png"
+        <img class="cm-body-img" (click)="onImgClick(3)" src="./assets/imgs/night_sahara.png"
           [class.is-selected]="mapId === 3"
-        >
-        <img class="cm-body-img" (click)="onImgClick(4)" src="./assets/imgs/night_sahara.png"
-          [class.is-selected]="mapId === 4"
         >
 
       </div>

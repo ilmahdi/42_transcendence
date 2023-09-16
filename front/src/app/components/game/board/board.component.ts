@@ -12,6 +12,7 @@ export class BoardComponent implements AfterViewInit {
     private gameService : GameService,
   ) {
     this.adapteCanvasSize();
+    this.adaptMap();
   }
 
   public width: number = 680;
@@ -78,10 +79,10 @@ export class BoardComponent implements AfterViewInit {
     return false;
   }
 
-  public adaptMap(mapIndex :number) {
+  public adaptMap() {
 
-    this.color = this.gameService.maps[mapIndex].boardColor;
-    this.objColor = this.gameService.maps[mapIndex].objColor;
+    this.color = this.gameService.maps[this.gameService.mapIndex].boardColor;
+    this.objColor = this.gameService.maps[this.gameService.mapIndex].objColor;
 
   }
 

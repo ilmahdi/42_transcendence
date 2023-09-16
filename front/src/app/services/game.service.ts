@@ -7,7 +7,7 @@ export class GameService {
 
   constructor() { }
 
-  maps = [
+  public maps = [
     {
       id: 1,
       name: 'Map 3',
@@ -41,4 +41,9 @@ export class GameService {
       objColor: '#D38146',
     },
   ];
+  public mapIndex :number = 0;
+  public playerId1 :number = 0;
+  public playerId2 :number = 0;
+  public isToStart :boolean = false;
+
 }

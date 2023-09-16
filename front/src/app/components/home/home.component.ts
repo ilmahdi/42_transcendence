@@ -7,6 +7,8 @@ import { ConfirmService } from 'src/app/services/modals/confirm.service';
 import { CustomizeGameComponent } from '../modals/customize-game/customize-game.component';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { GameService } from 'src/app/services/game.service';
+import { CustomSocket } from 'src/app/utils/socket/socket.module';
 
 
 @Component({
@@ -23,6 +25,8 @@ export class HomeComponent implements OnInit {
     public loadingService: LoadingService,
     private authService: AuthService,
     private confirmService: ConfirmService,
+    private gameService : GameService,
+    private socket: CustomSocket,
   ) { 
 
   }
@@ -62,8 +66,27 @@ export class HomeComponent implements OnInit {
       .open(this.entry, CustomizeGameComponent)
       .subscribe((mapId :any) => {
 
-        this.router.navigate(['/game', mapId]);
+       this.loadingService.showLoading();
+
+       this.gameService.mapIndex = mapId;
+        this.getPlayersIds();
       });
+  }
+
+  getPlayersIds() {
+    this.gameService.playerId1 = this.authService.getLoggedInUserId();
+    this.socket.emit("requestOpponentId", this.gameService.playerId1);
+    
+    this.socket.on('opponentId', (opponent :{userId :number, isToStart :boolean}) => {
+      
+      this.gameService.playerId2 = opponent.userId; 
+      this.gameService.isToStart = opponent.isToStart; 
+
+      this.router.navigate(['/game']);
+      this.loadingService.hideLoading();
+
+    });
+
   }
 
 }

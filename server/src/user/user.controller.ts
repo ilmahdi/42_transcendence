@@ -38,6 +38,12 @@ export class UserController {
         };
         
     }
+    @Get("short-data/:userId")
+    @UseGuards(JwtGuard)
+    getUserDataShort(@Param('userId') userId: number) : any {
+      const users = this.userService.getUserDataShort(userId);
+      return users;
+    }
 
     // @UseGuards(JwtGuard)
     @Get("friend-list/:userId")

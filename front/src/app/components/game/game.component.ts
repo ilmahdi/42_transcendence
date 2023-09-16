@@ -3,8 +3,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { PaddleComponent } from './paddle/paddle.component';
 import { BoardComponent } from './board/board.component';
 import { BallComponent } from './ball/ball.component';
-import { IPlayer } from 'src/app/utils/interfaces/history.interface';
-import { ActivatedRoute } from '@angular/router';
+import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
+import { UserService } from 'src/app/services/user.service';
+import { GameService } from 'src/app/services/game.service';
+import { CustomSocket } from 'src/app/utils/socket/socket.module';
 
 @Component({
   selector: 'app-game',
@@ -14,30 +16,31 @@ import { ActivatedRoute } from '@angular/router';
 export class GameComponent implements AfterViewInit {
 
   constructor(
-    private route: ActivatedRoute,
     private authService :AuthService,
     private elementRef: ElementRef,
     private renderer: Renderer2,
+    private userService: UserService,
+    private gameService : GameService,
+    private socket: CustomSocket,
   ) {
 
-    this.authService.setAuthenticated(false)
+    this.authService.setAuthenticated(false);
+    this.loggedInUserId  = this.authService.getLoggedInUserId();
+
   }
 
   public canvas!: HTMLCanvasElement;
   public ctx!: CanvasRenderingContext2D;
-  public player1: IPlayer = {
-    username : "ilmahd",
+  public loggedInUserId :number;
+  public player1: IUserDataShort = {
+    username : "",
     avatar : "",
-    rating: 1254,
-    score: 10,
-    points: 0,
+    rating: 0,
   };
-  public player2: IPlayer = {
-    username : "ilmahd",
+  public player2: IUserDataShort = {
+    username : "",
     avatar : "",
-    rating: 1254,
-    score: 10,
-    points: 0,
+    rating: 0,
   };
   private isGameStarted :boolean = false;
 
@@ -49,24 +52,28 @@ export class GameComponent implements AfterViewInit {
 
   ngOnInit() {
 
+    this.getUserData(this.gameService.playerId1);
+    this.getUserData(this.gameService.playerId2);
+
     this.canvas = this.elementRef.nativeElement.querySelector('canvas#gameCanvas');
     this.ctx = this.canvas.getContext('2d')!;
+
   }
 
   ngAfterViewInit(): void {
 
-    const subscription = this.route.params.subscribe(params => {
-      const mapIndex = params['mapId'] - 1;
-      this.ball.adaptMap(mapIndex);
-      this.gameBoard.adaptMap(mapIndex);
-      this.player1Paddle.adaptMap(mapIndex);
-      this.player2Paddle.adaptMap(mapIndex);
-    });
-
     this.setCanvas();
+    if (this.gameService.isToStart) {
 
-    this.setCanvasBackgroundColor();
-    this.gameBoard.drawPlayButton()
+      this.setCanvasBackgroundColor();
+      this.gameBoard.drawPlayButton()
+    }
+    else {
+      this.displayFrame();
+        this.socket.on('startGame', () => {
+        this.render();
+      });
+    }
 
     this.canvas.addEventListener('click', this.handleCanvasClick.bind(this));
 
@@ -95,12 +102,9 @@ export class GameComponent implements AfterViewInit {
     ) {
       this.isGameStarted = true;
       this.render();
+      this.emitStartGame();
     }
   }
-
-
-
-
 
 
 
@@ -111,17 +115,12 @@ export class GameComponent implements AfterViewInit {
   private render(): void {
    
     this.player1Paddle.updateOnKeyDown();
+    this.emitPaddleMove();
     // this.player1Paddle.updateBoot();
-    this.player2Paddle.updateBoot();
+    this.player2Paddle.updateOpponentPaddle();
     this.ball.updatePosition();
 
-    this.setCanvasBackgroundColor();
-    this.gameBoard.drawDashedLine();
-    this.ball.drawBall()
-    this.player1Paddle.dispalyScore()
-    this.player2Paddle.dispalyScore()
-    this.player1Paddle.drawPaddle();
-    this.player2Paddle.drawPaddle();
+    this.displayFrame();
 
     requestAnimationFrame(() => this.render());
   }
@@ -167,7 +166,57 @@ export class GameComponent implements AfterViewInit {
     
   }
 
+  getUserData(userId: number) {
+    if (userId){
 
+      this.userService.getUserDataShort2(userId).subscribe({
+        next: (response :IUserDataShort) => {
+
+          if (userId === this.gameService.playerId1)
+            this.player1 = response;
+          else if (userId === this.gameService.playerId2)
+            this.player2 = response;
+      },
+      error: error => {
+        console.error('Error:', error.error.message); 
+      }
+    });
+    }
+
+  }
+
+  private displayFrame() {
+
+    this.setCanvasBackgroundColor();
+    this.gameBoard.drawDashedLine();
+    this.ball.drawBall()
+    this.player1Paddle.dispalyScore()
+    this.player2Paddle.dispalyScore()
+    this.player1Paddle.drawPaddle();
+    this.player2Paddle.drawPaddle();
+
+  }
+
+  private emitStartGame() {
+    const opponentId = this.loggedInUserId === this.player1.id ? this.player2.id : this.player1.id;
+
+    this.socket.emit("startGame", opponentId);
+  }
+  private emitPaddleMove() {
+    const opponentId = this.loggedInUserId === this.player1.id ? this.player2.id : this.player1.id;
+
+    this.socket.emit("paddleMove", {
+      userId: opponentId, 
+      paddle: {
+        y: this.player1Paddle.y 
+      } 
+    });
+  }
+
+  ngOnDestroy(): void {
+    
+    this.socket.emit("endGame", this.loggedInUserId);
+  }
   
 
   

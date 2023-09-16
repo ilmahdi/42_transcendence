@@ -13,7 +13,7 @@ export class CustomizeGameComponent {
   @Output() closeMeEvent = new EventEmitter();
   @Output() confirmEvent = new EventEmitter();
 
-  public mapId :number = 1;
+  public mapId :number = 0;
 
   onImgClick(id :number) {
     this.mapId = id;

@@ -8,6 +8,7 @@ import { CreateUserDto } from "./utils/dtos/create-user.dto";
 import { TokenService } from "src/common/services/token.service";
 import { FrinedshipDto } from "./utils/dtos/friendship.dto";
 import { FriendshipStatus } from "@prisma/client";
+import { UserDataShort } from "./utils/interfaces/user-data.interface";
 
 @Injectable()
 export class UserService {
@@ -65,6 +66,22 @@ export class UserService {
             },
         })
         return users;
+    }
+    async getUserDataShort(userId :number) : Promise<UserDataShort> {
+        const user :UserDataShort = await this.prismaService.userAccount.findUnique({
+            select: {
+                id: true,
+                username: true,
+                avatar: true,
+                rating: true,
+            },
+            where: {
+                id: userId,
+            },
+        })
+        if (!user)
+            throw new HttpException('User not found', HttpStatus.CONFLICT);
+        return user;
     }
 
     async findFiendList(userId :number) {

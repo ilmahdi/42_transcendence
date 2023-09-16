@@ -3,6 +3,7 @@ import { BoardComponent } from '../board/board.component';
 import { BallComponent } from '../ball/ball.component';
 import { initial } from 'lodash';
 import { GameService } from 'src/app/services/game.service';
+import { CustomSocket } from 'src/app/utils/socket/socket.module';
 
 @Component({
   selector: 'app-paddle',
@@ -13,7 +14,9 @@ export class PaddleComponent implements OnInit{
 
   constructor(
     private gameService : GameService,
+    private socket: CustomSocket,
   ) {
+    this.adaptMap();
   }
 
   public x = 10; 
@@ -40,6 +43,7 @@ export class PaddleComponent implements OnInit{
   ngAfterViewInit(): void {
     this.adaptePaddleSize();
     this.adaptePaddleSide();
+    this.initPaddlePosition();
   }
   
   public drawPaddle() {
@@ -58,6 +62,10 @@ export class PaddleComponent implements OnInit{
     if (this.isOwnPaddle) {
       this.x = this.gameBoard.width - this.initialX - this.width;
     }
+  }
+
+  private initPaddlePosition() {
+    this.y = (this.gameBoard.height / 2) - (this.height / 2);
   }
 
   public onMouseMove(event: MouseEvent): void {
@@ -88,6 +96,12 @@ export class PaddleComponent implements OnInit{
     else if (this.y + this.height > this.canvas.height) {
       this.y = this.canvas.height - this.height - this.paddleMargin;
     }
+  }
+
+  public updateOpponentPaddle() {
+    this.socket.on('paddleMove', (paddle :{y :number}) => {
+      this.y = paddle.y;
+    });
   }
 
 
@@ -140,9 +154,9 @@ export class PaddleComponent implements OnInit{
     this.ctx.fillText(this.score.toString(), posX, this.gameBoard.height / 6);
 
   }
-  public adaptMap(mapIndex :number) {
+  public adaptMap() {
 
-    this.color = this.gameService.maps[mapIndex].paddleColor;
+    this.color = this.gameService.maps[this.gameService.mapIndex].paddleColor;
   }
 
 }

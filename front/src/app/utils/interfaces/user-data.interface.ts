@@ -16,4 +16,6 @@ export interface IUserDataShort {
     ft_id?:number;
     username?:string,
     avatar?: string,
+    rating?: number,
+
 }

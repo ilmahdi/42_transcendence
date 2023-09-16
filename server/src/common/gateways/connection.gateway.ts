@@ -20,7 +20,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
 
   connectedUsersBySocket: { [socketId: string]: string } = {}; 
   connectedUsersById: { [userId: string]: string[] } = {}; 
-  userUserListeners: { [userId: string]: string[] } = {}; 
+  userUserListeners: { [userId: string]: string[] } = {};
 
 
   handleConnection(client: Socket) {

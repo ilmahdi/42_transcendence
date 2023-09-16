@@ -13,6 +13,7 @@ export class BallComponent implements OnInit{
   constructor(
     private gameService : GameService,
   ) {
+    this.adaptMap();
   }
 
   public x = 0; 
@@ -60,8 +61,11 @@ export class BallComponent implements OnInit{
   }
   public async updatePosition() {
     if (this.isBallOut) {
-
+      if (this.gameService.isToStart)
       this.x += this.velocityX;
+      if (!this.gameService.isToStart)
+      this.x -= this.velocityX;
+      
       this.y += this.velocityY;
     }
     
@@ -150,6 +154,9 @@ export class BallComponent implements OnInit{
     this.velocityX = direction * Math.cos(bounceAngle) * this.speed;
     this.velocityY = Math.sin(bounceAngle) * this.speed;
 
+    // if (!this.gameService.isToStart)
+    //   this.velocityX *= -1;
+
   }
   
 
@@ -162,23 +169,27 @@ export class BallComponent implements OnInit{
 
     this.x = this.gameBoard.width / 2;
     this.y = this.gameBoard.height / 2;
+
   }
 
   private getInitialVelocity() {
 
-    const randAngle = (Math.random() - 0.5) * 2 * (Math.PI / 6);
+    const randAngle = (1 - 0.5) * 2 * (Math.PI / 6);
     
     this.velocityX = Math.abs(Math.cos(randAngle)) * this.speed * 0.6;
     this.velocityY = Math.sin(randAngle) * this.speed * 0.6;
+
+    // if (!this.gameService.isToStart)
+    //   this.velocityX *= -1;
   }
 
   public adapteBallSize() {
     this.r = this.gameBoard.width / 60;
   }
 
-  public adaptMap(mapIndex :number) {
+  public adaptMap() {
     
-    this.color = this.gameService.maps[mapIndex].ballColor;
+    this.color = this.gameService.maps[this.gameService.mapIndex].ballColor;
   }
 
 

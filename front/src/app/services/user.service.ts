@@ -28,6 +28,9 @@ export class UserService {
   getUserDataShort () : Observable<IUserDataShort> {
     return this.http.get<IUserDataShort>(`${this.apiUrl}/api/user/short` ,this.getHeaders());
   }
+  getUserDataShort2 (userId :number) : Observable<IUserDataShort> {
+    return this.http.get<IUserDataShort>(`${this.apiUrl}/api/user/short-data/${userId}` ,this.getHeaders());
+  }
   getUserDataByUsername (username :string) : Observable<IUserData> {
     return this.http.get<IUserData>(`${this.apiUrl}/api/user/data/${username}` ,this.getHeaders());
   }

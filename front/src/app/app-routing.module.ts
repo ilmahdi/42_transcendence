@@ -29,7 +29,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'game/:mapId',
+    path: 'game',
     loadChildren: () =>
     import('./components/game/game.module').then((m) => m.GameModule),
     canActivate: [AuthGuard],
