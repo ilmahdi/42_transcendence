@@ -33,7 +33,6 @@ export class ChatGateway{
   handlePrivateMessage(client: Socket, data: any) {
     
     this.privateChatService.saveMessage(data.message)
-    console.log(data.message);
     const senders = this.connectionGateway.connectedUsersById[data.message.senderId]
       if (senders)
         senders.forEach(id=>{
@@ -70,8 +69,19 @@ export class ChatGateway{
   @SubscribeMessage('getNotReadedMessages')
   async getNotReadedMessages(client:Socket, id:number) {
     const data = await this.privateChatService.getUnreadMessageCountsBySenderId(id)
-      this.server.to(client.id).emit('recNotReadedMessages', data)
-    
+    this.server.to(client.id).emit('recNotReadedMessages', data)
+  }
+
+  @SubscribeMessage('chatNotif')
+  async getChatNotification(client:Socket, data:{id:number, open:boolean}) {
+    const notif = await this.privateChatService.getUnreadMessageCountsBySenderId(data.id)
+    const senders = this.connectionGateway.connectedUsersById[data.id]
+    if (senders) {
+      const value = {num:notif.length, open:data.open}
+      senders.forEach(id=>{
+        this.server.to(id).emit('chatNotif', value);
+      })
+    }
   }
 
   ////////////////////////// ROOMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

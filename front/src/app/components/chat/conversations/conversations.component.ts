@@ -118,6 +118,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
         if (friend.id === this.userEmitted[0].id && friend.username === this.userEmitted[0].username) {
           this.chatService.sendNewMessage(msg, this.userEmitted[0])
           this.msg.reset();
+          this.chatService.sendToGetChatNotif(this.userEmitted[0].id, false)
           return;
         }
       })

@@ -273,6 +273,15 @@ export class ChatService {
     return this.socket.fromEvent<boolean>('recReadSignal');
   }
 
+  sendToGetChatNotif(id:number, open:boolean) {
+    const data = {id:id, open:open}
+    this.socket.emit('chatNotif', data)
+  }
+
+  getChatNotif() {
+    return this.socket.fromEvent<{num:number, open:boolean}>('chatNotif')
+  }
+
   token:string|null = localStorage.getItem('token');
   
   private httpOptions: { headers: HttpHeaders } = {

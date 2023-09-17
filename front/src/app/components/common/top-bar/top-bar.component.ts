@@ -48,11 +48,15 @@ export class TopBarComponent implements OnInit {
     });
     this.getNotifications();
 
-    // this.chatService.sendToGetNotReadedMessages(this.userId);
-    this.chatService.getNotReadedMessages().subscribe(data=>{
-      console.log("SAAD");
+    // this.chatService.sendToGetChatNotif(this.userId, false)
+    // this.socket.on('chatNotif', (data:any) => {
+    //   if (!data.open)
+    //     this.chatNotif = data.num;
+    //   else
+    //     this.chatNotif = 0;
+    // })
+    this.chatService.getNewMessage().subscribe(message=> {
       
-      this.chatNotif = data.length;
     })
   }
 

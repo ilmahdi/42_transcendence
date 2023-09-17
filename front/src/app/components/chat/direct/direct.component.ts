@@ -95,6 +95,7 @@ export class DirectComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getfriendList();
+    this.chatService.sendToGetChatNotif(this.userId!, true);
     // const subs1:Subscription = this.chatService.users$.subscribe(data=> {
     //   this.users = [];
     // })
