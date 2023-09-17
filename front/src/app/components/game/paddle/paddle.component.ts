@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { BoardComponent } from '../board/board.component';
 import { BallComponent } from '../ball/ball.component';
-import { initial } from 'lodash';
 import { GameService } from 'src/app/services/game.service';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
 
@@ -159,4 +158,9 @@ export class PaddleComponent implements OnInit{
     this.color = this.gameService.maps[this.gameService.mapIndex].paddleColor;
   }
 
+  ngOnDestroy(): void {
+
+    this.socket.removeAllListeners('paddleMove');
+
+  }
 }

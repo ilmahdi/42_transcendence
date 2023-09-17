@@ -25,7 +25,7 @@ export class BallComponent implements OnInit{
   private color = '#ED5252';
   
   private isBallSkiped : boolean = false;
-  private isBallOut : boolean = true;
+  private isBallIn : boolean = true;
 
 
   @Input() ctx!: CanvasRenderingContext2D;
@@ -59,13 +59,10 @@ export class BallComponent implements OnInit{
     this.ctx.fill();
 
   }
-  public async updatePosition() {
-    if (this.isBallOut) {
-      if (this.gameService.isToStart)
+  public updatePosition() {
+    if (this.isBallIn) {
+
       this.x += this.velocityX;
-      if (!this.gameService.isToStart)
-      this.x -= this.velocityX;
-      
       this.y += this.velocityY;
     }
     
@@ -73,7 +70,7 @@ export class BallComponent implements OnInit{
       this.velocityY = - this.velocityY
     else if (this.x - this.r > this.canvas.width || this.x + this.r < 0) {
 
-      this.isBallOut = false;
+      this.isBallIn = false;
       this.initBallPosition()
       this.getInitialVelocity();
     }
@@ -154,9 +151,6 @@ export class BallComponent implements OnInit{
     this.velocityX = direction * Math.cos(bounceAngle) * this.speed;
     this.velocityY = Math.sin(bounceAngle) * this.speed;
 
-    // if (!this.gameService.isToStart)
-    //   this.velocityX *= -1;
-
   }
   
 
@@ -164,7 +158,7 @@ export class BallComponent implements OnInit{
 
     setTimeout(() => {
       this.isBallSkiped = false;
-      this.isBallOut = true;
+      this.isBallIn = true;
     }, 200); 
 
     this.x = this.gameBoard.width / 2;
@@ -173,14 +167,12 @@ export class BallComponent implements OnInit{
   }
 
   private getInitialVelocity() {
-
-    const randAngle = (1 - 0.5) * 2 * (Math.PI / 6);
     
-    this.velocityX = Math.abs(Math.cos(randAngle)) * this.speed * 0.6;
-    this.velocityY = Math.sin(randAngle) * this.speed * 0.6;
+    this.velocityX = this.speed * 0.6;
+    this.velocityY = 0;
 
-    // if (!this.gameService.isToStart)
-    //   this.velocityX *= -1;
+    if (this.gameService.isToStart)
+      this.velocityX *= -1;
   }
 
   public adapteBallSize() {

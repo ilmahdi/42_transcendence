@@ -76,12 +76,13 @@ export class HomeComponent implements OnInit {
   getPlayersIds() {
     this.gameService.playerId1 = this.authService.getLoggedInUserId();
     this.socket.emit("requestOpponentId", this.gameService.playerId1);
+
     
     this.socket.on('opponentId', (opponent :{userId :number, isToStart :boolean}) => {
       
       this.gameService.playerId2 = opponent.userId; 
       this.gameService.isToStart = opponent.isToStart; 
-
+      
       this.router.navigate(['/game']);
       this.loadingService.hideLoading();
 
