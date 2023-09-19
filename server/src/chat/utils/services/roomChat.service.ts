@@ -212,6 +212,13 @@ export class RoomChatService {
       }
   
       async joinRoom(userId: number, room: Room): Promise<void> {
+        // CHECK IF THE ROOM TYPE HAS NOT BEEN CHANGED BEFORE JOINING
+        let actualRoom = await this.prismaService.room.findFirst({
+          where: {id: room.id}
+        })
+        if (actualRoom.type !== room.type)
+          return
+
         if (room.type === RoomType.PUBLIC) {
           const users: number[] = [...room.usersId, userId]; // Add the userId to the existing users
           await this.prismaService.room.update({
@@ -224,6 +231,13 @@ export class RoomChatService {
       }
 
     async joinProtected(id:number, room:Room, password:string) {
+      // CHECK IF THE ROOM TYPE HAS NOT BEEN CHANGED BEFORE JOINING
+      let actualRoom = await this.prismaService.room.findFirst({
+        where: {id: room.id}
+      })
+      if (actualRoom.type !== room.type)
+        return
+
       const isPasswordValid = this.comparePasswords(password, room.password);
       if (isPasswordValid) {
         room.usersId.push(id);
@@ -266,7 +280,7 @@ export class RoomChatService {
       await this.prismaService.room.update({
         where: {id:room.id},
         data:
-          {id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath}
+          {id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath, muteIds: room.muteIds}
       });
     }
 }

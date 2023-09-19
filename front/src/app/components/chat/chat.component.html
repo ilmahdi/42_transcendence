@@ -32,7 +32,7 @@
         <app-conversations *ngIf="smallScreen" [userEmitted]="userEvent" [roomConvers]="roomData"></app-conversations>
         
         <app-creating-rooms *ngIf="addRoom"></app-creating-rooms>
-        <app-other-rooms></app-other-rooms>
+        <app-other-rooms *ngIf="otherRooms"></app-other-rooms>
         <app-room-options *ngIf="options"></app-room-options>
         <app-add-member *ngIf="addMember"></app-add-member>
     </div>

@@ -6,7 +6,7 @@
         <span id="private" [style.backgroundColor]="type==='PRIVATE'? '#D38146':''" (click)="changeType('private')"><p id="typeName">Private</p></span>
         <h5 id="changePass" *ngIf="type==='PROTECTED'">Change the password:</h5>
         <form *ngIf="type==='PROTECTED'" [formGroup]="form">
-            <input type="password" placeholder="New password" formControlName="password">
+            <input id="password" type="password" placeholder="New password" formControlName="password">
         </form>
         <br>
         <h5 id="membersTitle" [style.top]="type==='PROTECTED'? '75px' :''">Members</h5>
@@ -14,10 +14,20 @@
 
     <br>
     <div class="members" [style.height]="type==='PROTECTED'? 'calc(100% - 290px)':''">
-        <div *ngFor="let user of members" (click)="clickOnMember(user)">
-            <div class="user" [style.backgroundColor]="user.click? '#D38146':''" [style.width]="(user.click && user.type === 'user')? '65%':'80%'">
+        <div *ngFor="let user of members" >
+            <div class="user" [style.backgroundColor]="user.click? '#D38146':''" (click)="clickOnMember(user)" [style.width]="(user.click && user.type === 'user')? '45%':'80%'">
                 <div class="addAdmin" *ngIf="user.click && user.type === 'user'" (click)="addAdmin(user)" [style.backgroundColor]="user.admin? '#D38146':''"><p style="text-align: center;margin-top: 3px;">Admin</p></div>
                 <div class="remove" *ngIf="user.click && user.type === 'user'" (click)="removeMember(user)" [style.backgroundColor]="user.removed?'#D38146':''"><p style="text-align: center;margin-top: 3px;">Remove</p></div>
+                <div class="mute" *ngIf="user.click && user.type === 'user'" (click)="muting(user)" [style.backgroundColor]="user.mute?'#D38146':''">
+                    <p style="text-align: center;margin-top: 3px;">Mute</p>
+                    <!-- <form> -->
+                    <!-- </form> -->
+                </div>
+                <div class="saad" (click)="saad(user)" >
+                    <form [formGroup]="form">
+                        <input type="number" id="mutingTime" min="0" max="100" step="1" placeholder="Minutes" formControlName="mute" *ngIf="user.mute">
+                    </form>
+                </div>
                 <img [src]="user.user.avatar" alt="avatar" id="img">
                 <p id="username">{{user.user.username}}</p>
                 <p id="type">{{user.type}}</p>

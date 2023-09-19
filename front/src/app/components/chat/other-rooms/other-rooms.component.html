@@ -2,9 +2,7 @@
     <div class="fa fa-angle-double-left"  (click)="hideOtherRooms()"></div>
     <div class="search">
         <div style="width: 280px;margin-top: 10px;">
-            <form [formGroup]="search">
-                <input type="text" formControlName="search" id="searchInput" placeholder="Search..." [(ngModel)]="searchQuery" (ngModelChange)="searchQueryRooms()">
-            </form>
+            <input type="text" id="searchInput" placeholder="Search..." [(ngModel)]="searchQuery" (ngModelChange)="searchQueryRooms()">
         </div>
     </div>
 
@@ -20,6 +18,6 @@
         </form>
         <p id="name">{{room.name}}</p>
         <p id="type" *ngIf="!(protectSelect && room === roomWaitForPassword)">{{room.type}}</p>
-        <img [src]="'http://localhost:3000/api/chat/image/' + room.imagePath">
+        <img [src]="room.imagePath">
     </div>
 </div>

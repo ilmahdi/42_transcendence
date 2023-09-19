@@ -49,23 +49,25 @@
 
         <div class="messages" #scrollContainer>
             <div *ngFor="let message of roomMessage">
-                <!-- <br> -->
-                <div *ngFor="let msg of lateRoomMessage">
-                    <div class="time" *ngIf="msg.late && msg.msg === message">{{msg.time}}</div>
-                </div>
-                <div *ngIf="message.senderId === userId" class="sentMessage">
-                    {{message.message}}
-                </div>
-                <div *ngFor="let user of users">
-                    <div class="username" *ngIf="userId !== message.senderId && user.id !== userId">{{user.username}}</div>
-                    <div class="senderImg" *ngIf="userId !== message.senderId && user.id !== userId">
-                        <img [src]="user.avatar" alt="avatar">
+                <div *ngIf="!bannedUser(message)">
+                    <!-- <br> -->
+                    <div *ngFor="let msg of lateRoomMessage">
+                        <div class="time" *ngIf="msg.late && msg.msg === message">{{msg.time}}</div>
                     </div>
+                    <div *ngIf="message.senderId === userId" class="sentMessage">
+                        {{message.message}}
+                    </div>
+                    <div *ngFor="let user of users">
+                        <div class="username" *ngIf="userId !== message.senderId && user.id !== userId">{{user.username}}</div>
+                        <div class="senderImg" *ngIf="userId !== message.senderId && user.id !== userId">
+                            <img [src]="user.avatar" alt="avatar">
+                        </div>
+                    </div>
+                    <div *ngIf="message.senderId !== userId" class="receivedMessage" style="left:50px;margin-top: -10px;">
+                        {{message.message}}
+                    </div>
+                    <br>
                 </div>
-                <div *ngIf="message.senderId !== userId" class="receivedMessage" style="left:50px;margin-top: -10px;">
-                    {{message.message}}
-                </div>
-                <br>
             </div>
         </div>
 

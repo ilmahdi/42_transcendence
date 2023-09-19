@@ -42,8 +42,8 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     
     this.userId = this.authService.getLoggedInUserId();
 
-    const subs:Subscription = chatService.displayConversation$.subscribe(data=>this.displayConversation = data)
-    this.subsciptions.push(subs)
+    const subs1:Subscription = chatService.displayConversation$.subscribe(data=>this.displayConversation = data)
+    this.subsciptions.push(subs1)
   }
 
   ngOnInit() {
@@ -141,6 +141,8 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
         this.chatService.sendRoomMessage(this.userId!, this.roomConvers[0], msg);
         this.msg.reset();
       }
+      else 
+        this.chatService.displayComponents(false, false, false, true, true, false, false);
     })
     this.msg.reset();
   }
@@ -149,6 +151,12 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     if (this.myScrollContainer) {
       this.myScrollContainer!.nativeElement.scrollTop = this.myScrollContainer?.nativeElement.scrollHeight
     }
+  }
+
+  bannedUser(message:Message) {
+    if (!this.roomConvers[0].usersId.includes(message.senderId))
+      return true
+    return false;
   }
 
   clickOnConversation() {

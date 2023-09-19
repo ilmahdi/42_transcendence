@@ -12,6 +12,7 @@ import { PrivateChatService } from './utils/services/privateChat.service';
 import { RoomChatService } from './utils/services/roomChat.service';
 import { JwtGuard } from 'src/auth/utils/guards/jwt.guard';
 import { ConnectionGateway } from 'src/common/gateways/connection.gateway';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @WebSocketGateway({cors: {origin: 'http://localhost:4200'}})
 export class ChatGateway{
@@ -26,6 +27,7 @@ export class ChatGateway{
     private authService:AuthService,
     private userService:UserService,
     private readonly connectionGateway :ConnectionGateway,
+    private prismaService:PrismaService
     ) {
   }
 
@@ -108,11 +110,17 @@ export class ChatGateway{
     this.privateChatService.saveMessage(data.message);
     let usersId:(number[]) = data.room.usersId;
     usersId.forEach(id=> {
-      this.userService.getUserById(id).subscribe(user=>{
+      this.userService.getUserById(id).subscribe(async user=>{
 
-        this.connectionGateway.connectedUsersById[user.id].forEach(id=>{
-          this.server.to(id).emit('recRoomMessage', data.message);
+        // CHECK IF THE USER IS ACTUALLY EXIST IN THE ROOM BEFORE GETING THE MESSAGE
+        let actualRoom:Room = await this.prismaService.room.findFirst({
+          where: {id :data.room.id}
         })
+        if (actualRoom.usersId.includes(id)) {
+          this.connectionGateway.connectedUsersById[user.id].forEach(id=>{
+            this.server.to(id).emit('recRoomMessage', data.message);
+          })
+        }
       })
     })
   }

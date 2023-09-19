@@ -76,7 +76,7 @@ h4 {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-input {
+#password {
     position: relative;
     width: 50%;
     height: 40px;
@@ -109,7 +109,7 @@ input {
     margin-top: 10px;
     margin-left: 10%;
     height: 80px;
-    width: 80%;
+    /* width: 80%; */
     border-radius: 10px;
     background-color: #201717;
     cursor: pointer;
@@ -159,6 +159,44 @@ input {
     border-radius: 10px;
     transition: 0.5s;
     margin-top: 40px;
+    color: white;
+}
+
+.mute {
+    height: 36px;
+    width: 20%;
+    background-color: #201717;;
+    position: absolute;
+    right: 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+    margin-top: 0px;
+    margin-right: 21%;
+    color: white;
+}
+
+#mutingTime {
+    position: absolute;
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    margin-left: 2px;
+    text-indent: 10px;
+    border-radius: 10px;
+    background-color: #584747;
+    color: #9D8686;
+}
+
+.saad {
+    height: 36px;
+    width: 20%;
+    position: absolute;
+    right: 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+    margin-top: 40px;
+    margin-right: 21%;
     color: white;
 }
 

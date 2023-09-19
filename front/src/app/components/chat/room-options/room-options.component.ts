@@ -17,13 +17,14 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
 
   userId?:number;
   room:Room = {}
-  members:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean}[] = []
-  form = new FormGroup({password:new FormControl});
+  members:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean}[] = []
+  form = new FormGroup({password:new FormControl, mute:new FormControl<string[]>([])});
   type?:RoomType
   clickOnUser:{user:IUserDataShort, click:boolean}[] = [];
   newAdminsId:number[] = []
   removedId:number[] = []
   isAdmin:boolean = false
+  muteDuring:number = 0
 
   constructor(private chatService:ChatService, private authService:AuthService) {
     this.userId = this.authService.getLoggedInUserId();
@@ -46,7 +47,7 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.members = []
       users.forEach(user=> {
         if (user.user.id !== this.userId)
-          this.members.push({user:user.user, type:user.type, click:false, admin:false, removed:false})
+          this.members.push({user:user.user, type:user.type, click:false, admin:false, removed:false, mute:false})
       })
     })
     this.subscriptions.push(subs2)
@@ -61,28 +62,41 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.type = RoomType.PRIVATE
   }
 
-  clickOnMember(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean}) {
+  clickOnMember(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean}) {
     member.click = !member.click
+    // member.mute = !member.mute
   }
 
-  addAdmin(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean}) {
+  addAdmin(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean}) {
     if (this.room.adminId?.includes(member.user.id!)) return
     member.click = !member.click
     member.admin = !member.admin
+    member.removed = false
     if (member.admin)
       this.newAdminsId.push(member.user.id!)
     else
       this.newAdminsId = this.newAdminsId.filter(id=> id !== member.user.id)
   }
 
-  removeMember(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean}) {
+  removeMember(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean}) {
     if (this.room.adminId?.includes(member.user.id!)) return
     member.click = !member.click
     member.removed = !member.removed
+    member.admin = false
     if (member.removed)
       this.removedId.push(member.user.id!)
     else
       this.removedId = this.removedId.filter(id=> id !== member.user.id)
+  }
+
+  muting(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean}) {
+    member.click = !member.click;
+    member.mute = !member.mute
+  }
+
+  saad(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean}) {
+    member.click = !member.click;
+
   }
 
   saveRoom() {
@@ -94,18 +108,16 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
     })
     if (this.form.value.password) {
       this.room.password = this.form.value.password;
-      this.chatService.roomOptionsSource.next(this.room)////////////
-      this.chatService.sendToGetRoomMembers(this.room);
-      this.chatService.updateRoom(this.room);
-      this.chatService.displayComponents(false, true, false, true, false, false, false)
     }
-    else if (this.type !== RoomType.PROTECTED) {
-      const data = this.room
-      this.chatService.roomOptionsSource.next(this.room)////////////
-      this.chatService.sendToGetRoomMembers(this.room);
-      this.chatService.updateRoom(this.room);
-      this.chatService.displayComponents(false, true, false, true, false, false, false)
+    if (this.form.value.mute) {
+      // --------------------------------------------------------
+      console.log(this.form.value.mute);
+      // --------------------------------------------------------
     }
+    this.chatService.roomOptionsSource.next(this.room)////////////
+    this.chatService.sendToGetRoomMembers(this.room);
+    this.chatService.updateRoom(this.room);
+    this.chatService.displayComponents(false, true, false, true, false, false, false)
   }
 
   addMembers() {

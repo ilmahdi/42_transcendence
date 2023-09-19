@@ -163,4 +163,5 @@ model Room {
   type      RoomType  @default(PUBLIC)
   password  String?
   imagePath String
+  muteIds   String[]  @default([]) // Prisma uses arrays natively for integer arrays
 }

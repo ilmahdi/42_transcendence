@@ -15,7 +15,6 @@ export class OtherRoomsComponent implements OnInit, OnDestroy{
   private subscriptions:Subscription[] = []
 
   password = new FormGroup({password: new FormControl})
-  search = new FormGroup({search: new FormControl})
   allRooms:Room[] = []
   protectSelect:boolean = false;
   userId?:number
@@ -40,7 +39,7 @@ export class OtherRoomsComponent implements OnInit, OnDestroy{
     const subs1:Subscription = this.chatService.getOtherRooms().subscribe(data=>{
       this.allRooms = []
       data.forEach(room=>{
-        if (!room.usersId?.includes(this.userId!))
+        if (!room.usersId?.includes(this.userId!) && room.type !== RoomType.PRIVATE)
           this.allRooms.push(room)
       })
       this.chatService.otherRoomSource.next(this.allRooms)

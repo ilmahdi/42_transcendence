@@ -26,6 +26,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   displayConvers:boolean = false;
   options:boolean = false
   addMember:boolean = false
+  otherRooms:boolean = false
 
   userId?:number
   addRoom:boolean = false
@@ -65,6 +66,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     const subs3:Subscription = this.chatService.addMember$.subscribe(data=>this.addMember = data)
     this.subscriptions.push(subs3)
+
+    const subs4:Subscription = this.chatService.displayOtherRooms$.subscribe(data=>this.otherRooms = data)
+    this.subscriptions.push(subs4)
   }
 
   onResize() {
