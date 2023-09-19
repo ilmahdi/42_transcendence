@@ -3,6 +3,7 @@ import { BoardComponent } from '../board/board.component';
 import { BallComponent } from '../ball/ball.component';
 import { GameService } from 'src/app/services/game.service';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-paddle',
@@ -27,7 +28,8 @@ export class PaddleComponent implements OnInit{
   private paddleMargin = 2;
   private keysPressed: { [key: string]: boolean } = {};
   private level :number = 0.1;
-  private initialX :number = 10;
+  public initialX :number = 10;
+  private keyLoop :any | null = null;
 
   @Input() ctx!: CanvasRenderingContext2D;
   @Input() gameBoard!: BoardComponent;
@@ -46,7 +48,6 @@ export class PaddleComponent implements OnInit{
   }
   
   public drawPaddle() {
-
     this.ctx.fillStyle = this.color;
 
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -79,22 +80,30 @@ export class PaddleComponent implements OnInit{
     if (this.y + this.height > this.canvas.height) {
       this.y = this.canvas.height - this.height - this.paddleMargin;
     }
+
+    this.emitPaddleMove();
   }
   public updateOnKeyDown(): void {
 
-    if (this.keysPressed['ArrowUp']) {
-      this.y -= 10;
-    }
-    if (this.keysPressed['ArrowDown']) {
-      this.y += 10;
-    }
+    
+    this.keyLoop = setInterval(() => {
 
-    if (this.y < 0) {
-      this.y = this.paddleMargin;
-    }
-    else if (this.y + this.height > this.canvas.height) {
-      this.y = this.canvas.height - this.height - this.paddleMargin;
-    }
+      if (this.keysPressed['ArrowUp']) {
+        this.y -= 10;
+      }
+      if (this.keysPressed['ArrowDown']) {
+        this.y += 10;
+      }
+
+      if (this.y < 0) {
+        this.y = this.paddleMargin;
+      }
+      else if (this.y + this.height > this.canvas.height) {
+        this.y = this.canvas.height - this.height - this.paddleMargin;
+      }
+
+      this.emitPaddleMove();
+    }, 17);
   }
 
   public updateOpponentPaddle() {
@@ -106,10 +115,16 @@ export class PaddleComponent implements OnInit{
 
   public onKeyDown(event: KeyboardEvent): void {
     this.keysPressed[event.key] = true;
-  }
+    if (!this.keyLoop)
+      this.updateOnKeyDown()
+}
 
   public onKeyUp(event: KeyboardEvent): void {
-    this.keysPressed[event.key] = false;
+  if (this.keyLoop) {
+    clearInterval(this.keyLoop);
+    this.keyLoop = null;
+  }
+  this.keysPressed[event.key] = false;
   }
 
 
@@ -157,7 +172,21 @@ export class PaddleComponent implements OnInit{
 
     this.color = this.gameService.maps[this.gameService.mapIndex].paddleColor;
   }
-
+  
+  
+  private emitPaddleMove() {
+    
+    this.socket.emit("paddleMove", {
+      userIds: {
+        player1Id: this.gameService.playerId1,
+        player2Id: this.gameService.playerId2,
+      }, 
+      paddle: {
+        y: this.y 
+      } 
+    });
+  }
+  
   ngOnDestroy(): void {
 
     this.socket.removeAllListeners('paddleMove');

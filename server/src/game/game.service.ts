@@ -44,13 +44,14 @@ class GameInstance {
   }
 
   private gameLoopInterval: NodeJS.Timeout | null = null;
-  private tickRate = 1000 / 60; // 60 FPS
+  private tickRate = 17; // 60 FPS
 
   public board :Board = new Board();
   public ball :Ball = new Ball();
   public player1 :string;
   public player2 :string;
   public paddles: { [userId: string]: Paddle } = {}; 
+  private currentTime :number;
 
   initPaddles(userId :string, isRightPaddle :boolean) {
 
@@ -68,8 +69,7 @@ class GameInstance {
   }
   initBall () {
 
-    this.ball.velocityY = 0;
-    this.ball.velocityX = this.ball.speed * 0.6;
+    this.getInitialVelocity();
     this.ball.r = this.board.width / 60;
     this.ball.x = this.board.width / 2;
     this.ball.y = this.board.height / 2;
@@ -77,11 +77,15 @@ class GameInstance {
   }
 
   startGameLoop() {
+    this.currentTime = new Date().getTime();
+
     if (!this.gameLoopInterval) {
       this.gameLoopInterval = setInterval(() => {
 
-        this.updatePosition();
-        this.server.emit('gameStateUpdate', this.ball);
+        const cDeltaTime = (new Date().getTime() - this.currentTime) / 17;
+        this.currentTime = new Date().getTime();
+
+        this.updatePosition(cDeltaTime);
 
       }, this.tickRate);
     }
@@ -94,24 +98,32 @@ class GameInstance {
     }
   }
 
-  updatePosition() {
+  updatePosition(cDeltaTime :number) {
     if (this.ball.isBallIn) {
 
-      this.ball.x += this.ball.velocityX;
-      this.ball.y += this.ball.velocityY;
+      this.ball.x += this.ball.velocityX * cDeltaTime;
+      this.ball.y += this.ball.velocityY * cDeltaTime;
+
+      if (this.ball.y + this.ball.r > this.board.height) {
+        this.ball.velocityY = -Math.abs(this.ball.velocityY);
+      }
+      else if (this.ball.y - this.ball.r < 0) {
+        this.ball.velocityY = Math.abs(this.ball.velocityY);
+      }
     }
     
-    if (this.ball.y + this.ball.r > this.board.height || this.ball.y - this.ball.r < 0)
-      this.ball.velocityY = - this.ball.velocityY
-    else if (this.ball.x - this.ball.r > this.board.width || this.ball.x + this.ball.r < 0) {
+    if (this.ball.x - this.ball.r > this.board.width || this.ball.x + this.ball.r < 0) {
 
       this.ball.isBallIn = false;
       this.initBallPosition()
       this.getInitialVelocity();
     }
 
-    else if (!this.ball.isBallSkiped && this.checkBallToHit())
+    else if (!this.ball.isBallSkiped && this.checkBallToHit()) {
+
+      this.ball.isBallSkiped = true;
       this.checkBallPaddlesCollision()
+    }
 
   }
   checkBallToHit() {
@@ -134,28 +146,37 @@ class GameInstance {
       if (this.checkBallPaddleCollision(this.paddles[this.player1])) {
 
         this.calculateVelocity(this.paddles[this.player1], -1);
+        setTimeout(() => {
+          this.ball.isBallSkiped = false;
+        }, 200); 
+        this.server.to(this.player1).emit('gameStateUpdate', this.ball);
+        this.server.to(this.player2).emit('gameStateUpdate', this.ball);
       }
       else {
-
-        this.ball.isBallSkiped = true;
         ++this.paddles[this.player2].score;
+        this.server.to(this.player1).emit('gameScoreUpdate', true);
+        this.server.to(this.player2).emit('gameScoreUpdate', false);
 
       }
     } else {
       if (this.checkBallPaddleCollision(this.paddles[this.player2])) {
 
         this.calculateVelocity(this.paddles[this.player2]);
+        setTimeout(() => {
+          this.ball.isBallSkiped = false;
+        }, 200); 
+        this.server.to(this.player1).emit('gameStateUpdate', this.ball);
+        this.server.to(this.player2).emit('gameStateUpdate', this.ball);
       }
       else {
-
-        this.ball.isBallSkiped = true;
         ++this.paddles[this.player1].score;
+        this.server.to(this.player1).emit('gameScoreUpdate', false);
+        this.server.to(this.player2).emit('gameScoreUpdate', true);
 
       }
     }
   }
   private checkBallPaddleCollision(paddle :Paddle): boolean {
-
 
     const ballTop = this.ball.y - this.ball.r;
     const ballBottom = this.ball.y + this.ball.r;
@@ -170,7 +191,6 @@ class GameInstance {
       return true; 
     }
   
-
     return false;
   }
   private calculateVelocity(paddle :Paddle, direction :number = 1) {
@@ -185,14 +205,18 @@ class GameInstance {
 
   }
   initBallPosition() {
+    
+
+    this.ball.x = this.board.width / 2;
+    this.ball.y = this.board.height / 2;
 
     setTimeout(() => {
       this.ball.isBallSkiped = false;
       this.ball.isBallIn = true;
-    }, 200); 
 
-    this.ball.x = this.board.width / 2;
-    this.ball.y = this.board.height / 2;
+      this.server.to(this.player1).emit('initBallPosition');
+      this.server.to(this.player2).emit('initBallPosition');
+    }, 200); 
 
   }
   getInitialVelocity() {
@@ -200,8 +224,6 @@ class GameInstance {
     this.ball.velocityX = this.ball.speed * 0.6;
     this.ball.velocityY = 0;
 
-    // if (this.gameService.isToStart)
-    //   this.velocityX *= -1;
   }
 
 }

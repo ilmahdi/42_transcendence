@@ -19,19 +19,27 @@ export class GameGateway {
 
   inGameUsersById: { [userId: string]: string } = {}; 
 
-
   private waitingPlayers: string[] = [];
   
   @SubscribeMessage('requestOpponentId')
-  handleJoinMatchmaking(client: Socket) {
+  handleJoinMatchmaking(client: Socket, userId :string) {
     
-    if (!this.inGameUsersById[this.connectionGateway.connectedUsersBySocket[client.id]]) {
+    if (!this.inGameUsersById[userId]) {
 
-      this.inGameUsersById[this.connectionGateway.connectedUsersBySocket[client.id]] = client.id;
-      this.addToQueue(client.id);
+      this.inGameUsersById[userId] = client.id;
+      this.addToQueue(userId);
     }
   }
-  
+  @SubscribeMessage('leaveMatchmaking')
+  handleLeaveMatchmaking(client: Socket, userId :string) {
+
+    if (this.inGameUsersById[userId]) {
+
+      delete this.inGameUsersById[userId];
+      this.waitingPlayers = this.waitingPlayers.filter(item => item != userId);
+    }
+  }
+
   addToQueue(client: string) {
     this.waitingPlayers.push(client);
     this.tryMatchPlayers();
@@ -48,18 +56,18 @@ export class GameGateway {
   }
 
   initializeGame(player1: string, player2: string) {
-    const userId1 = this.connectionGateway.connectedUsersBySocket[player2];
-    const userId2 = this.connectionGateway.connectedUsersBySocket[player1];
+    const socketId1 = this.inGameUsersById[player2];
+    const socketId2 = this.inGameUsersById[player1];
 
-    this.gameService.createGame(this.server, this.getGameId(userId1, userId2), player1, player2);
+    this.gameService.createGame(this.server, this.getGameId(player1, player2), socketId1, socketId2);
 
-    this.server.to(player1).emit('opponentId', { 
-      userId: userId1,
+    this.server.to(socketId1).emit('opponentId', { 
+      userId: player1,
       isToStart: false,
     });
 
-    this.server.to(player2).emit('opponentId', { 
-      userId: userId2,
+    this.server.to(socketId2).emit('opponentId', { 
+      userId: player2,
       isToStart: true,
     });
 
@@ -86,16 +94,17 @@ export class GameGateway {
       delete this.inGameUsersById[userIds.player2Id];
 
   }
-
+  
 
   @SubscribeMessage('paddleMove')
   paddleMove(client: Socket, data :{userIds :{ player1Id: string, player2Id: string,}, paddle: {y :number} }) {
-
+    
     const game = this.gameService.games[this.getGameId(data.userIds.player1Id, data.userIds.player2Id)]
+    if (game) {
+      game.paddles[client.id].y = data.paddle.y;
 
-    game.paddles[client.id].y = data.paddle.y;
-
-    this.server.to(this.inGameUsersById[data.userIds.player2Id]).emit('paddleMove', data.paddle);
+      this.server.to(this.inGameUsersById[data.userIds.player2Id]).emit('paddleMove', data.paddle);
+    }
   }
 
   getGameId(player1: string, player2: string) {

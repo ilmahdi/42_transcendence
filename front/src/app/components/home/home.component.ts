@@ -48,8 +48,11 @@ export class HomeComponent implements OnInit {
   sub!: Subscription;
 
   ngOnInit(): void {
+    
+    this.socket.emit("leaveMatchmaking", this.authService.getLoggedInUserId());
+
     this.loadingService.showLoading();
-    this.getUserData()
+    this.getUserData();
   }
   getUserData() {
      this.userService.getUserData().subscribe((data: IUserData) => {
@@ -88,6 +91,9 @@ export class HomeComponent implements OnInit {
 
     });
 
+  }
+
+  ngOnDestroy(): void {
   }
 
 }

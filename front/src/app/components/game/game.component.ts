@@ -27,13 +27,10 @@ export class GameComponent implements AfterViewInit {
   ) {
 
     this.authService.setAuthenticated(false);
-    this.loggedInUserId  = this.authService.getLoggedInUserId();
-
   }
 
   public canvas!: HTMLCanvasElement;
   public ctx!: CanvasRenderingContext2D;
-  public loggedInUserId :number;
   public player1: IUserDataShort = {
     username : "",
     avatar : "",
@@ -46,6 +43,7 @@ export class GameComponent implements AfterViewInit {
   };
   private isGameStarted :boolean = false;
   private animationFrameId!: number;
+  private currentTime! :number;
 
 
   @ViewChild('ball') ball!: BallComponent;
@@ -62,15 +60,18 @@ export class GameComponent implements AfterViewInit {
     this.ctx = this.canvas.getContext('2d')!;
 
     this.gameStateUpdate();
+    this.gameScoreUpdate();
 
     this.socket.on('endGame', () => {
 
+      cancelAnimationFrame(this.animationFrameId);
       this.router.navigate(['/home']);
     });
 
   }
 
   ngAfterViewInit(): void {
+    console.log(window.screen)
 
     this.player2Paddle.updateOpponentPaddle();
     this.setCanvas();
@@ -84,6 +85,8 @@ export class GameComponent implements AfterViewInit {
         this.socket.on('startGame', () => {
 
         this.isGameStarted = true;
+
+        this.currentTime = new Date().getTime();
         this.render();
       });
     }
@@ -99,6 +102,10 @@ export class GameComponent implements AfterViewInit {
   @HostListener('window:resize')
   onResize() {
     this.resizeCanvas();
+  }
+  onLeaveClick() {
+    cancelAnimationFrame(this.animationFrameId);
+    this.router.navigate(['/home']);
   }
 
   handleCanvasClick(event: MouseEvent) {
@@ -116,8 +123,9 @@ export class GameComponent implements AfterViewInit {
         clickY <= this.canvas.height / 2 + 25
       ) {
         this.isGameStarted = true;
-        this.render();
         this.emitStartGame();
+        this.currentTime = new Date().getTime();
+        this.render();
       }
     }
   }
@@ -129,14 +137,16 @@ export class GameComponent implements AfterViewInit {
 
 
   private render(): void {
-   
-    this.player1Paddle.updateOnKeyDown();
-    this.emitPaddleMove();
-    // this.player1Paddle.updateBoot();
-    // this.ball.updatePosition();
+    const cDeltaTime = (new Date().getTime() - this.currentTime) / 17;
+    this.currentTime = new Date().getTime();
 
+    this.ball.updatePosition2(cDeltaTime);
+    
     this.displayFrame();
-
+    
+    cancelAnimationFrame(this.animationFrameId);
+    if (this.player1Paddle.score === 10 || this.player2Paddle.score === 10)
+      this.router.navigate(['/home']);
     this.animationFrameId =  requestAnimationFrame(() => this.render());
   }
 
@@ -213,33 +223,20 @@ export class GameComponent implements AfterViewInit {
   }
 
   private emitStartGame() {
-    const opponentId = this.loggedInUserId === this.player1.id ? this.player2.id : this.player1.id;
 
     this.socket.emit("startGame", {
-      player1Id: this.loggedInUserId,
-      player2Id: opponentId,
+      player1Id: this.gameService.playerId1,
+      player2Id: this.gameService.playerId2,
     });
   }
-  private emitPaddleMove() {
-    const opponentId = this.loggedInUserId === this.player1.id ? this.player2.id : this.player1.id;
-
-    this.socket.emit("paddleMove", {
-      userIds: {
-        player1Id: this.loggedInUserId,
-        player2Id: opponentId,
-      }, 
-      paddle: {
-        y: this.player1Paddle.y 
-      } 
-    });
-  }
+  
   private gameStateUpdate() {
     this.socket.on('gameStateUpdate', (ball :any) => {
 
       this.ball.x = ball.x;
       this.ball.y = ball.y;
-      // this.ball.velocityX = ball.velocityX;
-      // this.ball.velocityY = ball.velocityY;
+      this.ball.velocityX = ball.velocityX;
+      this.ball.velocityY = ball.velocityY;
 
       if (this.gameService.isToStart) {
         this.ball.x = this.gameBoard.width - ball.x
@@ -249,8 +246,21 @@ export class GameComponent implements AfterViewInit {
     });
  
   }
+  
+  private gameScoreUpdate() {
+    this.socket.on('gameScoreUpdate', (isToStart :boolean) => {
+
+      if (isToStart)
+        ++this.player2Paddle.score;
+      else
+        ++this.player1Paddle.score
+
+    });
+ 
+  }
 
   ngOnDestroy(): void {
+    console.log("destroy game component")
     cancelAnimationFrame(this.animationFrameId);
     this.socket.emit("endGame", {
       player1Id: this.gameService.playerId1,

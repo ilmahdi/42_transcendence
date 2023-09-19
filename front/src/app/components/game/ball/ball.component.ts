@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { BoardComponent } from '../board/board.component';
 import { PaddleComponent } from '../paddle/paddle.component';
 import { GameService } from 'src/app/services/game.service';
+import { CustomSocket } from 'src/app/utils/socket/socket.module';
 
 @Component({
   selector: 'app-ball',
@@ -12,6 +13,7 @@ export class BallComponent implements OnInit{
 
   constructor(
     private gameService : GameService,
+    private socket: CustomSocket,
   ) {
     this.adaptMap();
   }
@@ -36,6 +38,12 @@ export class BallComponent implements OnInit{
 
 
   ngOnInit(): void {
+
+    this.socket.on('initBallPosition', () => {
+
+      this.isBallSkiped = false;
+      this.isBallIn = true;
+    });
 
   }
 
@@ -66,9 +74,12 @@ export class BallComponent implements OnInit{
       this.y += this.velocityY;
     }
     
-    if (this.y + this.r > this.canvas.height || this.y - this.r < 0)
-      this.velocityY = - this.velocityY
-    else if (this.x - this.r > this.canvas.width || this.x + this.r < 0) {
+    if (this.y + this.r > this.canvas.height)
+      this.velocityY = -Math.abs(this.velocityY);
+    else(this.y - this.r < 0)
+     this.velocityY = Math.abs(this.velocityY);
+
+    if (this.x - this.r > this.canvas.width || this.x + this.r < 0) {
 
       this.isBallIn = false;
       this.initBallPosition()
@@ -77,6 +88,39 @@ export class BallComponent implements OnInit{
 
     else if (!this.isBallSkiped && this.checkBallToHit())
       this.checkBallPaddlesCollision()
+
+  }
+  public updatePosition2(cDeltaTime :number) {
+    if (this.isBallIn) {
+
+      this.x += this.velocityX * cDeltaTime;
+      this.y += this.velocityY * cDeltaTime;
+      if (this.y + this.r > this.canvas.height) {
+        this.velocityY = - Math.abs(this.velocityY);
+      }
+      else if (this.y - this.r < 0) {
+        this.velocityY = Math.abs(this.velocityY);
+      }
+    }
+    
+    if (this.x - this.r > this.canvas.width || this.x + this.r < 0) {
+
+      this.isBallIn = false;
+      this.x = this.gameBoard.width / 2;
+      this.y = this.gameBoard.height / 2;
+      this.getInitialVelocity();
+      
+    }
+    // else if (!this.isBallSkiped && this.checkBallToHit()) {
+    //     if (this.x > this.gameBoard.width / 2) {
+    //       this.player1Paddle.x += this.x - this.player1Paddle.x;
+    //       this.player2Paddle.x += this.x - this.player1Paddle.x;
+    //     }
+    //     else {
+    //       this.player1Paddle.x += this.x - this.player2Paddle.x;
+    //       this.player2Paddle.x += this.x - this.player2Paddle.x;
+    //     }
+    // }
 
   }
 
