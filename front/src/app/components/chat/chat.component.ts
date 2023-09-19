@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Message } from 'src/app/models/message.model';
 import { ChatService } from 'src/app/services/chat.service';
 import { Subscription } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Room } from 'src/app/models/room.model';
-import { UserService } from 'src/app/services/user.service';
 import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -36,7 +34,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   searchResults: IUserDataShort[] = [];
   constructor(
     private chatService:ChatService, 
-    private userService: UserService,
     private authService: AuthService,
     ) {
 
@@ -58,7 +55,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     
-    const subs1:Subscription = this.chatService.displayConvers$.subscribe(data=> {this.displayConvers = data;console.log(data)})
+    const subs1:Subscription = this.chatService.displayConvers$.subscribe(data=> {
+      this.displayConvers = data
+    })
     this.subscriptions.push(subs1)
 
     const subs2:Subscription = this.chatService.options$.subscribe(data=>this.options = data)

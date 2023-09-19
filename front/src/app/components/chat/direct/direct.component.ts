@@ -41,6 +41,9 @@ export class DirectComponent implements OnInit, OnDestroy {
 
     // GET THE NUMBER OF MESSAGES WHICH ARE NOT HAVE READ BY YOU WITH THE SENDER ID
     const subs1:Subscription = this.chatService.getNewMessage().subscribe(data1=>{
+      // CLEAR CHAT NOTIFICATION
+      this.chatService.chatNotifSource.next(0);
+
       this.chatService.updateLastMessage(data1);
       const subs2:Subscription = chatService.getNotReadedMessages().subscribe(data=>{
         chatService.updateReadBehav(data);
@@ -95,11 +98,11 @@ export class DirectComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getfriendList();
-    this.chatService.sendToGetChatNotif(this.userId!, true);
-    // const subs1:Subscription = this.chatService.users$.subscribe(data=> {
-    //   this.users = [];
-    // })
-    // this.subscriptions.push(subs1)
+    const subs1:Subscription = this.chatService.users$.subscribe(data=> {
+      this.users = [];
+      this.users = data
+    })
+    this.subscriptions.push(subs1)
 
     this.chatService.sendToGetNotReadedMessages(this.userId!)//////////
     const subs2:Subscription = this.chatService.notReadedMessage$.subscribe(data=>{
@@ -110,6 +113,9 @@ export class DirectComponent implements OnInit, OnDestroy {
 
     this.chatService.sendToGetLastMessage(this.userId!)
     const subs3:Subscription = this.chatService.getLastMessage().subscribe(data=> {
+      // CLEAR CHAT NOTIFICATION
+      this.chatService.chatNotifSource.next(0);
+
       data.sort((a:Message, b:Message)=>a.id! - b.id!)
       data.forEach(data=> {
         this.lastMessages = this.lastMessages.filter(item => !((item.receiverId === data.receiverId && item.senderId === data.senderId) || (item.senderId === data.receiverId && item.receiverId === data.senderId)));

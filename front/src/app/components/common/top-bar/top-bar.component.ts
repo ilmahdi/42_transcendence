@@ -22,6 +22,11 @@ export class TopBarComponent implements OnInit {
     private chatService: ChatService,
   ) {
     this.userId = this.authServece.getLoggedInUserId();
+
+    chatService.sendToGetChatNotif(this.userId, false);
+    chatService.getChatNotif().subscribe(data=> {
+      chatService.chatNotifSource.next(data.num)
+    })
   }
   
   public userId: number
@@ -32,7 +37,6 @@ export class TopBarComponent implements OnInit {
   public isNewNotif: number = 0;
   public chatNotif: number = 0;
   public notifyData :INotifyData[] = []
-
 
   private subscriptions: Subscription[] = [];
   
@@ -48,16 +52,18 @@ export class TopBarComponent implements OnInit {
     });
     this.getNotifications();
 
-    // this.chatService.sendToGetChatNotif(this.userId, false)
-    // this.socket.on('chatNotif', (data:any) => {
-    //   if (!data.open)
-    //     this.chatNotif = data.num;
-    //   else
-    //     this.chatNotif = 0;
-    // })
-    this.chatService.getNewMessage().subscribe(message=> {
-      
+    let messages:{id:number}[] = [];
+    const subs1:Subscription = this.chatService.getNewMessage().subscribe(msg=> {
+      if (msg.senderId !== this.userId) {
+        messages = messages.filter(item=> item.id !== msg.senderId)
+        let id = {id:msg.senderId!}
+        messages.push(id)
+        this.chatService.chatNotifSource.next(messages.length)
+      }
     })
+    this.subscriptions.push(subs1)
+    const subs2:Subscription = this.chatService.chatNotif$.subscribe(data=>this.chatNotif = data)
+    this.subscriptions.push(subs2)
   }
 
   toggleLeftBar() {

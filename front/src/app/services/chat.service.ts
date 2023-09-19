@@ -4,7 +4,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Message } from '../models/message.model';
 import { User } from '../models/user.model';
 import { Room } from '../models/room.model';
-import { RoomType } from '../models/roomType.enum';
 import { CustomSocket } from '../utils/socket/socket.module';
 import { AuthService } from './auth.service';
 import { IUserDataShort } from '../utils/interfaces/user-data.interface';
@@ -78,6 +77,9 @@ export class ChatService {
   roomOptionsSource = new BehaviorSubject<Room>({})
   roomOptions$ = this.roomOptionsSource.asObservable();
 
+  chatNotifSource = new BehaviorSubject<number>(0);
+  chatNotif$ = this.chatNotifSource.asObservable()
+
   constructor(
     private http:HttpClient, 
     private socket: CustomSocket,
@@ -135,7 +137,7 @@ export class ChatService {
     this.roomsSource.next(rooms)
   }
 
-  updateUsers(users:User[]) {
+  updateUsers(users:IUserDataShort[]) {
     users = users.filter(item=> item.id !== this.userId)
     this.usersSource.next(users);
   }

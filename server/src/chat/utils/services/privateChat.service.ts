@@ -3,11 +3,15 @@ import { from, map } from "rxjs";
 import { Message } from "../models/message.interface";
 import { User } from "src/user/utils/models/user.interface";
 import { PrismaService } from "src/prisma/prisma.service";
+import { UserModel } from "src/user/utils/interfaces/user.model";
+import { UserService } from "src/user/user.service";
+import { FriendshipStatus } from "@prisma/client";
 
 @Injectable()
 export class PrivateChatService {
     constructor(
-        private prismaService:PrismaService
+        private prismaService:PrismaService,
+        private userService:UserService
     ) {}
 
     async saveMessage(message: Message) {
@@ -103,7 +107,7 @@ export class PrivateChatService {
       }
     }
 
-    async searchConversation(query: string): Promise<User[]> {
+    async searchConversation(query: string): Promise<UserModel[]> {
       try {
         const users = await this.prismaService.userAccount.findMany({
           where: {

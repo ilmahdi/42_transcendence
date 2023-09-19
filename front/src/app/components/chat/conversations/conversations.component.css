@@ -50,7 +50,7 @@ img {
     border-radius: 0px 0px 15px 15px;
 }
 
-#typing {
+.typing {
     margin-top: 5px;
     margin-left: 3%;
     /* width: 495px; */
@@ -61,8 +61,14 @@ img {
     border: none;
     outline: none;
     background-color: #584747;
-    color: #9D8686;
+    color: var(--primary-text-color);
 }
+
+::placeholder {
+    color: #9D8686;
+    opacity: 1; /* Firefox */
+}
+
 
 .send {
     position: relative;

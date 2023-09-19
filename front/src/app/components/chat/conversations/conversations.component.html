@@ -24,7 +24,7 @@
 
         <div class="writing" (click)="clickOnConversation()">
             <form [formGroup]="msg" style="width: 100%;">
-                <input type="text" id="typing" placeholder="write a message" formControlName="message">
+                <input type="text" class="typing" placeholder="write a message" formControlName="message">
             </form>
             <div class="send" (click)="sendPrivateMessage()">
                 <div class="disk">
@@ -71,7 +71,7 @@
 
         <div class="writing">
             <form [formGroup]="msg" style="width: 100%;">
-                <input type="text" id="typing" placeholder="write a message" formControlName="message">
+                <input type="text" class="typing" placeholder="write a message" formControlName="message">
             </form>
             <div class="send" (click)="sendRoomMessage()">
                 <div class="disk">
