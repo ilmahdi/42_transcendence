@@ -21,8 +21,14 @@ export class GameGateway {
 
   private waitingPlayers: string[] = [];
   
+  @SubscribeMessage('inviteOpponentId')
+  inviteOpponentId(client: Socket, userId :string) {
+    
+    
+    this.server.to(this.inGameUsersById[userId]).emit('inviteOpponentId');
+  }
   @SubscribeMessage('requestOpponentId')
-  handleJoinMatchmaking(client: Socket, userId :string) {
+  requestOpponentId(client: Socket, userId :string) {
     
     if (!this.inGameUsersById[userId]) {
 
@@ -86,6 +92,7 @@ export class GameGateway {
     
     this.gameService.endGame(this.getGameId(userIds.player1Id, userIds.player2Id));
 
+    this.server.to(this.inGameUsersById[userIds.player1Id]).emit('endGame');
     this.server.to(this.inGameUsersById[userIds.player2Id]).emit('endGame');
 
     if (this.inGameUsersById[userIds.player1Id]) 
@@ -105,6 +112,12 @@ export class GameGateway {
 
       this.server.to(this.inGameUsersById[data.userIds.player2Id]).emit('paddleMove', data.paddle);
     }
+  }
+
+  @SubscribeMessage('rematchGame')
+  rematchGame(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
+
+    this.server.to(this.inGameUsersById[userIds.player2Id]).emit('rematchGame');
   }
 
   getGameId(player1: string, player2: string) {

@@ -52,6 +52,7 @@ class GameInstance {
   public player2 :string;
   public paddles: { [userId: string]: Paddle } = {}; 
   private currentTime :number;
+  private isGameEnded :boolean = false;
 
   initPaddles(userId :string, isRightPaddle :boolean) {
 
@@ -77,6 +78,10 @@ class GameInstance {
   }
 
   startGameLoop() {
+    this.isGameEnded = false;
+    this.paddles[this.player1].score = 0;
+    this.paddles[this.player2].score = 0;
+    
     this.currentTime = new Date().getTime();
 
     if (!this.gameLoopInterval) {
@@ -86,7 +91,12 @@ class GameInstance {
         this.currentTime = new Date().getTime();
 
         this.updatePosition(cDeltaTime);
+        if (this.isGameEnded) {
 
+          clearInterval(this.gameLoopInterval);
+          this.gameLoopInterval = null;
+          return;
+        }
       }, this.tickRate);
     }
   }
@@ -153,7 +163,8 @@ class GameInstance {
         this.server.to(this.player2).emit('gameStateUpdate', this.ball);
       }
       else {
-        ++this.paddles[this.player2].score;
+        if (++this.paddles[this.player2].score === 3)
+          this.isGameEnded = true;
         this.server.to(this.player1).emit('gameScoreUpdate', true);
         this.server.to(this.player2).emit('gameScoreUpdate', false);
 
@@ -169,7 +180,8 @@ class GameInstance {
         this.server.to(this.player2).emit('gameStateUpdate', this.ball);
       }
       else {
-        ++this.paddles[this.player1].score;
+        if (++this.paddles[this.player1].score === 3)
+          this.isGameEnded = true;
         this.server.to(this.player1).emit('gameScoreUpdate', false);
         this.server.to(this.player2).emit('gameScoreUpdate', true);
 
@@ -211,11 +223,11 @@ class GameInstance {
     this.ball.y = this.board.height / 2;
 
     setTimeout(() => {
-      this.ball.isBallSkiped = false;
-      this.ball.isBallIn = true;
-
       this.server.to(this.player1).emit('initBallPosition');
       this.server.to(this.player2).emit('initBallPosition');
+
+      this.ball.isBallSkiped = false;
+      this.ball.isBallIn = true;
     }, 200); 
 
   }
