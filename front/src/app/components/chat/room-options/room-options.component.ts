@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription, take } from 'rxjs';
+import { Mute } from 'src/app/models/mutes.model';
 import { Room } from 'src/app/models/room.model';
 import { RoomType } from 'src/app/models/roomType.enum';
 import { AuthService } from 'src/app/services/auth.service';
@@ -17,14 +18,13 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
 
   userId?:number;
   room:Room = {}
-  members:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean}[] = []
+  members:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean, muteDuration: number}[] = []
   form = new FormGroup({password:new FormControl, mute:new FormControl<string[]>([])});
   type?:RoomType
   clickOnUser:{user:IUserDataShort, click:boolean}[] = [];
   newAdminsId:number[] = []
   removedId:number[] = []
   isAdmin:boolean = false
-  muteDuring:number = 0
 
   constructor(private chatService:ChatService, private authService:AuthService) {
     this.userId = this.authService.getLoggedInUserId();
@@ -47,7 +47,7 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.members = []
       users.forEach(user=> {
         if (user.user.id !== this.userId)
-          this.members.push({user:user.user, type:user.type, click:false, admin:false, removed:false, mute:false})
+          this.members.push({user:user.user, type:user.type, click:false, admin:false, removed:false, mute:false, muteDuration: 0})
       })
     })
     this.subscriptions.push(subs2)
@@ -62,12 +62,12 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.type = RoomType.PRIVATE
   }
 
-  clickOnMember(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean}) {
+  clickOnMember(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean, muteDuration: number}) {
     member.click = !member.click
     // member.mute = !member.mute
   }
 
-  addAdmin(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean}) {
+  addAdmin(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean, muteDuration: number}) {
     if (this.room.adminId?.includes(member.user.id!)) return
     member.click = !member.click
     member.admin = !member.admin
@@ -78,7 +78,7 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.newAdminsId = this.newAdminsId.filter(id=> id !== member.user.id)
   }
 
-  removeMember(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean}) {
+  removeMember(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean, muteDuration: number}) {
     if (this.room.adminId?.includes(member.user.id!)) return
     member.click = !member.click
     member.removed = !member.removed
@@ -89,12 +89,13 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.removedId = this.removedId.filter(id=> id !== member.user.id)
   }
 
-  muting(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean}) {
+  muting(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean, muteDuration: number}) {
     member.click = !member.click;
     member.mute = !member.mute
+    member.muteDuration = 0;
   }
 
-  saad(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean}) {
+  saad(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean, muteDuration: number}) {
     member.click = !member.click;
 
   }
@@ -109,11 +110,17 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
     if (this.form.value.password) {
       this.room.password = this.form.value.password;
     }
-    if (this.form.value.mute) {
-      // --------------------------------------------------------
-      console.log(this.form.value.mute);
-      // --------------------------------------------------------
-    }
+
+    const mutedUserDurations: Mute[] = this.members
+    .filter((member) => member.mute)
+    .map((member) => ({
+      userId: member.user.id!,
+      during: member.muteDuration,
+      roomId: this.room.id,
+    }));
+    this.room.mutes = mutedUserDurations
+    console.log(this.room.mutes);
+
     this.chatService.roomOptionsSource.next(this.room)////////////
     this.chatService.sendToGetRoomMembers(this.room);
     this.chatService.updateRoom(this.room);

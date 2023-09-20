@@ -1,6 +1,7 @@
 // import { RoomType } from "./roomType.enum";
 
-import { RoomType } from "@prisma/client";
+import { Mute, RoomType } from "@prisma/client";
+// import { Mute } from "./mute.model";
 
 export interface Room {
     id?: number;
@@ -10,5 +11,5 @@ export interface Room {
     type?: RoomType;
     password?: string;
     imagePath?: string;
-    muteIds?: string[];
+    mutes?: Mute[]
 }

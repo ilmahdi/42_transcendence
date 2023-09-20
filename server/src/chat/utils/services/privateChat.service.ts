@@ -1,21 +1,45 @@
 import { Injectable } from "@nestjs/common";
 import { from, map } from "rxjs";
 import { Message } from "../models/message.interface";
-import { User } from "src/user/utils/models/user.interface";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserModel } from "src/user/utils/interfaces/user.model";
-import { UserService } from "src/user/user.service";
-import { FriendshipStatus } from "@prisma/client";
+import { Room } from "../models/room.interface";
 
 @Injectable()
 export class PrivateChatService {
     constructor(
         private prismaService:PrismaService,
-        private userService:UserService
     ) {}
 
     async saveMessage(message: Message) {
-      return await this.prismaService.message.create({data:{senderId:message.senderId, date:message.date, message:message.message, receiverId:message.receiverId, readed:false, roomId:message.roomId}})
+      if (message.roomId != -1) {
+        const room:Room = await this.prismaService.room.findFirst({
+          where: {id: message.roomId}
+        })
+
+        let out:boolean = false
+        if (room.mutes[0])
+          room.mutes.forEach(item=> {
+            if (item.userId === message.senderId) {
+              let then:Date = new Date(item.createdAt)
+              let now:Date = new Date()
+              if (now.getTime() - then.getTime() < item.during)
+                out = true
+            }
+          })
+          if (out)
+            return
+      }
+      return await this.prismaService.message.create({
+        data:{
+          senderId:message.senderId,
+          date:message.date,
+          message:message.message,
+          receiverId:message.receiverId,
+          readed:false,
+          roomId:message.roomId
+        }
+      })
     }
 
     getMessages() {

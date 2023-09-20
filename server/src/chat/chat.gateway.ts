@@ -1,16 +1,11 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Message } from './utils/models/message.interface';
-import { Body, UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
-import { User } from 'src/user/utils/models/user.interface';
 import { UserService } from 'src/user/user.service';
-import { JwtService } from '@nestjs/jwt';
 import { Room } from './utils/models/room.interface';
-import * as jwt from 'jsonwebtoken';
 import { PrivateChatService } from './utils/services/privateChat.service';
 import { RoomChatService } from './utils/services/roomChat.service';
-import { JwtGuard } from 'src/auth/utils/guards/jwt.guard';
 import { ConnectionGateway } from 'src/common/gateways/connection.gateway';
 import { PrismaService } from 'src/prisma/prisma.service';
 

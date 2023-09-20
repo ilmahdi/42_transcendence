@@ -24,9 +24,7 @@
                     <!-- </form> -->
                 </div>
                 <div class="saad" (click)="saad(user)" >
-                    <form [formGroup]="form">
-                        <input type="number" id="mutingTime" min="0" max="100" step="1" placeholder="Minutes" formControlName="mute" *ngIf="user.mute">
-                    </form>
+                    <input type="number" id="mutingTime" min="0" max="100" step="1" placeholder="Minutes" [(ngModel)]="user.muteDuration" *ngIf="user.mute">
                 </div>
                 <img [src]="user.user.avatar" alt="avatar" id="img">
                 <p id="username">{{user.user.username}}</p>

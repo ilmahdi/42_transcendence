@@ -6,7 +6,6 @@ import * as bcrypt from 'bcrypt'
 import { UserService } from "src/user/user.service";
 import { PrismaService } from "src/prisma/prisma.service";
 import { RoomType } from "@prisma/client";
-import { UpdateUser } from "src/user/utils/interfaces/update-user.interface";
 import { UserModel } from "src/user/utils/interfaces/user.model";
 
 @Injectable()
@@ -43,12 +42,21 @@ export class RoomChatService {
     }
   
       async createRoom(room:Room) {
-        if (room.password) {
+        if (room.password)
           room.password = await this.hashPassword(room.password)
-          return await this.prismaService.room.create({data:{id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath}})
-        }
-        else
-          return await this.prismaService.room.create({data:{id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath}})
+        return await this.prismaService.room.create(
+          {
+            data:{
+              id:room.id,
+              adminId:room.adminId,
+              usersId:room.usersId,
+              name:room.name,
+              password:room.password,
+              type:room.type,
+              imagePath:room.imagePath,
+              mutes:{create:[]}
+            }
+          })
       }
 
       getRoomById(id:number){
@@ -272,7 +280,7 @@ export class RoomChatService {
 
     async changeRoomType(room:Room) {
       if (room.type !== RoomType.PROTECTED) {
-        room.password = null
+        room.password = null;
       }
       else {
         room.password = await this.hashPassword(room.password)
@@ -280,7 +288,15 @@ export class RoomChatService {
       await this.prismaService.room.update({
         where: {id:room.id},
         data:
-          {id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath, muteIds: room.muteIds}
+          {id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath,
+            mutes: {
+              create: room.mutes.map((mute) => ({
+                roomId: mute.id,
+                userId: mute.userId,
+                during: mute.during
+              })),
+            }
+          }
       });
     }
 }

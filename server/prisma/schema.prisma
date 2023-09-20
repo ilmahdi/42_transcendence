@@ -163,5 +163,15 @@ model Room {
   type      RoomType  @default(PUBLIC)
   password  String?
   imagePath String
-  muteIds   String[]  @default([]) // Prisma uses arrays natively for integer arrays
+  mutes     Mute[]
+}
+
+model Mute {
+  id       Int      @id @default(autoincrement())
+  roomId   Int
+  userId   Int
+  during   Int      // Mute duration in minutes
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  room     Room     @relation(fields: [roomId], references: [id])
 }
