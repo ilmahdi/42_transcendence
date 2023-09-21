@@ -16,6 +16,7 @@
   bottom: 0; 
   left: 0; 
   z-index: 13;
+  overflow: auto;
 }
 
 .overlay {
@@ -116,3 +117,27 @@
     cursor: pointer;
     color: var(--primary-text-color);
 }
+
+
+
+
+/***********************************************/
+/*                Media Queries                */
+/***********************************************/
+
+@media (max-width: 800px) {
+
+    .cm-body-img {
+        width: 8rem;
+        border-radius: 1rem;
+        border: 0.2rem solid transparent;
+    }
+    .is-selected {
+        border: 0.2rem solid #0038FF;
+        opacity: 0.8;
+    }
+   
+}
+
+
+

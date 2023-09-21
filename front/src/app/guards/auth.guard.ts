@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { JWT_TOKEN } from '../utils/constants';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { GameService } from '../services/game.service';
 
 @Injectable({
   providedIn: 'root'
@@ -98,6 +99,34 @@ export class TwoFaGuard implements CanActivate {
       
       return false;
         
+    }
+  
+}
+@Injectable({
+  providedIn: 'root'
+})
+export class GameGuard implements CanActivate {
+  
+  constructor (
+    private router: Router,
+    public jwtHelper: JwtHelperService,
+    private gameService : GameService,
+    ) {
+  }
+
+  async canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Promise<boolean | UrlTree> {
+      
+      const response = await firstValueFrom(this.gameService.isInGameMode$);
+        
+      if (response)
+        return true;
+      else
+        return this.router.createUrlTree(['/home']);
+      
+      return false;
+    
     }
   
 }

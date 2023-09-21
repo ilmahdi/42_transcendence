@@ -41,7 +41,7 @@ export class GameComponent implements AfterViewInit {
     avatar : "",
     rating: 0,
   };
-  private isGameStarted :boolean = false;
+  private gameStage :string = "START";
   private animationFrameId!: number;
   private currentTime! :number;
 
@@ -62,41 +62,63 @@ export class GameComponent implements AfterViewInit {
     this.gameStateUpdate();
     this.gameScoreUpdate();
 
+    this.socket.on('startGame', () => {
+
+      this.gameStage = "PLAY";
+      this.player1Paddle.score = 0;
+      this.player2Paddle.score = 0;
+
+      this.currentTime = new Date().getTime();
+      this.render();
+    });
+
     this.socket.on('endGame', () => {
 
       cancelAnimationFrame(this.animationFrameId);
+      this.gameService.setInGameMode(false);
       this.router.navigate(['/home']);
+    });
+
+    this.socket.on('rematchGame', () => {
+
+      this.setCanvasBackgroundColor();
+      this.player1Paddle.displayEndGameMessage("Rematch request")
+      this.gameBoard.drawPlayButton("Accept");
+
+      this.gameStage = "ACCEPT";
+      
     });
 
   }
 
   ngAfterViewInit(): void {
-    console.log(window.screen)
 
     this.player2Paddle.updateOpponentPaddle();
     this.setCanvas();
     if (this.gameService.isToStart) {
 
       this.setCanvasBackgroundColor();
-      this.gameBoard.drawPlayButton()
+      this.gameBoard.drawPlayButton("Play")
     }
     else {
       this.displayFrame();
-        this.socket.on('startGame', () => {
-
-        this.isGameStarted = true;
-
-        this.currentTime = new Date().getTime();
-        this.render();
-      });
+       
     }
 
-    this.canvas.addEventListener('click', this.handleCanvasClick.bind(this));
+    this.canvas.addEventListener('click', this.handleCanvasPlayClick.bind(this));
+    this.canvas.addEventListener('click', this.handleCanvasRematchClick.bind(this));
+    this.canvas.addEventListener('click', this.handleCanvasAcceptClick.bind(this));
 
     this.canvas.addEventListener('mousemove', (event) => this.player1Paddle.onMouseMove(event));
     window.addEventListener('keydown', (event) => this.player1Paddle.onKeyDown(event));
     window.addEventListener('keyup', (event) => this.player1Paddle.onKeyUp(event));
 
+  }
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any) {
+
+    this.gameService.setInGameMode(false);
+    this.router.navigate(['/home']);
   }
 
   @HostListener('window:resize')
@@ -105,11 +127,12 @@ export class GameComponent implements AfterViewInit {
   }
   onLeaveClick() {
     cancelAnimationFrame(this.animationFrameId);
+    this.gameService.setInGameMode(false);
     this.router.navigate(['/home']);
   }
 
-  handleCanvasClick(event: MouseEvent) {
-    if (!this.isGameStarted) {
+  handleCanvasPlayClick(event: MouseEvent) {
+    if (this.gameStage === "START" && this.gameService.isToStart) {
 
       const canvasRect = this.canvas.getBoundingClientRect();
     
@@ -117,14 +140,55 @@ export class GameComponent implements AfterViewInit {
       const clickY = event.clientY - canvasRect.top;
     
       if (
-        clickX >= this.canvas.width / 2 - 50 &&
-        clickX <= this.canvas.width / 2 + 50 &&
+        clickX >= this.canvas.width / 2 - 70 &&
+        clickX <= this.canvas.width / 2 + 70 &&
         clickY >= this.canvas.height / 2 - 25 &&
         clickY <= this.canvas.height / 2 + 25
       ) {
-        this.isGameStarted = true;
+        this.gameStage = "PLAY";
         this.emitStartGame();
         this.currentTime = new Date().getTime();
+        this.render();
+      }
+    }
+  }
+  handleCanvasRematchClick(event: MouseEvent) {
+    if (this.gameStage == "END") {
+
+      const canvasRect = this.canvas.getBoundingClientRect();
+    
+      const clickX = event.clientX - canvasRect.left;
+      const clickY = event.clientY - canvasRect.top;
+    
+      if (
+        clickX >= this.canvas.width / 2 - 70 &&
+        clickX <= this.canvas.width / 2 + 70 &&
+        clickY >= this.canvas.height / 2 - 25 &&
+        clickY <= this.canvas.height / 2 + 25
+      ) {
+        this.emitRematchGame();
+      }
+    }
+  }
+  
+  handleCanvasAcceptClick(event: MouseEvent) {
+    if (this.gameStage === "ACCEPT") {
+
+      const canvasRect = this.canvas.getBoundingClientRect();
+    
+      const clickX = event.clientX - canvasRect.left;
+      const clickY = event.clientY - canvasRect.top;
+    
+      if (
+        clickX >= this.canvas.width / 2 - 70 &&
+        clickX <= this.canvas.width / 2 + 70 &&
+        clickY >= this.canvas.height / 2 - 25 &&
+        clickY <= this.canvas.height / 2 + 25
+      ) {
+        this.player1Paddle.score = 0;
+        this.player2Paddle.score = 0;
+        this.gameStage = "PLAY";
+        this.emitStartGame();
         this.render();
       }
     }
@@ -145,9 +209,10 @@ export class GameComponent implements AfterViewInit {
     this.displayFrame();
     
     cancelAnimationFrame(this.animationFrameId);
-    if (this.player1Paddle.score === 10 || this.player2Paddle.score === 10)
-      this.router.navigate(['/home']);
-    this.animationFrameId =  requestAnimationFrame(() => this.render());
+    if (this.gameStage === "END") 
+      this.displayEndGameMsgs();
+    else 
+      this.animationFrameId =  requestAnimationFrame(() => this.render());
   }
 
 
@@ -156,17 +221,29 @@ export class GameComponent implements AfterViewInit {
     if (this.gameBoard.adapteCanvasSize()) {
 
       this.renderer.setAttribute(this.canvas, 'width', this.gameBoard.width.toString());
-      this.player1Paddle.adaptePaddleSize();
-      this.player1Paddle.adaptePaddleSide();
-      this.player2Paddle.adaptePaddleSize();
+      this.player1Paddle.initPaddlePosition();
+      this.player2Paddle.initPaddlePosition();
       this.ball.adapteBallSize();
-      this.ball.initSpeed();
 
-      if (!this.isGameStarted) {
-        
-        this.ball.initBallPosition();
+      if (this.gameStage === "START") {
+        if (this.gameService.isToStart) {
+
+          this.ball.initBallPosition();
+          this.setCanvasBackgroundColor();
+          this.gameBoard.drawPlayButton("Play");
+        }
+        else {
+          this.ball.initBallPosition()
+          this.displayFrame()
+        }
+      }
+      else if (this.gameStage === "END")
+        this.displayEndGameMsgs();
+      else if (this.gameStage === "ACCEPT") {
+
         this.setCanvasBackgroundColor();
-        this.gameBoard.drawPlayButton();
+        this.player1Paddle.displayEndGameMessage("Rematch request")
+        this.gameBoard.drawPlayButton("Accept");
       }
     }
     
@@ -221,6 +298,19 @@ export class GameComponent implements AfterViewInit {
     this.player2Paddle.drawPaddle();
 
   }
+  private displayEndGameMsgs() {
+
+    this.setCanvasBackgroundColor();
+    if (this.player1Paddle.score === 3) {
+        
+      this.player1Paddle.displayEndGameMessage("You Won")
+    }
+    else if (this.player2Paddle.score === 3){
+      
+      this.player2Paddle.displayEndGameMessage("You Lost")
+    }
+    this.gameBoard.drawPlayButton("REMATCH");
+  }
 
   private emitStartGame() {
 
@@ -229,18 +319,28 @@ export class GameComponent implements AfterViewInit {
       player2Id: this.gameService.playerId2,
     });
   }
+  private emitRematchGame() {
+
+    this.socket.emit("rematchGame", {
+      player1Id: this.gameService.playerId1,
+      player2Id: this.gameService.playerId2,
+    });
+  }
   
   private gameStateUpdate() {
     this.socket.on('gameStateUpdate', (ball :any) => {
 
-      this.ball.x = ball.x;
       this.ball.y = ball.y;
-      this.ball.velocityX = ball.velocityX;
       this.ball.velocityY = ball.velocityY;
 
       if (this.gameService.isToStart) {
-        this.ball.x = this.gameBoard.width - ball.x
-        this.ball.velocityX *= -1;
+        this.ball.x = this.gameBoard.width - (ball.x * (this.gameBoard.width / this.gameBoard.initialWidth))
+        this.ball.velocityX = - ball.velocityX * (this.gameBoard.width / this.gameBoard.initialWidth);
+      }
+      else {
+        
+        this.ball.x = ball.x * (this.gameBoard.width / this.gameBoard.initialWidth);
+        this.ball.velocityX = ball.velocityX * (this.gameBoard.width / this.gameBoard.initialWidth);
       }
 
     });
@@ -254,14 +354,15 @@ export class GameComponent implements AfterViewInit {
         ++this.player2Paddle.score;
       else
         ++this.player1Paddle.score
-
+      if (this.player1Paddle.score === 3 || this.player2Paddle.score === 3)
+        this.gameStage = "END";
     });
  
   }
 
   ngOnDestroy(): void {
-    console.log("destroy game component")
     cancelAnimationFrame(this.animationFrameId);
+    this.gameService.setInGameMode(false);
     this.socket.emit("endGame", {
       player1Id: this.gameService.playerId1,
       player2Id: this.gameService.playerId2,

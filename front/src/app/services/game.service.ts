@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -6,6 +7,14 @@ import { Injectable } from '@angular/core';
 export class GameService {
 
   constructor() { }
+
+  private isInGameModeSubject = new BehaviorSubject<boolean>(false);
+  public isInGameMode$ = this.isInGameModeSubject.asObservable();
+
+
+  setInGameMode(value: boolean) {
+    this.isInGameModeSubject.next(value);
+  }
 
   public maps = [
     {

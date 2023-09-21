@@ -5,10 +5,11 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ConfirmService } from 'src/app/services/modals/confirm.service';
 import { CustomizeGameComponent } from '../modals/customize-game/customize-game.component';
-import { Subscription } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { GameService } from 'src/app/services/game.service';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
+import { GameInviteComponent } from '../modals/game-invite/game-invite.component';
 
 
 @Component({
@@ -53,6 +54,17 @@ export class HomeComponent implements OnInit {
 
     this.loadingService.showLoading();
     this.getUserData();
+
+    this.socket.on('opponentId', (opponent :{userId :number, isToStart :boolean}) => {
+      
+      this.gameService.playerId2 = opponent.userId; 
+      this.gameService.isToStart = opponent.isToStart; 
+      
+      this.gameService.setInGameMode(true);
+      this.router.navigate(['/game']);
+      this.loadingService.hideLoading();
+
+    });
   }
   getUserData() {
      this.userService.getUserData().subscribe((data: IUserData) => {
@@ -64,33 +76,40 @@ export class HomeComponent implements OnInit {
 
   }
 
-  openConfirmModal() {
-    this.sub = this.confirmService
-      .open(this.entry, CustomizeGameComponent)
-      .subscribe((mapId :any) => {
+  async openConfirmModal(isNormalPlay :boolean) {
 
-       this.loadingService.showLoading();
 
-       this.gameService.mapIndex = mapId;
-        this.getPlayersIds();
-      });
+    try {
+      const mapId = await firstValueFrom(this.confirmService.open(this.entry, CustomizeGameComponent));
+      
+      this.gameService.mapIndex = +mapId;
+      this.gameService.playerId1 = this.authService.getLoggedInUserId();
+      
+      if (isNormalPlay) {
+        
+        this.loadingService.showLoading();
+        this.socket.emit("requestOpponentId", this.gameService.playerId1);
+      }
+      else {
+        this.openGameInviteModal();
+      }
+    }
+    catch {
+
+    }
+  
   }
 
-  getPlayersIds() {
-    this.gameService.playerId1 = this.authService.getLoggedInUserId();
-    this.socket.emit("requestOpponentId", this.gameService.playerId1);
+  openGameInviteModal() {
+    this.sub = this.confirmService
+      .open(this.entry, GameInviteComponent, "Enter a username")
+      .subscribe((userId :any) => {
 
-    
-    this.socket.on('opponentId', (opponent :{userId :number, isToStart :boolean}) => {
-      
-      this.gameService.playerId2 = opponent.userId; 
-      this.gameService.isToStart = opponent.isToStart; 
-      
-      this.router.navigate(['/game']);
-      this.loadingService.hideLoading();
-
-    });
-
+        this.gameService.isToStart = false;
+        this.gameService.playerId2 = userId;
+        this.gameService.setInGameMode(true);
+        this.router.navigate(['/game']);
+      });
   }
 
   ngOnDestroy(): void {

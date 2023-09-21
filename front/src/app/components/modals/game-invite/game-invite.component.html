@@ -1,0 +1,59 @@
+
+<div class="wraper">
+
+    <div class="overlay" (click)="closeMe()"></div>
+    <div class="confirm-modal">
+        <div class="cm-items-wrap" *ngIf="!invitedUserId">
+
+            <h2 class="cm-title">{{ title }}</h2> 
+            <div class="tb-sec-item">
+                <svg class="tb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="./assets/icons/search.svg#icon-search"></use>
+                </svg>
+                <input class="tb-sec-item-text"
+                    [(ngModel)]="searchQuery" 
+                    (ngModelChange)="onSearchInputChange()" 
+                    (keydown)="onSearchInputKeyDown($event)"
+                    (keydown.enter)="onUserItemEnter($event)"
+                    name="look" type="search" placeholder="search..."
+                    appClickOutside (appClickOutside)="searchQuery && onClickedOutside1()" 
+                    autocomplete="off"
+                >
+            </div>
+            <div class="tb-results" *ngIf="searchResults.length">
+                <button class="tb-result-item" 
+                    *ngFor="let searchResult of searchResults; let i = index" 
+                    [class.active]="i === activeIndex" 
+                    (click)="onUserClick(i)"
+                >
+                
+                    <img class="tb-sec-item-img" [src]="searchResult.avatar" 
+                    
+                        style="display: none" onload="this.style.display=''"
+                        onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+                    />
+                    <span class="tb-sec-item-user">{{searchResult.username}}</span>
+                
+                </button>
+            </div>
+            
+        </div>
+        <div class="cm-invited-user" *ngIf="invitedUserId">
+            <img class="cm-invited-user-img" [src]="searchResults[activeIndex].avatar" 
+                
+                    style="display: none" onload="this.style.display=''"
+                    onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+                />
+                <span class="cm-invited-user-name">{{searchResults[activeIndex].username}}</span>
+        </div>
+        <div class="loading">
+            <img class="loading-gif" *ngIf="invitedUserId" src="./assets/gifs/pong_loading.gif"/>
+        </div>
+
+        <div class="cm-btns">
+            <button type="button" class="cm-btn b2" (click)="closeMe()">cancel</button>
+  
+          </div>
+    </div>
+    
+  </div>

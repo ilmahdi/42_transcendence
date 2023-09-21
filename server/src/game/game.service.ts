@@ -1,9 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { NotifyService } from 'src/user/notify/notify.service';
+import { NotificationCreateDto } from 'src/user/notify/utils/dtos/create-notification.dto';
 
 @Injectable()
 export class GameService {
+
+  constructor(
+    public notifyService :NotifyService,
+  ) {
+
+  }
 
   public games: { [gameId: string]: GameInstance } = {}; 
 
@@ -33,6 +41,15 @@ export class GameService {
       game.stopGameLoop(); 
       delete this.games[gameId];
     }
+  }
+
+  sendGameInviteNotif(notification: NotificationCreateDto) {
+    
+    this.notifyService.addNotification(notification);
+  }
+  deleteGameInviteNotif(notification: {from_id :number}) {
+    
+    this.notifyService.deleteGameInviteNotif(notification);
   }
 
 } 

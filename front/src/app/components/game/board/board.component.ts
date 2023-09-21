@@ -46,21 +46,21 @@ export class BoardComponent implements AfterViewInit {
     this.ctx.restore();
   }
 
-  public drawPlayButton() {
+  public drawPlayButton(msg :string) {
     
     this.ctx.strokeStyle = this.objColor;
     this.ctx.lineWidth = 2;
-    this.ctx.strokeRect(this.width / 2 - 50, this.height / 2 - 25, 100, 50);
+    this.ctx.strokeRect(this.width / 2 - 70, this.height / 2 - 25, 140, 50);
   
     this.ctx.fillStyle = this.objColor;
     this.ctx.font = '24px Arial';
 
 
-    const textWidth = this.ctx.measureText('Play').width;
-    const textHeight = this.ctx.measureText('Play').actualBoundingBoxAscent ;
+    const textWidth = this.ctx.measureText(msg).width;
+    const textHeight = this.ctx.measureText(msg).actualBoundingBoxAscent ;
 
 
-    this.ctx.fillText('Play', this.width / 2 - (textWidth/2), this.height / 2 + (textHeight / 2)); 
+    this.ctx.fillText(msg, this.width / 2 - (textWidth/2), this.height / 2 + (textHeight / 2)); 
   }
 
   public adapteCanvasSize() :boolean {

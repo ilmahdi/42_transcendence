@@ -21,19 +21,67 @@ export class GameGateway {
 
   private waitingPlayers: string[] = [];
   
-  @SubscribeMessage('inviteOpponentId')
-  inviteOpponentId(client: Socket, userId :string) {
-    
-    
-    this.server.to(this.inGameUsersById[userId]).emit('inviteOpponentId');
-  }
   @SubscribeMessage('requestOpponentId')
-  requestOpponentId(client: Socket, userId :string) {
+  handleRequestOpponentId(client: Socket, userId :string) {
     
     if (!this.inGameUsersById[userId]) {
 
       this.inGameUsersById[userId] = client.id;
       this.addToQueue(userId);
+    }
+  }
+  @SubscribeMessage('inviteOpponentId')
+  handleInviteOpponentId(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
+    
+    if (!this.inGameUsersById[userIds.player1Id] && !this.inGameUsersById[userIds.player2Id]) {
+      
+      const socketId = this.connectionGateway.connectedUsersById[userIds.player2Id];
+      
+      this.gameService.sendGameInviteNotif({
+        from_id: +userIds.player1Id,
+        to_id: +userIds.player2Id,
+        type: "GAME_INVITE",
+      })
+      this.inGameUsersById[userIds.player1Id] = client.id;
+      this.server.to(client.id).emit('waitInviteOpponentId', userIds.player2Id);
+      this.server.to(socketId).emit('inviteOpponentId', { notify: 1 });
+    }
+    else 
+      this.server.to(client.id).emit('failInviteOpponentId');
+
+  }
+  @SubscribeMessage('acceptGameInvite')
+  handleAcceptGameInvite(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
+    
+    if (!this.inGameUsersById[userIds.player1Id]) {
+
+      this.inGameUsersById[userIds.player1Id] = client.id;
+
+      const socketId1 = client.id;
+      const socketId2 = this.inGameUsersById[userIds.player2Id];
+
+
+      
+      this.gameService.createGame(this.server, this.getGameId(userIds.player1Id, userIds.player2Id), socketId2, socketId1);
+      
+      this.server.to(socketId2).emit('successGameInvite');
+    }
+  }
+  @SubscribeMessage('cancelGameInvite')
+  handleCancelGameInvite(client: Socket, userId :string) {
+
+
+    const socketId1 = this.inGameUsersById[userId];
+    if (socketId1) {
+
+      if (socketId1 !== client.id)
+        this.server.to(socketId1).emit('cancelGameInvite');
+
+      this.gameService.deleteGameInviteNotif({
+        from_id: +userId,
+      })
+
+      delete this.inGameUsersById[userId];
     }
   }
   @SubscribeMessage('leaveMatchmaking')
@@ -80,7 +128,7 @@ export class GameGateway {
   }
 
   @SubscribeMessage('startGame')
-  startGame(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
+  handleStartGame(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
     
     this.gameService.startGameLoop(this.getGameId(userIds.player1Id, userIds.player2Id));
 
@@ -88,7 +136,7 @@ export class GameGateway {
   }
 
   @SubscribeMessage('endGame')
-  endGame(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
+  handleEndGame(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
     
     this.gameService.endGame(this.getGameId(userIds.player1Id, userIds.player2Id));
 
@@ -104,7 +152,7 @@ export class GameGateway {
   
 
   @SubscribeMessage('paddleMove')
-  paddleMove(client: Socket, data :{userIds :{ player1Id: string, player2Id: string,}, paddle: {y :number} }) {
+  handlePaddleMove(client: Socket, data :{userIds :{ player1Id: string, player2Id: string,}, paddle: {y :number} }) {
     
     const game = this.gameService.games[this.getGameId(data.userIds.player1Id, data.userIds.player2Id)]
     if (game) {
@@ -115,7 +163,7 @@ export class GameGateway {
   }
 
   @SubscribeMessage('rematchGame')
-  rematchGame(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
+  handleRematchGame(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
 
     this.server.to(this.inGameUsersById[userIds.player2Id]).emit('rematchGame');
   }

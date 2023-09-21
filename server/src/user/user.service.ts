@@ -55,6 +55,7 @@ export class UserService {
     async findManyUsers(query: string) {
         const users = await this.prismaService.userAccount.findMany({
             select: {
+                id: true,
                 username: true,
                 avatar: true,
             },

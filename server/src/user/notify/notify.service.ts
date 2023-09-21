@@ -78,33 +78,36 @@ export class NotifyService {
 
     }
     async deleteNotification(notification: NotificationCreateDto) {
+      try {
+        const existingNotification = await this.prismaService.notification.findFirst({
+          where: {
+            OR: [
+              {
+                from_id: notification.from_id,
+                to_id: notification.to_id,
+              },
+              {
+                from_id: notification.to_id,
+                to_id: notification.from_id,
+              }
+            ]
+          },
+        });
 
-      const existingNotification = await this.prismaService.notification.findFirst({
-        where: {
-          OR: [
-            {
-              from_id: notification.from_id,
-              to_id: notification.to_id,
-            },
-            {
-              from_id: notification.to_id,
-              to_id: notification.from_id,
-            }
-          ]
-        },
-      });
+        if (!existingNotification) {
+          throw new HttpException('Notification not found', HttpStatus.CONFLICT);
+        }
 
-      if (!existingNotification) {
-        throw new HttpException('Notification not found', HttpStatus.CONFLICT);
+        const createdNotification = await this.prismaService.notification.delete({
+          where: { 
+            id: existingNotification.id, 
+          },
+        });
+      
+        return createdNotification;
+      } catch (error) {
+        throw new HttpException('Failed to delete notifications', HttpStatus.CONFLICT);
       }
-
-      const createdNotification = await this.prismaService.notification.delete({
-        where: { 
-          id: existingNotification.id, 
-        },
-      });
-    
-      return createdNotification;
 
     }
 
@@ -120,6 +123,28 @@ export class NotifyService {
         throw new HttpException('Failed to delete notifications', HttpStatus.CONFLICT);
       }
     }
+    async deleteGameInviteNotif(notification : {from_id :number}) {
+      try {
+        const notificationToDelete = await this.prismaService.notification.findFirst({
+          where: {
+            from_id: notification.from_id,
+          },
+        });
+        if (notificationToDelete) {
+
+          const deletedNotification = await this.prismaService.notification.delete({
+            where: {
+              id: notificationToDelete.id,
+            },
+          });
+          return deletedNotification;
+        }
+      } catch (error) {
+          console.log('Failed to delete notification!');
+      }
+    }
+
+
     async updateSeenNotifications(notificationIds :number[]) {
       try {
         const deletedNotifications = await this.prismaService.notification.updateMany({

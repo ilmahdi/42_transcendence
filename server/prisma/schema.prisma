@@ -18,7 +18,6 @@ enum Status {
 }
 enum FriendshipStatus {
   WAITING
-  REFUSED
   ACCEPTED
   BLOCKED
 }

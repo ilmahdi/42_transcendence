@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { MenuBarService } from 'src/app/services/menu-bar.service';
 import { INotifyData } from 'src/app/utils/interfaces/notify-data.interface';
+import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
 
 @Component({
@@ -22,7 +23,7 @@ export class TopBarComponent implements OnInit {
   }
   
   public searchQuery: string = '';
-  public searchResults: any[] = [];
+  public searchResults: IUserDataShort[] = [];
   public activeIndex: number = -1;
   public isNotifClicked: boolean = false;
   public isNewNotif: number = 0;
@@ -39,6 +40,11 @@ export class TopBarComponent implements OnInit {
     this.socket.on('unNotifyFriendRequest', (data :any) => {
       if (this.isNewNotif)
         this.isNewNotif += data.notify
+
+    });
+
+    this.socket.on('inviteOpponentId', (data :any) => {
+      this.isNewNotif += data.notify
 
     });
     this.getNotifications();

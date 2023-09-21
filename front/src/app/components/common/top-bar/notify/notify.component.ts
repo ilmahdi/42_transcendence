@@ -1,10 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { GameService } from 'src/app/services/game.service';
 import { MenuBarService } from 'src/app/services/menu-bar.service';
 import { UserService } from 'src/app/services/user.service';
 import { IFriendship } from 'src/app/utils/interfaces/friendship.interface';
-import { INotification, INotifyData, NotificationType } from 'src/app/utils/interfaces/notify-data.interface';
+import { INotification, INotifyData } from 'src/app/utils/interfaces/notify-data.interface';
+import { CustomSocket } from 'src/app/utils/socket/socket.module';
 
 @Component({
   selector: 'app-notify',
@@ -18,6 +21,9 @@ export class NotifyComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private menuBarService: MenuBarService,
+    private socket: CustomSocket,
+    private gameService : GameService,
+    private router: Router,
   ) {
 
     this.loggedInUserId  = this.authService.getLoggedInUserId();
@@ -27,14 +33,13 @@ export class NotifyComponent implements OnInit {
 
   @Output() buttonClickEvent :EventEmitter<void> = new EventEmitter<void>();
 
-  public NotificationType = NotificationType;
   public loggedInUserId :number;
 
   ngOnInit(): void {
     
   }
 
-  async onAcceptClick(index :number) {
+  async onAcceptFriendClick(index :number) {
     
     this.buttonClickEvent.emit();
     const target_id = this.notifyData[index].notif_from.id;
@@ -62,6 +67,36 @@ export class NotifyComponent implements OnInit {
 
     this.menuBarService.sendEvent("refreshUser", target_id)
     this.menuBarService.sendEvent("refreshUser", this.loggedInUserId)
+  }
+
+
+
+  async onAcceptGameClick(index :number) {
+
+    this.buttonClickEvent.emit();
+    const target_id = this.notifyData[index].notif_from.id;
+
+    this.socket.emit("acceptGameInvite", {
+      player1Id: this.loggedInUserId,
+      player2Id: target_id,
+    });
+    await this.deleteFriendshipNotification(this.getNotification(this.loggedInUserId, target_id));
+
+    this.gameService.playerId1 = this.loggedInUserId; 
+    this.gameService.playerId2 = target_id; 
+    this.gameService.isToStart = true; 
+    
+    this.gameService.setInGameMode(true);
+    this.router.navigate(['/game']);
+    
+  }
+  async onRejecttGameClick(index :number) {
+
+    this.buttonClickEvent.emit();
+    const target_id = this.notifyData[index].notif_from.id;
+
+    this.socket.emit("cancelGameInvite", target_id,);
+    
   }
 
 

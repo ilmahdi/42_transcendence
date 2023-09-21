@@ -42,9 +42,9 @@ export class PaddleComponent implements OnInit{
   }
 
   ngAfterViewInit(): void {
-    this.adaptePaddleSize();
-    this.adaptePaddleSide();
     this.initPaddlePosition();
+
+    this.y = (this.gameBoard.height / 2) - (this.height / 2);
   }
   
   public drawPaddle() {
@@ -54,18 +54,18 @@ export class PaddleComponent implements OnInit{
 
   }
 
-  public adaptePaddleSize() {
+
+  public initPaddlePosition() {
     this.width = this.gameBoard.width / 80;
     this.height = this.gameBoard.height / 6;
-  }
-  public adaptePaddleSide() {
+
+    this.initialX = 10 *  this.gameBoard.width / this.gameBoard.initialWidth;
+
     if (this.isOwnPaddle) {
       this.x = this.gameBoard.width - this.initialX - this.width;
     }
-  }
-
-  private initPaddlePosition() {
-    this.y = (this.gameBoard.height / 2) - (this.height / 2);
+    else
+      this.x = this.initialX;
   }
 
   public onMouseMove(event: MouseEvent): void {
@@ -137,7 +137,7 @@ export class PaddleComponent implements OnInit{
     
     const deltaY = targetY - paddleCenter;
     if (this.ball.velocityX < 0 && this.x > this.gameBoard.width / 2
-    || this.ball.velocityX > 0 && this.x < this.gameBoard.width / 2
+      || this.ball.velocityX > 0 && this.x < this.gameBoard.width / 2
     ) {
       this.y += deltaY * this.level / 3;
     }
@@ -167,6 +167,16 @@ export class PaddleComponent implements OnInit{
 
     this.ctx.fillText(this.score.toString(), posX, this.gameBoard.height / 6);
 
+  }
+  public displayEndGameMessage(msg :string) {
+
+    this.ctx.font = '2.6rem Arial';
+    this.ctx.fillStyle = this.color;
+
+    const textWidth = this.ctx.measureText(msg).width;
+
+
+    this.ctx.fillText(msg, this.gameBoard.width / 2 - (textWidth/2), this.gameBoard.height / 3); 
   }
   public adaptMap() {
 

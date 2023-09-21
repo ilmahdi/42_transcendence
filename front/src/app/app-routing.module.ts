@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard, AuthGuardReversed, TwoFaGuard } from './guards/auth.guard';
+import { AuthGuard, AuthGuardReversed, GameGuard, TwoFaGuard } from './guards/auth.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { TwoFaLoginComponent } from './components/visitors/two-fa-login/two-fa-login.component';
 
@@ -32,7 +32,7 @@ const routes: Routes = [
     path: 'game',
     loadChildren: () =>
     import('./components/game/game.module').then((m) => m.GameModule),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, GameGuard],
   },
   {
     path: 'chat',

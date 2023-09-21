@@ -51,14 +51,7 @@ export class BallComponent implements OnInit{
     this.initBallPosition();
     this.adapteBallSize();
     this.getInitialVelocity();
-    this.initSpeed()
   }
-
-  public initSpeed() {
-
-    this.speed = 10 * this.gameBoard.width / this.gameBoard.initialWidth
-  }
-
   public drawBall() {
     this.ctx.fillStyle = this.color;
     this.ctx.beginPath();
@@ -194,7 +187,7 @@ export class BallComponent implements OnInit{
 
     this.velocityX = direction * Math.cos(bounceAngle) * this.speed;
     this.velocityY = Math.sin(bounceAngle) * this.speed;
-
+    
   }
   
 
@@ -212,7 +205,7 @@ export class BallComponent implements OnInit{
 
   private getInitialVelocity() {
     
-    this.velocityX = this.speed * 0.6;
+    this.velocityX = this.speed * 0.6 * (this.gameBoard.width / this.gameBoard.initialWidth);
     this.velocityY = 0;
 
     if (this.gameService.isToStart)
