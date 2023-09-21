@@ -9,8 +9,9 @@
         </div>
 
         <span *ngFor="let item of notReaded">
-            <div class="notReaded" *ngIf="f.id === item.senderId">
-                <p style="left: 5px;position: relative;bottom: 2px;">{{item.unreadCount}}</p>
+            <div class="notReaded" *ngIf="f.id === item.senderId" [style.width]="item.unreadCount>9? '25px' : ''">
+                <p style="left: 5px;position: relative;bottom: 2px;" *ngIf="item.unreadCount <= 9">{{item.unreadCount}}</p>
+                <p style="left: 5px;position: relative;bottom: 2px;" *ngIf="item.unreadCount > 9">9+</p>
             </div>
         </span>
 

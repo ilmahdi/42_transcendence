@@ -40,6 +40,7 @@ img {
     color: white;
     margin-top: 10px;
     margin-left: 108px;
+    /* width: 200px; */
 }
 
 .writing {
@@ -233,6 +234,9 @@ p {
     .fa-angle-double-left {
         display: block;
     }
+    #conv {
+        margin-left: 90px;
+    }
 }
 
 @media (max-width: 1000px) {
@@ -250,7 +254,7 @@ p {
         margin-left: -10px;
     }
     .options {
-        margin-left: 25%;
+        margin-left: 15%;
     }
 }
 
@@ -261,14 +265,17 @@ p {
     .options {
         margin-left: 10%;
     }
+    #conv {
+        margin-left: 60px;
+    }
 }
-    
+
 @media (max-width: 450px) {
     .body {
         width: 330px;
     }
     .options {
-        margin-left: 3%;
+        margin-left: 0%;
     }
 }
 

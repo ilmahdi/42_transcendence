@@ -29,7 +29,7 @@
             <app-rooms *ngIf="roomsClicked" (conversData)="getRoomConvers($event)"></app-rooms>
         </div>
 
-        <app-conversations *ngIf="smallScreen" [userEmitted]="userEvent" [roomConvers]="roomData"></app-conversations>
+        <app-conversations *ngIf="conversation" [userEmitted]="userEvent" [roomConvers]="roomData"></app-conversations>
         
         <app-creating-rooms *ngIf="addRoom"></app-creating-rooms>
         <app-other-rooms *ngIf="otherRooms"></app-other-rooms>

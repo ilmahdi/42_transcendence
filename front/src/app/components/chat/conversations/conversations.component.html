@@ -1,9 +1,14 @@
 <div *ngIf="!roomConvers[0]">
     <div class="body" *ngIf="userEmitted && displayConversation" [style.display]="userEmitted[1]? 'block': 'none'">
         <div class="header">
-            <div class="fa fa-angle-double-left" (click)="getConversEvent()"></div>
-            <img [src]="userEmitted[0].avatar" alt="avatar">
-            <span id="conv">Conversation with <span style="font-weight: bolder;">{{userEmitted[0].username}}</span></span>
+            <div style="width: 80%;display: flex;">
+                <div class="fa fa-angle-double-left" (click)="getConversEvent()"></div>
+                <img [src]="userEmitted[0].avatar" alt="avatar" (click)="openProfile()" style="cursor: pointer;">
+                <span id="conv">Conversation with <span style="font-weight: bolder;">{{userEmitted[0].username}}</span></span>
+            </div>
+            <div class="options" style="margin-right: 10%;margin-left: 30%;">
+                <div class="fa fa-ellipsis-v"></div>
+            </div>
         </div>
 
         <div class="messages" #scrollContainer (click)="clickOnConversation()">

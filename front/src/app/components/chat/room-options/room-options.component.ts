@@ -18,7 +18,7 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
 
   userId?:number;
   room:Room = {}
-  members:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean, muteDuration: number}[] = []
+  members:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean, muteDuration: number, ban:boolean}[] = []
   form = new FormGroup({password:new FormControl, mute:new FormControl<string[]>([])});
   type?:RoomType
   clickOnUser:{user:IUserDataShort, click:boolean}[] = [];
@@ -47,7 +47,7 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.members = []
       users.forEach(user=> {
         if (user.user.id !== this.userId)
-          this.members.push({user:user.user, type:user.type, click:false, admin:false, removed:false, mute:false, muteDuration: 0})
+          this.members.push({user:user.user, type:user.type, click:false, admin:false, removed:false, mute:false, muteDuration: 0, ban:false})
       })
     })
     this.subscriptions.push(subs2)
@@ -62,42 +62,97 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.type = RoomType.PRIVATE
   }
 
-  clickOnMember(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean, muteDuration: number}) {
+  clickOnMember(member:{user:IUserDataShort,
+    type:string,
+    click:boolean,
+    admin:boolean,
+    removed:boolean,
+    mute:boolean,
+    muteDuration: number,
+    ban:boolean}) {
     member.click = !member.click
     // member.mute = !member.mute
   }
 
-  addAdmin(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean, muteDuration: number}) {
+  addAdmin(member:{user:IUserDataShort,
+    type:string,
+    click:boolean,
+    admin:boolean,
+    removed:boolean,
+    mute:boolean,
+    muteDuration: number,
+    ban:boolean}) {
     if (this.room.adminId?.includes(member.user.id!)) return
     member.click = !member.click
     member.admin = !member.admin
     member.removed = false
+    member.ban = false
     if (member.admin)
       this.newAdminsId.push(member.user.id!)
     else
       this.newAdminsId = this.newAdminsId.filter(id=> id !== member.user.id)
   }
 
-  removeMember(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean, muteDuration: number}) {
+  removeMember(member:{user:IUserDataShort,
+    type:string,
+    click:boolean,
+    admin:boolean,
+    removed:boolean,
+    mute:boolean,
+    muteDuration: number,
+    ban:boolean}) {
     if (this.room.adminId?.includes(member.user.id!)) return
     member.click = !member.click
     member.removed = !member.removed
     member.admin = false
+    member.ban = false
     if (member.removed)
       this.removedId.push(member.user.id!)
     else
       this.removedId = this.removedId.filter(id=> id !== member.user.id)
   }
 
-  muting(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean, muteDuration: number}) {
+  muting(member:{user:IUserDataShort,
+    type:string,
+    click:boolean,
+    admin:boolean,
+    removed:boolean,
+    mute:boolean,
+    muteDuration: number,
+    ban:boolean}) {
     member.click = !member.click;
     member.mute = !member.mute
-    member.muteDuration = 0;
+    member.muteDuration = 0; 
+    member.ban = false
   }
 
-  saad(member:{user:IUserDataShort, type:string, click:boolean, admin:boolean, removed:boolean, mute:boolean, muteDuration: number}) {
-    member.click = !member.click;
+  clickOnInput(member:{user:IUserDataShort,
+    type:string,
+    click:boolean,
+    admin:boolean,
+    removed:boolean,
+    mute:boolean,
+    muteDuration: number,
+    ban:boolean}) {
+    member.click = !member.click
+    member.removed = false
+    member.admin = false
+    member.ban = false
+  }
 
+  banUser(member:{user:IUserDataShort,
+    type:string,
+    click:boolean,
+    admin:boolean,
+    removed:boolean,
+    mute:boolean,
+    muteDuration: number,
+    ban:boolean}) {
+    member.click = !member.click
+    member.ban = !member.ban
+    member.removed = false
+    member.admin = false
+    member.mute = false
   }
 
   saveRoom() {
@@ -119,7 +174,6 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       roomId: this.room.id,
     }));
     this.room.mutes = mutedUserDurations
-    console.log(this.room.mutes);
 
     this.chatService.roomOptionsSource.next(this.room)////////////
     this.chatService.sendToGetRoomMembers(this.room);

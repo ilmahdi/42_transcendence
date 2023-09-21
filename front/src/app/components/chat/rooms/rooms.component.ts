@@ -115,15 +115,25 @@ export class RoomsComponent implements OnInit, OnDestroy {
   }
 
   openRoom(room:Room) {
+    let newRoom:Room = room
+    this.chatService.sendToGetRooms(this.userId!);
+    this.chatService.getRooms().subscribe(data=>{
+      data.forEach(item=>{
+        if (room.id === item.id) {
+          newRoom = item
+        }
+      })
+    })
+    
     //  IF THE SCREEN WIDTH < 1350 SO THE CONVERSATION BUTTON COLOR WILL NOT CHANGE WHEN THE USER CLICK IT
     if (this.screenWidth > 1350) {
-      this.color = {color:'#d3814674', name:room.name}
+      this.color = {color:'#d3814674', name:newRoom.name}
     }
     else
       this.color = {color:'', name:''}
 
     //  GET THE CONVERSATION FROM SERVER
-    this.chatService.sendToGetRoomConversation(room)
+    this.chatService.sendToGetRoomConversation(newRoom)
     const subs:Subscription = this.chatService.getRoomConversation().subscribe((data) => {
       data.sort((a:Message, b:Message)=>a.id! - b.id!)
       this.chatService.updateRoomConversation(data);
@@ -136,8 +146,8 @@ export class RoomsComponent implements OnInit, OnDestroy {
       this.chatService.displayComponents(false, true, false, true, false, false, false);
     })
     this.subscriptions.push(subs)
-    this.chatService.roomOptionsSource.next(room);////////////
-    this.conversData.emit(room);
+    this.chatService.roomOptionsSource.next(newRoom);////////////
+    this.conversData.emit(newRoom);
   }
 
   ngOnDestroy(): void {

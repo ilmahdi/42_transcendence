@@ -5,7 +5,7 @@ import { Message } from "../models/message.interface";
 import * as bcrypt from 'bcrypt'
 import { UserService } from "src/user/user.service";
 import { PrismaService } from "src/prisma/prisma.service";
-import { RoomType } from "@prisma/client";
+import { Mute, RoomType } from "@prisma/client";
 import { UserModel } from "src/user/utils/interfaces/user.model";
 
 @Injectable()
@@ -23,6 +23,45 @@ export class RoomChatService {
   
     async comparePasswords(plainTextPassword: string, hashedPassword: string): Promise<boolean> {
       return bcrypt.compare(plainTextPassword, hashedPassword);
+    }
+
+    async saveMessage(data: {senderId:number, room:Room, message:Message}) {
+      let out: boolean = false;
+
+      if (data.message.roomId != -1 && data.room.mutes) {
+        for (const item of data.room.mutes) {
+          if (item.userId === data.message.senderId) {
+            const then: Date = new Date(item.updatedAt);
+            const now: Date = new Date();
+            console.log(then, "          ", now)
+            
+            const timeDifference = now.getTime() - then.getTime();
+          
+            console.log(timeDifference, "        ", item.during * 60000)
+            if (timeDifference < item.during * 60000) {
+              out = true;
+              break;
+            }
+          }
+        }
+      }
+      
+      if (out) {
+        return false;
+      }
+    
+      await this.prismaService.message.create({
+        data: {
+          senderId: data.message.senderId,
+          date: data.message.date,
+          message: data.message.message,
+          receiverId: data.message.receiverId,
+          readed: false,
+          roomId: data.message.roomId
+        }
+      });
+    
+      return true;
     }
 
     getAllUsers() {
@@ -76,15 +115,18 @@ export class RoomChatService {
   
       async getRooms(id: number): Promise<Room[]> {
         try {
-          const rooms = await this.prismaService.room.findMany({
+          const rooms: Room[] = await this.prismaService.room.findMany({
             where: {
               OR: [
                 { adminId: { hasSome: [id] } }, // Check if id is present in the adminId array
                 { usersId: { hasSome: [id] } }, // Check if id is present in the usersId array
               ],
             },
+            include: {
+              mutes: true, // Include the associated mutes
+            },
           });
-    
+      
           return rooms;
         } catch (error) {
           throw new Error('Could not retrieve rooms');
@@ -278,25 +320,57 @@ export class RoomChatService {
       return result;
     }
 
-    async changeRoomType(room:Room) {
+    async changeRoomType(room: Room) {
       if (room.type !== RoomType.PROTECTED) {
         room.password = null;
+      } else {
+        room.password = await this.hashPassword(room.password);
       }
-      else {
-        room.password = await this.hashPassword(room.password)
+    
+      // Iterate through the room's mute entries
+      for (const mute of room.mutes) {
+        // Check if a mute entry with the same roomId and userId exists
+        const existingMute = await this.prismaService.mute.findFirst({
+          where: {
+            roomId: mute.roomId,
+            userId: mute.userId,
+          },
+        });
+    
+        if (existingMute) {
+          // Mute entry exists, update it
+          await this.prismaService.mute.update({
+            where: {
+              id: existingMute.id, // Use the existing mute's ID for updating
+            },
+            data: {
+              during: mute.during,
+            },
+          });
+        } else {
+          // Mute entry doesn't exist, create a new one
+          await this.prismaService.mute.create({
+            data: {
+              roomId: mute.roomId,
+              userId: mute.userId,
+              during: mute.during,
+            },
+          });
+        }
       }
+    
+      // Finally, update the room
       await this.prismaService.room.update({
-        where: {id:room.id},
-        data:
-          {id:room.id, adminId:room.adminId, usersId:room.usersId, name:room.name, password:room.password, type:room.type, imagePath:room.imagePath,
-            mutes: {
-              create: room.mutes.map((mute) => ({
-                roomId: mute.id,
-                userId: mute.userId,
-                during: mute.during
-              })),
-            }
-          }
+        where: { id: room.id },
+        data: {
+          id: room.id,
+          adminId: room.adminId,
+          usersId: room.usersId,
+          name: room.name,
+          password: room.password,
+          type: room.type,
+          imagePath: room.imagePath,
+        },
       });
     }
 }

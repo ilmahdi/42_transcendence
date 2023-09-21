@@ -3,7 +3,7 @@ import { from, map } from "rxjs";
 import { Message } from "../models/message.interface";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserModel } from "src/user/utils/interfaces/user.model";
-import { Room } from "../models/room.interface";
+import { Friendship, FriendshipStatus } from "@prisma/client";
 
 @Injectable()
 export class PrivateChatService {
@@ -12,25 +12,23 @@ export class PrivateChatService {
     ) {}
 
     async saveMessage(message: Message) {
-      if (message.roomId != -1) {
-        const room:Room = await this.prismaService.room.findFirst({
-          where: {id: message.roomId}
-        })
+      let friends:Friendship[] = await this.prismaService.friendship.findMany({
+        where: {
+          friendship_status: FriendshipStatus.BLOCKED
+        }
+      })
+      let blocked:boolean = false;
+      friends.forEach(friend=> {
+        if (friend.id === message.senderId) {
+          blocked = true;
+          return;
+        }
+      })
 
-        let out:boolean = false
-        if (room.mutes[0])
-          room.mutes.forEach(item=> {
-            if (item.userId === message.senderId) {
-              let then:Date = new Date(item.createdAt)
-              let now:Date = new Date()
-              if (now.getTime() - then.getTime() < item.during)
-                out = true
-            }
-          })
-          if (out)
-            return
-      }
-      return await this.prismaService.message.create({
+      if (blocked)
+        return false;
+
+      await this.prismaService.message.create({
         data:{
           senderId:message.senderId,
           date:message.date,
@@ -40,6 +38,8 @@ export class PrivateChatService {
           roomId:message.roomId
         }
       })
+
+      return true;
     }
 
     getMessages() {

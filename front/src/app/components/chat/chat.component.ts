@@ -22,11 +22,12 @@ export class ChatComponent implements OnInit, OnDestroy {
   directClicked: boolean = true
   roomsClicked: boolean = false
   screenWidth: number = 1000;
-  smallScreen:boolean = false;
+  // smallScreen:boolean = false;
   displayConvers:boolean = false;
   options:boolean = false
   addMember:boolean = false
   otherRooms:boolean = false
+  conversation:boolean = false
 
   userId?:number
   addRoom:boolean = false
@@ -69,6 +70,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     const subs4:Subscription = this.chatService.displayOtherRooms$.subscribe(data=>this.otherRooms = data)
     this.subscriptions.push(subs4)
+
+    const subs5:Subscription = this.chatService.displayConversation$.subscribe(data=>this.conversation = data)
+    this.subscriptions.push(subs5)
   }
 
   onResize() {
@@ -86,7 +90,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   onCustomEvent(user:IUserDataShort) {
-    this.smallScreen = true
+    // this.smallScreen = true
     this.userEvent = [user, true]
     this.roomData = []
   }
@@ -98,7 +102,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getRoomConvers(room:Room) {
-    this.smallScreen = true
+    // this.smallScreen = true
     // this.displayConvers = false
     this.chatService.sendToGetRoomById(room.id!)
     this.roomData = [room, true]

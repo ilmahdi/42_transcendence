@@ -181,7 +181,7 @@ h4 {
     outline: none;
     width: 100%;
     height: 100%;
-    margin-left: 2px;
+    /* margin-left: 2px; */
     text-indent: 10px;
     border-radius: 10px;
     background-color: #584747;
@@ -191,6 +191,19 @@ h4 {
 .saad {
     height: 36px;
     width: 20%;
+    position: absolute;
+    right: 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+    margin-top: 40px;
+    margin-right: 21%;
+    color: white;
+}
+
+.ban {
+    height: 36px;
+    width: 20%;
+    background-color: #201717;;
     position: absolute;
     right: 10px;
     border-radius: 10px;

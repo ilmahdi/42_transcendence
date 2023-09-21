@@ -1,9 +1,9 @@
 import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { Observable, take, Subscription } from 'rxjs';
 import { Message } from 'src/app/models/message.model';
-import { User } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ChatService } from 'src/app/services/chat.service';
 import { UserService } from 'src/app/services/user.service';
@@ -36,7 +36,8 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
 
   constructor(private chatService: ChatService,
     private authService: AuthService,
-    private userService:UserService
+    private userService:UserService,
+    private router:Router
     ) {
     this.chatService.optionsSource.next(false)
     
@@ -127,7 +128,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
   }
 
   sendRoomMessage() {
-    const msg = {senderId:this.userId, receiverId:this.userId, message:this.msg.value.message, date:new Date(), readed:false, roomId:this.roomConvers[0].id}
+    const msg = {senderId:this.userId, receiverId:this.userId, message:this.msg.value.message, date:new Date(), readed:false, roomId:this.roomConvers[0].id, mutes:this.roomConvers[0].mutes}   
     if (!msg.message) return;
     this.chatService.sendToGetRoomMembers(this.roomConvers[0])
     this.chatService.getRoomMembers().pipe(take(1)).subscribe(data=> {
@@ -161,6 +162,10 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
 
   clickOnConversation() {
     this.chatService.clickOnConversationSource.next({click:true, user:this.userEmitted[0]})
+  }
+
+  openProfile() {
+    this.router.navigateByUrl('/profile/' + this.userEmitted[0].username)
   }
 
   ngOnDestroy(): void {

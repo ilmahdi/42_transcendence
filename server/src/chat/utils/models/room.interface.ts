@@ -11,5 +11,5 @@ export interface Room {
     type?: RoomType;
     password?: string;
     imagePath?: string;
-    mutes?: Mute[]
+    mutes?: Mute[];
 }

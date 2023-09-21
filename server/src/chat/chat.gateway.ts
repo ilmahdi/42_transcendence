@@ -29,7 +29,8 @@ export class ChatGateway{
   @SubscribeMessage('privateMessage')
   handlePrivateMessage(client: Socket, data: any) {
     
-    this.privateChatService.saveMessage(data.message)
+    if (!this.privateChatService.saveMessage(data.message))
+      return;
     const senders = this.connectionGateway.connectedUsersById[data.message.senderId]
       if (senders)
         senders.forEach(id=>{
@@ -101,8 +102,10 @@ export class ChatGateway{
   }
 
   @SubscribeMessage('roomMessage')
-  roomMessage(client:Socket, data:any) {
-    this.privateChatService.saveMessage(data.message);
+  async roomMessage(client:Socket, data:{senderId:number, room:Room, message:Message}) {
+    const isSaved:boolean = await this.roomChatService.saveMessage(data);
+    if (!isSaved)
+      return
     let usersId:(number[]) = data.room.usersId;
     usersId.forEach(id=> {
       this.userService.getUserById(id).subscribe(async user=>{

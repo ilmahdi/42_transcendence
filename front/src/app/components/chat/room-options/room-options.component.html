@@ -18,14 +18,13 @@
             <div class="user" [style.backgroundColor]="user.click? '#D38146':''" (click)="clickOnMember(user)" [style.width]="(user.click && user.type === 'user')? '45%':'80%'">
                 <div class="addAdmin" *ngIf="user.click && user.type === 'user'" (click)="addAdmin(user)" [style.backgroundColor]="user.admin? '#D38146':''"><p style="text-align: center;margin-top: 3px;">Admin</p></div>
                 <div class="remove" *ngIf="user.click && user.type === 'user'" (click)="removeMember(user)" [style.backgroundColor]="user.removed?'#D38146':''"><p style="text-align: center;margin-top: 3px;">Remove</p></div>
-                <div class="mute" *ngIf="user.click && user.type === 'user'" (click)="muting(user)" [style.backgroundColor]="user.mute?'#D38146':''">
-                    <p style="text-align: center;margin-top: 3px;">Mute</p>
-                    <!-- <form> -->
-                    <!-- </form> -->
+                <div class="mute" *ngIf="user.click && user.type === 'user'"  [style.backgroundColor]="user.mute?'#D38146':''">
+                    <p style="text-align: center;margin-top: 3px;" (click)="muting(user)" *ngIf="!user.mute">Mute</p>
+                    <div (click)="clickOnInput(user)" *ngIf="user.mute">
+                        <input type="number" id="mutingTime" min="0" max="100" step="1" placeholder="Minutes" [(ngModel)]="user.muteDuration">
+                    </div>
                 </div>
-                <div class="saad" (click)="saad(user)" >
-                    <input type="number" id="mutingTime" min="0" max="100" step="1" placeholder="Minutes" [(ngModel)]="user.muteDuration" *ngIf="user.mute">
-                </div>
+                <div class="ban" *ngIf="user.click && user.type === 'user'" (click)="banUser(user)" [style.backgroundColor]="user.ban?'#D38146':''"><p style="text-align: center;margin-top: 3px;">Ban</p></div>
                 <img [src]="user.user.avatar" alt="avatar" id="img">
                 <p id="username">{{user.user.username}}</p>
                 <p id="type">{{user.type}}</p>
