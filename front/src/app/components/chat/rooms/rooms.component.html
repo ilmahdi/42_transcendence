@@ -17,10 +17,10 @@
             </div>
         </div>
 
-        <span *ngFor="let item of lastMessages" id="date">
-            <span *ngIf="item">
-                <p *ngIf="item && item.roomId === room.id">{{editeDateFormat(item.date)}}</p>
-            </span>
-        </span>
+        <div *ngFor="let item of lastMessages" class="date">
+            <div *ngIf="item">
+                <p *ngIf="item && item.roomId === room.id" style="margin-left: 100px;">{{editeDateFormat(item.date)}}</p>
+            </div>
+        </div>
     </div>
 </div>

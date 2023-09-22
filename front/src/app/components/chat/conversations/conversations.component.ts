@@ -131,7 +131,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     const msg = {senderId:this.userId, receiverId:this.userId, message:this.msg.value.message, date:new Date(), readed:false, roomId:this.roomConvers[0].id, mutes:this.roomConvers[0].mutes}   
     if (!msg.message) return;
     this.chatService.sendToGetRoomMembers(this.roomConvers[0])
-    this.chatService.getRoomMembers().pipe(take(1)).subscribe(data=> {
+    const subs1:Subscription = this.chatService.getRoomMembers().pipe(take(1)).subscribe(data=> {
       let found:boolean = false
       data.forEach(item=>{
         if (item.user.id === this.userId) {
@@ -139,12 +139,18 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
         }
       })
       if (found) {
-        this.chatService.sendRoomMessage(this.userId!, this.roomConvers[0], msg);
-        this.msg.reset();
+        // UPDATE ROOM
+        this.chatService.sendToGetRoomById(this.roomConvers[0].id);
+        const subs2:Subscription = this.chatService.getRoomById().pipe(take(1)).subscribe(room=> {
+          this.chatService.sendRoomMessage(this.userId!, room, msg);
+          this.msg.reset();
+        })
+        this.subsciptions.push(subs2);
       }
-      else 
+      else
         this.chatService.displayComponents(false, false, false, true, true, false, false);
     })
+    this.subsciptions.push(subs1)
     this.msg.reset();
   }
 
@@ -164,8 +170,8 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     this.chatService.clickOnConversationSource.next({click:true, user:this.userEmitted[0]})
   }
 
-  openProfile() {
-    this.router.navigateByUrl('/profile/' + this.userEmitted[0].username)
+  openProfile(user:IUserDataShort) {
+    this.router.navigateByUrl('/profile/' + user.username)
   }
 
   ngOnDestroy(): void {

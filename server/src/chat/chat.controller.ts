@@ -63,11 +63,6 @@ export class ChatController {
     return room
   }
 
-  @Get('allRooms')
-  getAllRooms() {
-    return this.roomChatService.getAllRooms();
-  }
-
   @Get('searchRoom')
   async searchRoom(@Query('query') query:string) {
     const rooms = await this.roomChatService.searchRooms(query);

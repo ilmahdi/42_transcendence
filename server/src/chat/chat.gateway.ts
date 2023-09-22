@@ -139,8 +139,9 @@ export class ChatGateway{
   }
 
   @SubscribeMessage('getOtherRooms')
-  getOtherRooms(client:Socket) {
-    this.roomChatService.getAllRooms().subscribe(data=>client.emit('recOtherRooms', data))
+  async getOtherRooms(client:Socket, id:number) {
+    const rooms = await this.roomChatService.getAllRooms(id);
+    client.emit('recOtherRooms', rooms);
   }
 
   @SubscribeMessage('getRoomMembers')
@@ -150,8 +151,8 @@ export class ChatGateway{
   }
 
   @SubscribeMessage('updateRoom')
-  updateRoom(client:Socket, room:Room) {
-    this.roomChatService.changeRoomType(room);
+  async updateRoom(client:Socket, room:Room) {
+    await this.roomChatService.changeRoomType(room);
   }
 
   @SubscribeMessage('readSignal')

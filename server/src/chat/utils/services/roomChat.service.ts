@@ -28,20 +28,18 @@ export class RoomChatService {
     async saveMessage(data: {senderId:number, room:Room, message:Message}) {
       let out: boolean = false;
 
-      if (data.message.roomId != -1 && data.room.mutes) {
-        for (const item of data.room.mutes) {
-          if (item.userId === data.message.senderId) {
-            const then: Date = new Date(item.updatedAt);
-            const now: Date = new Date();
-            console.log(then, "          ", now)
-            
-            const timeDifference = now.getTime() - then.getTime();
+      for (const item of data.room.mutes) {
+        if (item.userId === data.message.senderId) {
+          const then: Date = new Date(item.updatedAt);
+          const now: Date = new Date();
+          console.log(then, "          ", now)
           
-            console.log(timeDifference, "        ", item.during * 60000)
-            if (timeDifference < item.during * 60000) {
-              out = true;
-              break;
-            }
+          const timeDifference = now.getTime() - then.getTime();
+        
+          console.log(timeDifference, "        ", item.during * 60000)
+          if (timeDifference < item.during * 60000) {
+            out = true;
+            break;
           }
         }
       }
@@ -100,17 +98,23 @@ export class RoomChatService {
 
       getRoomById(id:number){
         let room = this.prismaService.room.findFirst({
-          where: {id :id}
+          where: {id :id},
+          include: {
+            mutes: true, // Include the associated mutes
+          },
         });
         return from(room);
       }
 
-      getAllRooms() {
-        const roomsQuery = this.prismaService.room.findMany()
-  
-        return from(roomsQuery).pipe(
-          map(rooms => rooms.filter(room => room.type !== RoomType.PRIVATE))
-        );
+      async getAllRooms(id:number) {
+        const roomsQuery = await this.prismaService.room.findMany()
+
+        let otherRooms:Room[] = [];
+        roomsQuery.forEach(room=> {
+          if (room.type != RoomType.PRIVATE && !room.blackList.includes(id))
+            otherRooms.push(room);
+        })
+        return otherRooms;
       }
   
       async getRooms(id: number): Promise<Room[]> {
@@ -370,6 +374,7 @@ export class RoomChatService {
           password: room.password,
           type: room.type,
           imagePath: room.imagePath,
+          blackList: room.blackList,
         },
       });
     }

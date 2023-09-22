@@ -1,12 +1,13 @@
 <div *ngIf="!roomConvers[0]">
     <div class="body" *ngIf="userEmitted && displayConversation" [style.display]="userEmitted[1]? 'block': 'none'">
         <div class="header">
-            <div style="width: 80%;display: flex;">
+            <div style="width: 90%;display: flex;">
                 <div class="fa fa-angle-double-left" (click)="getConversEvent()"></div>
-                <img [src]="userEmitted[0].avatar" alt="avatar" (click)="openProfile()" style="cursor: pointer;">
+                <img [src]="userEmitted[0].avatar" alt="avatar" (click)="openProfile(userEmitted[0])" style="cursor: pointer;">
                 <span id="conv">Conversation with <span style="font-weight: bolder;">{{userEmitted[0].username}}</span></span>
             </div>
-            <div class="options" style="margin-right: 10%;margin-left: 30%;">
+            <!-- <div class="options" style="margin-right: 10%;margin-left: 30%;"> -->
+            <div class="options">
                 <div class="fa fa-ellipsis-v"></div>
             </div>
         </div>
@@ -44,9 +45,11 @@
 <div *ngIf="roomConvers[0]">
     <div class="body" *ngIf="roomConvers && displayConversation" [style.display]="roomConvers[1]? 'block': 'none'">
         <div class="header">
-            <div class="fa fa-angle-double-left" (click)="getConversEvent()"></div>
-            <img [src]="roomConvers[0].imagePath" alt="avatar">
-            <span id="conv">Conversation in <span style="font-weight: bolder;">{{roomConvers[0].name}}</span></span>
+            <div style="width: 90%;display: flex;">
+                <div class="fa fa-angle-double-left" (click)="getConversEvent()"></div>
+                <img [src]="roomConvers[0].imagePath" alt="avatar">
+                <span id="conv">Conversation in <span style="font-weight: bolder;">{{roomConvers[0].name}}</span></span>
+            </div>
             <div class="options" (click)="openOptions()">
                 <div class="fa fa-ellipsis-v"></div>
             </div>
@@ -65,7 +68,7 @@
                     <div *ngFor="let user of users">
                         <div class="username" *ngIf="userId !== message.senderId && user.id !== userId">{{user.username}}</div>
                         <div class="senderImg" *ngIf="userId !== message.senderId && user.id !== userId">
-                            <img [src]="user.avatar" alt="avatar">
+                            <img [src]="user.avatar" alt="avatar" (click)="openProfile(user)" style="cursor: pointer;">
                         </div>
                     </div>
                     <div *ngIf="message.senderId !== userId" class="receivedMessage" style="left:50px;margin-top: -10px;">

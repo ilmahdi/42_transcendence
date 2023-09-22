@@ -24,6 +24,7 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
   clickOnUser:{user:IUserDataShort, click:boolean}[] = [];
   newAdminsId:number[] = []
   removedId:number[] = []
+  blackList:number[] = []
   isAdmin:boolean = false
 
   constructor(private chatService:ChatService, private authService:AuthService) {
@@ -153,12 +154,22 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
     member.removed = false
     member.admin = false
     member.mute = false
+    if (member.ban) {
+      this.blackList.push(member.user.id!);
+      this.removedId.push(member.user.id!)
+    }
+    else {
+      this.blackList = this.blackList.filter(id=> id !== member.user.id)
+      this.removedId = this.removedId.filter(id=> id !== member.user.id)
+    }
   }
 
   saveRoom() {
     this.chatService.sendToGetRoomMembers(this.room)
     this.room.type = this.type
     this.room.adminId = this.room.adminId?.concat(this.newAdminsId)
+    this.room.blackList = this.room.blackList?.concat(this.blackList);
+    
     this.removedId.forEach(id=> {
       this.room.usersId = this.room.usersId?.filter(item=> item !== id)
     })
@@ -196,12 +207,14 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
   exitRoom() {
     this.room.usersId = this.room.usersId?.filter(id=> id !== this.userId);
     this.chatService.updateRoom(this.room)
-      for(let i:number = 0;i < 10;i++) {
-        this.chatService.sendToGetRooms(this.userId!);
-      }
-      const subs:Subscription = this.chatService.getRooms().subscribe(data=> {this.chatService.updateRooms(data);})
-      this.subscriptions.push(subs)
-      this.chatService.displayComponents(false, false, false, true, true, false, false)
+    const newRooms:Room[] = this.chatService.roomsSource.value.filter(room=> room.id !== this.room.id)
+    this.chatService.roomsSource.next(newRooms)
+    // this.chatService.sendToGetRooms(this.userId!);
+    // const subs:Subscription = this.chatService.getRooms().subscribe(data=> {
+    //   this.chatService.updateRooms(data);
+    // })
+    // this.subscriptions.push(subs)
+    this.chatService.displayComponents(false, false, false, true, true, false, false)
   }
 
   ngOnDestroy(): void {

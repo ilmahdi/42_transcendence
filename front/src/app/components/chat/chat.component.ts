@@ -90,7 +90,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   onCustomEvent(user:IUserDataShort) {
-    // this.smallScreen = true
     this.userEvent = [user, true]
     this.roomData = []
   }
@@ -102,8 +101,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getRoomConvers(room:Room) {
-    // this.smallScreen = true
-    // this.displayConvers = false
     this.chatService.sendToGetRoomById(room.id!)
     this.roomData = [room, true]
   }

@@ -111,11 +111,9 @@ img {
 /***************************** MESSAGES DESIGN *******************************/
 
 .options {
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    margin-left: 40%;
+    width: 10%;
     margin-top: 10px;
+    cursor: pointer;
 }
 
 .fa-ellipsis-v {
@@ -253,17 +251,11 @@ p {
         width: 450px;
         margin-left: -10px;
     }
-    .options {
-        margin-left: 15%;
-    }
 }
 
 @media (max-width: 530px) {
     .body {
         width: 380px;
-    }
-    .options {
-        margin-left: 10%;
     }
     #conv {
         margin-left: 60px;

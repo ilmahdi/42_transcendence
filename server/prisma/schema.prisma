@@ -164,6 +164,7 @@ model Room {
   password  String?
   imagePath String
   mutes     Mute[]
+  blackList Int[]     @default([]) // Prisma uses arrays natively for integer arrays
 }
 
 model Mute {

@@ -4,6 +4,7 @@
     width: 290px;
     background-color: #231C1C;
     border-radius: 0px 0px 15px 15px;
+    overflow: auto;
 }
 
 .roomSearch {
@@ -58,20 +59,20 @@
     margin-left: 4%;
 }
 
-#date {
-    position: fixed;
-    font-size: small;
+.date {
+    /* position: fixed; */
+    font-size: smaller;
     color: #ABABAB;
     margin-top: 10px;
-    margin-left: 180px;
+    /* margin-left: 80px; */
 }
 
 .message {
-    position: absolute;
+    /* position: absolute; */
     color: #ABABAB;
     font-size: small;
     margin-top: 33px;
-    margin-left: 72px;
+    margin-left: -10px;
     max-width: 100px;
     max-height: 20px;
     overflow: hidden;

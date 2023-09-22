@@ -35,7 +35,7 @@ export class OtherRoomsComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    this.chatService.sendTetOtherRooms()
+    this.chatService.sendTetOtherRooms(this.userId!)
     const subs1:Subscription = this.chatService.getOtherRooms().subscribe(data=>{
       this.allRooms = []
       data.forEach(room=>{
@@ -80,16 +80,19 @@ export class OtherRoomsComponent implements OnInit, OnDestroy{
       this.protectSelect = false
       const subs1:Subscription = this.chatService.joinRoom(this.userId!, room).subscribe(data=> {
         // REMOVE ROOM JOINED FROM THE OTHER ROOMS LIST AND ADD IT TO THE ROOMS CONVERSATIONS LIST
-        this.chatService.sendTetOtherRooms()
-        const subs2:Subscription = this.chatService.getOtherRooms().subscribe(data=>{
-          this.allRooms = []
-          data.forEach(room=>{
-            if (!room.usersId?.includes(this.userId!))
-              this.allRooms.push(room)
-          })
-          this.updateRoomsConversations()
-        })
-        this.subscriptions.push(subs2)
+        const newRooms:Room[] = this.chatService.roomsSource.value
+        newRooms.push(data)
+        this.chatService.roomsSource.next(newRooms)
+        // this.chatService.sendTetOtherRooms(this.userId!)
+        // const subs2:Subscription = this.chatService.getOtherRooms().subscribe(data=>{
+        //   this.allRooms = []
+        //   data.forEach(room=>{
+        //     if (!room.usersId?.includes(this.userId!))
+        //       this.allRooms.push(room)
+        //   })
+        //   this.updateRoomsConversations()
+        // })
+        // this.subscriptions.push(subs2)
       })
       this.subscriptions.push(subs1)
     }
@@ -103,7 +106,7 @@ export class OtherRoomsComponent implements OnInit, OnDestroy{
     if (this.password.value.password) {
       this.chatService.joinProtected(this.userId!, this.roomWaitForPassword!, this.password.value.password).subscribe(data=>{
         // REMOVE ROOM JOINED FROM THE OTHER ROOMS LIST AND ADD IT TO THE ROOMS CONVERSATIONS LIST
-        this.chatService.sendTetOtherRooms()
+        this.chatService.sendTetOtherRooms(this.userId!)
         const subs:Subscription = this.chatService.getOtherRooms().subscribe(data=>{
           this.allRooms = []
           data.forEach(room=>{

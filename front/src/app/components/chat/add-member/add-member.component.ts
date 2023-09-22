@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { take, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Room } from 'src/app/models/room.model';
-import { User } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ChatService } from 'src/app/services/chat.service';
 import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
@@ -73,8 +72,10 @@ export class AddMemberComponent implements OnInit, OnDestroy {
   addMembers() {
     let newUsers:number[] = []
     this.users.forEach(user=>{
-      if (user.click)
+      if (user.click) {
         newUsers.push(user.user.id!);
+        this.room.blackList = this.room.blackList!.filter(id=>id != user.user.id!)
+      }
     })
     this.chatService.sendToGetRoomMembers(this.room);
     this.room.usersId = this.room.usersId?.concat(newUsers);

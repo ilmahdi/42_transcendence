@@ -251,8 +251,8 @@ export class ChatService {
     return this.socket.fromEvent<{senderId:number, roomId: number; unreadCount: number}[]>('recNotReadedRoomMessages')
   }
 
-  sendTetOtherRooms() {
-    this.socket.emit('getOtherRooms');
+  sendTetOtherRooms(id:number) {
+    this.socket.emit('getOtherRooms', id);
   }
 
   getOtherRooms() {
@@ -300,10 +300,6 @@ export class ChatService {
 
   createRoom(room:Room): Observable<Room> {
     return this.http.post('http://localhost:3000/api/chat/createRoom', room);
-  }
-
-  getAllRooms() {
-    return this.http.get<Room[]>('http://localhost:3000/api/chat/allRooms')
   }
 
   uploadImage(image:FormData) {

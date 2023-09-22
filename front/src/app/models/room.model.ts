@@ -10,4 +10,5 @@ export interface Room {
     password?:string;
     imagePath?:string;
     mutes?:Mute[];
+    blackList?:number[];
 }
