@@ -28,9 +28,13 @@ export class BoardComponent implements AfterViewInit {
   ngAfterViewInit(): void {
 
   }
+  public setCanvasBackgroundColor(): void {
 
+    this.ctx.fillStyle = this.color;
+    this.ctx.fillRect(0, 0, this.width, this.height);
+  }
 
-   drawDashedLine() {
+  public drawDashedLine() {
     this.ctx.save();
     
     this.ctx.setLineDash([5, 5]);
@@ -46,11 +50,11 @@ export class BoardComponent implements AfterViewInit {
     this.ctx.restore();
   }
 
-  public drawPlayButton(msg :string) {
+  public drawPlayButton(msg :string, positionY: number, width :number, height :number) {
     
     this.ctx.strokeStyle = this.objColor;
     this.ctx.lineWidth = 2;
-    this.ctx.strokeRect(this.width / 2 - 70, this.height / 2 - 25, 140, 50);
+    this.ctx.strokeRect(this.width / 2 - width / 2, positionY - height / 2, width, height);
   
     this.ctx.fillStyle = this.objColor;
     this.ctx.font = '24px Arial';
@@ -60,7 +64,7 @@ export class BoardComponent implements AfterViewInit {
     const textHeight = this.ctx.measureText(msg).actualBoundingBoxAscent ;
 
 
-    this.ctx.fillText(msg, this.width / 2 - (textWidth/2), this.height / 2 + (textHeight / 2)); 
+    this.ctx.fillText(msg, this.width / 2 - (textWidth/2), positionY + (textHeight / 2)); 
   }
 
   public adapteCanvasSize() :boolean {

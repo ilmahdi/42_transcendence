@@ -60,17 +60,17 @@ export class BallComponent implements OnInit{
     this.ctx.fill();
 
   }
-  public updatePosition() {
+  public updatePosition(cDeltaTime :number) {
     if (this.isBallIn) {
 
-      this.x += this.velocityX;
-      this.y += this.velocityY;
+      this.x += this.velocityX * cDeltaTime;
+      this.y += this.velocityY * cDeltaTime;
     }
-    
+
     if (this.y + this.r > this.canvas.height)
       this.velocityY = -Math.abs(this.velocityY);
-    else(this.y - this.r < 0)
-     this.velocityY = Math.abs(this.velocityY);
+    else if (this.y - this.r < 0)
+      this.velocityY = Math.abs(this.velocityY);
 
     if (this.x - this.r > this.canvas.width || this.x + this.r < 0) {
 
@@ -89,7 +89,7 @@ export class BallComponent implements OnInit{
       this.x += this.velocityX * cDeltaTime;
       this.y += this.velocityY * cDeltaTime;
       if (this.y + this.r > this.canvas.height) {
-        this.velocityY = - Math.abs(this.velocityY);
+        this.velocityY = -Math.abs(this.velocityY);
       }
       else if (this.y - this.r < 0) {
         this.velocityY = Math.abs(this.velocityY);
@@ -104,16 +104,6 @@ export class BallComponent implements OnInit{
       this.getInitialVelocity();
       
     }
-    // else if (!this.isBallSkiped && this.checkBallToHit()) {
-    //     if (this.x > this.gameBoard.width / 2) {
-    //       this.player1Paddle.x += this.x - this.player1Paddle.x;
-    //       this.player2Paddle.x += this.x - this.player1Paddle.x;
-    //     }
-    //     else {
-    //       this.player1Paddle.x += this.x - this.player2Paddle.x;
-    //       this.player2Paddle.x += this.x - this.player2Paddle.x;
-    //     }
-    // }
 
   }
 
@@ -139,6 +129,9 @@ export class BallComponent implements OnInit{
       if (this.checkBallPaddleCollision(this.player1Paddle)) {
 
         this.calculateVelocity(this.player1Paddle, -1);
+        setTimeout(() => {
+          this.isBallSkiped = false;
+        }, 200); 
       }
       else {
 
@@ -150,6 +143,9 @@ export class BallComponent implements OnInit{
       if (this.checkBallPaddleCollision(this.player2Paddle)) {
 
         this.calculateVelocity(this.player2Paddle);
+        setTimeout(() => {
+          this.isBallSkiped = false;
+        }, 200); 
       }
       else {
 
@@ -187,6 +183,7 @@ export class BallComponent implements OnInit{
 
     this.velocityX = direction * Math.cos(bounceAngle) * this.speed;
     this.velocityY = Math.sin(bounceAngle) * this.speed;
+  
     
   }
   
@@ -203,7 +200,7 @@ export class BallComponent implements OnInit{
 
   }
 
-  private getInitialVelocity() {
+  public getInitialVelocity() {
     
     this.velocityX = this.speed * 0.6 * (this.gameBoard.width / this.gameBoard.initialWidth);
     this.velocityY = 0;

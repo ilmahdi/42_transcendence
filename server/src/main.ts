@@ -6,7 +6,7 @@ import { SocketAdapter } from './chat/utils/dtos/socketAdapter.class';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://10.13.11.10:4200',
+    origin: process.env.FONTEND_URL,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });

@@ -27,7 +27,7 @@ export class PaddleComponent implements OnInit{
   private color = '#DEC8C8';
   private paddleMargin = 2;
   private keysPressed: { [key: string]: boolean } = {};
-  private level :number = 0.1;
+  public level :number = 0;
   public initialX :number = 10;
   private keyLoop :any | null = null;
 
@@ -101,8 +101,8 @@ export class PaddleComponent implements OnInit{
       else if (this.y + this.height > this.canvas.height) {
         this.y = this.canvas.height - this.height - this.paddleMargin;
       }
-
-      this.emitPaddleMove();
+      if (!this.gameService.isOnePlayer)
+        this.emitPaddleMove();
     }, 17);
   }
 
@@ -129,13 +129,13 @@ export class PaddleComponent implements OnInit{
 
 
 
-  public updateBoot() {
+  public updateBoot(cDeltaTime :number) {
     
     const paddleCenter = this.y + this.height / 2;
     const targetY = this.ball.y ;
     
     
-    const deltaY = targetY - paddleCenter;
+    const deltaY = (targetY - paddleCenter) * cDeltaTime;
     if (this.ball.velocityX < 0 && this.x > this.gameBoard.width / 2
       || this.ball.velocityX > 0 && this.x < this.gameBoard.width / 2
     ) {

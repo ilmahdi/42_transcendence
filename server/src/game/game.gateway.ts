@@ -24,11 +24,14 @@ export class GameGateway {
   @SubscribeMessage('requestOpponentId')
   handleRequestOpponentId(client: Socket, userId :string) {
     
-    if (!this.inGameUsersById[userId]) {
+    if (!this.inGameUsersById[userId] || !this.connectionGateway.connectedUsersById[userId]) {
 
       this.inGameUsersById[userId] = client.id;
       this.addToQueue(userId);
     }
+    else 
+      this.server.to(client.id).emit('failRequestOpponentId');
+
   }
   @SubscribeMessage('inviteOpponentId')
   handleInviteOpponentId(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {

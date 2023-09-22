@@ -59,11 +59,17 @@ export class HomeComponent implements OnInit {
       
       this.gameService.playerId2 = opponent.userId; 
       this.gameService.isToStart = opponent.isToStart; 
+      this.gameService.isOnePlayer = false;
       
       this.gameService.setInGameMode(true);
       this.router.navigate(['/game']);
       this.loadingService.hideLoading();
 
+    });
+
+    this.socket.on('failRequestOpponentId', () => {
+      
+      this.loadingService.hideLoading();
     });
   }
   getUserData() {
@@ -76,7 +82,7 @@ export class HomeComponent implements OnInit {
 
   }
 
-  async openConfirmModal(isNormalPlay :boolean) {
+  async openConfirmModal(playMode :string) {
 
 
     try {
@@ -85,14 +91,22 @@ export class HomeComponent implements OnInit {
       this.gameService.mapIndex = +mapId;
       this.gameService.playerId1 = this.authService.getLoggedInUserId();
       
-      if (isNormalPlay) {
+      if (playMode === 'NORMAL') {
         
         this.loadingService.showLoading();
         this.socket.emit("requestOpponentId", this.gameService.playerId1);
       }
-      else {
+      else if (playMode === 'INVITE') {
         this.openGameInviteModal();
       }
+      else if (playMode === 'COMPUTER') {
+
+        this.gameService.setInGameMode(true);
+        this.gameService.isOnePlayer = true;
+        this.gameService.isToStart = true;
+        this.router.navigate(['/game']);
+      }
+      
     }
     catch {
 

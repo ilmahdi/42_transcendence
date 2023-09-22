@@ -21,7 +21,7 @@
     <div class="gp-canvas-wrap">
 
     <div class="mh-sec-main">
-       <div class="mh-sec-main-user u1">
+       <div class="mh-sec-main-user u1" *ngIf="!gameService.isOnePlayer">
 
            <img class="mh-sec-img" src="{{player2.avatar}}"
                style="display: none" onload="this.style.display=''"
@@ -31,6 +31,20 @@
                <span class="mh-sec-info-name"> {{ player2.username }} </span>
                <div class="mh-sec-info-rate"> 
                    <span class="mh-sec-info-rate-score"> {{player2.rating}} </span>
+               </div>
+           </div>
+
+       </div>
+       <div class="mh-sec-main-user u1" *ngIf="gameService.isOnePlayer">
+
+           <img class="mh-sec-img" src="./assets/imgs/pong_robot.png"
+               style="display: none" onload="this.style.display=''"
+               onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+           />
+           <div class="mh-sec-info">
+               <span class="mh-sec-info-name"> COMPUTER </span>
+               <div class="mh-sec-info-rate"> 
+                   <span class="mh-sec-info-rate-score"> {{gameLevel}} </span>
                </div>
            </div>
 

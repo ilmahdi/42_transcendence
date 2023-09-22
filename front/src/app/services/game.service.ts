@@ -54,5 +54,6 @@ export class GameService {
   public playerId1 :number = 0;
   public playerId2 :number = 0;
   public isToStart :boolean = false;
+  public isOnePlayer :boolean = false;
 
 }
