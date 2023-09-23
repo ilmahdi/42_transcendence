@@ -1,29 +1,33 @@
 <div class="convers">
     <div *ngFor="let f of users" class="conver" (click)="openConversation(f, true)" [style.backgroundColor]="(color.name === f.username)? color.color : ''">
         <img [src]="f.avatar" alt="avatar" id="img">
-        <p id="name">{{f.username}}</p>
+        <div style="width: 30%;margin-left: 2px;">
+            <p id="name">{{f.username}}</p>
 
-        <div *ngFor="let item of readSymbol">
-            <span *ngIf="item.receiverId=== f.id && item.senderId === userId && !item.read" class="fa fa-check-circle-o"></span>
-            <img *ngIf="item.receiverId === f.id && item.senderId === userId && item.read" [src]="f.avatar" id="readMsg">
-        </div>
-
-        <div *ngFor="let item of notReaded">
-            <div class="notReaded" *ngIf="f.id === item.senderId" [style.width]="item.unreadCount>9? '25px' : ''">
-                <p style="left: 5px;position: relative;bottom: 2px;" *ngIf="item.unreadCount <= 9">{{item.unreadCount}}</p>
-                <p style="left: 5px;position: relative;bottom: 2px;" *ngIf="item.unreadCount > 9">9+</p>
+            <div *ngFor="let item of lastMessages" >
+                <div *ngIf="item" class="message">
+                    <p *ngIf="item && item.senderId === f.id || item.receiverId === f.id">{{item.message}}</p>
+                </div>
             </div>
         </div>
 
-        <div *ngFor="let item of lastMessages" class="message">
-            <div *ngIf="item">
-                <p *ngIf="item && item.senderId === f.id || item.receiverId === f.id">{{item.message}}</p>
+        <div style="display: flex;width: 50%;">
+            <div *ngFor="let item of lastMessages" >
+                <div *ngIf="item" >
+                    <p *ngIf="item && item.senderId === f.id || item.receiverId === f.id"class="date">{{editeDateFormat(item.date)}}</p>
+                </div>
             </div>
-        </div>
 
-        <div *ngFor="let item of lastMessages" class="date">
-            <div *ngIf="item">
-                <p *ngIf="item && item.senderId === f.id || item.receiverId === f.id" style="margin-left: 100px;">{{editeDateFormat(item.date)}}</p>
+            <div *ngFor="let item of readSymbol" >
+                <span *ngIf="item.receiverId=== f.id && item.senderId === userId && !item.read" class="fa fa-check-circle-o"></span>
+                <img *ngIf="item.receiverId === f.id && item.senderId === userId && item.read" [src]="f.avatar" id="readMsg">
+            </div>
+
+            <div *ngFor="let item of notReaded">
+                <div class="notReaded" *ngIf="f.id === item.senderId" [style.width]="item.unreadCount>9? '25px' : ''">
+                    <p style="left: 5px;position: relative;bottom: 2px;" *ngIf="item.unreadCount <= 9">{{item.unreadCount}}</p>
+                    <p style="left: 5px;position: relative;bottom: 2px;" *ngIf="item.unreadCount > 9">9+</p>
+                </div>
             </div>
         </div>
     </div>

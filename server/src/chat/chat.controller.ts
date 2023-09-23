@@ -76,15 +76,15 @@ export class ChatController {
   }
 
   @Post('joinProtected')
-  joinProtectedRoom(@Body() data:{id:number, room:Room, password:string}) {
-    return this.roomChatService.joinProtected(data.id, data.room, data.password)
+  async joinProtectedRoom(@Body() data:{id:number, room:Room, password:string}) {
+    return await this.roomChatService.joinProtected(data.id, data.room, data.password)
   }
 
-  @Post('updateRoom')
-  updateRoom(@Body() room:Room) {
-    this.roomChatService.changeRoomType(room);
-    return room
-  }
+  // @Post('updateRoom')
+  // updateRoom(@Body() room:Room) {
+  //   this.roomChatService.changeRoomType(room);
+  //   return room
+  // }
 
   @Get("allUsers")
   getAllUsers() {

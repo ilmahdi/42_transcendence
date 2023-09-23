@@ -48,7 +48,13 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.members = []
       users.forEach(user=> {
         if (user.user.id !== this.userId)
-          this.members.push({user:user.user, type:user.type, click:false, admin:false, removed:false, mute:false, muteDuration: 0, ban:false})
+          this.members.push({user:user.user,
+            type:user.type,
+            click:false, admin:false,
+            removed:false,
+            mute:false,
+            muteDuration: 0,
+            ban:false})
       })
     })
     this.subscriptions.push(subs2)
@@ -123,8 +129,8 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
     ban:boolean}) {
     member.click = !member.click;
     member.mute = !member.mute
-    member.muteDuration = 0; 
-    member.ban = false
+    member.muteDuration = 0;
+    member.ban = false;
   }
 
   clickOnInput(member:{user:IUserDataShort,
@@ -186,9 +192,12 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
     }));
     this.room.mutes = mutedUserDurations
 
-    this.chatService.roomOptionsSource.next(this.room)////////////
+    this.chatService.roomOptionsSource.next(this.room)
     this.chatService.sendToGetRoomMembers(this.room);
-    this.chatService.updateRoom(this.room);
+    if (this.form.value.password)   // UPDATE THE PASSWORD IN DATABASE
+      this.chatService.updateRoom(this.room, true);
+    else                            // DON'T UPDATE THE PASSWORD IN DATABASE
+      this.chatService.updateRoom(this.room, false);
     this.chatService.displayComponents(false, true, false, true, false, false, false)
   }
 
@@ -206,14 +215,9 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
 
   exitRoom() {
     this.room.usersId = this.room.usersId?.filter(id=> id !== this.userId);
-    this.chatService.updateRoom(this.room)
+    this.chatService.updateRoom(this.room, false)
     const newRooms:Room[] = this.chatService.roomsSource.value.filter(room=> room.id !== this.room.id)
     this.chatService.roomsSource.next(newRooms)
-    // this.chatService.sendToGetRooms(this.userId!);
-    // const subs:Subscription = this.chatService.getRooms().subscribe(data=> {
-    //   this.chatService.updateRooms(data);
-    // })
-    // this.subscriptions.push(subs)
     this.chatService.displayComponents(false, false, false, true, true, false, false)
   }
 

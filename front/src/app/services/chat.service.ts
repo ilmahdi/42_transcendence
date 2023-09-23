@@ -336,8 +336,9 @@ export class ChatService {
     return this.socket.fromEvent<{user:IUserDataShort, type:string}[]>('recRoomMembers');
   }
 
-  updateRoom(room:Room) {
-    this.socket.emit('updateRoom', room)
+  updateRoom(room:Room, withPasswd:boolean) {
+    const data: {room:Room, withPasswd:boolean} = {room, withPasswd}
+    this.socket.emit('updateRoom', data)
     // return this.http.post('http://localhost:3000/api/chat/updateRoom', room);
   }
 }

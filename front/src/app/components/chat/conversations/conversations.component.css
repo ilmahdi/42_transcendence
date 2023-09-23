@@ -114,6 +114,22 @@ img {
     width: 10%;
     margin-top: 10px;
     cursor: pointer;
+    margin-right: 20px;
+}
+
+.play {
+    cursor: pointer;
+    fill: var(--primary-text-color);
+    height: 27px;
+    width: 27px;
+    margin-right: 20px;
+    margin-top: 9px;
+}
+
+.playHover {
+    color: var(--primary-text-color);
+    margin-right: 25px;
+    margin-top: 5px;
 }
 
 .fa-ellipsis-v {

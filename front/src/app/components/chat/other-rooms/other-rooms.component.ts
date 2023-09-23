@@ -69,12 +69,6 @@ export class OtherRoomsComponent implements OnInit, OnDestroy{
     this.chatService.displayComponents(false, false, false, false, true, false, false)
   }
 
-  updateRoomsConversations() {
-    this.chatService.sendToGetRooms(this.userId!);
-    const subs:Subscription = this.chatService.getRooms().subscribe(data=> this.chatService.updateRooms(data))
-    this.subscriptions.push(subs)
-  }
-
   onJoinPublic(room:Room) {
     if (room.type === RoomType.PUBLIC) {
       this.protectSelect = false
@@ -83,16 +77,8 @@ export class OtherRoomsComponent implements OnInit, OnDestroy{
         const newRooms:Room[] = this.chatService.roomsSource.value
         newRooms.push(data)
         this.chatService.roomsSource.next(newRooms)
-        // this.chatService.sendTetOtherRooms(this.userId!)
-        // const subs2:Subscription = this.chatService.getOtherRooms().subscribe(data=>{
-        //   this.allRooms = []
-        //   data.forEach(room=>{
-        //     if (!room.usersId?.includes(this.userId!))
-        //       this.allRooms.push(room)
-        //   })
-        //   this.updateRoomsConversations()
-        // })
-        // this.subscriptions.push(subs2)
+        const otherRooms:Room[] = this.chatService.otherRoomSource.value.filter(item=>item.id != room.id)
+        this.chatService.otherRoomSource.next(otherRooms)
       })
       this.subscriptions.push(subs1)
     }
@@ -106,16 +92,13 @@ export class OtherRoomsComponent implements OnInit, OnDestroy{
     if (this.password.value.password) {
       this.chatService.joinProtected(this.userId!, this.roomWaitForPassword!, this.password.value.password).subscribe(data=>{
         // REMOVE ROOM JOINED FROM THE OTHER ROOMS LIST AND ADD IT TO THE ROOMS CONVERSATIONS LIST
-        this.chatService.sendTetOtherRooms(this.userId!)
-        const subs:Subscription = this.chatService.getOtherRooms().subscribe(data=>{
-          this.allRooms = []
-          data.forEach(room=>{
-            if (!room.usersId?.includes(this.userId!))
-              this.allRooms.push(room)
-          })
-          this.updateRoomsConversations()
-        })
-        this.subscriptions.push(subs)
+        if (data) {
+          const newRooms:Room[] = this.chatService.roomsSource.value
+          newRooms.push(this.roomWaitForPassword!)
+          this.chatService.roomsSource.next(newRooms)
+          const otherRooms:Room[] = this.chatService.otherRoomSource.value.filter(item=>item.id != this.roomWaitForPassword!.id)
+          this.chatService.otherRoomSource.next(otherRooms)
+        }
       })
       this.protectSelect = false;
     }

@@ -101,6 +101,10 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     this.chatService.displayComponents(false, false, false, true, false, true, false)
   }
 
+  goPlay() {
+    this.router.navigateByUrl('/profile/' + this.userEmitted[0].username)
+  }
+
   getConversEvent() {
     this.chatService.displayComponents(false, false, false, false, true, false, false)
   }

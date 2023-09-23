@@ -6,10 +6,9 @@
                 <img [src]="userEmitted[0].avatar" alt="avatar" (click)="openProfile(userEmitted[0])" style="cursor: pointer;">
                 <span id="conv">Conversation with <span style="font-weight: bolder;">{{userEmitted[0].username}}</span></span>
             </div>
-            <!-- <div class="options" style="margin-right: 10%;margin-left: 30%;"> -->
-            <div class="options">
-                <div class="fa fa-ellipsis-v"></div>
-            </div>
+            <svg class="play" xmlns="http://www.w3.org/2000/svg" (click)="goPlay()">
+                <use xlink:href="./assets/icons/arrow.svg#icon-arrow"></use>
+            </svg>
         </div>
 
         <div class="messages" #scrollContainer (click)="clickOnConversation()">
@@ -27,14 +26,14 @@
                 <br>
             </div>
         </div>
-
+        
         <div class="writing" (click)="clickOnConversation()">
             <form [formGroup]="msg" style="width: 100%;">
-                <input type="text" class="typing" placeholder="write a message" formControlName="message">
+                <input type="text" class="typing" placeholder="write a message" formControlName="message" (keyup.enter)="sendPrivateMessage()">
             </form>
             <div class="send" (click)="sendPrivateMessage()">
                 <div class="disk">
-                    <span class="fa fa-send" (click)="sendPrivateMessage()"></span>
+                    <span class="fa fa-send"></span>
                 </div>
             </div>
         </div>
@@ -81,11 +80,11 @@
 
         <div class="writing">
             <form [formGroup]="msg" style="width: 100%;">
-                <input type="text" class="typing" placeholder="write a message" formControlName="message">
+                <input type="text" class="typing" placeholder="write a message" formControlName="message" (keyup.enter)="sendRoomMessage()">
             </form>
             <div class="send" (click)="sendRoomMessage()">
                 <div class="disk">
-                    <span class="fa fa-send" (click)="sendRoomMessage()"></span>
+                    <span class="fa fa-send"></span>
                 </div>
             </div>
         </div>

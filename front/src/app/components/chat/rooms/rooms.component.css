@@ -60,30 +60,28 @@
 }
 
 .date {
-    /* position: fixed; */
     font-size: smaller;
     color: #ABABAB;
     margin-top: 10px;
-    /* margin-left: 80px; */
+    width: 40px;
+    height: 20px;
+    margin-left: 50px;
 }
 
 .message {
-    /* position: absolute; */
     color: #ABABAB;
     font-size: small;
-    margin-top: 33px;
-    margin-left: -10px;
+    margin-top: -10px;
+    margin-left: 10px;
     max-width: 100px;
     max-height: 20px;
     overflow: hidden;
 }
 
 .notReaded {
-    /* position: absolute; */
     height: 20px;
     width: 20px;
     border-radius: 65px;
-    margin-left: 100px;
     margin-top: 37px;
     background-color: #FF7A00;
     color: white;
@@ -91,7 +89,6 @@
 
 @media (min-width: 2000px) {
     .list {
-        /* left: 470px; */
         right: calc(32% + 600px);
         width: 320px;
     }

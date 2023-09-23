@@ -151,8 +151,8 @@ export class ChatGateway{
   }
 
   @SubscribeMessage('updateRoom')
-  async updateRoom(client:Socket, room:Room) {
-    await this.roomChatService.changeRoomType(room);
+  async updateRoom(client:Socket, data:{room:Room, withPasswd:boolean}) {
+    await this.roomChatService.changeRoomType(data);
   }
 
   @SubscribeMessage('readSignal')

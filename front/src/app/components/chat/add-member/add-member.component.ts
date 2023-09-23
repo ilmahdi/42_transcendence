@@ -80,7 +80,7 @@ export class AddMemberComponent implements OnInit, OnDestroy {
     this.chatService.sendToGetRoomMembers(this.room);
     this.room.usersId = this.room.usersId?.concat(newUsers);
     this.room.adminId = this.room.adminId?.concat(this.newAdminsId);
-    this.chatService.updateRoom(this.room);
+    this.chatService.updateRoom(this.room, false);
     this.chatService.displayComponents(false, true, false, true, false, false, false)
   }
 

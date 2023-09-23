@@ -8,7 +8,6 @@ import { PrivateChatService } from './utils/services/privateChat.service';
 import { RoomChatService } from './utils/services/roomChat.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
-import { ConnectionGateway } from 'src/common/gateways/connection.gateway';
 import { ConnectionModule } from 'src/common/gateways/connection.module';
 import { TokenService } from 'src/common/services/token.service';
 
