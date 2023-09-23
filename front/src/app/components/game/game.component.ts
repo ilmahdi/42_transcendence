@@ -271,8 +271,13 @@ export class GameComponent implements AfterViewInit {
     this.displayFrame();
     
     cancelAnimationFrame(this.animationFrameId);
-    if (this.gameStage === "END") 
+    if (this.gameStage === "END") {
+
+      this.ball.initBallPosition()
+      this.ball.getInitialVelocity()
+      this.ball.isBallIn = false;
       this.displayEndGameMsgs();
+    }
     else 
       this.animationFrameId =  requestAnimationFrame(() => this.renderNormal());
   }
@@ -289,6 +294,7 @@ export class GameComponent implements AfterViewInit {
     if (this.player1Paddle.score === 3 || this.player2Paddle.score === 3)  {
 
       this.gameStage = "END";
+      this.ball.isBallSkiped = false;
       this.displayEndGameMsgs();
     }
     else 
@@ -414,6 +420,13 @@ export class GameComponent implements AfterViewInit {
       player2Id: this.gameService.playerId2,
     });
   }
+  private emitStoreGame() {
+
+    this.socket.emit("storeGame", {
+      player1Id: this.gameService.playerId1,
+      player2Id: this.gameService.playerId2,
+    });
+  }
   
 
   // socket on 
@@ -445,8 +458,12 @@ export class GameComponent implements AfterViewInit {
         ++this.player2Paddle.score;
       else
         ++this.player1Paddle.score
-      if (this.player1Paddle.score === 3 || this.player2Paddle.score === 3)
+      if (this.player1Paddle.score === 3 || this.player2Paddle.score === 3) {
+
+        if (this.gameStage !== "END" && this.gameService.isToStart)
+          this.emitStoreGame();
         this.gameStage = "END";
+      }
     });
  
   }
@@ -457,8 +474,8 @@ export class GameComponent implements AfterViewInit {
     this.gameStage = "PLAY";
     this.player1Paddle.score = 0;
     this.player2Paddle.score = 0;
-
     this.currentTime = new Date().getTime();
+
     this.renderNormal();
   });
 

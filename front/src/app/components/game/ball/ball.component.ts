@@ -26,8 +26,8 @@ export class BallComponent implements OnInit{
   private r = 14;
   private color = '#ED5252';
   
-  private isBallSkiped : boolean = false;
-  private isBallIn : boolean = true;
+  public isBallSkiped : boolean = false;
+  public isBallIn : boolean = true;
 
 
   @Input() ctx!: CanvasRenderingContext2D;
@@ -75,6 +75,10 @@ export class BallComponent implements OnInit{
     if (this.x - this.r > this.canvas.width || this.x + this.r < 0) {
 
       this.isBallIn = false;
+      setTimeout(() => {
+        this.isBallSkiped = false;
+        this.isBallIn = true;
+      }, 200); 
       this.initBallPosition()
       this.getInitialVelocity();
     }
@@ -189,11 +193,6 @@ export class BallComponent implements OnInit{
   
 
   public initBallPosition() {
-
-    setTimeout(() => {
-      this.isBallSkiped = false;
-      this.isBallIn = true;
-    }, 200); 
 
     this.x = this.gameBoard.width / 2;
     this.y = this.gameBoard.height / 2;

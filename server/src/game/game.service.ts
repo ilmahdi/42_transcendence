@@ -1,14 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { WebSocketServer } from '@nestjs/websockets';
+import { PrismaService } from 'nestjs-prisma';
 import { Server, Socket } from 'socket.io';
 import { NotifyService } from 'src/user/notify/notify.service';
 import { NotificationCreateDto } from 'src/user/notify/utils/dtos/create-notification.dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class GameService {
 
   constructor(
     public notifyService :NotifyService,
+    public userService :UserService,
+    private prismaService: PrismaService,
   ) {
 
   }
@@ -52,7 +56,63 @@ export class GameService {
     this.notifyService.deleteGameInviteNotif(notification);
   }
 
+  async storeGame(users: any) {
+    try {
+      // Fetch user data for player 1 and player 2
+      const user1 = await this.userService.findUserById(+users.player1.id);
+      const user2 = await this.userService.findUserById(+users.player2.id);
+  
+      // Calculate expected results
+      const expectedResult1 = 1 / (1 + 10 ** ((user2.rating - user1.rating) / 400));
+      const expectedResult2 = 1 / (1 + 10 ** ((user1.rating - user2.rating) / 400));
+
+      
+      // Calculate points earned by each player
+      const point1 = 19 * (+(users.player1.score > users.player2.score) - expectedResult1);
+      const point2 = 19 * (+(users.player2.score > users.player1.score) - expectedResult2);
+  
+      // Update user ratings
+      await this.userService.updateUserAny(+users.player1.id, {
+        rating: user1.rating + point1,
+        wins: user1.wins + +(users.player1.score > users.player2.score),
+        losses: user1.losses + +(users.player1.score < users.player2.score),
+        games: user1.games + 1,
+      });
+      await this.userService.updateUserAny(+users.player2.id, {
+        rating: user2.rating + point2,
+        wins: user2.wins + +(users.player1.score < users.player2.score),
+        losses: user2.losses + +(users.player1.score > users.player2.score),
+        games: user2.games + 1,
+      });
+
+      // Create a new game entry
+      await this.prismaService.matches.create({
+        data: {
+          id1: +users.player1.id,
+          id2: +users.player2.id,
+          score1: users.player1.score,
+          score2: users.player2.score,
+          point1: point1,
+          point2: point2,
+        },
+      });
+    } catch (error) {
+      console.error('Error while storing game:', error.error);
+    }
+  }
 } 
+
+
+
+
+
+
+
+
+
+
+
+
 
 class GameInstance {
 
@@ -68,8 +128,9 @@ class GameInstance {
   public player1 :string;
   public player2 :string;
   public paddles: { [userId: string]: Paddle } = {}; 
+  public isGameEnded :boolean = false;
+  public isGameStored :boolean = false;
   private currentTime :number;
-  private isGameEnded :boolean = false;
 
   initPaddles(userId :string, isRightPaddle :boolean) {
 
@@ -96,14 +157,17 @@ class GameInstance {
 
   startGameLoop() {
     this.isGameEnded = false;
+    this.isGameStored = false;
     this.paddles[this.player1].score = 0;
     this.paddles[this.player2].score = 0;
+    this.initBall();
     
     this.currentTime = new Date().getTime();
 
     if (!this.gameLoopInterval) {
       this.gameLoopInterval = setInterval(() => {
 
+        
         const cDeltaTime = (new Date().getTime() - this.currentTime) / 17;
         this.currentTime = new Date().getTime();
 
@@ -114,6 +178,7 @@ class GameInstance {
           this.gameLoopInterval = null;
           return;
         }
+        
       }, this.tickRate);
     }
   }

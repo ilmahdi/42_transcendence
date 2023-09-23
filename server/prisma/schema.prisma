@@ -116,25 +116,22 @@ model Friendship {
 
 
 model Matches { 
-  id                  Int  @id @default(autoincrement())
+  id                  Int                 @id @default(autoincrement())
 
-  player1_id          Int
-  player2_id          Int
+  id1                 Int
+  id2                 Int
 
-  player1_score       Int
-  player2_score       Int
-
-  rating1             Int
-  rating2             Int
+  score1              Int
+  score2              Int
 
   point1              Int
   point2              Int
 
-  start_time          DateTime    @default(now())
-  end_time            DateTime    @updatedAt
+  start_time          DateTime            @default(now())
+  end_time            DateTime            @updatedAt
 
-  player1             UserAccount         @relation("player1", fields: [player1_id], references: [id])
-  player2             UserAccount         @relation("player2", fields: [player2_id], references: [id])
+  player1             UserAccount         @relation("player1", fields: [id1], references: [id])
+  player2             UserAccount         @relation("player2", fields: [id2], references: [id])
 } 
 
 
