@@ -2,6 +2,7 @@ import { WebSocketGateway, SubscribeMessage, WebSocketServer } from '@nestjs/web
 import { GameService } from './game.service';
 import { ConnectionGateway } from 'src/common/gateways/connection.gateway';
 import { Server, Socket } from 'socket.io';
+import { error } from 'console';
 
 @WebSocketGateway({
   cors: {
@@ -181,27 +182,31 @@ export class GameGateway {
 
   @SubscribeMessage('storeGame')
   handleStoreGame(client: Socket, userIds :{ player1Id: string, player2Id: string }) {
+    try {
+      const game = this.gameService.games[this.getGameId(userIds.player1Id, userIds.player2Id)]
+      if (game && game.isGameEnded) {
+        if (!game.isGameStored) {
+          game.isGameStored = true;
+          this.gameService.storeGame({ 
+            player1: {
+              id: userIds.player1Id,
+              score: game.paddles[this.inGameUsersById[userIds.player1Id]].score
+            }, 
+            player2: {
+              id: userIds.player2Id,
+              score: game.paddles[this.inGameUsersById[userIds.player2Id]].score
+            }
+          }).catch(() => {
+            this.server.to(client.id).emit('errorEvent', { message: 'Error while storing game result.' });
 
-    const game = this.gameService.games[this.getGameId(userIds.player1Id, userIds.player2Id)]
-    if (game && game.isGameEnded) {
-      if (!game.isGameStored) {
-        game.isGameStored = true;
-        this.gameService.storeGame({ 
-          player1: {
-            id: userIds.player1Id,
-            score: game.paddles[this.inGameUsersById[userIds.player1Id]].score
-          }, 
-          player2: {
-            id: userIds.player2Id,
-            score: game.paddles[this.inGameUsersById[userIds.player2Id]].score
-          }
-        });
+          });
+        }
       }
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: 'Error while storing game result.' });
     }
 
   }
-
-
 
   
 }
