@@ -1,3 +1,4 @@
+import { UserAccount } from "@prisma/client";
 
 export interface Message {
   id?: number;
@@ -7,4 +8,7 @@ export interface Message {
   date?:Date;
   readed?:boolean;
   roomId?:number;
+
+  sender?:UserAccount;
+  receiver?:UserAccount;
 }

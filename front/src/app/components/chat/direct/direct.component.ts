@@ -40,6 +40,7 @@ export class DirectComponent implements OnInit, OnDestroy {
 
     // GET THE NUMBER OF MESSAGES WHICH ARE NOT HAVE READ BY YOU WITH THE SENDER ID
     const subs1:Subscription = this.chatService.getNewMessage().subscribe(data1=>{
+      this.getAllConversations()
       // CLEAR CHAT NOTIFICATION
       this.chatService.chatNotifSource.next(0);
 
@@ -97,7 +98,8 @@ export class DirectComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getfriendList();
+    this.getAllConversations()
+
     const subs1:Subscription = this.chatService.users$.subscribe(data=> {
       this.users = [];
       this.users = data
@@ -195,7 +197,7 @@ export class DirectComponent implements OnInit, OnDestroy {
     const subs:Subscription = this.userService.getfriendList(this.userId!).subscribe({
      next: (response :IUserDataShort[]) => {
       
-       this.users = response;
+      this.chatService.updateUsers(response)
      },
      error: error => {
        console.error('Error:', error.error.message); 
@@ -230,6 +232,21 @@ export class DirectComponent implements OnInit, OnDestroy {
     this.chatService.updateUsers(sortedUsers)
     // console.log(topUser);
     
+  }
+
+  async getAllConversations() {
+    this.chatService.sendToGetAllConversations(this.userId!);
+    this.chatService.getAllConversations().subscribe(data=> {
+      let users:IUserDataShort[] = this.chatService.usersSource.value.concat(data);
+      let saad:IUserDataShort[] = []
+      users.forEach(item=> {
+        saad = saad.filter(user=> user.id !== item.id)
+        saad.push(item);
+      })
+      this.users = saad
+      console.log(saad)
+      this.chatService.updateUsers(saad);
+    })
   }
 
   ngOnDestroy(): void {

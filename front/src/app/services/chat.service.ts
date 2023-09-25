@@ -80,6 +80,9 @@ export class ChatService {
   chatNotifSource = new BehaviorSubject<number>(0);
   chatNotif$ = this.chatNotifSource.asObservable()
 
+  openChatFromProfileSource = new BehaviorSubject<{user:IUserDataShort, open:boolean}>({user:{}, open:false});
+  openChatFromProfile$ = this.openChatFromProfileSource.asObservable()
+
   constructor(
     private http:HttpClient, 
     private socket: CustomSocket,
@@ -284,6 +287,14 @@ export class ChatService {
     return this.socket.fromEvent<{num:number, open:boolean}>('chatNotif')
   }
 
+  sendToGetAllConversations(id:number) {
+    this.socket.emit('allConversations', id);
+  }
+
+  getAllConversations() {
+    return this.socket.fromEvent<IUserDataShort[]>('recAllConversations');
+  }
+
   token:string|null = localStorage.getItem('token');
   
   private httpOptions: { headers: HttpHeaders } = {
@@ -323,10 +334,6 @@ export class ChatService {
     const data = {id:id, room:room, password:password}
     return this.http.post<boolean>('http://localhost:3000/api/chat/joinProtected', data)
   }
-
-  // getRoomMembers(room:Room) {
-  //   return this.http.post<User[]>('http://localhost:3000/api/chat/roomMembers' , room);
-  // }
 
   sendToGetRoomMembers(room:Room) {
     this.socket.emit('getRoomMembers', room)

@@ -1,4 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { ChatService } from 'src/app/services/chat.service';
+import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 
 @Component({
   selector: 'app-more-opts',
@@ -8,6 +11,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class MoreOptsComponent implements OnInit {
 
   constructor(
+    private chatService:ChatService,
+    private router:Router,
   ) { }
 
   @Input() friendshipStatus :string = "NONE";
@@ -31,4 +36,9 @@ export class MoreOptsComponent implements OnInit {
     this.cancelClick.emit()
   }
 
+  onSendMessage() {
+    const user:IUserDataShort = this.chatService.openChatFromProfileSource.value.user
+    this.chatService.openChatFromProfileSource.next({user:user, open:true})
+    this.router.navigateByUrl('/chat');
+  }
 }

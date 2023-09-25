@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { from, map } from "rxjs";
+import { from } from "rxjs";
 import { Message } from "../models/message.interface";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserModel } from "src/user/utils/interfaces/user.model";
-import { Friendship, FriendshipStatus } from "@prisma/client";
+import { Friendship, FriendshipStatus, UserAccount } from "@prisma/client";
 
 @Injectable()
 export class PrivateChatService {
@@ -127,7 +127,7 @@ export class PrivateChatService {
         return result;
       } catch (error) {
         console.error('Error querying unread messages:', error);
-        throw error; // Re-throw the error to be handled at a higher level
+        throw error;
       }
     }
 
@@ -142,7 +142,57 @@ export class PrivateChatService {
         return users;
       } catch (error) {
         console.error('Error searching conversation:', error);
-        throw error; // Re-throw the error to be handled at a higher level
+        throw error;
+      }
+    }
+
+    async getAllConversations(id:number) {
+      try {
+        const messages = await this.prismaService.message.findMany({
+          where: {
+            OR: [
+              { senderId: id },
+              { receiverId: id }
+            ]
+          },
+          include: {
+            sender: true,
+            receiver: true
+          }
+        })
+        
+        let users:UserModel[] = [];
+        messages.forEach(msg=> {
+          if (msg.senderId === id) {
+            // const usr:UserModel = {}
+            users.push({id:msg.receiver.id, username:msg.receiver.username, avatar:msg.receiver.avatar});
+          }
+          else
+            users.push({id:msg.sender.id, username:msg.sender.username, avatar:msg.sender.avatar});
+        })
+
+        const friendship = await this.prismaService.friendship.findMany({
+          where: {
+            OR: [
+              {user_id: id},
+              {friend_id: id}
+            ]
+          },
+          include: {friend:true, user: true}
+        })
+
+        let friends:UserModel[] = []
+        friendship.forEach(item=> {
+          friends.push(item.friend)
+          friends.push(item.user)
+        })
+
+        users = users.concat(friends)
+
+        return users;
+      } catch (error) {
+        console.error('Error searching conversations:', error);
+        throw error;
       }
     }
 }

@@ -23,7 +23,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   directClicked: boolean = true
   roomsClicked: boolean = false
   screenWidth: number = 1000;
-  // smallScreen:boolean = false;
   displayConvers:boolean = false;
   options:boolean = false
   addMember:boolean = false
@@ -120,7 +119,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   searchQueryConvers() {
     const subs:Subscription = this.chatService.searchConvers(this.searchQuery).subscribe(data=>{
-      this.searchResults = data
       this.chatService.updateUsers(data)
     })
     this.subscriptions.push(subs)

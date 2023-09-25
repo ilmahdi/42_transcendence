@@ -118,7 +118,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     const msg = {senderId, receiverId, message, date}
     if (!message) return;
 
-    const subs:Subscription = this.userService.getfriendList(this.userId!).subscribe(friends=>{
+    const subs:Subscription = this.chatService.getUsers().subscribe(friends=>{
       friends.forEach(friend=>{
         if (friend.id === this.userEmitted[0].id && friend.username === this.userEmitted[0].username) {
           this.chatService.sendNewMessage(msg, this.userEmitted[0])

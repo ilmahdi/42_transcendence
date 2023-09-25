@@ -82,6 +82,12 @@ export class ChatGateway{
     }
   }
 
+  @SubscribeMessage('allConversations')
+  async getAllConversations(client:Socket, id:number) {
+    const users = await this.privateChatService.getAllConversations(id);
+    client.emit('recAllConversations', users);
+  }
+
   ////////////////////////// ROOMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
   @SubscribeMessage('getUnreadedRoomMessages')
