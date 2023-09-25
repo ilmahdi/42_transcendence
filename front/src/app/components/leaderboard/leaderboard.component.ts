@@ -1,4 +1,6 @@
 import { Component,  OnInit } from '@angular/core';
+import { UserService } from 'src/app/services/user.service';
+import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 
 @Component({
   selector: 'app-leaderboard',
@@ -7,254 +9,27 @@ import { Component,  OnInit } from '@angular/core';
 })
 export class LeaderboardComponent implements OnInit {
 
-  constructor() { 
-    
+  constructor(
+    private userService: UserService,
+  ) { 
   }
+
+  public usersList: IUserDataShort[] = [];
 
   ngOnInit(): void {
+    this.getAllUsers();
   }
-  users:any[] = [
-    {
-      name: 'ossama',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'anass',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-    {
-      name: 'omar',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-      
-    ]
 
+
+  getAllUsers() {
+    this.userService.getAllUsers().subscribe({
+     next: (response :IUserDataShort[]) => {
+      
+       this.usersList = response;
+     },
+     error: error => {
+       console.error('Error:', error.error.message); 
+     }
+   });
+ }
 }

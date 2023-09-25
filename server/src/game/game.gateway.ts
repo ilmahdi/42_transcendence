@@ -18,16 +18,29 @@ export class GameGateway {
   @WebSocketServer() server: Server
 
 
-  inGameUsersById: { [userId: string]: string } = {}; 
 
   private waitingPlayers: string[] = [];
+
+
+  @SubscribeMessage('broadcastPlaying')
+  broadcastPlaying(client: Socket, userId: string) {
+
+    const userSocketIds = this.connectionGateway.userUserListeners[userId];
+
+    if (userSocketIds) {
+      userSocketIds.forEach((socketId) => {
+
+        this.server.to(socketId).emit('playing', userId);
+      });
+    }
+  }
   
   @SubscribeMessage('requestOpponentId')
   handleRequestOpponentId(client: Socket, userId :string) {
     
-    if (!this.inGameUsersById[userId] || !this.connectionGateway.connectedUsersById[userId]) {
+    if (!this.connectionGateway.inGameUsersById[userId] || !this.connectionGateway.connectedUsersById[userId]) {
 
-      this.inGameUsersById[userId] = client.id;
+      this.connectionGateway.inGameUsersById[userId] = client.id;
       this.addToQueue(userId);
     }
     else 
@@ -37,7 +50,7 @@ export class GameGateway {
   @SubscribeMessage('inviteOpponentId')
   handleInviteOpponentId(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
     
-    if (!this.inGameUsersById[userIds.player1Id] && !this.inGameUsersById[userIds.player2Id]) {
+    if (!this.connectionGateway.inGameUsersById[userIds.player1Id] && !this.connectionGateway.inGameUsersById[userIds.player2Id]) {
       
       const socketId = this.connectionGateway.connectedUsersById[userIds.player2Id];
       
@@ -46,7 +59,7 @@ export class GameGateway {
         to_id: +userIds.player2Id,
         type: "GAME_INVITE",
       })
-      this.inGameUsersById[userIds.player1Id] = client.id;
+      this.connectionGateway.inGameUsersById[userIds.player1Id] = client.id;
       this.server.to(client.id).emit('waitInviteOpponentId', userIds.player2Id);
       this.server.to(socketId).emit('inviteOpponentId', { notify: 1 });
     }
@@ -57,12 +70,12 @@ export class GameGateway {
   @SubscribeMessage('acceptGameInvite')
   handleAcceptGameInvite(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
     
-    if (!this.inGameUsersById[userIds.player1Id]) {
+    if (!this.connectionGateway.inGameUsersById[userIds.player1Id]) {
 
-      this.inGameUsersById[userIds.player1Id] = client.id;
+      this.connectionGateway.inGameUsersById[userIds.player1Id] = client.id;
 
       const socketId1 = client.id;
-      const socketId2 = this.inGameUsersById[userIds.player2Id];
+      const socketId2 = this.connectionGateway.inGameUsersById[userIds.player2Id];
 
 
       
@@ -75,7 +88,7 @@ export class GameGateway {
   handleCancelGameInvite(client: Socket, userId :string) {
 
 
-    const socketId1 = this.inGameUsersById[userId];
+    const socketId1 = this.connectionGateway.inGameUsersById[userId];
     if (socketId1) {
 
       if (socketId1 !== client.id)
@@ -85,15 +98,16 @@ export class GameGateway {
         from_id: +userId,
       })
 
-      delete this.inGameUsersById[userId];
+      delete this.connectionGateway.inGameUsersById[userId];
     }
   }
   @SubscribeMessage('leaveMatchmaking')
   handleLeaveMatchmaking(client: Socket, userId :string) {
 
-    if (this.inGameUsersById[userId]) {
+    if (this.connectionGateway.inGameUsersById[userId]) {
 
-      delete this.inGameUsersById[userId];
+      delete this.connectionGateway.inGameUsersById[userId];
+      this.connectionGateway.broadcastOnline(client, userId)
       this.waitingPlayers = this.waitingPlayers.filter(item => item != userId);
     }
   }
@@ -114,8 +128,8 @@ export class GameGateway {
   }
 
   initializeGame(player1: string, player2: string) {
-    const socketId1 = this.inGameUsersById[player2];
-    const socketId2 = this.inGameUsersById[player1];
+    const socketId1 = this.connectionGateway.inGameUsersById[player2];
+    const socketId2 = this.connectionGateway.inGameUsersById[player1];
 
     this.gameService.createGame(this.server, this.getGameId(player1, player2), socketId1, socketId2);
 
@@ -136,7 +150,7 @@ export class GameGateway {
     
     this.gameService.startGameLoop(this.getGameId(userIds.player1Id, userIds.player2Id));
 
-    this.server.to(this.inGameUsersById[userIds.player2Id]).emit('startGame');
+    this.server.to(this.connectionGateway.inGameUsersById[userIds.player2Id]).emit('startGame');
   }
 
   @SubscribeMessage('endGame')
@@ -144,13 +158,19 @@ export class GameGateway {
     
     this.gameService.endGame(this.getGameId(userIds.player1Id, userIds.player2Id));
 
-    this.server.to(this.inGameUsersById[userIds.player1Id]).emit('endGame');
-    this.server.to(this.inGameUsersById[userIds.player2Id]).emit('endGame');
+    this.server.to(this.connectionGateway.inGameUsersById[userIds.player1Id]).emit('endGame');
+    this.server.to(this.connectionGateway.inGameUsersById[userIds.player2Id]).emit('endGame');
 
-    if (this.inGameUsersById[userIds.player1Id]) 
-      delete this.inGameUsersById[userIds.player1Id];
-    if (this.inGameUsersById[userIds.player2Id]) 
-      delete this.inGameUsersById[userIds.player2Id];
+    if (this.connectionGateway.inGameUsersById[userIds.player1Id]) {
+
+      delete this.connectionGateway.inGameUsersById[userIds.player1Id];
+      this.connectionGateway.broadcastOnline(client, userIds.player1Id)
+    }
+    if (this.connectionGateway.inGameUsersById[userIds.player2Id]) {
+
+      delete this.connectionGateway.inGameUsersById[userIds.player2Id];
+      this.connectionGateway.broadcastOnline(client, userIds.player2Id)
+    }
 
   }
   
@@ -162,14 +182,14 @@ export class GameGateway {
     if (game) {
       game.paddles[client.id].y = data.paddle.y;
 
-      this.server.to(this.inGameUsersById[data.userIds.player2Id]).emit('paddleMove', data.paddle);
+      this.server.to(this.connectionGateway.inGameUsersById[data.userIds.player2Id]).emit('paddleMove', data.paddle);
     }
   }
 
   @SubscribeMessage('rematchGame')
   handleRematchGame(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
 
-    this.server.to(this.inGameUsersById[userIds.player2Id]).emit('rematchGame');
+    this.server.to(this.connectionGateway.inGameUsersById[userIds.player2Id]).emit('rematchGame');
   }
 
   getGameId(player1: string, player2: string) {
@@ -190,12 +210,13 @@ export class GameGateway {
           this.gameService.storeGame({ 
             player1: {
               id: userIds.player1Id,
-              score: game.paddles[this.inGameUsersById[userIds.player1Id]].score
+              score: game.paddles[this.connectionGateway.inGameUsersById[userIds.player1Id]].score
             }, 
             player2: {
               id: userIds.player2Id,
-              score: game.paddles[this.inGameUsersById[userIds.player2Id]].score
-            }
+              score: game.paddles[this.connectionGateway.inGameUsersById[userIds.player2Id]].score
+            },
+            start_time: game.start_time,
           }).catch(() => {
             this.server.to(client.id).emit('errorEvent', { message: 'Error while storing game result.' });
 

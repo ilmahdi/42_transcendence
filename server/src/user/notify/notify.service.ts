@@ -11,6 +11,7 @@ export class NotifyService {
     }
 
     async getNotifications(userId :number) {
+      try {
         const notifications : INotifyData[] = await this.prismaService.notification.findMany({
             select: {
                 id: true,                  
@@ -28,53 +29,69 @@ export class NotifyService {
                     },
                 },
             },
+            orderBy: {
+              created_at: 'desc',
+            },
             where: {
                 to_id: userId,
               },
         });
         return notifications;
+      }
+      catch (error) {
+        throw new HttpException('Failed to fetch notifications', HttpStatus.CONFLICT);
+      }
     }
 
     async addNotification(notification: NotificationCreateDto) {
-      const createdNotification = await this.prismaService.notification.create({
-        data: {
-          from_id: notification.from_id,
-          to_id: notification.to_id,
-          type: notification.type,
-          friendship_id: notification.friendship_id || 0,
-        },
-      });
-  
-      return createdNotification;
-
+      try {
+        const createdNotification = await this.prismaService.notification.create({
+          data: {
+            from_id: notification.from_id,
+            to_id: notification.to_id,
+            type: notification.type,
+            friendship_id: notification.friendship_id || 0,
+          },
+        });
+    
+        return createdNotification;
+      }
+      catch (error) {
+        throw new HttpException('Failed to add notification', HttpStatus.CONFLICT);
+      }
     }
 
     async switchNotification(notification: NotificationCreateDto) {
+      try {
+        const existingNotification = await this.prismaService.notification.findFirst({
+          where: {
+            from_id: notification.to_id,
+            to_id: notification.from_id,
+          },
+        });
 
-      const existingNotification = await this.prismaService.notification.findFirst({
-        where: {
-          from_id: notification.to_id,
-          to_id: notification.from_id,
-        },
-      });
+        if (!existingNotification) {
+          throw new HttpException('Notification not found', HttpStatus.CONFLICT);
+        }
 
-      if (!existingNotification) {
-        throw new HttpException('Notification not found', HttpStatus.CONFLICT);
+        const createdNotification = await this.prismaService.notification.update({
+          where: { 
+            id: existingNotification.id, 
+          },
+          data: {
+            from_id: notification.from_id,
+            to_id: notification.to_id,
+            type: notification.type,
+            seen: false,
+          },
+        });
+      
+        return createdNotification;
+      }
+      catch (error) {
+        throw new HttpException('Failed to switch notification', HttpStatus.CONFLICT);
       }
 
-      const createdNotification = await this.prismaService.notification.update({
-        where: { 
-          id: existingNotification.id, 
-        },
-        data: {
-          from_id: notification.from_id,
-          to_id: notification.to_id,
-          type: notification.type,
-          seen: false,
-        },
-      });
-    
-      return createdNotification;
 
     }
     async deleteNotification(notification: NotificationCreateDto) {
@@ -106,7 +123,7 @@ export class NotifyService {
       
         return createdNotification;
       } catch (error) {
-        throw new HttpException('Failed to delete notifications', HttpStatus.CONFLICT);
+        throw new HttpException('Failed to delete notification', HttpStatus.CONFLICT);
       }
 
     }

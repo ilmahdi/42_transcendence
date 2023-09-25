@@ -45,12 +45,19 @@ export class UserController {
       return users;
     }
 
-    // @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard)
     @Get("friend-list/:userId")
     async getFiendList(@Param('userId') userId: number) {
         const friendList =  await this.userService.findFiendList(userId);
 
         return friendList;
+    }
+    @UseGuards(JwtGuard)
+    @Get("all-users")
+    async getAllUsers(@Param('userId') userId: number) {
+        const allUsers =  await this.userService.getAllUsers();
+
+        return allUsers;
     }
 
     @UseGuards(JwtGuard)

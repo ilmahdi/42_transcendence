@@ -55,6 +55,8 @@ export class GameComponent implements AfterViewInit {
   ngOnInit() {
 
     
+    this.socket.emit("broadcastPlaying", this.gameService.playerId1);
+
     this.canvas = this.elementRef.nativeElement.querySelector('canvas#gameCanvas');
     this.ctx = this.canvas.getContext('2d')!;
     
@@ -506,6 +508,7 @@ export class GameComponent implements AfterViewInit {
 
   ngOnDestroy(): void {
 
+    this.socket.emit("broadcastOnline", this.gameService.playerId1);
     cancelAnimationFrame(this.animationFrameId);
     this.gameService.setInGameMode(false);
 

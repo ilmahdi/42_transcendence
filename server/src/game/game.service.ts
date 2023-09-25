@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { WebSocketServer } from '@nestjs/websockets';
 import { error } from 'console';
 import { PrismaService } from 'nestjs-prisma';
 import { Server, Socket } from 'socket.io';
+import { IHistory, IPlayer } from 'src/temporarius/utils/interfaces/history.interface';
 import { NotifyService } from 'src/user/notify/notify.service';
 import { NotificationCreateDto } from 'src/user/notify/utils/dtos/create-notification.dto';
 import { UserService } from 'src/user/user.service';
@@ -56,6 +57,16 @@ export class GameService {
     
     this.notifyService.deleteGameInviteNotif(notification);
   }
+  getWinStreak(winStreakHol :number, winStreak :number) {
+    if (winStreakHol == 3 && winStreak < 3)
+      return 3;
+    if (winStreakHol == 7 && winStreak < 7)
+      return 7;
+    if (winStreakHol == 21 && winStreak < 21)
+      return 21;
+    return winStreak;
+
+  }
   async storeGame(users: any) {
 
     // Fetch user data for player 1 and player 2
@@ -69,6 +80,9 @@ export class GameService {
     // Calculate points earned by each player
     const point = Math.floor(19 * (+(users.player1.score > users.player2.score) - expectedResult));
 
+    const win_streak_hol1 = users.player1.score > users.player2.score ? user1.win_streak_hol + 1 : 0;
+    const win_streak_hol2 = users.player1.score < users.player2.score ? user2.win_streak_hol + 1 : 0;
+
     
     // Update user ratings
     await this.userService.updateUserAny(+users.player1.id, {
@@ -76,12 +90,16 @@ export class GameService {
       wins: user1.wins + +(users.player1.score > users.player2.score),
       losses: user1.losses + +(users.player1.score < users.player2.score),
       games: user1.games + 1,
+      win_streak_hol: win_streak_hol1,
+      win_streak : this.getWinStreak(win_streak_hol1, user1.win_streak),
     });
     await this.userService.updateUserAny(+users.player2.id, {
       rating: user2.rating - point,
       wins: user2.wins + +(users.player1.score < users.player2.score),
       losses: user2.losses + +(users.player1.score > users.player2.score),
       games: user2.games + 1,
+      win_streak_hol: win_streak_hol2,
+      win_streak : this.getWinStreak(win_streak_hol2, user2.win_streak),
     });
 
     // Create a new game entry
@@ -91,10 +109,87 @@ export class GameService {
         id2: +users.player2.id,
         score1: users.player1.score,
         score2: users.player2.score,
+        rating1: user1.rating,
+        rating2: user2.rating ,
         point1: point,
         point2: -point,
+        start_time: users.start_time,
       },
     });
+  }
+
+
+  async getMatchHistory() { 
+    try {
+      const matches = await this.prismaService.matches.findMany({
+        select: {
+          score1: true,
+          score2: true,
+          rating1: true,
+          rating2: true,
+          point1: true,
+          point2: true,
+          start_time: true,
+          end_time: true,
+          player1: {
+            select: {
+              username: true,
+              avatar: true,
+            },
+          },
+          player2: {
+            select: {
+              username: true,
+              avatar: true,
+            },
+          },
+        },
+        orderBy: {
+          start_time: 'desc',
+        },
+      });
+  
+      const formattedMatches: IHistory[] = matches.map((match) => {
+        const player1: IPlayer = {
+          username: match.player1.username,
+          avatar: match.player1.avatar,
+          rating: match.rating1,
+          score: match.score1,
+          points: match.point1,
+        };
+  
+        const player2: IPlayer = {
+          username: match.player2.username,
+          avatar: match.player2.avatar,
+          rating: match.rating2,
+          score: match.score2,
+          points: match.point2,
+        };
+  
+        const start = new Date(match.start_time);
+        const end = new Date(match.end_time);
+        const diff = end.getTime() - start.getTime();
+        const durationMinutes = Math.floor(diff / (1000 * 60)); 
+        const durationSeconds = Math.floor((diff % (1000 * 60)) / 1000);
+  
+        const history: IHistory = {
+          player1,
+          player2,
+          date: match.start_time,
+          duration: {
+            min: durationMinutes,
+            sec: durationSeconds,
+          },
+        };
+  
+        return history;
+      });
+  
+      return formattedMatches;
+
+    } catch (error) {
+      throw new HttpException('Error fetching matches: ' + error, HttpStatus.CONFLICT);
+    } 
   }
 } 
 
@@ -127,6 +222,7 @@ class GameInstance {
   public isGameEnded :boolean = false;
   public isGameStored :boolean = false;
   private currentTime :number;
+  public start_time :Date;
 
   initPaddles(userId :string, isRightPaddle :boolean) {
 
@@ -158,6 +254,7 @@ class GameInstance {
     this.paddles[this.player2].score = 0;
     this.initBall();
     
+    this.start_time = new Date();
     this.currentTime = new Date().getTime();
 
     if (!this.gameLoopInterval) {

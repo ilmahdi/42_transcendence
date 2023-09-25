@@ -21,6 +21,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   connectedUsersBySocket: { [socketId: string]: string } = {}; 
   connectedUsersById: { [userId: string]: string[] } = {}; 
   userUserListeners: { [userId: string]: string[] } = {};
+  inGameUsersById: { [userId: string]: string } = {}; 
 
 
   handleConnection(client: Socket) {
@@ -102,7 +103,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
 
 
 
-  /****************************************************8 */
+  /*****************************************************/
 
   removeItemFromArray(dictionary: { [key: string]: string[] }, socketId :string) :boolean {
 
@@ -140,7 +141,10 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
     const userSocketIds = this.connectedUsersById[userId];
     
     if (userSocketIds) {
-      this.server.to(client.id).emit('online', userId);
+      if (this.inGameUsersById[userId])
+        this.server.to(client.id).emit('playing', userId);
+      else
+        this.server.to(client.id).emit('online', userId);
     }
     else
       this.server.to(client.id).emit('offline', userId);
@@ -152,6 +156,9 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
       const userSocketIds = this.connectedUsersById[userId];
       
       if (userSocketIds) {
+        if (this.inGameUsersById[userId])
+          this.server.to(client.id).emit('playing', userId);
+        else
           this.server.to(client.id).emit('online', userId);
 
       } else {

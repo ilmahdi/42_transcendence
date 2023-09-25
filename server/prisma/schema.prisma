@@ -58,11 +58,9 @@ model UserAccount {
   id                  Int                 @id @default(autoincrement())
   ft_id               Int                 
   username            String              @unique
-  // email               String              @unique   
   tfa_secret          String?       
   is_tfa_enabled      Boolean?            @default(false)
   avatar              String        
-  status              Status              @default(OFFLINE)
   wins                Int                 @default(0)          
   losses              Int                 @default(0)
   draws               Int                 @default(0)
@@ -70,6 +68,8 @@ model UserAccount {
   rating              Int                 @default(1000)
 
   win_streak          Int                 @default(0)
+  win_streak_hol      Int                 @default(0)
+  friends_count       Int                 @default(0)
 
   created_at          DateTime            @default(now())
   updated_at          DateTime            @updatedAt
@@ -123,6 +123,9 @@ model Matches {
 
   score1              Int
   score2              Int
+
+  rating1             Int
+  rating2             Int
 
   point1              Int
   point2              Int

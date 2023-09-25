@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
+import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 
 @Component({
   selector: 'app-friends',
@@ -7,17 +10,33 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FriendsComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    ) {
+      this.loggedInUserId  = this.authService.getLoggedInUserId();
+    }
+  
+
+  public loggedInUserId :number;
+  public friendList: IUserDataShort[] = [];
 
   ngOnInit(): void {
+    this.getfriendList()
   }
-  friends:any[] = [
-    {
-      name: 'ossama',
-      avatar: "https://img-new.cgtrader.com/items/4504436/2ae8a812ff/large/ping-pong-player-avatar-3d-icon-3d-model-2ae8a812ff.jpg",
-      rating: 1245,
-    },
-  ]
+    
+
+
+  getfriendList() {
+    this.userService.getfriendList(this.loggedInUserId).subscribe({
+     next: (response :IUserDataShort[]) => {
+       this.friendList = response;
+     },
+     error: error => {
+       console.error('Error:', error.error.message); 
+     }
+   });
+ }
 
 
 }

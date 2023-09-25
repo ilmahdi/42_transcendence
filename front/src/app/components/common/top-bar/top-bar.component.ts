@@ -120,7 +120,7 @@ export class TopBarComponent implements OnInit {
     const userId :number = this.authServece.getLoggedInUserId()
     const subscription = this.menuBarService.getNotifications(userId).subscribe({
       next: response => {
-        this.notifyData = response.slice().reverse();
+        this.notifyData = response;
 
         this.notifyData.forEach((notification :INotifyData) => {
           if (!notification.seen)

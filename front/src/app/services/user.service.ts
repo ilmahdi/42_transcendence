@@ -38,6 +38,9 @@ export class UserService {
   getfriendList (userId :number) : Observable<IUserDataShort[]> {
     return this.http.get<IUserDataShort[]>(`${this.apiUrl}/api/user/friend-list/${userId}` ,this.getHeaders());
   }
+  getAllUsers () : Observable<IUserDataShort[]> {
+    return this.http.get<IUserDataShort[]>(`${this.apiUrl}/api/user/all-users` ,this.getHeaders());
+  }
 
   uploadImage (formData :FormData) : Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/api/user/avatar/upload`, formData ,this.getHeaders());
@@ -99,6 +102,6 @@ export class UserService {
   // temporary 
   /*********************************************/
   getMatchHistory (username :string) : Observable<IHistory[]> {
-    return this.http.get<IHistory[]>(`${this.apiUrl}/api/tmp/history` ,this.getHeaders());
+    return this.http.get<IHistory[]>(`${this.apiUrl}/api/game/history` ,this.getHeaders());
   }
 }

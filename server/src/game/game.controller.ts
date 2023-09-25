@@ -9,7 +9,9 @@ export class GameController {
 
     @Get("history")
     @UseGuards(JwtGuard)
-    getMatchHistory() {
-        return this.temporariusService.getMatchHistory();
+    async getMatchHistory() {
+      const formattedMatches = await this.gameService.getMatchHistory();
+
+      return formattedMatches;
     }
 }
