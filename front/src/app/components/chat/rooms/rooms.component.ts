@@ -121,22 +121,6 @@ export class RoomsComponent implements OnInit, OnDestroy {
     }
     else
       this.color = {color:'', name:''}
-
-    //  GET THE CONVERSATION FROM SERVER
-    this.chatService.sendToGetRoomConversation(room)
-    const subs:Subscription = this.chatService.getRoomConversation().subscribe((data) => {
-      data.sort((a:Message, b:Message)=>a.id! - b.id!)
-      this.chatService.updateRoomConversation(data);
-      data.forEach((item)=>{
-        if (item.senderId !== this.userId) {
-          this.chatService.updateRead(item)
-          this.chatService.updateReadRoomBehav(this.notReaded.filter(shit=> shit.roomId !== item.roomId));
-        }
-      })
-      this.chatService.displayComponents(false, true, false, true, false, false, false);
-    })
-    this.subscriptions.push(subs)
-    this.chatService.roomOptionsSource.next(room);////////////
     this.conversData.emit(room);
   }
 

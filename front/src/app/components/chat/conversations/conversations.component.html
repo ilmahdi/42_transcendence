@@ -65,8 +65,8 @@
                         {{message.message}}
                     </div>
                     <div *ngFor="let user of users">
-                        <div class="username" *ngIf="userId !== message.senderId && user.id !== userId">{{user.username}}</div>
-                        <div class="senderImg" *ngIf="userId !== message.senderId && user.id !== userId">
+                        <div class="username" *ngIf="userId !== message.senderId && user.id !== userId && user.id === message.senderId">{{user.username}}</div>
+                        <div class="senderImg" *ngIf="userId !== message.senderId && user.id !== userId && user.id === message.senderId">
                             <img [src]="user.avatar" alt="avatar" (click)="openProfile(user)" style="cursor: pointer;">
                         </div>
                     </div>

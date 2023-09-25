@@ -51,7 +51,22 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getfriendList();
+    // this.getfriendList();
+    this.chatService.getUsers().subscribe({
+
+      next: (response :IUserDataShort[]) => {
+ 
+       response.forEach((user)=>{
+         if (user.id != this.userId) {
+           this.users?.push({user:user, added:false, admin:false})
+         }
+       })
+       
+      },
+      error: error => {
+        console.error('Error:', error.error.message); 
+      }
+    })
   }
 
   onResize() {
@@ -189,7 +204,6 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
 
   back() {
     this.chatService.displayComponents(true, false, false, true, false, false, false)
-    // this.chatService.backToRoomFormularSource.next(true);
   }
 
   getfriendList() {

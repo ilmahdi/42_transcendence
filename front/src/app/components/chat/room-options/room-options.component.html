@@ -46,7 +46,7 @@
         <h5 id="membersTitle">Members</h5>
     </div>
 
-    <div class="members">
+    <div class="members" style="height: 460px;">
         <div *ngFor="let user of members">
             <div class="user" [style.backgroundColor]="user.click? '#D38146':''" [style.width]="(user.click && user.type === 'user')? '65%':'80%'">
                 <div class="addAdmin" *ngIf="user.click && user.type === 'user'"><p style="text-align: center;margin-top: 3px;">Admin</p></div>

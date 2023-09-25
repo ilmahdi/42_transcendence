@@ -145,7 +145,18 @@ export class RoomChatService {
           },
         });
 
-        return messages;
+        const room = await this.prismaService.room.findFirst({
+          where: { id: roomId }
+        })
+
+        // GET JUST THE MESSAGES OF ACTUAL ROOM MEMBERS
+        let actuallMsgs:Message[] = []
+        messages.forEach(msg=> {
+          if (room.usersId.includes(msg.senderId))
+            actuallMsgs.push(msg)
+        })
+        
+        return actuallMsgs;
       } catch (error) {
         // Handle errors (e.g., database connection errors)
         throw new Error('Could not retrieve messages');

@@ -1,8 +1,7 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ChatService } from 'src/app/services/chat.service';
-import { BehaviorSubject, Subscription, finalize, flatMap, last, map, take, tap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Message } from 'src/app/models/message.model';
-import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 import { AuthService } from 'src/app/services/auth.service';
@@ -53,6 +52,7 @@ export class DirectComponent implements OnInit, OnDestroy {
     this.subscriptions.push(subs1)
 
     const subs3:Subscription = chatService.string$.subscribe(data=>{
+      // this.sortConversations(data)------------------------------------------------------------------
       // GET THE NEW UNREAD MESSAGE AND ADD IT IN readSymbolSource WITH FALSE READ SIGNAL
       let item = {senderId:data.senderId!, receiverId:data.receiverId!, read:false}
       let newArray:{senderId:number, receiverId:number, read:boolean}[] = chatService.readSymbolSource.getValue()
@@ -202,6 +202,34 @@ export class DirectComponent implements OnInit, OnDestroy {
      }
    });
    this.subscriptions.push(subs)
+  }
+
+  sortConversations(message:Message) {
+    let topUser:IUserDataShort = {}
+    if (message.senderId === this.userId) {
+      this.users.forEach(user=> {
+        if (user.id === message.senderId) {
+          topUser = user
+          console.log(topUser);
+        }
+      })
+      this.users = this.users.filter(user=> user.id !== message.receiverId)
+    }
+    else {
+      this.users.forEach(user=> {
+        if (user.id === message.receiverId) {
+          topUser = user
+          console.log(topUser);
+        }
+      })
+      this.users = this.users.filter(user=> user.id !== message.senderId)
+    }
+    let sortedUsers:IUserDataShort[] = []
+    sortedUsers.push(topUser);
+    sortedUsers = sortedUsers.concat(this.users)
+    this.chatService.updateUsers(sortedUsers)
+    // console.log(topUser);
+    
   }
 
   ngOnDestroy(): void {

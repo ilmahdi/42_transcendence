@@ -23,9 +23,6 @@
                     (change)="onImageSelected($event)" 
                 >
             </div>
-            <!-- <div style="display: flex;align-items: center;justify-content: center;">
-                <input type="file" id="imageUpload" formControlName="imagePath" (change)="handleFileChange($event)">
-            </div> -->
             <p id="giveName" [style]="roomFormularTitles[0].error? 'color: red' : 'color:white'">{{roomFormularTitles[0].title}}</p>
             <div style="display: flex;align-items: center;justify-content: center;width: 60%;">
                 <input type="text" placeholder="Room name" id="roomName" formControlName="name">

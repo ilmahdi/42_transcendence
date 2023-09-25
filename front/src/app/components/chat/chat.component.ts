@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ChatService } from 'src/app/services/chat.service';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Room } from 'src/app/models/room.model';
 import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 import { AuthService } from 'src/app/services/auth.service';
+import { Message } from 'src/app/models/message.model';
 
 @Component({
   selector: 'app-chat',
@@ -102,7 +103,19 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   getRoomConvers(room:Room) {
     this.chatService.sendToGetRoomById(room.id!)
-    this.roomData = [room, true]
+
+    this.chatService.getRoomById().pipe(take(1)).subscribe(actualRoom=> {
+      this.chatService.sendToGetRoomConversation(actualRoom)
+      const subs:Subscription = this.chatService.getRoomConversation().subscribe((data) => {
+        data.sort((a:Message, b:Message)=>a.id! - b.id!)
+        this.chatService.updateRoomConversation(data);
+        this.chatService.displayComponents(false, true, false, true, false, false, false);
+      })
+      this.subscriptions.push(subs)
+      this.chatService.roomOptionsSource.next(actualRoom);////////////
+    
+      this.roomData = [actualRoom, true]
+    })
   }
 
   searchQueryConvers() {

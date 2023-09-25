@@ -52,6 +52,7 @@ export class TopBarComponent implements OnInit {
     });
     this.getNotifications();
 
+    // FOR PRIVATE MESSAE
     let messages:{id:number}[] = [];
     const subs1:Subscription = this.chatService.getNewMessage().subscribe(msg=> {
       if (msg.senderId !== this.userId) {
@@ -64,6 +65,19 @@ export class TopBarComponent implements OnInit {
     this.subscriptions.push(subs1)
     const subs2:Subscription = this.chatService.chatNotif$.subscribe(data=>this.chatNotif = data)
     this.subscriptions.push(subs2)
+
+    // FOR ROOM MESSAGE
+    const subs3:Subscription = this.chatService.getRoomMessage().subscribe(msg=> {
+      if (msg.senderId !== this.userId) {
+        messages = messages.filter(item=> item.id !== msg.senderId)
+        let id = {id:msg.senderId!}
+        messages.push(id)
+        this.chatService.chatNotifSource.next(messages.length)
+      }
+    })
+    this.subscriptions.push(subs3)
+    const subs4:Subscription = this.chatService.chatNotif$.subscribe(data=>this.chatNotif = data)
+    this.subscriptions.push(subs4)
   }
 
   toggleLeftBar() {
