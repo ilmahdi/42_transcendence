@@ -13,9 +13,6 @@ import { MoreOptsComponent } from './more-opts/more-opts.component';
 import { SharedModule } from 'src/app/utils/shared/shared.module';
 import { PipesModule } from 'src/app/utils/pipes/pipes.module';
 import { ChatRoutingModule } from '../chat/chat-routing.module';
-import { MatDialogModule } from '@angular/material/dialog';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
 
 
 
