@@ -68,28 +68,33 @@ export class HomeComponent implements OnInit {
     });
 
     this.socket.on('failRequestOpponentId', () => {
-      
+
       this.loadingService.hideLoading();
     });
   }
   getUserData() {
-     this.userService.getUserData().subscribe((data: IUserData) => {
-       this.userData = data;
+    this.userService.getUserData().subscribe({
+      next: (response :IUserData) => {
        
-       this.loadingService.hideLoading();
+        this.userData = response;
 
+        this.loadingService.hideLoading();
+      },
+      error: error => {
+        console.error('Error:', error.error.message); 
+      }
     });
 
   }
 
   async openConfirmModal(playMode :string) {
 
-
     try {
       const mapId = await firstValueFrom(this.confirmService.open(this.entry, CustomizeGameComponent));
       
       this.gameService.mapIndex = +mapId;
       this.gameService.playerId1 = this.authService.getLoggedInUserId();
+      this.gameService.playerId2 = 0;
       
       if (playMode === 'NORMAL') {
         

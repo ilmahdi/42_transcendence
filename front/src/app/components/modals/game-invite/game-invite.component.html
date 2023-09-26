@@ -1,4 +1,6 @@
 
+<div #alertModal></div>
+
 <div class="wraper">
 
     <div class="overlay" (click)="closeMe()"></div>
@@ -39,12 +41,12 @@
             
         </div>
         <div class="cm-invited-user" *ngIf="invitedUserId">
-            <img class="cm-invited-user-img" [src]="searchResults[activeIndex].avatar" 
+            <img class="cm-invited-user-img" [src]="userData.avatar" 
                 
                     style="display: none" onload="this.style.display=''"
                     onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
                 />
-                <span class="cm-invited-user-name">{{searchResults[activeIndex].username}}</span>
+                <span class="cm-invited-user-name">{{userData.username}}</span>
         </div>
         <div class="loading">
             <img class="loading-gif" *ngIf="invitedUserId" src="./assets/gifs/pong_loading.gif"/>

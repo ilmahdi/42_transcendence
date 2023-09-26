@@ -220,15 +220,15 @@ export class UserService {
         if (user)
             throw new HttpException('Username is already in use', HttpStatus.CONFLICT);
 
-            const addeduser = await this.addUser(createUserDto);
-            const token = this.tokenService.generateToken(
-                {
-                    sub: user.id,
-                    username: user.username,
-                }
-            )
-            // console.log(token)
-            return { token };
+        const addeduser = await this.addUser(createUserDto);
+        const token = this.tokenService.generateToken(
+            {
+                sub: addeduser.id,
+                username: addeduser.username,
+            }
+        )
+        // console.log(token)
+        return { token };
 
         } catch (error) {
             throw new HttpException('Failed to update user', HttpStatus.CONFLICT);

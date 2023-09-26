@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
+import { GameService } from 'src/app/services/game.service';
+import { ConfirmService } from 'src/app/services/modals/confirm.service';
+import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
+import { CustomizeGameComponent } from '../../modals/customize-game/customize-game.component';
+import { firstValueFrom } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
+import { CustomSocket } from 'src/app/utils/socket/socket.module';
+import { Router } from '@angular/router';
+import { GameInviteComponent } from '../../modals/game-invite/game-invite.component';
 
 @Component({
   selector: 'app-more-opts',
@@ -8,15 +17,20 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class MoreOptsComponent implements OnInit {
 
   constructor(
+    private confirmService: ConfirmService,
+    private authService: AuthService,
+    private socket: CustomSocket,
   ) { }
 
-  @Input() friendshipStatus :string = "NONE";
   @Input() friendshipId :number = -1;
+  @Input() friendshipStatus :string = "NONE";
   @Input() isRequestInitiator :boolean = true;
 
   @Output() unfriendClick: EventEmitter<void> = new EventEmitter<void>();
   @Output() blockClick: EventEmitter<void> = new EventEmitter<void>();
   @Output() cancelClick: EventEmitter<void> = new EventEmitter<void>();
+  @Output() playClick: EventEmitter<void> = new EventEmitter<void>();
+
 
   ngOnInit(): void {
   }
@@ -30,5 +44,10 @@ export class MoreOptsComponent implements OnInit {
   onCancleClick() {
     this.cancelClick.emit()
   }
+  onPlayClick() {
+    this.playClick.emit()
+  }
+
+ 
 
 }

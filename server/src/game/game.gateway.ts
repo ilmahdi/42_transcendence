@@ -61,7 +61,7 @@ export class GameGateway {
       })
       this.connectionGateway.inGameUsersById[userIds.player1Id] = client.id;
       this.server.to(client.id).emit('waitInviteOpponentId', userIds.player2Id);
-      this.server.to(socketId).emit('inviteOpponentId', { notify: 1 });
+      this.server.to(socketId).emit('notifyFriendRequest', { notify: 1 });
     }
     else 
       this.server.to(client.id).emit('failInviteOpponentId');
@@ -70,7 +70,8 @@ export class GameGateway {
   @SubscribeMessage('acceptGameInvite')
   handleAcceptGameInvite(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
     
-    if (!this.connectionGateway.inGameUsersById[userIds.player1Id]) {
+    if (!this.connectionGateway.inGameUsersById[userIds.player1Id]
+      && this.connectionGateway.inGameUsersById[userIds.player2Id]) {
 
       this.connectionGateway.inGameUsersById[userIds.player1Id] = client.id;
 
@@ -81,24 +82,33 @@ export class GameGateway {
       
       this.gameService.createGame(this.server, this.getGameId(userIds.player1Id, userIds.player2Id), socketId2, socketId1);
       
+      this.server.to(socketId1).emit('successGameInvite');
       this.server.to(socketId2).emit('successGameInvite');
     }
   }
   @SubscribeMessage('cancelGameInvite')
-  handleCancelGameInvite(client: Socket, userId :string) {
+  handleCancelGameInvite(client: Socket, userIds :{ player1Id: string, player2Id: string}) {
 
 
-    const socketId1 = this.connectionGateway.inGameUsersById[userId];
+    const socketId1 = this.connectionGateway.inGameUsersById[userIds.player1Id];
+    const socketId2 = this.connectionGateway.connectedUsersById[userIds.player2Id];
+
     if (socketId1) {
 
-      if (socketId1 !== client.id)
+      if (socketId1 !== client.id) {
+
         this.server.to(socketId1).emit('cancelGameInvite');
 
+      }
+      else
+        this.server.to(socketId2).emit('unNotifyFriendRequest', { notify: -1 });
+
+
       this.gameService.deleteGameInviteNotif({
-        from_id: +userId,
+        from_id: +userIds.player1Id,
       })
 
-      delete this.connectionGateway.inGameUsersById[userId];
+      delete this.connectionGateway.inGameUsersById[userIds.player1Id];
     }
   }
   @SubscribeMessage('leaveMatchmaking')

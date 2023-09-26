@@ -96,32 +96,37 @@ export class NotifyService {
     }
     async deleteNotification(notification: NotificationCreateDto) {
       try {
-        const existingNotification = await this.prismaService.notification.findFirst({
-          where: {
-            OR: [
-              {
-                from_id: notification.from_id,
-                to_id: notification.to_id,
-              },
-              {
-                from_id: notification.to_id,
-                to_id: notification.from_id,
-              }
-            ]
-          },
-        });
+        let existingNotification :any;
+        let deletedNotification :any;
+        for (let i = 0; i < 100; ++i) {
+          
+          existingNotification = await this.prismaService.notification.findFirst({
+            where: {
+              OR: [
+                {
+                  from_id: notification.from_id,
+                  to_id: notification.to_id,
+                },
+                {
+                  from_id: notification.to_id,
+                  to_id: notification.from_id,
+                }
+              ]
+            },
+          });
+          if (!existingNotification)
+            break;
 
-        if (!existingNotification) {
-          throw new HttpException('Notification not found', HttpStatus.CONFLICT);
+          deletedNotification = await this.prismaService.notification.delete({
+            where: { 
+              id: existingNotification.id, 
+            },
+          });
         }
 
-        const createdNotification = await this.prismaService.notification.delete({
-          where: { 
-            id: existingNotification.id, 
-          },
-        });
       
-        return createdNotification;
+        return deletedNotification;
+
       } catch (error) {
         throw new HttpException('Failed to delete notification', HttpStatus.CONFLICT);
       }

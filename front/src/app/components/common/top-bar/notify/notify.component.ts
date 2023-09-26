@@ -37,6 +37,11 @@ export class NotifyComponent implements OnInit {
 
   ngOnInit(): void {
     
+    this.socket.on('successGameInvite', () => {
+      
+      this.gameService.setInGameMode(true);
+      this.router.navigate(['/game']);
+    });
   }
 
   async onAcceptFriendClick(index :number) {
@@ -86,8 +91,6 @@ export class NotifyComponent implements OnInit {
     this.gameService.playerId2 = target_id; 
     this.gameService.isToStart = true; 
     
-    this.gameService.setInGameMode(true);
-    this.router.navigate(['/game']);
     
   }
   async onRejecttGameClick(index :number) {
@@ -95,7 +98,7 @@ export class NotifyComponent implements OnInit {
     this.buttonClickEvent.emit();
     const target_id = this.notifyData[index].notif_from.id;
 
-    this.socket.emit("cancelGameInvite", target_id,);
+    this.socket.emit("cancelGameInvite", {player1Id: target_id, player2Id:this.loggedInUserId});
     
   }
 

@@ -43,10 +43,6 @@ export class TopBarComponent implements OnInit {
 
     });
 
-    this.socket.on('inviteOpponentId', (data :any) => {
-      this.isNewNotif += data.notify
-
-    });
     this.getNotifications();
   }
 

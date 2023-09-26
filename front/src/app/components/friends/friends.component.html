@@ -1,3 +1,6 @@
+
+<div #confirmModal></div>
+
 <app-online-friends></app-online-friends>
 
 <div class="wrap-component">
@@ -29,7 +32,7 @@
                 />
               </span>
               <span class="ld-sec-tb-data-item">{{ friend.rating }}</span>
-              <span class="ld-sec-tb-data-item">
+              <span class="ld-sec-tb-data-item" (click)="handlePlayClick(i)">
                   <svg class="ld-sec-tb-data-icon" xmlns="http://www.w3.org/2000/svg">
                       <use xlink:href="./assets/icons/arrow.svg#icon-arrow"></use>
                   </svg>

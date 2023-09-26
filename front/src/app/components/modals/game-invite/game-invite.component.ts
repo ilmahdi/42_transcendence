@@ -1,12 +1,13 @@
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Component, EventEmitter, HostListener, Input, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MenuBarService } from 'src/app/services/menu-bar.service';
-import { INotifyData } from 'src/app/utils/interfaces/notify-data.interface';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
 import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
+import { GameService } from 'src/app/services/game.service';
+import { UserService } from 'src/app/services/user.service';
+import { ConfirmService } from 'src/app/services/modals/confirm.service';
+import { AlertComponent } from '../alert/alert.component';
 
 
 
@@ -19,19 +20,28 @@ export class GameInviteComponent {
   constructor(
     private authService :AuthService,
     public menuBarService: MenuBarService,
-    public authServece: AuthService,
     private socket: CustomSocket,
-    ) {
+    private gameService : GameService,
+    private userService: UserService,
+  ) {
 
     this.loggedInUserId  = this.authService.getLoggedInUserId();
+    this.invitedUserId = this.gameService.playerId2;
   }
+
+  private confirmService = new ConfirmService();
 
   private loggedInUserId :number;
   
-  public invitedUserId :number = 0;
+  public invitedUserId :number;
   public activeIndex: number = -1;
   public searchQuery: string = '';
   public searchResults: IUserDataShort[] = [];
+  public userData : IUserDataShort = {
+    id: 0,
+    username: "",
+    avatar: ""
+  }
 
   private subscriptions: Subscription[] = [];
 
@@ -40,7 +50,13 @@ export class GameInviteComponent {
   @Output() closeMeEvent = new EventEmitter();
   @Output() confirmEvent = new EventEmitter();
 
+  @ViewChild('alertModal', { read: ViewContainerRef })
+  entry2!: ViewContainerRef;
+
   ngOnInit(): void {
+    if (this.gameService.playerId2)
+      this.getUserData()
+
     this.socket.on('successGameInvite', () => {
       this.confirmEvent.emit(this.invitedUserId);
     });
@@ -48,22 +64,39 @@ export class GameInviteComponent {
       this.invitedUserId = userId;
     });
     this.socket.on('failInviteOpponentId', () => {
+      if (!this.title)
+        this.closeMe()
       this.invitedUserId = 0;
       this.searchQuery = '';
-      this. searchResults = [];    
+      this. searchResults = [];
+
     });
     this.socket.on('cancelGameInvite', () => {
+      if (!this.title)
+        this.confirmEvent.emit(-1);
       this.invitedUserId = 0;
       this.searchQuery = '';
       this. searchResults = [];    
     });
   }
 
+  getUserData() {
+     this.userService.getUserDataShort2(this.gameService.playerId2).subscribe({
+      next: (response :IUserDataShort) => {
+       
+        this.userData = response;
+        this.inviteUser(this.gameService.playerId2);
+      },
+      error: error => {
+        console.error('Error:', error.error.message); 
+      }
+    });
+  }
+
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
 
-    console.log("before leaaaa")
-    this.socket.emit("cancelGameInvite", this.loggedInUserId);
+    this.socket.emit("cancelGameInvite", {player1Id:this.loggedInUserId, player2Id: this.invitedUserId});
   }
 
   onSearchInputChange() {
@@ -98,8 +131,11 @@ export class GameInviteComponent {
     if (this.activeIndex >= 0 && this.activeIndex < this.searchResults.length) {
       if (this.searchResults[this.activeIndex].id !== this.loggedInUserId) {
 
-        this.searchQuery =this.searchResults[this.activeIndex].username!;
-        this.inviteUser(this.searchResults[this.activeIndex].id!);
+        this.userData.id = this.searchResults[this.activeIndex].id!
+        this.userData.username = this.searchResults[this.activeIndex].username!
+        this.userData.avatar = this.searchResults[this.activeIndex].avatar!
+
+        this.inviteUser(this.userData.id);
       }
       else {
         this.onClickedOutside1()
@@ -110,10 +146,12 @@ export class GameInviteComponent {
 
     if (index >= 0 && index < this.searchResults.length) {
       if (this.searchResults[index].id !== this.loggedInUserId) {
-        
-        this.activeIndex = index;
-        this.searchQuery =this.searchResults[index].username!;
-        this.inviteUser(this.searchResults[index].id!);
+
+        this.userData.id = this.searchResults[index].id!
+        this.userData.username = this.searchResults[index].username!
+        this.userData.avatar = this.searchResults[index].avatar!
+
+        this.inviteUser(this.userData.id);
       }
       else {
         this.onClickedOutside1()
@@ -122,7 +160,7 @@ export class GameInviteComponent {
   }
 
   onClickedOutside1(): void {
-    this.socket.emit("cancelGameInvite", this.loggedInUserId);
+    this.socket.emit("cancelGameInvite", {player1Id:this.loggedInUserId, player2Id: this.invitedUserId});
     this.searchQuery = '';
     this. searchResults = [];    
   }
@@ -150,9 +188,8 @@ export class GameInviteComponent {
   }
 
 
-
   closeMe() {
-    this.socket.emit("cancelGameInvite", this.loggedInUserId);
+    this.socket.emit("cancelGameInvite", {player1Id:this.loggedInUserId, player2Id: this.invitedUserId});
     this.closeMeEvent.emit();
   }
 
