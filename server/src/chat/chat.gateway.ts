@@ -27,19 +27,19 @@ export class ChatGateway{
   }
 
   @SubscribeMessage('privateMessage')
-  handlePrivateMessage(client: Socket, data: any) {
-    
-    if (!this.privateChatService.saveMessage(data.message))
+  async handlePrivateMessage(client: Socket, data: any) {
+    const message = await this.privateChatService.saveMessage(data.message)
+    if (!message.sent)
       return;
     const senders = this.connectionGateway.connectedUsersById[data.message.senderId]
       if (senders)
         senders.forEach(id=>{
-          this.server.to(id).emit('recMessage', data.message);
+          this.server.to(id).emit('recMessage', message.message);
         })
       const reciver = this.connectionGateway.connectedUsersById[data.message.receiverId]
       if (reciver)
         reciver.forEach(id=>{
-          this.server.to(id).emit('recMessage', data.message);
+          this.server.to(id).emit('recMessage', message.message);
         })
   }
 
@@ -162,7 +162,11 @@ export class ChatGateway{
   }
 
   @SubscribeMessage('readSignal')
-  readSignal(client:Socket) {
-    this.server.emit('recReadSignal', true);
+  readSignal(client:Socket, data:{sender:number, receiver:number}) {
+    const senders = this.connectionGateway.connectedUsersById[data.sender]
+    if (senders)
+      senders.forEach(id=>{
+        this.server.to(id).emit('recReadSignal', {read:true, receiver:data.receiver});
+      })
   }
 }

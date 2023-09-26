@@ -270,12 +270,13 @@ export class ChatService {
     return this.socket.fromEvent<Room>('recRoomById');
   }
 
-  sendReadSignal() {
-    this.socket.emit('readSignal');
+  sendReadSignal(senderId:number, receiverId:number) {
+    const data = {sender: senderId, receiver:receiverId}
+    this.socket.emit('readSignal', data);
   }
 
   getReadSignal() {
-    return this.socket.fromEvent<boolean>('recReadSignal');
+    return this.socket.fromEvent<{read:boolean, receiver:number}>('recReadSignal');
   }
 
   sendToGetChatNotif(id:number, open:boolean) {

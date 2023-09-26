@@ -1,3 +1,5 @@
+import { IUserData } from "../utils/interfaces/user-data.interface";
+
 export interface Message {
     id?: number;
     senderId?:number;
@@ -5,5 +7,7 @@ export interface Message {
     message?: string;
     date?:Date;
     readed?:boolean;
-    roomId?:number
+    roomId?:number;
+    sender?:IUserData;
+    reciever?:IUserData;
 }

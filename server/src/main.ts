@@ -5,7 +5,7 @@ import { SocketAdapter } from './chat/utils/dtos/socketAdapter.class';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: false
+    
   });
   app.enableCors({
     origin: 'http://localhost:4200',

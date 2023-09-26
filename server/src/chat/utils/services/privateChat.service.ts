@@ -11,7 +11,7 @@ export class PrivateChatService {
         private prismaService:PrismaService,
     ) {}
 
-    async saveMessage(message: Message) {
+    async saveMessage(message: Message): Promise<{sent:boolean, message:Message}> {
       let friends:Friendship[] = await this.prismaService.friendship.findMany({
         where: {
           friendship_status: FriendshipStatus.BLOCKED
@@ -26,20 +26,21 @@ export class PrivateChatService {
       })
 
       if (blocked)
-        return false;
+        return {sent:false, message:null};
 
-      await this.prismaService.message.create({
+      const msg = await this.prismaService.message.create({
         data:{
           senderId:message.senderId,
           date:message.date,
           message:message.message,
           receiverId:message.receiverId,
           readed:false,
-          roomId:message.roomId
-        }
+          roomId:message.roomId,
+        },
+        include: {sender: true, receiver: true}
       })
 
-      return true;
+      return {sent:true, message:msg};
     }
 
     getMessages() {

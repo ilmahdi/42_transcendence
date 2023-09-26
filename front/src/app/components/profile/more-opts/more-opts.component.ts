@@ -37,8 +37,6 @@ export class MoreOptsComponent implements OnInit {
   }
 
   onSendMessage() {
-    const user:IUserDataShort = this.chatService.openChatFromProfileSource.value.user
-    this.chatService.openChatFromProfileSource.next({user:user, open:true})
-    this.router.navigateByUrl('/chat');
+    
   }
 }
