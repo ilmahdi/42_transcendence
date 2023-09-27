@@ -1,3 +1,4 @@
+import { Mute } from "./mutes.model";
 import { RoomType } from "./roomType.enum";
 
 export interface Room {
@@ -8,4 +9,6 @@ export interface Room {
     type?:RoomType;
     password?:string;
     imagePath?:string;
+    mutes?:Mute[];
+    blackList?:number[];
 }

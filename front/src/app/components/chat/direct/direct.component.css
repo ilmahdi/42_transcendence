@@ -1,0 +1,95 @@
+.convers {
+    display: flex;
+    flex-direction: column;
+    width: 290px;
+    background-color: #231C1C;
+    border-radius: 0px 0px 15px 15px;
+}
+
+.conver {
+    display: flex;
+    height: 66px;
+    width: 92%;
+    background-color: #201717;
+    margin-left: 4%;
+    margin-top: 10px;
+    border-radius: 10px 10px 10px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.conver:hover {
+    background-color: #d3814674;
+}
+
+#img {
+    width: 35px;
+    height: 35px;
+    background-color: white;
+    border-radius: 20px;
+    margin-top: 17px;
+    margin-left: 3%;
+}
+
+#name {
+    color: #DEC8C8;
+    margin-top: 7px;
+    margin-left: 4%;
+}
+
+.date {
+    font-size: smaller;
+    color: #ABABAB;
+    margin-top: 10px;
+    width: 40px;
+    height: 20px;
+    margin-left: 50px;
+}
+
+.message {
+    color: #ABABAB;
+    font-size: small;
+    margin-top: -5px;
+    margin-left: 10px;
+    max-width: 100px;
+    max-height: 20px;
+    overflow: hidden;
+}
+
+.fa-check-circle-o {
+    color: white;
+    margin-top: 37px;
+}
+
+#readMsg {
+    width: 15px;
+    height: 15px;
+    border-radius: 10px;
+    margin-top: 37px;
+    float: right;
+}
+
+.notReaded {
+    height: 20px;
+    width: 20px;
+    border-radius: 65px;
+    margin-top: 37px;
+    background-color: #FF7A00;
+    color: white;
+}
+
+/***********************************************/
+/*                Media Queries                */
+/***********************************************/
+
+@media (max-width: 1000px) {
+
+}
+
+@media (max-width: 530px) {
+
+}
+    
+@media (max-width: 450px) {
+
+}

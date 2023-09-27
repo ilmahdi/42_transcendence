@@ -1,0 +1,63 @@
+<div class="options" *ngIf="isAdmin">
+    <div class="roomType" [style.height]="type==='PROTECTED'? '210px':'125px'">
+        <h4>Room type:</h4>
+        <span id="public" [style.backgroundColor]="type==='PUBLIC'? '#D38146':''" (click)="changeType('public')"><p id="typeName">Public</p></span>
+        <span id="protected" [style.backgroundColor]="type==='PROTECTED'? '#D38146':''" (click)="changeType('protected')"><p id="typeName">Protected</p></span>
+        <span id="private" [style.backgroundColor]="type==='PRIVATE'? '#D38146':''" (click)="changeType('private')"><p id="typeName">Private</p></span>
+        <h5 id="changePass" *ngIf="type==='PROTECTED'">Change the password:</h5>
+        <form *ngIf="type==='PROTECTED'" [formGroup]="form">
+            <input id="password" type="password" placeholder="New password" formControlName="password">
+        </form>
+        <br>
+        <h5 id="membersTitle" [style.top]="type==='PROTECTED'? '75px' :''">Members</h5>
+    </div>
+
+    <br>
+    <div class="members" [style.height]="type==='PROTECTED'? 'calc(100% - 290px)':''">
+        <div *ngFor="let user of members" >
+            <div class="user" [style.backgroundColor]="user.click? '#D38146':''" (click)="clickOnMember(user)" [style.width]="(user.click && user.type === 'user')? '45%':'80%'">
+                <div class="addAdmin" *ngIf="user.click && user.type === 'user'" (click)="addAdmin(user)" [style.backgroundColor]="user.admin? '#D38146':''"><p style="text-align: center;margin-top: 3px;">Admin</p></div>
+                <div class="remove" *ngIf="user.click && user.type === 'user'" (click)="removeMember(user)" [style.backgroundColor]="user.removed?'#D38146':''"><p style="text-align: center;margin-top: 3px;">Remove</p></div>
+                <div class="mute" *ngIf="user.click && user.type === 'user'"  [style.backgroundColor]="user.mute?'#D38146':''">
+                    <p style="text-align: center;margin-top: 3px;" (click)="muting(user)" *ngIf="!user.mute">Mute</p>
+                    <div (click)="clickOnInput(user)" *ngIf="user.mute">
+                        <input type="number" id="mutingTime" min="0" max="100" step="1" placeholder="Minutes" [(ngModel)]="user.muteDuration">
+                    </div>
+                </div>
+                <div class="ban" *ngIf="user.click && user.type === 'user'" (click)="banUser(user)" [style.backgroundColor]="user.ban?'#D38146':''"><p style="text-align: center;margin-top: 3px;">Ban</p></div>
+                <img [src]="user.user.avatar" alt="avatar" id="img">
+                <p id="username">{{user.user.username}}</p>
+                <p id="type">{{user.type}}</p>
+            </div>
+        </div>
+    </div>
+
+    <button id="submit" (click)="saveRoom()"><span>Save</span></button>
+    <button id="back" (click)="back()"><span>Back</span></button>
+    <button id="addMember" (click)="addMembers()"><span>Add</span></button>
+</div>
+
+<div class="options" *ngIf="!isAdmin">
+    <div class="roomType">
+        <h4>Room type:</h4>
+        <span id="protected" *ngIf="type === 'PUBLIC'" style="cursor: auto;"><p id="typeName">Public</p></span>
+        <span id="protected" *ngIf="type === 'PROTECTED'" style="cursor: auto;"><p id="typeName">Protected</p></span>
+        <span id="protected" *ngIf="type === 'PRIVATE'" style="cursor: auto;"><p id="typeName">Private</p></span>
+        <h5 id="membersTitle">Members</h5>
+    </div>
+
+    <div class="members" style="height: 460px;">
+        <div *ngFor="let user of members">
+            <div class="user" [style.backgroundColor]="user.click? '#D38146':''" [style.width]="(user.click && user.type === 'user')? '65%':'80%'">
+                <div class="addAdmin" *ngIf="user.click && user.type === 'user'"><p style="text-align: center;margin-top: 3px;">Admin</p></div>
+                <div class="remove" *ngIf="user.click && user.type === 'user'"><p style="text-align: center;margin-top: 3px;">Remove</p></div>
+                <img [src]="user.user.avatar" alt="avatar" id="img">
+                <p id="username">{{user.user.username}}</p>
+                <p id="type">{{user.type}}</p>
+            </div>
+        </div>
+    </div>
+
+    <button id="submit" (click)="exitRoom()"><span>Exit</span></button>
+    <button id="back" style="left: 30px;" (click)="back()"><span>Back</span></button>
+</div>

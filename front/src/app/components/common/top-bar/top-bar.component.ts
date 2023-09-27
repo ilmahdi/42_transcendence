@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { ChatService } from 'src/app/services/chat.service';
 import { MenuBarService } from 'src/app/services/menu-bar.service';
 import { INotifyData } from 'src/app/utils/interfaces/notify-data.interface';
 import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
@@ -19,16 +20,24 @@ export class TopBarComponent implements OnInit {
     public authServece: AuthService,
     private router: Router,
     private socket: CustomSocket,
+    private chatService: ChatService,
   ) {
+    this.userId = this.authServece.getLoggedInUserId();
+
+    chatService.sendToGetChatNotif(this.userId, false);
+    chatService.getChatNotif().subscribe(data=> {
+      chatService.chatNotifSource.next(data.num)
+    })
   }
   
+  public userId: number
   public searchQuery: string = '';
   public searchResults: IUserDataShort[] = [];
   public activeIndex: number = -1;
   public isNotifClicked: boolean = false;
   public isNewNotif: number = 0;
+  public chatNotif: number = 0;
   public notifyData :INotifyData[] = []
-
 
   private subscriptions: Subscription[] = [];
   
@@ -44,6 +53,33 @@ export class TopBarComponent implements OnInit {
     });
 
     this.getNotifications();
+
+    // FOR PRIVATE MESSAE
+    let messages:{id:number}[] = [];
+    const subs1:Subscription = this.chatService.getNewMessage().subscribe(msg=> {
+      if (msg.senderId !== this.userId) {
+        messages = messages.filter(item=> item.id !== msg.senderId)
+        let id = {id:msg.senderId!}
+        messages.push(id)
+        this.chatService.chatNotifSource.next(messages.length)
+      }
+    })
+    this.subscriptions.push(subs1)
+    const subs2:Subscription = this.chatService.chatNotif$.subscribe(data=>this.chatNotif = data)
+    this.subscriptions.push(subs2)
+
+    // FOR ROOM MESSAGE
+    const subs3:Subscription = this.chatService.getRoomMessage().subscribe(msg=> {
+      if (msg.senderId !== this.userId) {
+        messages = messages.filter(item=> item.id !== msg.senderId)
+        let id = {id:msg.senderId!}
+        messages.push(id)
+        this.chatService.chatNotifSource.next(messages.length)
+      }
+    })
+    this.subscriptions.push(subs3)
+    const subs4:Subscription = this.chatService.chatNotif$.subscribe(data=>this.chatNotif = data)
+    this.subscriptions.push(subs4)
   }
 
   toggleLeftBar() {

@@ -10,6 +10,9 @@ import { INotification } from 'src/app/utils/interfaces/notify-data.interface';
 import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
+import { ChatService } from 'src/app/services/chat.service';
+import { MessageService } from 'src/app/services/modals/message.service';
+import { MessageComponent } from '../../modals/message/message.component';
 import { CustomizeGameComponent } from '../../modals/customize-game/customize-game.component';
 import { GameService } from 'src/app/services/game.service';
 import { GameInviteComponent } from '../../modals/game-invite/game-invite.component';
@@ -29,6 +32,8 @@ export class ProfileIdComponent implements OnChanges {
     private menuBarService: MenuBarService,
     private socket: CustomSocket,
     private confirmService: ConfirmService,
+    private messageService:MessageService,
+    private chatService:ChatService,
     private gameService : GameService,
     private router: Router,
   ) { 
@@ -118,6 +123,7 @@ export class ProfileIdComponent implements OnChanges {
 
   onMoreClick(){
     this.isMoreClicked = !this.isMoreClicked;
+    this.chatService.openChatFromProfileSource.next({user:this.userData, open:false})
   }
   
   onClickedOutside(): void {
@@ -241,6 +247,12 @@ export class ProfileIdComponent implements OnChanges {
           this.handleUnblockClick()
       });
       this.subscriptions.push(subscription);
+  }
+
+  openMessasge() {
+    const subscription = this.messageService.open(this.entry, MessageComponent, `Send private message to ${this.userData.username}?`, 'type the message here:', this.userData)
+      .subscribe(data=> {})
+    this.subscriptions.push(subscription);
   }
   
   

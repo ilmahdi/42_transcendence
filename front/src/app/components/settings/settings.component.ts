@@ -156,13 +156,11 @@ export class SettingsComponent implements OnInit {
   private updateUser() {
     const subscription = this.userService.updateUserData(this.userDataShort).subscribe({
       next: response => {
-        // console.log('Received data:', response);
         localStorage.setItem(JWT_TOKEN, response.token);
         this.router.navigate(["/home"]);
       },
       error: error => {
         this.isUsernameTaken = true;
-        // console.error('Error:', error.error.message); 
       }
     });
     this.subscriptions.push(subscription);
@@ -177,7 +175,5 @@ export class SettingsComponent implements OnInit {
       subscription.unsubscribe();
     }
   }
-
- 
   
 }

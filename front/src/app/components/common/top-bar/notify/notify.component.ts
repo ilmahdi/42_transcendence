@@ -33,6 +33,7 @@ export class NotifyComponent implements OnInit {
 
   @Output() buttonClickEvent :EventEmitter<void> = new EventEmitter<void>();
 
+  public NotificationType = NotificationType;
   public loggedInUserId :number;
 
   ngOnInit(): void {

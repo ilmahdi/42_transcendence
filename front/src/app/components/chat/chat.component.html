@@ -1,0 +1,40 @@
+
+<app-online-friends></app-online-friends>
+<div class="wrap-component">
+    <div style="display: flex;">
+        <div class="top" *ngIf="displayConvers || screenWidth > 1350">
+            <div class="header">
+                <div class="direct" [style.background-color]="!roomsClicked? '#231C1C' : '#201717'" (click)="onDirect()">
+                    <div class="text">DIRECT</div>
+                    <div class="line" [style.background-color]="!roomsClicked? '#D38146' : '#201717'"></div>
+                </div>
+                <div class="rooms" [style.background-color]="roomsClicked? '#231C1C' : '#201717'" (click)="onRooms()">
+                    <div class="text">ROOMS</div>
+                    <div class="line" [style.background-color]="roomsClicked? '#D38146' : '#201717'"></div>
+                </div>
+            </div>
+            <div class="searchPart" [style.border-radius]="!roomsClicked?'0px 15px 0px 0px' : '15px 0px 0px 0px'" *ngIf="!roomsClicked">
+                <input type="text" class="search" placeholder="search..." [(ngModel)]="searchQuery" (ngModelChange)="searchQueryConvers()">
+                <span id="rightSerch"></span>
+                <span class="fa fa-search"></span>
+            </div>
+        
+            <div class="searchPart" [style.border-radius]="!roomsClicked?'0px 15px 0px 0px' : '15px 0px 0px 0px'" *ngIf="roomsClicked">
+                <input type="text" class="search" placeholder="search..." [(ngModel)]="searchQuery" (ngModelChange)="searchQueryRooms()">
+                <span id="rightSerch"></span>
+                <span class="fa fa-search fa-rooms"></span>
+                <span class="fa fa-plus-square" (click)="displayFormRoom()"></span>
+            </div>
+            <app-direct *ngIf="directClicked" (customEvent)="onCustomEvent($event)"></app-direct>
+            <app-rooms *ngIf="roomsClicked" (conversData)="getRoomConvers($event)"></app-rooms>
+        </div>
+
+        <app-conversations *ngIf="conversation" [userEmitted]="userEvent" [roomConvers]="roomData"></app-conversations>
+        
+        <app-creating-rooms *ngIf="addRoom"></app-creating-rooms>
+        <app-other-rooms *ngIf="otherRooms"></app-other-rooms>
+        <app-room-options *ngIf="options"></app-room-options>
+        <app-add-member *ngIf="addMember"></app-add-member>
+    </div>
+
+</div>

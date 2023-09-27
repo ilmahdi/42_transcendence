@@ -1,0 +1,16 @@
+
+<div class="wraper">
+
+  <div class="overlay" (click)="closeMe()"></div>
+  <div class="confirm-modal">
+    <h2 class="cm-title">{{ title }}</h2>
+    <p class="cm-body">{{ body }}</p>
+    <input type="text" placeholder="Message..." [(ngModel)]="message">
+    <div class="cm-btns">
+      <div class="cm-indent"></div>
+      <button class="cm-btn b1" (click)="closeMe()">close</button>
+      <button class="cm-btn b2" (click)="send()">Send</button>
+    </div>
+  </div>
+  
+</div>

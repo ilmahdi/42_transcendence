@@ -1,0 +1,126 @@
+.list {
+    display: flex;
+    flex-direction: column;
+    width: 290px;
+    background-color: #231C1C;
+    border-radius: 0px 0px 15px 15px;
+    overflow: auto;
+}
+
+.roomSearch {
+    position: relative;
+    height: 40px;
+    width: 95%;
+    left: 3%;
+    top: 10px;
+    margin-bottom: 10px;
+
+    border-radius: 10px 10px 10px 10px;
+    background-color: #201717;
+    color: #DEC8C8;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.roomSearch:hover {
+    background-color: #D38146;
+}
+
+.room {
+    display: flex;
+    /* position: absolute; */
+    height: 66px;
+    width: 92%;
+    background-color: #201717;
+    margin-top: 10px;
+    margin-left: 4%;
+    border-radius: 10px 10px 10px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.room:hover {
+    background-color: #D38146;
+}
+
+#image {
+    width: 35px;
+    height: 35px;
+    background-color: white;
+    border-radius: 20px;
+    margin-top: 17px;
+    margin-left: 3%;
+}
+
+#roomName {
+    color: #DEC8C8;
+    margin-top: 7px;
+    margin-left: 4%;
+}
+
+.date {
+    font-size: smaller;
+    color: #ABABAB;
+    margin-top: 10px;
+    width: 40px;
+    height: 20px;
+    margin-left: 50px;
+}
+
+.message {
+    color: #ABABAB;
+    font-size: small;
+    margin-top: -10px;
+    margin-left: 10px;
+    max-width: 100px;
+    max-height: 20px;
+    overflow: hidden;
+}
+
+.notReaded {
+    height: 20px;
+    width: 20px;
+    border-radius: 65px;
+    margin-top: 37px;
+    background-color: #FF7A00;
+    color: white;
+}
+
+@media (min-width: 2000px) {
+    .list {
+        right: calc(32% + 600px);
+        width: 320px;
+    }
+}
+
+@media (min-width: 1515px) {
+    .list {
+        right: calc(25% + 530px);
+    }
+}
+
+@media (max-width: 1420px) {
+    .list {
+        right: calc(2% + 600px);
+    }
+}
+
+@media (max-width: 1160px) {
+    .list {
+        right: calc(2% + 508px);
+    }
+}
+
+@media (max-width: 934px) {
+    .list {
+        left: 35%;
+        width: 320px;
+    }
+}
+
+@media (max-width: 660px) {
+    .list {
+        left: 22%;
+    }
+}

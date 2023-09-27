@@ -42,10 +42,13 @@
     </div>
     <div class="tb-sec-three">
         
-        <li class="tb-sec-item">
+        <li routerLink="chat" class="tb-sec-item">
             <svg class="tb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/message.svg#icon-message"></use>
             </svg>
+            <div class="tb-sec-item-indic" *ngIf="chatNotif">
+                <span> {{ chatNotif }} </span>
+            </div>
         </li>
         <li class="tb-sec-item notif" appClickOutside (click)="onClickNotif($event)" >
             <svg class="tb-sec-item-icon" xmlns="http://www.w3.org/2000/svg" [class.active]="isNotifClicked">

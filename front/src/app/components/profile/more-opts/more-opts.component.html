@@ -6,11 +6,11 @@
         </svg>
         <span class="mo-text"> Cancle </span> 
     </div>
-    <div class="mo-item">
+    <div class="mo-item" (click)="onSendMessage()">
         <svg class="mo-icon" xmlns="http://www.w3.org/2000/svg">
             <use xlink:href="./assets/icons/message_add.svg#icon-message_add"></use>
         </svg>
-        <span class="mo-text"> Message </span> 
+        <span class="mo-text"> Message </span>
     </div>
     <div class="mo-item" *ngIf="friendshipStatus !== 'ACCEPTED'" (click)="onPlayClick()">
         <svg class="mo-icon" xmlns="http://www.w3.org/2000/svg">

@@ -25,12 +25,18 @@ export class UserService {
                 id,
             },
         })
+<<<<<<< HEAD
+        return user;
+    }
+
+=======
         if (!user)
             throw new HttpException('User not found', HttpStatus.CONFLICT);
         return user;
     }
 
 
+>>>>>>> origin/main
     // async findUserByFtId(id: number) {
     //     const user = await this.prismaService.userAccount.findUnique({
     //         where: {
@@ -196,6 +202,7 @@ export class UserService {
                 ...createUserDto,
             }
         })
+        return user;
     }
     getUserById(id:number) {
         try {

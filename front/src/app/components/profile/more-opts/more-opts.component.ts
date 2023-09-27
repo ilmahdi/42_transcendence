@@ -1,3 +1,7 @@
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { ChatService } from 'src/app/services/chat.service';
+import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { GameService } from 'src/app/services/game.service';
 import { ConfirmService } from 'src/app/services/modals/confirm.service';
@@ -17,6 +21,8 @@ import { GameInviteComponent } from '../../modals/game-invite/game-invite.compon
 export class MoreOptsComponent implements OnInit {
 
   constructor(
+    private chatService:ChatService,
+    private router:Router,
     private confirmService: ConfirmService,
     private authService: AuthService,
     private socket: CustomSocket,
@@ -29,6 +35,7 @@ export class MoreOptsComponent implements OnInit {
   @Output() unfriendClick: EventEmitter<void> = new EventEmitter<void>();
   @Output() blockClick: EventEmitter<void> = new EventEmitter<void>();
   @Output() cancelClick: EventEmitter<void> = new EventEmitter<void>();
+  @Output() sendMessage: EventEmitter<void> = new EventEmitter<void>();
   @Output() playClick: EventEmitter<void> = new EventEmitter<void>();
 
 
@@ -50,4 +57,7 @@ export class MoreOptsComponent implements OnInit {
 
  
 
+  onSendMessage() {
+    this.sendMessage.emit();
+  }
 }

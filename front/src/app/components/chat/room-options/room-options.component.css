@@ -1,0 +1,352 @@
+.options {
+    margin-left: 20px;
+    height: 650px;
+    width: 570px;
+    background-color: #231C1C;
+    border-radius: 15px 15px 15px 15px;
+}
+
+.roomType {
+    position: relative;
+    height: 125px;
+    width: 100%;
+    border-radius: 15px 15px 0px 0px;
+}
+
+h4 {
+    top: 7px;
+    position: relative;
+    text-align: center;
+    color: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+#public {
+    position: absolute;
+    left: 7%;
+    top: 50px;
+    height: 40px;
+    width: 25%;
+    background-color: #201717;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#protected {
+    position: absolute;
+    left: 37%;
+    top: 50px;
+    height: 40px;
+    width: 25%;
+    background-color: #201717;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#private {
+    position: absolute;
+    left: 67%;
+    top: 50px;
+    height: 40px;
+    width: 25%;
+    background-color: #201717;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#public:hover, #protected:hover, #private:hover {
+    background-color: #D38146;
+}
+
+#typeName {
+    position: relative;
+    text-align: center;
+    color: white;
+    top: 7px;
+}
+
+#changePass {
+    position: relative;
+    top: 65px;
+    text-align: center;
+    color: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+#password {
+    position: relative;
+    width: 50%;
+    height: 40px;
+    left: 25%;
+    top: 65px;
+    border: none;
+    outline: none;
+    text-indent: 20px;
+    border-radius: 10px;
+    background-color: #584747;
+    color: #9D8686;
+}
+
+.members {
+    position: relative;
+    width: 100%;
+    height: 440px;
+    overflow: hidden;
+}
+
+#membersTitle {
+    position: relative;
+    top: 65px;
+    text-align: center;
+    color: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.user {
+    margin-top: 10px;
+    margin-left: 10%;
+    height: 80px;
+    /* width: 80%; */
+    border-radius: 10px;
+    background-color: #201717;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#img {
+    width: 40px;
+    height: 40px;
+    border-radius: 30px;
+    margin-top: 20px;
+    margin-left: 3%;
+}
+
+#username {
+    position: relative;
+    text-align: center;
+    top: -55px;
+    color: white;
+}
+
+#type {
+    position: relative;
+    text-align: center;
+    top: -55px;
+    color: #696969;
+}
+
+.addAdmin {
+    height: 36px;
+    width: 20%;
+    background-color: #201717;;
+    position: absolute;
+    right: 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+    margin-top: 0px;
+    color: white;
+}
+
+.remove {
+    height: 36px;
+    width: 20%;
+    background-color: #201717;;
+    position: absolute;
+    right: 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+    margin-top: 40px;
+    color: white;
+}
+
+.mute {
+    height: 36px;
+    width: 20%;
+    background-color: #201717;;
+    position: absolute;
+    right: 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+    margin-top: 0px;
+    margin-right: 21%;
+    color: white;
+}
+
+#mutingTime {
+    position: absolute;
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    /* margin-left: 2px; */
+    text-indent: 10px;
+    border-radius: 10px;
+    background-color: #584747;
+    color: #9D8686;
+}
+
+.saad {
+    height: 36px;
+    width: 20%;
+    position: absolute;
+    right: 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+    margin-top: 40px;
+    margin-right: 21%;
+    color: white;
+}
+
+.ban {
+    height: 36px;
+    width: 20%;
+    background-color: #201717;;
+    position: absolute;
+    right: 10px;
+    border-radius: 10px;
+    transition: 0.5s;
+    margin-top: 40px;
+    margin-right: 21%;
+    color: white;
+}
+
+#submit {
+    margin-top: 10px;
+    margin-right: 20px;
+    height: 35px;
+    width: 100px;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    background-color: #D38146;
+    float: right;
+}
+
+#submit span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+  }
+  
+#submit span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: -5px;
+    right: -20px;
+    transition: 0.5s;
+    font-size: 20px;
+}
+
+#submit:hover span {
+    padding-right: 15px;
+}
+
+#submit:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+#back {
+    margin-top: 10px;
+    margin-left: 20px;
+    height: 35px;
+    width: 100px;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    background-color: #D38146;
+}
+
+#back span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+#back span:after {
+    content: '\00AB';
+    position: absolute;
+    opacity: 0;
+    top: -5px;
+    left: -20px;
+    transition: 0.5s;
+    font-size: 20px;
+}
+
+#back:hover span {
+    padding-left: 15px;
+}
+  
+#back:hover span:after {
+    opacity: 1;
+    left: 0;
+}
+
+#addMember {
+    margin-top: 10px;
+    margin-right: 30px;
+    height: 35px;
+    width: 100px;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    background-color: #D38146;
+    float: right;
+}
+
+#addMember span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+#addMember span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: -5px;
+    right: -20px;
+    transition: 0.5s;
+    font-size: 20px;
+}
+  
+#addMember:hover span {
+    padding-right: 15px;
+}
+    
+#addMember:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+@media (max-width: 1000px) {
+    .options {
+        width: 450px;
+        margin-left: -10px;
+    }
+}
+
+@media (max-width: 530px) {
+    .options {
+        width: 380px;
+    }
+}
+    
+@media (max-width: 450px) {
+    .options {
+        width: 330px;
+    }
+}
+
+p{
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    user-select:none;
+}
