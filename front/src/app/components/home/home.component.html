@@ -1,4 +1,6 @@
 
+<div #confirmModal></div>
+
 <app-online-friends></app-online-friends>
 
 <div class="wrap-component">
@@ -30,11 +32,11 @@
             <img class="hb-stats-item-icon" src="./assets/icons/ilose.svg" />
             <span class="hb-stats-item-title"> losses </span>
           </div>
-          <div class="hb-stats-item">
+          <!-- <div class="hb-stats-item">
             <span class="hb-stats-item-nb"> {{ userData.draws }} </span>
             <img class="hb-stats-item-icon" src="./assets/icons/idraw.svg" />
             <span class="hb-stats-item-title"> draws </span>
-          </div>
+          </div> -->
           <div class="hb-stats-item">
             <span class="hb-stats-item-nb"> {{ userData.games }} </span>
             <img class="hb-stats-item-icon" src="./assets/icons/igames.svg" />
@@ -49,8 +51,9 @@
       </div>
     </div>
     <div class="hp-sec-two">
-        <div class="hp-s-two-button"> Play now </div>
-        <div class="hp-s-two-button"> Choose your opponent </div>
+        <button class="hp-s-two-button" (click)="openConfirmModal('NORMAL')"> Play now </button>
+        <button class="hp-s-two-button" (click)="openConfirmModal('INVITE')"> Choose your opponent </button>
+        <button class="hp-s-two-button" (click)="openConfirmModal('COMPUTER')"> Train with the computer </button>
     </div>
   </div>
 </div>

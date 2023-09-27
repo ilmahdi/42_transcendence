@@ -10,7 +10,6 @@ import { OnlineFriendsComponent } from './right-bar/online-friends/online-friend
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/utils/shared/shared.module';
 import { NotifyComponent } from './top-bar/notify/notify.component';
-import { RelativeTimePipe } from 'src/app/utils/pipes/relative-time.pipe';
 import { PipesModule } from 'src/app/utils/pipes/pipes.module';
 import { LoadingComponent } from './loading/loading.component';
 

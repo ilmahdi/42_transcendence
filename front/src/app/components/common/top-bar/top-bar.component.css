@@ -158,6 +158,10 @@
     fill: var(--primary-text-color);
     flex-shrink: 0;
 }
+.tb-sec-item-icon.i1 {
+
+    stroke: var(--primary-text-color);
+}
 
 .tb-sec-item-icon.active {
     fill: var(--second-hover-background-color);

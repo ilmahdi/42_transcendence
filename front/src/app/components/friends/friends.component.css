@@ -89,7 +89,8 @@
 .ld-sec-table-wrap {
     display: flex;
     width: 100%;
-    height: 80vh;
+    max-height: 80vh;
+    min-height: 40vh;
 
     overflow-y: auto;
     scrollbar-gutter: stable both-edges;
@@ -170,6 +171,8 @@
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
+
+    border: 0.001rem solid var(--primary-text-color);
 }
 
 .ld-sec-tb-data-icon {
@@ -181,13 +184,12 @@
 .ld-sec-tb-data-icon:hover {
     cursor: pointer;
     fill: var(--second-hover-background-color);
-    padding-left: 0.08rem;
 }
 
 .entry:hover  {
     cursor: pointer;
     background-color: var(--primary-hover-background-color);
-    border-radius: 0.4rem;
+    border-radius: 0.04rem;
 }
 
 
@@ -202,6 +204,49 @@
     background-color:var(--top-bar-background-color);
     pointer-events: none;
 
+}
+
+
+
+
+.mh-empty {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-text-color);
+    background-color: var(--second-background-color);
+    border-radius: 1rem;
+    min-width: 18rem;
+    width: 100%;;
+    height: 100%;
+    padding: 2rem 0;
+}
+
+
+.mh-empty-img {
+    width: 16rem;
+}
+
+.mh-empty-h {
+    margin-top: 1rem;
+    width: fit-content;
+    font-size: 1.4rem;
+}
+
+.mh-empty-p {
+    width: 90%;
+    height: auto;
+    text-align: center;
+}
+
+.mh-empty-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(32, 23, 23, 0.5);
+    z-index: 1;
 }
 
 

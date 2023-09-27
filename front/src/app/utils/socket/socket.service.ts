@@ -28,6 +28,12 @@ export class SocketService {
       this.socket.emit("broadcastOnline", this.loggedInUserId);
 
     });
+
+    this.socket.on('errorEvent', (errorData :any) => {
+      const errorMessage = errorData.message;
+      console.log(errorMessage);
+    })
+
   }
   
   endSocketConnection() {

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
@@ -25,6 +26,9 @@ export class OnlineFriendsComponent implements OnInit {
   public connectedFriendsById: { [userId: number]: boolean } = {}; 
   public connectedFriendsIds: number[] = [];
 
+  private subscriptions: Subscription[] = [];
+
+
   ngOnInit(): void {
     this.getUserData()
 
@@ -39,7 +43,7 @@ export class OnlineFriendsComponent implements OnInit {
   }
 
   getUserData() {
-     this.userService.getUserDataShort().subscribe({
+    const subscription = this.userService.getUserDataShort().subscribe({
       next: (response :IUserDataShort) => {
        
         this.userData = response;
@@ -49,9 +53,10 @@ export class OnlineFriendsComponent implements OnInit {
         console.error('Error:', error.error.message); 
       }
     });
+    this.subscriptions.push(subscription);
   }
   getfriendList() {
-     this.userService.getfriendList(this.userData.id!).subscribe({
+    const subscription = this.userService.getfriendList(this.userData.id!).subscribe({
       next: (response :IUserDataShort[]) => {
        
         this.friendList = response;
@@ -70,6 +75,18 @@ export class OnlineFriendsComponent implements OnInit {
         console.error('Error:', error.error.message); 
       }
     });
+    this.subscriptions.push(subscription);
+  }
+
+
+  ngOnDestroy(): void {
+    
+    this.socket.off('online');
+    this.socket.off('offline'); 
+
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
 

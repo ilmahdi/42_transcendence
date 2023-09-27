@@ -21,7 +21,7 @@ import { Profile } from '../interfaces'
           ft_id: profile._json.id,
           username: profile._json.login,
           email: profile._json.email,
-          avatar: profile._json.image.link,
+          avatar: profile._json.image!.link,
         }
         
         const user = await this.authService.validateFtUser(miniProfile);

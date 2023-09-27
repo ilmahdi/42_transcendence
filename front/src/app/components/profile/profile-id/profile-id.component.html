@@ -43,7 +43,7 @@
                     </svg>
                 <span>Accept</span> 
             </button>
-            <button class="pi-sec-four-btn b1" *ngIf=" friendshipStatus==='ACCEPTED'"> 
+            <button class="pi-sec-four-btn b1" *ngIf=" friendshipStatus==='ACCEPTED'" (click)="handlePlayClick()"> 
                     <svg class="pi-sec-four-icon" xmlns="http://www.w3.org/2000/svg">
                         <use xlink:href="./assets/icons/play.svg#icon-play"></use>
                     </svg>
@@ -65,7 +65,8 @@
                         [isRequestInitiator]="isRequestInitiator" 
                         (unfriendClick)="openConfirmModal('unfriend')"
                         (blockClick)="openConfirmModal('block')"
-                        (cancelClick)="onCancelClick()">
+                        (cancelClick)="onCancelClick()"
+                        (playClick)="handlePlayClick()">
                     </app-more-opts>
                 </div>
             </div>

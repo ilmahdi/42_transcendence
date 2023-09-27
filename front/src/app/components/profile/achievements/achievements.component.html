@@ -1,71 +1,71 @@
 <div class="achievements">
     <div class="ac-progress-bar">
         <div class="ac-pb-wrap">
-            <div class="ac-pb-steps" [style.width]="'33%'"></div>
+            <div class="ac-pb-steps" [style.width.%]="(acCount / 12) * 100"></div>
         </div>
-        <div class="ac-pb-text"> Total: 4 from 12 </div>
+        <div class="ac-pb-text"> Total: {{acCount}} from 12 </div>
     </div>
     <div class="ac-achievements-items">
         <div class="ac-achievements-item">
-            <img class="ac-item-img" src="./assets/icons/iplay1.svg" />
-            <div class="ac-item-text"> first game </div>
-            <div class="ac-item-cover ac-item-uncover"></div>
+          <img class="ac-item-img" src="./assets/icons/iplay1.svg" />
+          <div class="ac-item-text">First Game</div>
+          <div class="ac-item-cover" [class.ac-item-uncover]="isUncovered(userData.games, 0)"></div>
         </div>
         <div class="ac-achievements-item">
-            <img class="ac-item-img" src="./assets/icons/iplay2.svg" />
-            <div class="ac-item-text"> 9 games </div>
-            <div class="ac-item-cover ac-item-uncover"></div>
+          <img class="ac-item-img" src="./assets/icons/iplay2.svg" />
+          <div class="ac-item-text">9 Games</div>
+          <div class="ac-item-cover" [class.ac-item-uncover]="isUncovered(userData.games, 8)"></div>
         </div>
         <div class="ac-achievements-item">
-            <img class="ac-item-img" src="./assets/icons/iplay3.svg" />
-            <div class="ac-item-text"> 99 games </div>
-            <div class="ac-item-cover"></div>
+          <img class="ac-item-img" src="./assets/icons/iplay3.svg" />
+          <div class="ac-item-text">99 Games</div>
+          <div class="ac-item-cover" [class.ac-item-uncover]="isUncovered(userData.games, 98)"></div>
         </div>
         <div class="ac-achievements-item">
-            <img class="ac-item-img" src="./assets/icons/iplay4.svg" />
-            <div class="ac-item-text"> 999 games </div>
-            <div class="ac-item-cover"></div>
+          <img class="ac-item-img" src="./assets/icons/iplay4.svg" />
+          <div class="ac-item-text">999 Games</div>
+          <div class="ac-item-cover" [class.ac-item-uncover]="isUncovered(userData.games, 998)"></div>
         </div>
         <div class="ac-achievements-item">
-            <img class="ac-item-img" src="./assets/icons/iwin1.svg" />
-            <div class="ac-item-text"> 3 wins in row </div>
-            <div class="ac-item-cover ac-item-uncover"></div>
+          <img class="ac-item-img" src="./assets/icons/iwin1.svg" />
+          <div class="ac-item-text">3 Wins in Row</div>
+          <div class="ac-item-cover" [class.ac-item-uncover]="isUncovered(userData.win_streak!, 2)"></div>
         </div>
         <div class="ac-achievements-item">
-            <img class="ac-item-img" src="./assets/icons/iwin2.svg" />
-            <div class="ac-item-text"> 7 wins in row </div>
-            <div class="ac-item-cover"></div>
+          <img class="ac-item-img" src="./assets/icons/iwin2.svg" />
+          <div class="ac-item-text">7 Wins in Row</div>
+          <div class="ac-item-cover" [class.ac-item-uncover]="isUncovered(userData.win_streak!, 6)"></div>
         </div>
         <div class="ac-achievements-item">
-            <img class="ac-item-img" src="./assets/icons/iwin3.svg" />
-            <div class="ac-item-text"> 21 wins in row </div>
-            <div class="ac-item-cover"></div>
+          <img class="ac-item-img" src="./assets/icons/iwin3.svg" />
+          <div class="ac-item-text">21 wins in Row</div>
+          <div class="ac-item-cover" [class.ac-item-uncover]="isUncovered(userData.win_streak!, 20)"></div>
         </div>
         <div class="ac-achievements-item">
-            <img class="ac-item-img" src="./assets/icons/ilevel1.svg" />
-            <div class="ac-item-text"> level 1000</div>
-            <div class="ac-item-cover ac-item-uncover"></div>
+          <img class="ac-item-img" src="./assets/icons/ilevel1.svg" />
+          <div class="ac-item-text">Level 1000</div>
+          <div class="ac-item-cover" [class.ac-item-uncover]="isUncovered(userData.rating, 999)"></div>
         </div>
         <div class="ac-achievements-item">
-            <img class="ac-item-img" src="./assets/icons/ilevel2.svg" />
-            <div class="ac-item-text"> level 2000</div>
-            <div class="ac-item-cover"></div>
+          <img class="ac-item-img" src="./assets/icons/ilevel2.svg" />
+          <div class="ac-item-text">Level 2000</div>
+          <div class="ac-item-cover" [class.ac-item-uncover]="isUncovered(userData.rating, 1999)"></div>
         </div>
         <div class="ac-achievements-item">
-            <img class="ac-item-img" src="./assets/icons/ilevel3.svg" />
-            <div class="ac-item-text"> level 3000</div>
-            <div class="ac-item-cover"></div>
+          <img class="ac-item-img" src="./assets/icons/ilevel3.svg" />
+          <div class="ac-item-text">Level 3000</div>
+          <div class="ac-item-cover" [class.ac-item-uncover]="isUncovered(userData.rating, 2999)"></div>
         </div>
         <div class="ac-achievements-item">
-            <img class="ac-item-img" src="./assets/icons/iinvite1.svg" />
-            <div class="ac-item-text"> invite 3 friends</div>
-            <div class="ac-item-cover"></div>
+          <img class="ac-item-img" src="./assets/icons/iinvite1.svg" />
+          <div class="ac-item-text">42 Friends</div>
+          <div class="ac-item-cover" [class.ac-item-uncover]="isUncovered(userData.friends_count!, 41)"></div>
         </div>
         <div class="ac-achievements-item">
-            <img class="ac-item-img" src="./assets/icons/iinvite2.svg" />
-            <div class="ac-item-text"> invite 7 friends</div>
-            <div class="ac-item-cover"></div>
+          <img class="ac-item-img" src="./assets/icons/iinvite2.svg" />
+          <div class="ac-item-text">1337 Friends</div>
+          <div class="ac-item-cover" [class.ac-item-uncover]="isUncovered(userData.friends_count!, 1336)"></div>
         </div>
-    </div>
+      </div>
 
 </div>

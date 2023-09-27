@@ -28,12 +28,18 @@ export class UserService {
   getUserDataShort () : Observable<IUserDataShort> {
     return this.http.get<IUserDataShort>(`${this.apiUrl}/api/user/short` ,this.getHeaders());
   }
+  getUserDataShort2 (userId :number) : Observable<IUserDataShort> {
+    return this.http.get<IUserDataShort>(`${this.apiUrl}/api/user/short-data/${userId}` ,this.getHeaders());
+  }
   getUserDataByUsername (username :string) : Observable<IUserData> {
     return this.http.get<IUserData>(`${this.apiUrl}/api/user/data/${username}` ,this.getHeaders());
   }
 
   getfriendList (userId :number) : Observable<IUserDataShort[]> {
     return this.http.get<IUserDataShort[]>(`${this.apiUrl}/api/user/friend-list/${userId}` ,this.getHeaders());
+  }
+  getAllUsers () : Observable<IUserDataShort[]> {
+    return this.http.get<IUserDataShort[]>(`${this.apiUrl}/api/user/all-users` ,this.getHeaders());
   }
 
   uploadImage (formData :FormData) : Observable<any> {
@@ -95,7 +101,7 @@ export class UserService {
   
   // temporary 
   /*********************************************/
-  getMatchHistory (username :string) : Observable<IHistory[]> {
-    return this.http.get<IHistory[]>(`${this.apiUrl}/api/tmp/history` ,this.getHeaders());
+  getMatchHistory (userId :number) : Observable<IHistory[]> {
+    return this.http.get<IHistory[]>(`${this.apiUrl}/api/game/history/${userId}` ,this.getHeaders());
   }
 }

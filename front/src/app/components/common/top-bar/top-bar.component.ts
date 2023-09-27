@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { MenuBarService } from 'src/app/services/menu-bar.service';
 import { INotifyData } from 'src/app/utils/interfaces/notify-data.interface';
+import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
 
 @Component({
@@ -22,7 +23,7 @@ export class TopBarComponent implements OnInit {
   }
   
   public searchQuery: string = '';
-  public searchResults: any[] = [];
+  public searchResults: IUserDataShort[] = [];
   public activeIndex: number = -1;
   public isNotifClicked: boolean = false;
   public isNewNotif: number = 0;
@@ -41,6 +42,7 @@ export class TopBarComponent implements OnInit {
         this.isNewNotif += data.notify
 
     });
+
     this.getNotifications();
   }
 
@@ -100,7 +102,7 @@ export class TopBarComponent implements OnInit {
 
   // private functions
   searchUsers() {
-    this.menuBarService.searchUsers(this.searchQuery).subscribe({
+    const subscription = this.menuBarService.searchUsers(this.searchQuery).subscribe({
       next: response => {
         this.searchResults = response;
       },
@@ -108,13 +110,14 @@ export class TopBarComponent implements OnInit {
         console.error('Error:', error.error.message); 
       }
     });
+    this.subscriptions.push(subscription);
   }
 
   getNotifications() {
     const userId :number = this.authServece.getLoggedInUserId()
     const subscription = this.menuBarService.getNotifications(userId).subscribe({
       next: response => {
-        this.notifyData = response.slice().reverse();
+        this.notifyData = response;
 
         this.notifyData.forEach((notification :INotifyData) => {
           if (!notification.seen)
@@ -143,7 +146,7 @@ export class TopBarComponent implements OnInit {
   }
 
   deleteNotifications(notifications :number[]) {
-    this.menuBarService.deleteNotifications(notifications).subscribe({
+    const subscription = this.menuBarService.deleteNotifications(notifications).subscribe({
       next: response => {
         
         const remaindIds = this.notifyData
@@ -156,10 +159,11 @@ export class TopBarComponent implements OnInit {
         console.error('Error:', error.error.message); 
       }
     });
+    this.subscriptions.push(subscription);
   }
   
   updateSeenNotifications(notifications :number[]) {
-    this.menuBarService.updateSeenNotifications(notifications).subscribe({
+    const subscription = this.menuBarService.updateSeenNotifications(notifications).subscribe({
       next: response => {
 
       },
@@ -167,7 +171,22 @@ export class TopBarComponent implements OnInit {
         console.error('Error:', error.error.message); 
       }
     });
+    this.subscriptions.push(subscription);
   }
+
+
+
+  ngOnDestroy(): void {
+    
+    this.socket.off('notifyFriendRequest');
+    this.socket.off('unNotifyFriendRequest');
+
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
+
+
 
 
 }

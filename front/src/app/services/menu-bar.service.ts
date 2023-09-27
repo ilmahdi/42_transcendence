@@ -4,7 +4,8 @@ import { environment } from 'src/environments/environment';
 import { JWT_TOKEN } from '../utils/constants';
 import { HttpClient } from '@angular/common/http';
 import { CustomSocket } from '../utils/socket/socket.module';
-import { INotification, INotifyData, NotificationType } from '../utils/interfaces/notify-data.interface';
+import { INotification, INotifyData } from '../utils/interfaces/notify-data.interface';
+import { IUserDataShort } from '../utils/interfaces/user-data.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +23,9 @@ export class MenuBarService {
 
   // http handlers
   /*********************************************/
-  searchUsers(searchQuery :string ) : Observable<any> {
+  searchUsers(searchQuery :string ) : Observable<IUserDataShort[]> {
     
-    return this.http.get<any>(`${this.apiUrl}/api/user/search?q=${searchQuery}`,this.getHeaders())
+    return this.http.get<IUserDataShort[]>(`${this.apiUrl}/api/user/search?q=${searchQuery}`,this.getHeaders())
     .pipe(
       catchError( error => {
         return throwError(() => error);

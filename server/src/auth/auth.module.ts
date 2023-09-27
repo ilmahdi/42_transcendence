@@ -6,6 +6,7 @@ import { UserModule } from 'src/user/user.module';
 import { JwtStrategy } from './utils/strategies/jwt.strategy';
 import { TokenService } from 'src/common/services/token.service';
 import { TwoFaModule } from './two-fa/two-fa.module';
+import { FtLoginSrategy } from './utils/strategies/ft-login.strategy';
 
 @Module({
     imports: [

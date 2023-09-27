@@ -86,8 +86,14 @@
 .mh-sec-main-user{
     display: flex;
     align-items: center;
-    justify-content: center;
+    width: 30%;
     gap: 0.6rem;
+}
+.mh-sec-main-user.u1 {
+    justify-content: flex-start;
+}
+.mh-sec-main-user.u2 {
+    justify-content: flex-end;
 }
 
 /* match-history section time */
@@ -109,6 +115,7 @@
     height: 2.6rem;
     border-radius: 50%;
     border: solid 0.12rem;
+    border: 0.01rem solid var(--primary-text-color);
 }
 .mh-sec-info-rate.left {
     text-align: end;
@@ -117,6 +124,13 @@
     font-size: 0.9rem;
     font-weight: 600;
     color: white;
+}
+
+.mh-sec-info-name:hover {
+
+    cursor: pointer;
+    color: var(--second-text-color);
+    border-radius: 0.04rem;
 }
 
 .mh-sec-info-rate-res {

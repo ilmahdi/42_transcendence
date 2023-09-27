@@ -18,7 +18,6 @@ enum Status {
 }
 enum FriendshipStatus {
   WAITING
-  REFUSED
   ACCEPTED
   BLOCKED
 }
@@ -59,11 +58,9 @@ model UserAccount {
   id                  Int                 @id @default(autoincrement())
   ft_id               Int                 
   username            String              @unique
-  // email               String              @unique   
   tfa_secret          String?       
   is_tfa_enabled      Boolean?            @default(false)
   avatar              String        
-  status              Status              @default(OFFLINE)
   wins                Int                 @default(0)          
   losses              Int                 @default(0)
   draws               Int                 @default(0)
@@ -71,6 +68,8 @@ model UserAccount {
   rating              Int                 @default(1000)
 
   win_streak          Int                 @default(0)
+  win_streak_hol      Int                 @default(0)
+  friends_count       Int                 @default(0)
 
   created_at          DateTime            @default(now())
   updated_at          DateTime            @updatedAt
@@ -81,10 +80,6 @@ model UserAccount {
   match_player2       Matches[]           @relation("player2")
   message_sender      Message[]           @relation("sender")
   message_receiver    Message[]           @relation("receiver")
-  channel             Channel[]           @relation()
-  channel_admins      ChannelAdmins[]     @relation()
-  channel_members     ChannelMembers[]    @relation()
-  restricted_members  RestrictedMembers[] @relation()
   notif_to            Notification[]      @relation("notif_to")
   notif_from          Notification[]      @relation("notif_from")
 }
@@ -121,28 +116,27 @@ model Friendship {
 
 
 model Matches { 
-  id                  Int  @id @default(autoincrement())
-  player1_id          Int
-  player2_id          Int
-  game_id             Int
-  match_status        MatchStatus
-  created_at          DateTime    @default(now())
+  id                  Int                 @id @default(autoincrement())
 
-  game                Game?
-  player1             UserAccount         @relation("player1", fields: [player1_id], references: [id])
-  player2             UserAccount         @relation("player2", fields: [player2_id], references: [id])
+  id1                 Int
+  id2                 Int
+
+  score1              Int
+  score2              Int
+
+  rating1             Int
+  rating2             Int
+
+  point1              Int
+  point2              Int
+
+  start_time          DateTime            @default(now())
+  end_time            DateTime            @updatedAt
+
+  player1             UserAccount         @relation("player1", fields: [id1], references: [id])
+  player2             UserAccount         @relation("player2", fields: [id2], references: [id])
 } 
 
-model Game {  
-  id                  Int @id @default(autoincrement())
-  match_id            Int @unique
-  player1_score       Int
-  player2_score       Int
-  start_time          DateTime    @default(now())
-  end_time            DateTime    @updatedAt
-
-  match               Matches             @relation(fields: [match_id], references: [id])
-} 
 
 
 model Message { 
@@ -153,6 +147,10 @@ model Message {
   date                DateTime
   readed              Boolean @default(false)
   roomId              Int     @default(-1)
+
+
+  sender              UserAccount         @relation("sender", fields: [senderId], references: [id])
+  receiver            UserAccount         @relation("receiver", fields: [receiverId], references: [id])
 } 
 
 model Room { 
@@ -162,5 +160,5 @@ model Room {
   usersId   Int[]     @default([])
   type      RoomType  @default(PUBLIC)
   password  String?
-  imagePath String    @default("default.png")
+  imagePath String
 }

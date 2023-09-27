@@ -33,11 +33,19 @@
                     Invite you to a game.
                 </div>
                 <div class="nf-item-dts-l3" *ngIf="notif.type == 'FRIEND_REQUEST'">
-                    <button class="nf-item-dts-l3-btn b1" (click)="onAcceptClick(i)">
+                    <button class="nf-item-dts-l3-btn b1" (click)="onAcceptFriendClick(i)">
                         accept
                     </button>
                     <button class="nf-item-dts-l3-btn b2" (click)="onCancelClick(i)">
                         cancel
+                    </button>
+                </div>
+                <div class="nf-item-dts-l3" *ngIf="notif.type == 'GAME_INVITE'">
+                    <button class="nf-item-dts-l3-btn b1" (click)="onAcceptGameClick(i)">
+                        accept
+                    </button>
+                    <button class="nf-item-dts-l3-btn b2" (click)="onRejecttGameClick(i)">
+                        reject
                     </button>
                 </div>
 

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, ViewChild, ViewContainerRef,  } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, firstValueFrom } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { MenuBarService } from 'src/app/services/menu-bar.service';
@@ -10,6 +10,10 @@ import { INotification } from 'src/app/utils/interfaces/notify-data.interface';
 import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
+import { CustomizeGameComponent } from '../../modals/customize-game/customize-game.component';
+import { GameService } from 'src/app/services/game.service';
+import { GameInviteComponent } from '../../modals/game-invite/game-invite.component';
+import { AlertComponent } from '../../modals/alert/alert.component';
 
 @Component({
   selector: 'app-profile-id',
@@ -19,21 +23,28 @@ import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 export class ProfileIdComponent implements OnChanges {
 
   constructor(
-    private route: ActivatedRoute,
     private authService: AuthService,
+    private route: ActivatedRoute,
     private userService: UserService,
     private menuBarService: MenuBarService,
     private socket: CustomSocket,
     private confirmService: ConfirmService,
-  ) { }
+    private gameService : GameService,
+    private router: Router,
+  ) { 
 
+    this.loggedInUserId  = this.authService.getLoggedInUserId();
+  }
+  
+  
+  private confirmService2 = new ConfirmService();
 
+  public loggedInUserId :number;
   public isOwnProfile: boolean = true;
   public isMoreClicked: boolean = false;
   public friendshipStatus: string = "NONE";
   public friendshipId: number = -1;
   public isRequestInitiator :boolean = true;
-  public loggedInUserId :number = this.authService.getLoggedInUserId();
 
   private subscriptions: Subscription[] = [];
   
@@ -53,6 +64,7 @@ export class ProfileIdComponent implements OnChanges {
   @ViewChild('confirmModal', { read: ViewContainerRef })
   entry!: ViewContainerRef;
 
+
   public connection :string = "";
   public showTooltip :boolean = false;
 
@@ -65,6 +77,7 @@ export class ProfileIdComponent implements OnChanges {
   }
 
   ngOnInit(): void {
+
     const subscription = this.route.params.subscribe(params => {
       this.isOwnProfile = params['username'] === this.authService.getLoggedInUser();
     });
@@ -85,6 +98,7 @@ export class ProfileIdComponent implements OnChanges {
       if (userId == this.userData.id)
         this.connection = "playing";
     });
+    this.subscriptions.push(subscription);
   }
 
 
@@ -143,6 +157,7 @@ export class ProfileIdComponent implements OnChanges {
 
   async handleUnfriendClick() {
 
+    await this.deleteFriendshipNotification(this.getNotification(this.loggedInUserId, this.userData.id, this.friendshipId));
     await this.removeFriend(this.friendshipId)
 
     this.menuBarService.sendEvent("refreshUser", this.userData.id)
@@ -150,12 +165,11 @@ export class ProfileIdComponent implements OnChanges {
 
   async handleBlockClick() {
 
+    await this.deleteFriendshipNotification(this.getNotification(this.loggedInUserId, this.userData.id, this.friendshipId));
     if (this.friendshipId <= 0)
       await this.addFriend(this.getFriendship(this.loggedInUserId, this.userData.id, "BLOCKED"));
     
     else {
-      if (this.friendshipStatus == 'WAITING')
-        await this.deleteFriendshipNotification(this.getNotification(this.loggedInUserId, this.userData.id, this.friendshipId));
       await this.blockFriend(this.friendshipId, this.getFriendship(this.loggedInUserId, this.userData.id, "BLOCKED"))
       
       
@@ -169,7 +183,51 @@ export class ProfileIdComponent implements OnChanges {
       await this.unbBlockFriend(this.friendshipId)
       this.menuBarService.sendEvent("refreshUser", this.userData.id)
   }
+
+  async handlePlayClick() {
+
+    try {
+      const mapId = await firstValueFrom(this.confirmService.open(this.entry, CustomizeGameComponent));
+      
+      this.gameService.mapIndex = +mapId;
+      this.gameService.playerId1 = this.authService.getLoggedInUserId();
+      this.gameService.playerId2 = this.userData.id;
+      
+      this.openGameInviteModal();
+      
+    }
+    catch {
+
+    }
   
+  }
+  openGameInviteModal() {
+    const subscription = this.confirmService
+      .open(this.entry, GameInviteComponent)
+      .subscribe((userId :any) => {
+        if (userId < 0) {
+          if (userId == -1) {
+            this.confirmService2
+            .open(this.entry, AlertComponent, "ERROR", "Game Request Rejected")
+          }
+          else if (userId == -2) {
+            this.confirmService2
+            .open(this.entry, AlertComponent, "ERROR", "User is already in a game")
+
+          }
+        }
+        else {
+
+          this.gameService.isToStart = false;
+          this.gameService.setInGameMode(true);
+          this.router.navigate(['/game']);
+        }
+
+      });
+      this.subscriptions.push(subscription);
+  }
+  
+
 
   openConfirmModal(emiter :string) {
     const subscription = this.confirmService
@@ -318,15 +376,6 @@ export class ProfileIdComponent implements OnChanges {
 
 
 
-  ngOnDestroy(): void {
-
-    for (const subscription of this.subscriptions) {
-      subscription.unsubscribe();
-    }
-  }
-
-
-
   // private utility functions
   /******************************************************************** */
   getFriendship (arg1 :number, arg2 :number, arg3? :string) :IFriendship { 
@@ -365,6 +414,20 @@ export class ProfileIdComponent implements OnChanges {
     response.user_id
       this.isRequestInitiator = this.loggedInUserId === response.user_id;
   }
+
+
+  ngOnDestroy(): void {
+
+    this.socket.off('refreshUser');
+    this.socket.off('online');
+    this.socket.off('offline');
+    this.socket.off('playing');
+
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
+
  
   
 }

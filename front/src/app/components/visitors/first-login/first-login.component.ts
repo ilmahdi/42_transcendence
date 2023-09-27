@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, Subscription, firstValueFrom } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 import { JWT_TOKEN } from 'src/app/utils/constants';
 import { IUserData, IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
@@ -36,6 +36,8 @@ export class FirstLoginComponent implements OnInit {
   public myformGroup! :FormGroup;
   public userDataShort: IUserDataShort = {}
   public isUsernameTaken :boolean = false;
+
+  private subscriptions: Subscription[] = [];
 
   ngOnInit(): void {
 
@@ -93,7 +95,7 @@ export class FirstLoginComponent implements OnInit {
   }
 
   private registerUser() {
-    return this.userService.registerUser(this.userDataShort).subscribe({
+    const subscription =  this.userService.registerUser(this.userDataShort).subscribe({
       next: response => {
         // console.log('Received data:', response);
         if (response.token) 
@@ -105,7 +107,10 @@ export class FirstLoginComponent implements OnInit {
         console.error('Error:', error.error.message); 
         this.isUsernameTaken = true;
       }
-  });
+    });
+    this.subscriptions.push(subscription);
+    
+    return subscription;
   }
 
  

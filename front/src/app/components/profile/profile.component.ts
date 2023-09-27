@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { UserService } from 'src/app/services/user.service';
 import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
@@ -13,9 +14,11 @@ import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
 export class ProfileComponent implements OnInit {
 
   constructor(
+    private router: Router,
     private userService: UserService,
     private route: ActivatedRoute,
     public loadingService: LoadingService,
+    private authService :AuthService,
     ) { }
 
   ngOnInit(): void {
@@ -41,11 +44,18 @@ export class ProfileComponent implements OnInit {
   getUserData() {
     const subscription = this.route.params.subscribe(params => {
 
-      const subscription = this.userService.getUserDataByUsername(params['username']).subscribe((data: IUserData) => {
-        this.userData = data;
-
-       this.loadingService.hideLoading()
-     });
+      const subscription = this.userService.getUserDataByUsername(params['username']).subscribe({
+          next: (response :IUserData) => {
+          
+            this.userData = response;
+            this.loadingService.hideLoading()
+          },
+          error: error => {
+            this.loadingService.hideLoading();
+            this.authService.setAuthenticated(false)
+            this.router.navigate(["/not-found"]);
+          }
+      });
      this.subscriptions.push(subscription);
     });
     this.subscriptions.push(subscription);

@@ -38,13 +38,26 @@ export class UserController {
         };
         
     }
+    @Get("short-data/:userId")
+    @UseGuards(JwtGuard)
+    getUserDataShort(@Param('userId') userId: number) : any {
+      const users = this.userService.getUserDataShort(userId);
+      return users;
+    }
 
-    // @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard)
     @Get("friend-list/:userId")
     async getFiendList(@Param('userId') userId: number) {
         const friendList =  await this.userService.findFiendList(userId);
 
         return friendList;
+    }
+    @UseGuards(JwtGuard)
+    @Get("all-users")
+    async getAllUsers(@Param('userId') userId: number) {
+        const allUsers =  await this.userService.getAllUsers();
+
+        return allUsers;
     }
 
     @UseGuards(JwtGuard)

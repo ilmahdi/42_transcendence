@@ -1,9 +1,3 @@
-export enum NotificationType {
-    FRIEND_REQUEST,
-    FRIEND_ACCEPTE,
-    GAME_INVITE,
-    GAME_ACCEPTE,
-  }
 
 
 export interface INotifyData {
