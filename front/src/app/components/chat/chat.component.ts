@@ -108,10 +108,15 @@ export class ChatComponent implements OnInit, OnDestroy {
       const subs:Subscription = this.chatService.getRoomConversation().subscribe((data) => {
         data.sort((a:Message, b:Message)=>a.id! - b.id!)
         this.chatService.updateRoomConversation(data);
+        data.forEach((item)=>{
+          if (item.senderId !== this.userId) {
+            this.chatService.updateRead(item);
+          }
+        })
         this.chatService.displayComponents(false, true, false, true, false, false, false);
       })
       this.subscriptions.push(subs)
-      this.chatService.roomOptionsSource.next(actualRoom);////////////
+      this.chatService.roomOptionsSource.next(actualRoom);
     
       this.roomData = [actualRoom, true]
     })

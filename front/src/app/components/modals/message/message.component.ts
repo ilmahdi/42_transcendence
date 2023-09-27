@@ -26,7 +26,7 @@ export class MessageComponent {
   closeMe() {
     this.closeMeEvent.emit();
   }
-  confirm() {
+  send() {
     this.confirmEvent.emit(this.message);
   }
 }

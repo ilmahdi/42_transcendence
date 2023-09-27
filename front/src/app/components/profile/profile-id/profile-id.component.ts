@@ -196,7 +196,7 @@ export class ProfileIdComponent implements OnChanges {
   }
 
   openMessasge() {
-    const subscription = this.messageService.open(this.entry, MessageComponent, `Send private message to ${this.userData.username}?`, 'type the message here:')
+    const subscription = this.messageService.open(this.entry, MessageComponent, `Send private message to ${this.userData.username}?`, 'type the message here:', this.userData)
       .subscribe(data=> {})
     this.subscriptions.push(subscription);
   }

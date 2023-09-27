@@ -15,7 +15,7 @@
             <div *ngFor="let message of messages">
                 <br>
                 <div *ngFor="let msg of lateMessage">
-                    <div class="time" *ngIf="msg.late && msg.msg === message">{{msg.time}}</div>
+                    <div class="time" *ngIf="msg.late && msg.msg === message && (message.senderId === userEmitted[0].id || message.senderId === userId)">{{msg.time}}</div>
                 </div>
                 <div *ngIf="message.senderId === userId && message.receiverId === userEmitted[0].id" class="sentMessage">
                     {{message.message}}

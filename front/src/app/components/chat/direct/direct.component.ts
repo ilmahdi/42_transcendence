@@ -166,9 +166,9 @@ export class DirectComponent implements OnInit, OnDestroy {
           this.chatService.updateRead(item);
           this.chatService.updateReadBehav(this.notReaded.filter(shit=> shit.senderId !== item.senderId));
         }
-        })
-        if (flag) // HIDE EVERY COMPONENT AND OPEN CONVERSATION COMPONENT 
-          this.chatService.displayComponents(false, true, false, true, false, false, false);
+      })
+      if (flag) // HIDE EVERY COMPONENT AND OPEN CONVERSATION COMPONENT 
+        this.chatService.displayComponents(false, true, false, true, false, false, false);
       })
       this.subscriptions.push(subs1)
       const subs2:Subscription = this.chatService.getNotReadedMessages().subscribe(data=>{

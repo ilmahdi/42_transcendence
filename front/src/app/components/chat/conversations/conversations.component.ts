@@ -132,7 +132,13 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
   }
 
   sendRoomMessage() {
-    const msg = {senderId:this.userId, receiverId:this.userId, message:this.msg.value.message, date:new Date(), readed:false, roomId:this.roomConvers[0].id, mutes:this.roomConvers[0].mutes}   
+    const msg = {senderId:this.userId,
+      receiverId:this.userId,
+      message:this.msg.value.message,
+      date:new Date(), 
+      readed:false,
+      roomId:this.roomConvers[0].id,
+      mutes:this.roomConvers[0].mutes}   
     if (!msg.message) return;
     this.chatService.sendToGetRoomMembers(this.roomConvers[0])
     const subs1:Subscription = this.chatService.getRoomMembers().pipe(take(1)).subscribe(data=> {
