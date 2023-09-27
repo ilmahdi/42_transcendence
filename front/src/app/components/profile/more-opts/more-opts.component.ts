@@ -22,6 +22,7 @@ export class MoreOptsComponent implements OnInit {
   @Output() unfriendClick: EventEmitter<void> = new EventEmitter<void>();
   @Output() blockClick: EventEmitter<void> = new EventEmitter<void>();
   @Output() cancelClick: EventEmitter<void> = new EventEmitter<void>();
+  @Output() sendMessage: EventEmitter<void> = new EventEmitter<void>();
 
   ngOnInit(): void {
   }
@@ -37,6 +38,6 @@ export class MoreOptsComponent implements OnInit {
   }
 
   onSendMessage() {
-    
+    this.sendMessage.emit();
   }
 }

@@ -65,7 +65,8 @@
                         [isRequestInitiator]="isRequestInitiator" 
                         (unfriendClick)="openConfirmModal('unfriend')"
                         (blockClick)="openConfirmModal('block')"
-                        (cancelClick)="onCancelClick()">
+                        (cancelClick)="onCancelClick()"
+                        (sendMessage)="openMessasge()">
                     </app-more-opts>
                 </div>
             </div>

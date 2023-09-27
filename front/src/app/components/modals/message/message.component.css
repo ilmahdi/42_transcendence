@@ -18,6 +18,16 @@
   z-index: 13;
 }
 
+input {
+    height: 30px;
+    border: none;
+    border-radius: 10px;
+    text-indent: 20px;
+    outline: none;
+    background-color: #5e4a4a;
+    color: #DEC8C8;
+}
+
 .overlay {
     position: fixed;
     z-index: 19;

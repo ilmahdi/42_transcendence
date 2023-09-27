@@ -22,7 +22,9 @@ export class MessageService {
     if (modalBody)
       this.componentRef.instance.body = modalBody;
     this.componentRef.instance.closeMeEvent.subscribe(() => this.close());
-    this.componentRef.instance.confirmEvent.subscribe(() => this.confirm());
+    this.componentRef.instance.confirmEvent.subscribe((data:string) => {
+      this.confirm()
+    });
     this.componentSubscriber = new Subject<string>();
     return this.componentSubscriber.asObservable();
   }
@@ -33,7 +35,7 @@ export class MessageService {
   }
 
   confirm() {
-    this.componentSubscriber.next('confirm');
+    this.componentSubscriber.next('send');
     this.close();
   }
 }

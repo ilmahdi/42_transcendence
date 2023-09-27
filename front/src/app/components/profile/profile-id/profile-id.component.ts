@@ -11,6 +11,9 @@ import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
 import { ConfirmComponent } from '../../modals/confirm/confirm.component';
 import { ChatService } from 'src/app/services/chat.service';
+import { MessageService } from 'src/app/services/modals/message.service';
+import { MessageComponent } from '../../modals/message/message.component';
+import { Message } from 'src/app/models/message.model';
 
 @Component({
   selector: 'app-profile-id',
@@ -26,6 +29,7 @@ export class ProfileIdComponent implements OnChanges {
     private menuBarService: MenuBarService,
     private socket: CustomSocket,
     private confirmService: ConfirmService,
+    private messageService:MessageService,
     private chatService:ChatService
   ) { 
 
@@ -189,6 +193,12 @@ export class ProfileIdComponent implements OnChanges {
           this.handleUnblockClick()
       });
       this.subscriptions.push(subscription);
+  }
+
+  openMessasge() {
+    const subscription = this.messageService.open(this.entry, MessageComponent, `Send private message to ${this.userData.username}?`, 'type the message here:')
+      .subscribe(data=> {})
+    this.subscriptions.push(subscription);
   }
   
   
