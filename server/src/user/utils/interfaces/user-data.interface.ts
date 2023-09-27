@@ -6,3 +6,11 @@ export interface UserData {
     draws:  number,
     rating: number,
 }
+
+
+export interface UserDataShort {
+    id: number,
+    username:string,
+    avatar: string,
+    rating: number,
+}

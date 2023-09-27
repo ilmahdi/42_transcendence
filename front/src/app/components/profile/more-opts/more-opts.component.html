@@ -1,3 +1,4 @@
+
 <div class="more-opts">
     <div class="mo-item" *ngIf="!isRequestInitiator && friendshipStatus == 'WAITING'" (click)="onCancleClick()">
         <svg class="mo-icon" xmlns="http://www.w3.org/2000/svg">
@@ -11,7 +12,7 @@
         </svg>
         <span class="mo-text"> Message </span>
     </div>
-    <div class="mo-item" *ngIf="friendshipStatus !== 'ACCEPTED'">
+    <div class="mo-item" *ngIf="friendshipStatus !== 'ACCEPTED'" (click)="onPlayClick()">
         <svg class="mo-icon" xmlns="http://www.w3.org/2000/svg">
             <use xlink:href="./assets/icons/play_add.svg#icon-play_add"></use>
         </svg>

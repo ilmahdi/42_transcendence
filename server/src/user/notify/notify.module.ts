@@ -7,5 +7,6 @@ import { PrismaModule } from 'nestjs-prisma';
   imports: [PrismaModule],
   controllers: [NotifyController],
   providers: [NotifyService],
+  exports: [NotifyService]
 })
 export class NotifyModule {}

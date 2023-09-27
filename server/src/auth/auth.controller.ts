@@ -1,8 +1,6 @@
-import { Body, Controller, Get, Param, ParseEnumPipe, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseEnumPipe, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-// import * as bcrypt from "bcryptjs"
 import { FtLoginGuard } from './utils/guards/ft-login.guard';
-import { AuthGuard } from '@nestjs/passport';
 
 import { Request, Response } from "express";
 import { JwtGuard } from './utils/guards/jwt.guard';
@@ -24,7 +22,7 @@ export class AuthController {
     @UseGuards(FtLoginGuard)
     ftLogin(){0
     }
-    
+    // to see later ************************************************//
     @Get("callback/42")
     @UseGuards(FtLoginGuard)
     ftCallback(@Req() req :any, @Res() res :Response){
@@ -45,6 +43,3 @@ export class AuthController {
         // return this.authService.ftLogout()
     }
 }
-// ft_id
-// username
-// avatar

@@ -59,8 +59,9 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadingService.showLoading();
-    this.userService.getUserData().subscribe((data: IUserData) => {
-      
+    const subscription = this.userService.getUserData().subscribe({
+    next: (data: IUserData) => {   
+
       this.selectedImage = data.avatar;
       this.userDataShort.id = data.id;
       this.userDataShort.username = data.username;
@@ -72,7 +73,14 @@ export class SettingsComponent implements OnInit {
       });
 
       this.loadingService.hideLoading()
-   });
+
+    },
+    error: error => {
+      console.error('Error:', error.error.message); 
+    }
+  });
+   this.subscriptions.push(subscription);
+
 
    this.myformGroup.get('username')?.valueChanges.subscribe(newUsername => {
       if (this.isUsernameTaken)
@@ -107,7 +115,7 @@ export class SettingsComponent implements OnInit {
 
   toggleTwoFactorAuth() {
     if (this.isTwoFaEnabled) {
-      this.authService.disableTwoFa(this.loggedInUserId).subscribe({
+      const subscription = this.authService.disableTwoFa(this.loggedInUserId).subscribe({
         next: response => {
          
           this.isTwoFaEnabled = false;
@@ -116,6 +124,7 @@ export class SettingsComponent implements OnInit {
           console.error('Error:', error.error.message); 
         }
       });
+      this.subscriptions.push(subscription);
     }
     else
       this.openConfirmModal()
@@ -145,7 +154,7 @@ export class SettingsComponent implements OnInit {
   }
 
   private updateUser() {
-    return this.userService.updateUserData(this.userDataShort).subscribe({
+    const subscription = this.userService.updateUserData(this.userDataShort).subscribe({
       next: response => {
         localStorage.setItem(JWT_TOKEN, response.token);
         this.router.navigate(["/home"]);
@@ -153,7 +162,18 @@ export class SettingsComponent implements OnInit {
       error: error => {
         this.isUsernameTaken = true;
       }
-  });
+    });
+    this.subscriptions.push(subscription);
+
+    return subscription
+  }
+
+
+  ngOnDestroy(): void {
+    
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
   
 }

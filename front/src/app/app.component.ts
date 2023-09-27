@@ -24,6 +24,8 @@ export class AppComponent implements OnInit {
     this.authService.isAuthenticated$.subscribe((value) => {
       this.isAuthenticated = value;
     });
+
+    
   }
 
   

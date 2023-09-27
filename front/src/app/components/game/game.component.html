@@ -1,1 +1,84 @@
-<app-online-friends></app-online-friends>
+<div class="game-page">
+
+    <div class="gp-top">
+        
+        <div class="gp-sec-logo">
+            <svg id="icon-logo" class="gp-sec-item-icon i1" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="./assets/icons/logo.svg#icon-logo"></use>
+            </svg>
+            <span class="gp-sec-item-text t1"> POING </span>
+        </div>
+        <button class="gp-sec-leave" (click)="onLeaveClick()">
+            <span class="gp-sec-item-text t2"> leave </span>
+            <svg id="icon-logo" class="gp-sec-item-icon i2" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="./assets/icons/back.svg#icon-back"></use>
+            </svg>
+        </button>
+
+    </div>
+
+
+    <div class="gp-canvas-wrap">
+
+    <div class="mh-sec-main">
+       <div class="mh-sec-main-user u1" *ngIf="!gameService.isOnePlayer">
+
+           <img class="mh-sec-img" src="{{player2.avatar}}"
+               style="display: none" onload="this.style.display=''"
+               onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+           />
+           <div class="mh-sec-info">
+               <span class="mh-sec-info-name"> {{ player2.username }} </span>
+               <div class="mh-sec-info-rate"> 
+                   <span class="mh-sec-info-rate-score"> {{player2.rating}} </span>
+               </div>
+           </div>
+
+       </div>
+       <div class="mh-sec-main-user u1" *ngIf="gameService.isOnePlayer">
+
+           <img class="mh-sec-img" src="./assets/imgs/pong_robot.png"
+               style="display: none" onload="this.style.display=''"
+               onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+           />
+           <div class="mh-sec-info">
+               <span class="mh-sec-info-name"> COMPUTER </span>
+               <div class="mh-sec-info-rate"> 
+                   <span class="mh-sec-info-rate-score"> {{gameLevel}} </span>
+               </div>
+           </div>
+
+       </div>
+       <div class="mh-sec-main-user u2">
+
+           <div class="mh-sec-info">
+               <span class="mh-sec-info-name"> {{ player1.username }} </span>
+               <div class="mh-sec-info-rate left">
+                   <span class="mh-sec-info-rate-score"> {{player1.rating}} </span>
+               </div>
+               
+           </div>
+           <img class="mh-sec-img" src="{{player1.avatar}}" alt="avatar" 
+               style="display: none" onload="this.style.display=''"
+               onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
+           />
+
+       </div>
+       
+    </div>
+
+
+        <canvas #gameCanvas id="gameCanvas" class="gp-canvas"></canvas>
+    </div>
+</div>
+
+
+<div class="gp-bg" >
+    <img class="gp-bg-img"  src="./assets/imgs/pong_login.png" >
+    <div class="gp-bg-cover"></div>
+</div>
+
+<app-board #gameBoard [ctx]="ctx"></app-board>
+  <app-ball #ball [ctx]="ctx" [gameBoard]="gameBoard" [canvas]="canvas" [player1Paddle]="player1Paddle" [player2Paddle]="player2Paddle"></app-ball>
+  <app-paddle #player1Paddle [ctx]="ctx" [canvas]="canvas" [gameBoard]="gameBoard" [ball]="ball" [isOwnPaddle]="true"></app-paddle>
+  <app-paddle #player2Paddle [ctx]="ctx" [canvas]="canvas" [gameBoard]="gameBoard" [ball]="ball" [isOwnPaddle]="false"></app-paddle>

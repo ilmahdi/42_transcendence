@@ -1,0 +1,144 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+    color: var(--modal-text-color);
+}
+
+.wraper {
+    width: 100%; 
+  height: 100%;
+  position: fixed; 
+  top: 0; 
+  right: 0; 
+  bottom: 0; 
+  left: 0; 
+  z-index: 13;
+  overflow: auto;
+  user-select: none;
+}
+
+.overlay {
+    position: fixed;
+    z-index: 19;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(11, 11, 11, 0.7);
+    z-index: 14;
+}
+
+.confirm-modal {
+    position: fixed;
+    display: flex;
+    flex-shrink: 1;
+    flex-direction: column;
+    position: absolute;
+    background-color: var(--modal-background-color);
+    top: 50%;
+    left: 50%;
+    width: min(90%, 30rem);
+    min-width: min-content;
+    transform: translate(-50%, -50%);
+    padding: 2.6rem 1.2rem 1rem 1.2rem;
+    border-radius: 0.6rem;
+    z-index: 15;
+
+}
+.cm-title {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+}
+.cm-body {
+    display: flex;
+    align-items: space;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 0.6rem;
+}
+
+.cm-body-img {
+    width: 12rem;
+    border-radius: 1rem;
+    border: 0.2rem solid transparent;
+}
+.cm-body-img:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.is-selected {
+    border: 0.2rem solid #0038FF;
+    opacity: 0.8;
+}
+
+.cm-indent {
+    flex-grow: 1;
+}
+
+.cm-btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3rem;
+    gap: 0.8rem;
+
+}
+.cm-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    width: 6rem;
+    height: 2rem;
+    border-radius: 0.4rem;
+    border: none;
+}
+
+
+.cm-btn.b1 {
+    border: 0.08rem solid var(--modal-text-color) ;
+    background-color: var(--modal-background-color);
+}
+
+.cm-btn.b2 {
+    background-color: var(--second-text-color);
+}
+
+.cm-btn.b1:hover {
+        
+    cursor: pointer;
+    color: var(--second-text-color);
+    border: 0.08rem solid var(--second-hover-background-color) ;
+}
+.cm-btn.b2:hover {
+        
+    cursor: pointer;
+    color: var(--primary-text-color);
+}
+
+
+
+
+/***********************************************/
+/*                Media Queries                */
+/***********************************************/
+
+@media (max-width: 800px) {
+
+    .cm-body-img {
+        width: 8rem;
+        border-radius: 1rem;
+        border: 0.2rem solid transparent;
+    }
+    .is-selected {
+        border: 0.2rem solid #0038FF;
+        opacity: 0.8;
+    }
+   
+}
+
+
+

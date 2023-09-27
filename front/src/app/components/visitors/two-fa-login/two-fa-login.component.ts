@@ -1,6 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { SocketService } from 'src/app/utils/socket/socket.service';
 
@@ -43,6 +44,9 @@ export class TwoFaLoginComponent {
   public isIncorrectCode: boolean = false
   public isLeavingPage: boolean = true
 
+
+  private subscriptions: Subscription[] = [];
+
   @Input() title: string = '';
   @Input() body: string = '';
 
@@ -67,7 +71,7 @@ export class TwoFaLoginComponent {
   submitForm() {
     
     this.twoFACode = this.twoFACodeForm.get('twoFACode')?.value;
-    this.authService.validateTwoFa(this.loggedInUserId, this.twoFACode).subscribe({
+    const subscription = this.authService.validateTwoFa(this.loggedInUserId, this.twoFACode).subscribe({
       next: response => {
         if (response.is_tfa_validated) {
           this.isLeavingPage = false;
@@ -84,10 +88,15 @@ export class TwoFaLoginComponent {
         console.error('Error:', error.error.message); 
       }
     });
+    this.subscriptions.push(subscription);
   }
   ngOnDestroy() {
     if (this.isLeavingPage)
       this.authService.logout()
+
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
 }

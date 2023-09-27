@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { JWT_TOKEN } from '../../utils/constants';
 import { SocketService } from 'src/app/utils/socket/socket.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-visitors',
@@ -25,6 +26,8 @@ export class VisitorsComponent implements OnInit {
   public isTwoFaEnabled :boolean = false;
   private  loggedInUserId:number = -1;
 
+  private subscriptions: Subscription[] = [];
+
 
   ngOnInit(): void {
     this.firstLogin = JSON.parse(this.route.snapshot.queryParamMap.get('first_login')!);
@@ -36,7 +39,7 @@ export class VisitorsComponent implements OnInit {
     
     if (this.firstLogin == false)
     {
-      this.authService.checkTwofa(this.loggedInUserId).subscribe({
+      const subscription = this.authService.checkTwofa(this.loggedInUserId).subscribe({
         next: response => {
          
           if (response.is_tfa_enabled)
@@ -52,11 +55,19 @@ export class VisitorsComponent implements OnInit {
           console.error('Error:', error.error.message); 
         }
       });
+      this.subscriptions.push(subscription);
     }
 
   }
 
   redirectToLogin() {
     window.location.href = this.apiUrlAuth;
+  }
+
+  ngOnDestroy(): void {
+    
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 }

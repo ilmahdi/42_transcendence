@@ -9,7 +9,7 @@
                     onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
                 />
                 <div class="mh-sec-info">
-                    <span class="mh-sec-info-name"> {{ match.player1.username }} </span>
+                    <span class="mh-sec-info-name" [routerLink]="['/profile', match.player1.username]"> {{ match.player1.username }} </span>
                     <div class="mh-sec-info-rate"> 
                         <span class="mh-sec-info-rate-score"> {{match.player1.rating}} </span>
                         <span class="mh-sec-info-rate-res" 
@@ -26,9 +26,9 @@
             <div class="mh-sec-main-user u2">
 
                 <div class="mh-sec-info">
-                    <span class="mh-sec-info-name"> {{ match.player2.username }} </span>
+                    <span class="mh-sec-info-name" [routerLink]="['/profile', match.player2.username]"> {{ match.player2.username }} </span>
                     <div class="mh-sec-info-rate left">
-                        <span class="mh-sec-info-rate-score"> {{match.player1.rating}} </span>
+                        <span class="mh-sec-info-rate-score"> {{match.player2.rating}} </span>
                         <span class="mh-sec-info-rate-res" 
                             [ngStyle]="match.player2.points >= 0 ? {'color': '#67E306'} : {'color': '#F35352'}"> 
                             {{match.player2.points | positiveNumberSign}}  
@@ -38,6 +38,8 @@
                 </div>
                 <img class="mh-sec-img" src="{{match.player2.avatar}}" alt="avatar" 
                     [ngStyle]="match.player2.points >= 0 ? {'color': '#67E306'} : {'color': '#F35352'}"
+                    style="display: none" onload="this.style.display=''"
+                    onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''"
                 />
 
             </div>
@@ -61,7 +63,7 @@
 
         </div>
     </div>     
-    <div class="mh-empty" *ngIf="!matchs.length">
+    <div class="mh-empty" *ngIf="!matchs!.length">
         <img class="mh-empty-img" src="./assets/imgs/death_pong2.jpeg" >
         <h2 class="mh-empty-h">No Match, no History !</h2>
         <p class="mh-empty-p"> Record your first match and begin your journey to ping pong victory! </p>

@@ -17,12 +17,12 @@
             
             <div class="ld-sec-table-wrap">
                 <div class="ld-sec-table">
-                    <div class="ld-sec-tb-row" *ngFor="let user of users; let i = index" 
+                    <div class="ld-sec-tb-row" *ngFor="let user of usersList; let i = index" 
                     [style.background-color]=" i < 3 ? '#2A1E17': 'var(--primary-background-color)'"
                     >
                     <div class="ld-sec-tb-data">
                         <span class="ld-sec-tb-data-item">{{i + 1}}</span>
-                        <span class="ld-sec-tb-data-item entry">{{user.name}}</span>
+                        <span class="ld-sec-tb-data-item entry" [routerLink]="['/profile', user.username]">{{user.username}}</span>
                         <span class="ld-sec-tb-data-item">
                                 <img src="{{user.avatar}}"
                                     style="display: none" onload="this.style.display=''"

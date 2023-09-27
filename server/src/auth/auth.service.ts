@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Profile } from './utils/interfaces'
 import { UserService } from 'src/user/user.service';
 import { TokenService } from 'src/common/services/token.service';
@@ -13,24 +13,31 @@ export class AuthService {
     }
 
     async validateFtUser(profile: Profile){
-        let firstLogin :string = "false";
-        // original auth
-        // let user = await this.userService.findUserByFtId(profile.ft_id);
-        let user = await this.userService.findUserByUsername(profile.username);
-        // 
-        if (!user)
-        {
-            // user = await this.userService.addUser(profile);
-            firstLogin = "true";
-            return { profile, firstLogin }
-        }
-        const token =  this.tokenService.generateToken(
+        try {
+
+            let firstLogin :string = "false";
+            // original auth
+            // let user = await this.userService.findUserByFtId(profile.ft_id);
+            let user = await this.userService.findUserByUsername(profile.username);
+            // 
+            if (!user)
             {
-                sub: user.id,
-                username: user.username,
+                // user = await this.userService.addUser(profile);
+                firstLogin = "true";
+                return { profile, firstLogin }
             }
-        )
-        return { token, firstLogin }
+            const token =  this.tokenService.generateToken(
+                {
+                    sub: user.id,
+                    username: user.username,
+                }
+                )
+                return { token, firstLogin }
+         }
+         catch {
+
+            throw new UnauthorizedException();
+         }
     }
 
     async twofaCheck(userId :number) {
