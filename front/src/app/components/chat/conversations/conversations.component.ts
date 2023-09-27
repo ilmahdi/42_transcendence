@@ -1,13 +1,18 @@
-import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
-import { Observable, take, Subscription } from 'rxjs';
+import { Observable, take, Subscription, firstValueFrom } from 'rxjs';
 import { Message } from 'src/app/models/message.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ChatService } from 'src/app/services/chat.service';
 import { UserService } from 'src/app/services/user.service';
 import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
+import { CustomizeGameComponent } from '../../modals/customize-game/customize-game.component';
+import { GameInviteComponent } from '../../modals/game-invite/game-invite.component';
+import { AlertComponent } from '../../modals/alert/alert.component';
+import { ConfirmService } from 'src/app/services/modals/confirm.service';
+import { GameService } from 'src/app/services/game.service';
 
 @Component({
   selector: 'app-conversations',
@@ -37,7 +42,9 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
   constructor(private chatService: ChatService,
     private authService: AuthService,
     private userService:UserService,
-    private router:Router
+    private router:Router,
+    private confirmService: ConfirmService,
+    private gameService : GameService,
     ) {
     this.chatService.optionsSource.next(false)
     
@@ -46,6 +53,14 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     const subs1:Subscription = chatService.displayConversation$.subscribe(data=>this.displayConversation = data)
     this.subsciptions.push(subs1)
   }
+
+
+
+  @ViewChild('confirmModal', { read: ViewContainerRef })
+  entry!: ViewContainerRef;
+
+  private confirmService2 = new ConfirmService();
+
 
   ngOnInit() {
     /////////////////////////// FOR PRIVATE MESSAGE \\\\\\\\\\\\\\\\\\\\\\\\
@@ -182,6 +197,48 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
 
   openProfile(user:IUserDataShort) {
     this.router.navigateByUrl('/profile/' + user.username)
+  }
+
+
+  async handlePlayClick() {
+    console.log("ok")
+    try {
+      const mapId = await firstValueFrom(this.confirmService.open(this.entry, CustomizeGameComponent));
+      
+      this.gameService.mapIndex = +mapId;
+      this.gameService.playerId1 = this.authService.getLoggedInUserId();
+      this.gameService.playerId2 = this.userEmitted[0].id;
+      
+      this.openGameInviteModal();
+      
+    }
+    catch {
+
+    }
+
+  }
+  openGameInviteModal() {
+    this.confirmService
+      .open(this.entry, GameInviteComponent)
+      .subscribe((userId :any) => {
+        if (userId < 0) {
+          if (userId == -1) {
+            this.confirmService2
+            .open(this.entry, AlertComponent, "ERROR", "Game Request Rejected")
+          }
+          else if (userId == -2) {
+            this.confirmService2
+            .open(this.entry, AlertComponent, "ERROR", "User is already in a game")
+
+          }
+        }
+        else {
+
+          this.gameService.isToStart = false;
+          this.gameService.setInGameMode(true);
+          this.router.navigate(['/game']);
+        }
+      });
   }
 
   ngOnDestroy(): void {

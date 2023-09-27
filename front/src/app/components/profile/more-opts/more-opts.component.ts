@@ -1,17 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChatService } from 'src/app/services/chat.service';
-import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
-import { GameService } from 'src/app/services/game.service';
+import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { ConfirmService } from 'src/app/services/modals/confirm.service';
-import { IUserData } from 'src/app/utils/interfaces/user-data.interface';
-import { CustomizeGameComponent } from '../../modals/customize-game/customize-game.component';
-import { firstValueFrom } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
-import { Router } from '@angular/router';
-import { GameInviteComponent } from '../../modals/game-invite/game-invite.component';
 
 @Component({
   selector: 'app-more-opts',
@@ -21,11 +13,6 @@ import { GameInviteComponent } from '../../modals/game-invite/game-invite.compon
 export class MoreOptsComponent implements OnInit {
 
   constructor(
-    private chatService:ChatService,
-    private router:Router,
-    private confirmService: ConfirmService,
-    private authService: AuthService,
-    private socket: CustomSocket,
   ) { }
 
   @Input() friendshipId :number = -1;

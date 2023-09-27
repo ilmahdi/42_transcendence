@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, NgModel } from '@angular/forms';
 import { Subscription, take } from 'rxjs';
 import { Mute } from 'src/app/models/mutes.model';
 import { Room } from 'src/app/models/room.model';
@@ -15,6 +15,7 @@ import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 })
 export class RoomOptionsComponent implements OnInit, OnDestroy{
   private subscriptions:Subscription[] = []
+
 
   userId?:number;
   room:Room = {}
@@ -140,8 +141,9 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
     removed:boolean,
     mute:boolean,
     muteDuration: number,
-    ban:boolean}) {
-    member.click = !member.click
+    ban:boolean}, event :Event) {
+    
+    event.stopPropagation();
     member.removed = false
     member.admin = false
     member.ban = false

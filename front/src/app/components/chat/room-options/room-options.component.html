@@ -20,7 +20,7 @@
                 <div class="remove" *ngIf="user.click && user.type === 'user'" (click)="removeMember(user)" [style.backgroundColor]="user.removed?'#D38146':''"><p style="text-align: center;margin-top: 3px;">Remove</p></div>
                 <div class="mute" *ngIf="user.click && user.type === 'user'"  [style.backgroundColor]="user.mute?'#D38146':''">
                     <p style="text-align: center;margin-top: 3px;" (click)="muting(user)" *ngIf="!user.mute">Mute</p>
-                    <div (click)="clickOnInput(user)" *ngIf="user.mute">
+                    <div (click)="clickOnInput(user, $event)" *ngIf="user.mute">
                         <input type="number" id="mutingTime" min="0" max="100" step="1" placeholder="Minutes" [(ngModel)]="user.muteDuration">
                     </div>
                 </div>
