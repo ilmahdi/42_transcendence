@@ -196,7 +196,6 @@ export class UserService {
                 ...createUserDto,
             }
         })
-        return user;
     }
     getUserById(id:number) {
         try {
