@@ -43,10 +43,10 @@ export class HomeComponent implements OnInit {
     rating: 0,
   };
 
+  private subscriptions: Subscription[] = [];
+
   @ViewChild('confirmModal', { read: ViewContainerRef })
   entry!: ViewContainerRef;
-
-  sub!: Subscription;
 
   ngOnInit(): void {
     
@@ -73,7 +73,7 @@ export class HomeComponent implements OnInit {
     });
   }
   getUserData() {
-    this.userService.getUserData().subscribe({
+    const subscription = this.userService.getUserData().subscribe({
       next: (response :IUserData) => {
        
         this.userData = response;
@@ -84,6 +84,7 @@ export class HomeComponent implements OnInit {
         console.error('Error:', error.error.message); 
       }
     });
+    this.subscriptions.push(subscription);
 
   }
 
@@ -120,18 +121,26 @@ export class HomeComponent implements OnInit {
   }
 
   openGameInviteModal() {
-    this.sub = this.confirmService
+    const subscription = this.confirmService
       .open(this.entry, GameInviteComponent, "Enter a username")
       .subscribe((userId :any) => {
-
+        
         this.gameService.isToStart = false;
         this.gameService.playerId2 = userId;
         this.gameService.setInGameMode(true);
         this.router.navigate(['/game']);
       });
+      this.subscriptions.push(subscription);
   }
 
   ngOnDestroy(): void {
+    
+    this.socket.off('opponentId');
+    this.socket.off('failRequestOpponentId');
+
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
 }

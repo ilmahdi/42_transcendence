@@ -53,20 +53,25 @@ export class UserService {
         return user;
     }
     async findManyUsers(query: string) {
-        const users = await this.prismaService.userAccount.findMany({
-            select: {
-                id: true,
-                username: true,
-                avatar: true,
-            },
-            take: 13,
-            where: {
-                username: {
-                    startsWith: query,
-                }
-            },
-        })
-        return users;
+        try {
+            const users = await this.prismaService.userAccount.findMany({
+                select: {
+                    id: true,
+                    username: true,
+                    avatar: true,
+                },
+                take: 13,
+                where: {
+                    username: {
+                        startsWith: query,
+                    }
+                },
+            })
+            return users;
+        }
+        catch (error) {
+            throw new HttpException('Error fetching users list', HttpStatus.CONFLICT);
+        } 
     }
     async getUserDataShort(userId :number) : Promise<UserDataShort> {
         const user :UserDataShort = await this.prismaService.userAccount.findUnique({
@@ -152,25 +157,33 @@ export class UserService {
     }
 
     async updateUserAny(id: number, data: any) {
-        const updatedUser = await this.prismaService.userAccount.update({
-            where: { id },
-            data: {
-                ...data,
-            }
-        });
-        return updatedUser;
+        try {
+            const updatedUser = await this.prismaService.userAccount.update({
+                where: { id },
+                data: {
+                    ...data,
+                }
+            });
+            return updatedUser;
+        } catch (error) {
+            throw new HttpException('Error updating user data', HttpStatus.CONFLICT);
+        } 
     }
 
     async twofaCheck(userId :number) {
-        const user = await this.findUserById(userId);
+        try {
+            const user = await this.findUserById(userId);
 
-        if (!user)
-            throw new HttpException('User not found', HttpStatus.CONFLICT);
-        
+            if (!user)
+                throw new HttpException('User not found', HttpStatus.CONFLICT);
+            
 
-        return { 
-            is_tfa_enabled: user.is_tfa_enabled 
-        };
+            return { 
+                is_tfa_enabled: user.is_tfa_enabled 
+            };
+        } catch (error) {
+            throw new HttpException('Error checking two FA', HttpStatus.CONFLICT);
+        } 
 
     }
 

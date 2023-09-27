@@ -201,5 +201,8 @@ export class PaddleComponent implements OnInit{
 
     this.socket.removeAllListeners('paddleMove');
 
+    this.socket.off('paddleMove');
+
   }
+
 }

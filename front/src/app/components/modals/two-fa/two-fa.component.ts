@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -36,13 +37,15 @@ export class TwoFAComponent {
   public twoFACode: string = ""
   public isIncorrectCode: boolean = false
 
+  private subscriptions: Subscription[] = [];
+
   @Input() title: string = '';
   @Input() body: string = '';
   @Output() closeMeEvent = new EventEmitter();
   @Output() confirmEvent = new EventEmitter();
 
   ngOnInit(): void {
-    this.authService.generateTwoFa(this.loggedInUserId).subscribe({
+    const subscription = this.authService.generateTwoFa(this.loggedInUserId).subscribe({
       next: response => {
         this.qrCode = response.qr_code;
         this.tfaSecret = response.tfa_secret;
@@ -51,6 +54,7 @@ export class TwoFAComponent {
         console.error('Error:', error.error.message); 
       }
     });
+    this.subscriptions.push(subscription);
   }
   onInputFocus() {
     this.isIncorrectCode = false;
@@ -60,7 +64,7 @@ export class TwoFAComponent {
   submitForm() {
     
     this.twoFACode = this.twoFACodeForm.get('twoFACode')?.value;
-    this.authService.enableTwoFa(this.loggedInUserId, this.twoFACode).subscribe({
+    const subscription = this.authService.enableTwoFa(this.loggedInUserId, this.twoFACode).subscribe({
       next: response => {
         if (response.is_tfa_enabled)
           this.confirmEvent.emit();
@@ -74,11 +78,19 @@ export class TwoFAComponent {
         console.error('Error:', error.error.message); 
       }
     });
+    this.subscriptions.push(subscription);
   }
 
 
   closeMe() {
     this.closeMeEvent.emit();
+  }
+
+  ngOnDestroy(): void {
+
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
 

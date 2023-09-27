@@ -119,9 +119,17 @@ export class GameService {
   }
 
 
-  async getMatchHistory() { 
+  async getMatchHistory(userId :number) { 
     try {
       const matches = await this.prismaService.matches.findMany({
+        where: {  OR: [
+          {
+            id1: userId,
+          },
+          {
+            id2: userId,
+          }
+        ]},
         select: {
           score1: true,
           score2: true,

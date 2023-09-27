@@ -98,6 +98,7 @@ export class ProfileIdComponent implements OnChanges {
       if (userId == this.userData.id)
         this.connection = "playing";
     });
+    this.subscriptions.push(subscription);
   }
 
 
@@ -201,12 +202,19 @@ export class ProfileIdComponent implements OnChanges {
   
   }
   openGameInviteModal() {
-    this.confirmService
+    const subscription = this.confirmService
       .open(this.entry, GameInviteComponent)
       .subscribe((userId :any) => {
         if (userId < 0) {
-          this.confirmService2
-          .open(this.entry, AlertComponent, "ERROR", "Game Request Rejected")
+          if (userId == -1) {
+            this.confirmService2
+            .open(this.entry, AlertComponent, "ERROR", "Game Request Rejected")
+          }
+          else if (userId == -2) {
+            this.confirmService2
+            .open(this.entry, AlertComponent, "ERROR", "User is already in a game")
+
+          }
         }
         else {
 
@@ -216,6 +224,7 @@ export class ProfileIdComponent implements OnChanges {
         }
 
       });
+      this.subscriptions.push(subscription);
   }
   
 
@@ -367,15 +376,6 @@ export class ProfileIdComponent implements OnChanges {
 
 
 
-  ngOnDestroy(): void {
-
-    for (const subscription of this.subscriptions) {
-      subscription.unsubscribe();
-    }
-  }
-
-
-
   // private utility functions
   /******************************************************************** */
   getFriendship (arg1 :number, arg2 :number, arg3? :string) :IFriendship { 
@@ -414,6 +414,20 @@ export class ProfileIdComponent implements OnChanges {
     response.user_id
       this.isRequestInitiator = this.loggedInUserId === response.user_id;
   }
+
+
+  ngOnDestroy(): void {
+
+    this.socket.off('refreshUser');
+    this.socket.off('online');
+    this.socket.off('offline');
+    this.socket.off('playing');
+
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
+
  
   
 }

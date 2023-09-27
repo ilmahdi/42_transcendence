@@ -1,4 +1,5 @@
 import { Component,  OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 import { IUserDataShort } from 'src/app/utils/interfaces/user-data.interface';
 
@@ -16,13 +17,15 @@ export class LeaderboardComponent implements OnInit {
 
   public usersList: IUserDataShort[] = [];
 
+  private subscriptions: Subscription[] = [];
+
   ngOnInit(): void {
     this.getAllUsers();
   }
 
 
   getAllUsers() {
-    this.userService.getAllUsers().subscribe({
+    const subscription = this.userService.getAllUsers().subscribe({
      next: (response :IUserDataShort[]) => {
       
        this.usersList = response;
@@ -30,6 +33,17 @@ export class LeaderboardComponent implements OnInit {
      error: error => {
        console.error('Error:', error.error.message); 
      }
-   });
- }
+    });
+    this.subscriptions.push(subscription);
+  }
+
+
+
+  ngOnDestroy(): void {
+    
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
+
 }

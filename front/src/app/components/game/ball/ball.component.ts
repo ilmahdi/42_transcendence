@@ -218,5 +218,10 @@ export class BallComponent implements OnInit{
   }
 
 
+  ngOnDestroy(): void {
+    this.socket.off('initBallPosition');
+  }
+
+
 
 }

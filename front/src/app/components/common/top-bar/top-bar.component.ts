@@ -102,7 +102,7 @@ export class TopBarComponent implements OnInit {
 
   // private functions
   searchUsers() {
-    this.menuBarService.searchUsers(this.searchQuery).subscribe({
+    const subscription = this.menuBarService.searchUsers(this.searchQuery).subscribe({
       next: response => {
         this.searchResults = response;
       },
@@ -110,6 +110,7 @@ export class TopBarComponent implements OnInit {
         console.error('Error:', error.error.message); 
       }
     });
+    this.subscriptions.push(subscription);
   }
 
   getNotifications() {
@@ -145,7 +146,7 @@ export class TopBarComponent implements OnInit {
   }
 
   deleteNotifications(notifications :number[]) {
-    this.menuBarService.deleteNotifications(notifications).subscribe({
+    const subscription = this.menuBarService.deleteNotifications(notifications).subscribe({
       next: response => {
         
         const remaindIds = this.notifyData
@@ -158,10 +159,11 @@ export class TopBarComponent implements OnInit {
         console.error('Error:', error.error.message); 
       }
     });
+    this.subscriptions.push(subscription);
   }
   
   updateSeenNotifications(notifications :number[]) {
-    this.menuBarService.updateSeenNotifications(notifications).subscribe({
+    const subscription = this.menuBarService.updateSeenNotifications(notifications).subscribe({
       next: response => {
 
       },
@@ -169,7 +171,22 @@ export class TopBarComponent implements OnInit {
         console.error('Error:', error.error.message); 
       }
     });
+    this.subscriptions.push(subscription);
   }
+
+
+
+  ngOnDestroy(): void {
+    
+    this.socket.off('notifyFriendRequest');
+    this.socket.off('unNotifyFriendRequest');
+
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
+
+
 
 
 }

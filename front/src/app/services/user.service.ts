@@ -101,7 +101,7 @@ export class UserService {
   
   // temporary 
   /*********************************************/
-  getMatchHistory (username :string) : Observable<IHistory[]> {
-    return this.http.get<IHistory[]>(`${this.apiUrl}/api/game/history` ,this.getHeaders());
+  getMatchHistory (userId :number) : Observable<IHistory[]> {
+    return this.http.get<IHistory[]>(`${this.apiUrl}/api/game/history/${userId}` ,this.getHeaders());
   }
 }

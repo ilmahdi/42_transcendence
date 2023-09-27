@@ -8,6 +8,7 @@ import { UserService } from 'src/app/services/user.service';
 import { GameService } from 'src/app/services/game.service';
 import { CustomSocket } from 'src/app/utils/socket/socket.module';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-game',
@@ -45,6 +46,8 @@ export class GameComponent implements AfterViewInit {
   private gameStage :string = "START";
   private animationFrameId!: number;
   private currentTime! :number;
+
+  private subscriptions: Subscription[] = [];
 
 
   @ViewChild('ball') ball!: BallComponent;
@@ -111,18 +114,19 @@ export class GameComponent implements AfterViewInit {
   private getUserData(userId: number) {
     if (userId){
 
-      this.userService.getUserDataShort2(userId).subscribe({
+      const subscription = this.userService.getUserDataShort2(userId).subscribe({
         next: (response :IUserDataShort) => {
 
           if (userId === this.gameService.playerId1)
             this.player1 = response;
           else if (userId === this.gameService.playerId2)
             this.player2 = response;
-      },
-      error: error => {
-        console.error('Error:', error.error.message); 
-      }
-    });
+        },
+        error: error => {
+          console.error('Error:', error.error.message); 
+        }
+      });
+    this.subscriptions.push(subscription);
     }
 
   }
@@ -511,10 +515,18 @@ export class GameComponent implements AfterViewInit {
     this.socket.emit("broadcastOnline", this.gameService.playerId1);
     cancelAnimationFrame(this.animationFrameId);
     this.gameService.setInGameMode(false);
-
     this.emitEndGame()
+
+    this.socket.off('gameStateUpdate');
+    this.socket.off('gameScoreUpdate');
+    this.socket.off('startGame');
+    this.socket.off('endGame');
+    this.socket.off('rematchGame');
+
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
-  
 
   
 }

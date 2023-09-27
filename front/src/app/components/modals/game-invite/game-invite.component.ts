@@ -43,6 +43,9 @@ export class GameInviteComponent {
     avatar: ""
   }
 
+  @ViewChild('alertModal', { read: ViewContainerRef })
+  entry!: ViewContainerRef;
+
   private subscriptions: Subscription[] = [];
 
   @Input() title: string = '';
@@ -64,16 +67,30 @@ export class GameInviteComponent {
       this.invitedUserId = userId;
     });
     this.socket.on('failInviteOpponentId', () => {
-      if (!this.title)
-        this.closeMe()
+      if (!this.title) {
+
+        this.confirmEvent.emit(-2);
+      }
+      else {
+
+        this.confirmService
+        .open(this.entry, AlertComponent, "ERROR", "User is already in a game")
+      }
       this.invitedUserId = 0;
       this.searchQuery = '';
       this. searchResults = [];
 
     });
     this.socket.on('cancelGameInvite', () => {
-      if (!this.title)
+      if (!this.title) {
+
         this.confirmEvent.emit(-1);
+      }
+      else {
+
+        this.confirmService
+        .open(this.entry, AlertComponent, "ERROR", "Game Request Rejected")
+      }
       this.invitedUserId = 0;
       this.searchQuery = '';
       this. searchResults = [];    
@@ -81,7 +98,7 @@ export class GameInviteComponent {
   }
 
   getUserData() {
-     this.userService.getUserDataShort2(this.gameService.playerId2).subscribe({
+    const subscription = this.userService.getUserDataShort2(this.gameService.playerId2).subscribe({
       next: (response :IUserDataShort) => {
        
         this.userData = response;
@@ -91,6 +108,7 @@ export class GameInviteComponent {
         console.error('Error:', error.error.message); 
       }
     });
+    this.subscriptions.push(subscription);
   }
 
   @HostListener('window:beforeunload', ['$event'])
@@ -169,7 +187,7 @@ export class GameInviteComponent {
 
   // private functions
   searchUsers() {
-    this.menuBarService.searchUsers(this.searchQuery).subscribe({
+    const subscription = this.menuBarService.searchUsers(this.searchQuery).subscribe({
       next: response => {
         this.searchResults = response;
       },
@@ -177,6 +195,7 @@ export class GameInviteComponent {
         console.error('Error:', error.error.message); 
       }
     });
+    this.subscriptions.push(subscription);
 
   }
   inviteUser(invitedUserId :number) {
@@ -194,6 +213,14 @@ export class GameInviteComponent {
   }
 
   ngOnDestroy(): void {
+    this.socket.off('successGameInvite');
+    this.socket.off('waitInviteOpponentId');
+    this.socket.off('failInviteOpponentId');
+    this.socket.off('cancelGameInvite');
+    
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
 }

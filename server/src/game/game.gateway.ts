@@ -89,7 +89,6 @@ export class GameGateway {
   @SubscribeMessage('cancelGameInvite')
   handleCancelGameInvite(client: Socket, userIds :{ player1Id: string, player2Id: string}) {
 
-
     const socketId1 = this.connectionGateway.inGameUsersById[userIds.player1Id];
     const socketId2 = this.connectionGateway.connectedUsersById[userIds.player2Id];
 
@@ -97,7 +96,7 @@ export class GameGateway {
 
       if (socketId1 !== client.id) {
 
-        this.server.to(socketId1).emit('cancelGameInvite');
+        this.server.to(socketId1).emit('cancelGameInvite'); 
 
       }
       else

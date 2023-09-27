@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/utils/guards/jwt.guard';
 import { GameService } from './game.service';
 
@@ -7,10 +7,10 @@ export class GameController {
 
   constructor(private readonly gameService: GameService) {}
 
-    @Get("history")
+    @Get("history/:userId")
     @UseGuards(JwtGuard)
-    async getMatchHistory() {
-      const formattedMatches = await this.gameService.getMatchHistory();
+    async getMatchHistory(@Param('userId') userId: number) {
+      const formattedMatches = await this.gameService.getMatchHistory(userId);
 
       return formattedMatches;
     }

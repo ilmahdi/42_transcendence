@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { ConfirmService } from 'src/app/services/modals/confirm.service';
 import { UserService } from 'src/app/services/user.service';
@@ -8,6 +8,7 @@ import { CustomizeGameComponent } from '../modals/customize-game/customize-game.
 import { GameService } from 'src/app/services/game.service';
 import { GameInviteComponent } from '../modals/game-invite/game-invite.component';
 import { Router } from '@angular/router';
+import { AlertComponent } from '../modals/alert/alert.component';
 
 @Component({
   selector: 'app-friends',
@@ -34,6 +35,9 @@ export class FriendsComponent implements OnInit {
   @ViewChild('confirmModal', { read: ViewContainerRef })
   entry!: ViewContainerRef;
 
+  private subscriptions: Subscription[] = [];
+
+  private confirmService2 = new ConfirmService();
 
   ngOnInit(): void {
     this.getfriendList()
@@ -42,7 +46,7 @@ export class FriendsComponent implements OnInit {
 
 
   getfriendList() {
-    this.userService.getfriendList(this.loggedInUserId).subscribe({
+    const subscription = this.userService.getfriendList(this.loggedInUserId).subscribe({
      next: (response :IUserDataShort[]) => {
        this.friendList = response;
      },
@@ -50,37 +54,58 @@ export class FriendsComponent implements OnInit {
        console.error('Error:', error.error.message); 
      }
    });
- }
-
- async handlePlayClick(index :number) {
-
-  console.log(index)
-
-  try {
-    const mapId = await firstValueFrom(this.confirmService.open(this.entry, CustomizeGameComponent));
-    
-    this.gameService.mapIndex = +mapId;
-    this.gameService.playerId1 = this.authService.getLoggedInUserId();
-    this.gameService.playerId2 = this.friendList[index].id!;
-    
-    this.openGameInviteModal();
-    
-  }
-  catch {
-
+   this.subscriptions.push(subscription);
   }
 
-}
-openGameInviteModal() {
-  this.confirmService
-    .open(this.entry, GameInviteComponent)
-    .subscribe(() => {
+  async handlePlayClick(index :number) {
 
-      this.gameService.isToStart = false;
-      this.gameService.setInGameMode(true);
-      this.router.navigate(['/game']);
-    });
-}
+    console.log(index)
+
+    try {
+      const mapId = await firstValueFrom(this.confirmService.open(this.entry, CustomizeGameComponent));
+      
+      this.gameService.mapIndex = +mapId;
+      this.gameService.playerId1 = this.authService.getLoggedInUserId();
+      this.gameService.playerId2 = this.friendList[index].id!;
+      
+      this.openGameInviteModal();
+      
+    }
+    catch {
+
+    }
+
+  }
+  openGameInviteModal() {
+    this.confirmService
+      .open(this.entry, GameInviteComponent)
+      .subscribe((userId :any) => {
+        if (userId < 0) {
+          if (userId == -1) {
+            this.confirmService2
+            .open(this.entry, AlertComponent, "ERROR", "Game Request Rejected")
+          }
+          else if (userId == -2) {
+            this.confirmService2
+            .open(this.entry, AlertComponent, "ERROR", "User is already in a game")
+
+          }
+        }
+        else {
+
+          this.gameService.isToStart = false;
+          this.gameService.setInGameMode(true);
+          this.router.navigate(['/game']);
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
 
 
 }

@@ -40,9 +40,18 @@
             </div>
             <span class="ld-sec-tb-hr"></span>
           </div>
+
+          <div class="mh-empty" *ngIf="!friendList!.length">
+            <img class="mh-empty-img" src="./assets/imgs/pong_friends.png" >
+            <h2 class="mh-empty-h">No Friends!</h2>
+            <p class="mh-empty-p"> You don't have any friends yet. Start adding friends! </p>
+            <div class="mh-empty-overlay"></div>
+          </div>
+
         </div>
         <span class="ld-sec-table-scroll"></span>
       </div>
     </div>
   </div>
+
 </div>
