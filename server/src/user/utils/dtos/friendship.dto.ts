@@ -13,3 +13,10 @@ export class FrinedshipDto {
     @IsEnum(FriendshipStatus)
     friendship_status?: FriendshipStatus;
 }
+
+export class FrinedshipStatusDto {
+
+    @IsEnum(FriendshipStatus)
+    friendship_status: FriendshipStatus;
+
+}

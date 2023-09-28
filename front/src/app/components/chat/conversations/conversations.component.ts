@@ -201,7 +201,6 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
 
 
   async handlePlayClick() {
-    console.log("ok")
     try {
       const mapId = await firstValueFrom(this.confirmService.open(this.entry, CustomizeGameComponent));
       
