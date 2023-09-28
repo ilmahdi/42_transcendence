@@ -26,7 +26,7 @@
     border: none;
     outline: none;
     background-color: #584747;
-    color: #9D8686;
+    color: var(--primary-text-color);
     border-radius: 20px;
     align-items: center;
     justify-content: center;
@@ -98,11 +98,14 @@ img {
     top: 5px;
     text-align: center;
     font-size: larger;
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-text-color);
     /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
 }
 
 #type {
     position: relative;
+    font-family: 'Poppins', sans-serif;
     color: #696969;
     top: 10px;
     text-align: center;
@@ -119,13 +122,17 @@ img {
     border: none;
     outline: none;
     background-color: #584747;
-    color: #9D8686;
+    color: var(--primary-text-color);
     border-radius: 20px;
 }
 
 #noRoom {
-    position: relative;color: white; text-align: center;top: 40%;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    position: relative;
+    text-align: center;
+    top: 40%;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-text-color);
 }
 
 @media (max-width: 1350px) {

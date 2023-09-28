@@ -104,15 +104,17 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.sendToGetRoomById(room.id!)
 
     this.chatService.getRoomById().pipe(take(1)).subscribe(actualRoom=> {
-      this.chatService.sendToGetRoomConversation(actualRoom)
+      this.chatService.sendToGetRoomConversation(actualRoom, this.userId!)
       const subs:Subscription = this.chatService.getRoomConversation().subscribe((data) => {
-        data.sort((a:Message, b:Message)=>a.id! - b.id!)
-        this.chatService.updateRoomConversation(data);
-        data.forEach((item)=>{
-          if (item.senderId !== this.userId) {
-            this.chatService.updateRead(item);
-          }
-        })
+        if (data.length) {
+          data.sort((a:Message, b:Message)=>a.id! - b.id!)
+          this.chatService.updateRoomConversation(data);
+          data.forEach((item)=>{
+            if (item.senderId !== this.userId) {
+              this.chatService.updateRead(item);
+            }
+          })
+        }
         this.chatService.displayComponents(false, true, false, true, false, false, false);
       })
       this.subscriptions.push(subs)
@@ -123,6 +125,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   searchQueryConvers() {
+    if (!this.searchQuery) {
+      this.getAllConversations();
+      return;
+    }
+      
     const subs:Subscription = this.chatService.searchConvers(this.searchQuery).subscribe(data=>{
       this.chatService.updateUsers(data)
     })
@@ -139,6 +146,19 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.chatService.updateRooms(this.searchResults)
     })
     this.subscriptions.push(subs)
+  }
+
+  getAllConversations() {
+    this.chatService.sendToGetAllConversations(this.userId!);
+    this.chatService.getAllConversations().subscribe(data=> {
+      let users:IUserDataShort[] = this.chatService.usersSource.value.concat(data);
+      let actualUsers:IUserDataShort[] = []
+      users.forEach(item=> {
+        actualUsers = actualUsers.filter(user=> user.id !== item.id)
+        actualUsers.push(item);
+      })
+      this.chatService.updateUsers(actualUsers);
+    })
   }
 
   ngOnDestroy(): void {

@@ -99,7 +99,10 @@ export class ChatGateway{
   @SubscribeMessage('getRooms')
   async getRooms(client:Socket, id:number) {
     const data = await this.roomChatService.getRooms(id)
-    client.emit('recRooms', data);
+    const sockIds = this.connectionGateway.connectedUsersById[id]
+    sockIds.forEach(id=> {
+      this.server.to(id).emit('recRooms', data);
+    })
   }
 
   @SubscribeMessage('getRoomById')
@@ -113,26 +116,33 @@ export class ChatGateway{
     if (!isSaved)
       return
     let usersId:(number[]) = data.room.usersId;
-    usersId.forEach(id=> {
-      this.userService.getUserById(id).subscribe(async user=>{
+    
+    usersId.forEach(async id=> {
+      // CHECK IF THERE IS SOMEONE IN THE ROOM HAS BLOCKED YOU TO SKIP HIM
+      let isBlocked:boolean = false
+      if (id !== data.senderId)
+        isBlocked = await this.roomChatService.getBlacklist(data.senderId, id);
+      if (!isBlocked) {
+        this.userService.getUserById(id).subscribe(async user=>{
 
-        // CHECK IF THE USER IS ACTUALLY EXIST IN THE ROOM BEFORE GETING THE MESSAGE
-        let actualRoom:Room = await this.prismaService.room.findFirst({
-          where: {id :data.room.id}
-        })
-        if (actualRoom.usersId.includes(id)) {
-          this.connectionGateway.connectedUsersById[user.id].forEach(id=>{
-            this.server.to(id).emit('recRoomMessage', data.message);
+          // CHECK IF THE USER IS ACTUALLY EXIST IN THE ROOM BEFORE GETING THE MESSAGE
+          let actualRoom:Room = await this.prismaService.room.findFirst({
+            where: {id :data.room.id}
           })
-        }
-      })
+          if (actualRoom.usersId.includes(id)) {
+            this.connectionGateway.connectedUsersById[user.id].forEach(id=>{
+              this.server.to(id).emit('recRoomMessage', data.message);
+            })
+          }
+        })
+      }
     })
   }
 
   @SubscribeMessage('roomConversation')
-  async roomConversation(client:Socket, room:Room) {
-    const data = await this.roomChatService.getRoomConversation(room.id)
-    this.server.to(client.id).emit('recRoomConversation', data)
+  async roomConversation(client:Socket, data:{room:Room, id:number}) {
+    const messages = await this.roomChatService.getRoomConversation(data)
+    this.server.to(client.id).emit('recRoomConversation', messages)
   }
 
   @SubscribeMessage('getRoomLastMessage')

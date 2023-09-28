@@ -230,8 +230,9 @@ export class ChatService {
     return this.socket.fromEvent<Message>('recRoomMessage');
   }
 
-  sendToGetRoomConversation(room:Room) {
-    this.socket.emit('roomConversation', room);
+  sendToGetRoomConversation(room:Room, id:number) {
+    const data = {room:room, id:id}
+    this.socket.emit('roomConversation', data);
   }
 
   getRoomConversation() {

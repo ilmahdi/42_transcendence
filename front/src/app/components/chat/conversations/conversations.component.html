@@ -1,3 +1,7 @@
+
+<div #confirmModal></div>
+
+
 <div *ngIf="!roomConvers[0]">
     <div class="body" *ngIf="userEmitted && displayConversation" [style.display]="userEmitted[1]? 'block': 'none'">
         <div class="header">
@@ -6,7 +10,7 @@
                 <img [src]="userEmitted[0].avatar" alt="avatar" (click)="openProfile(userEmitted[0])" style="cursor: pointer;">
                 <span id="conv">Conversation with <span style="font-weight: bolder;">{{userEmitted[0].username}}</span></span>
             </div>
-            <svg class="play" xmlns="http://www.w3.org/2000/svg" (click)="goPlay()">
+            <svg class="play" xmlns="http://www.w3.org/2000/svg" (click)="handlePlayClick()">
                 <use xlink:href="./assets/icons/arrow.svg#icon-arrow"></use>
             </svg>
         </div>

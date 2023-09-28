@@ -17,8 +17,8 @@ h4 {
     top: 7px;
     position: relative;
     text-align: center;
-    color: white;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-text-color);
 }
 
 #public {
@@ -66,14 +66,16 @@ h4 {
     text-align: center;
     color: white;
     top: 7px;
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-text-color);
 }
 
 #changePass {
     position: relative;
     top: 65px;
     text-align: center;
-    color: white;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-text-color);
 }
 
 #password {
@@ -87,7 +89,7 @@ h4 {
     text-indent: 20px;
     border-radius: 10px;
     background-color: #584747;
-    color: #9D8686;
+    color: var(--primary-text-color);
 }
 
 .members {
@@ -101,8 +103,8 @@ h4 {
     position: relative;
     top: 65px;
     text-align: center;
-    color: white;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-text-color);
 }
 
 .user {
@@ -128,7 +130,8 @@ h4 {
     position: relative;
     text-align: center;
     top: -55px;
-    color: white;
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-text-color);
 }
 
 #type {
@@ -136,6 +139,7 @@ h4 {
     text-align: center;
     top: -55px;
     color: #696969;
+    font-family: 'Poppins', sans-serif;
 }
 
 .addAdmin {

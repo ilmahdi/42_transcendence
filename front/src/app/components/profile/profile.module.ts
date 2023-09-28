@@ -12,7 +12,6 @@ import { AchievementsComponent } from './achievements/achievements.component';
 import { MoreOptsComponent } from './more-opts/more-opts.component';
 import { SharedModule } from 'src/app/utils/shared/shared.module';
 import { PipesModule } from 'src/app/utils/pipes/pipes.module';
-import { ChatRoutingModule } from '../chat/chat-routing.module';
 
 
 
@@ -33,7 +32,6 @@ import { ChatRoutingModule } from '../chat/chat-routing.module';
     MenuBarModule,
     SharedModule,
     PipesModule,
-    ChatRoutingModule,
   ]
 })
 export class ProfileModule { }

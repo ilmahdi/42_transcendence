@@ -244,14 +244,13 @@ export class DirectComponent implements OnInit, OnDestroy {
     this.chatService.sendToGetAllConversations(this.userId!);
     this.chatService.getAllConversations().subscribe(data=> {
       let users:IUserDataShort[] = this.chatService.usersSource.value.concat(data);
-      let saad:IUserDataShort[] = []
+      let actualUsers:IUserDataShort[] = []
       users.forEach(item=> {
-        saad = saad.filter(user=> user.id !== item.id)
-        saad.push(item);
+        actualUsers = actualUsers.filter(user=> user.id !== item.id)
+        actualUsers.push(item);
       })
-      this.users = saad
-      
-      this.chatService.updateUsers(saad);
+      this.users = actualUsers
+      this.chatService.updateUsers(actualUsers);
     })
   }
 

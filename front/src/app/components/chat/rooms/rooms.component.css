@@ -1,3 +1,9 @@
+p {
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+    color: var(--primary-text-color);
+}
+
 .list {
     display: flex;
     flex-direction: column;
@@ -29,12 +35,11 @@
 
 .room {
     display: flex;
-    /* position: absolute; */
     height: 66px;
     width: 92%;
     background-color: #201717;
-    margin-top: 10px;
     margin-left: 4%;
+    margin-top: 10px;
     border-radius: 10px 10px 10px 10px;
     cursor: pointer;
     transition: 0.3s;
@@ -71,11 +76,17 @@
 .message {
     color: #ABABAB;
     font-size: small;
-    margin-top: -10px;
+    margin-top: -5px;
     margin-left: 10px;
     max-width: 100px;
     max-height: 20px;
     overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+}
+
+.fa-check-circle-o {
+    color: white;
+    margin-top: 37px;
 }
 
 .notReaded {
