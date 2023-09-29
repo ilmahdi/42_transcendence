@@ -8,6 +8,7 @@ export const environment = {
   apiUrl: 'http://localhost:3000',
   apiUrlAuth: 'http://localhost:3000/api/auth/login/42/',
   uploadUrl: 'http://localhost:3000/api/user/avatar/',
+  endpointHost:'http://localhost:3000/'
 };
 
 /*
