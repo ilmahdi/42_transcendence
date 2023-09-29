@@ -88,7 +88,8 @@ export class RoomsComponent implements OnInit, OnDestroy {
       this.lastMessages.forEach(message=> {
         let room:Room = this.rooms.filter(item=> item.id === message.roomId)[0]
         if (room)
-          sortedUsers.push(room);
+          if (room.usersId?.includes(this.userId!))
+            sortedUsers.push(room);
       })
       
       if (sortedUsers.length === this.rooms.length) {

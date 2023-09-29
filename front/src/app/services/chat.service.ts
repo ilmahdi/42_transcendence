@@ -106,7 +106,14 @@ export class ChatService {
     })
   }
 
-  displayComponents(formular:boolean, conversation:boolean, otherRooms:boolean, backto:boolean, convers:boolean, options:boolean, addMember:boolean) {
+  displayComponents(formular:boolean,
+      conversation:boolean,
+      otherRooms:boolean,
+      backto:boolean,
+      convers:boolean,
+      options:boolean,
+      addMember:boolean
+    ) {
     this.roomFormular(formular)
     this.displayConversationSource.next(conversation);
     this.displayOtherRoomsSource.next(otherRooms);
@@ -122,14 +129,17 @@ export class ChatService {
     while (messages.length > i + 1){
       const t1 = new Date(messages[i + 1].date!).getMinutes()
       const t2 = new Date(messages[i].date!).getMinutes()
-      if (t1 - t2 >= 1) {
+      if (t1 - t2 >= 15) {
         const options: Intl.DateTimeFormatOptions = {
           day: '2-digit',   // Two-digit day
           month: '2-digit', // Two-digit month
           year: 'numeric'   // Full year
         };
         const formattedDate: string = new Date(messages[i + 1].date!).toLocaleDateString('en-GB', options);
-        let date = {late:true, time:`${formattedDate}, ${new Date(messages[i + 1].date!).getHours()}:${new Date(messages[i + 1].date!).getMinutes()}`, msg:messages[i + 1]}
+        let date = {late:true,
+          time:`${formattedDate}, ${new Date(messages[i + 1].date!).getHours()}:${new Date(messages[i + 1].date!).getMinutes()}`,
+          msg:messages[i + 1]
+        }
         lateMessage.push(date)
       }
       ++i;

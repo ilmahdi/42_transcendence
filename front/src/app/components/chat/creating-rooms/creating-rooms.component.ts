@@ -150,6 +150,7 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
   resetRoomFormular() {
     this.room.reset()
     this.users.forEach(item=>item.added = false)
+    this.selectedImage = ''
   }
 
   onType(type:string) {

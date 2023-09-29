@@ -89,6 +89,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     const subs:Subscription = this.chatService.getRoomConversation().subscribe((data) => {
       data.sort((a:Message, b:Message)=>a.id! - b.id!)
       this.chatService.updateRoomConversation(data);
+      this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
     })
     const subs3:Subscription = this.chatService.roomConversation$.subscribe(data=>{
       this.roomMessage = data

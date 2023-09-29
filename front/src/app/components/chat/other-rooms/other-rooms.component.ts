@@ -72,13 +72,29 @@ export class OtherRoomsComponent implements OnInit, OnDestroy{
   onJoinPublic(room:Room) {
     if (room.type === RoomType.PUBLIC) {
       this.protectSelect = false
-      const subs1:Subscription = this.chatService.joinRoom(this.userId!, room).subscribe(data=> {
-        // REMOVE ROOM JOINED FROM THE OTHER ROOMS LIST AND ADD IT TO THE ROOMS CONVERSATIONS LIST
-        const newRooms:Room[] = this.chatService.roomsSource.value
-        newRooms.push(data)
-        this.chatService.roomsSource.next(newRooms)
-        const otherRooms:Room[] = this.chatService.otherRoomSource.value.filter(item=>item.id != room.id)
-        this.chatService.otherRoomSource.next(otherRooms)
+      const subs1:Subscription = this.chatService.joinRoom(this.userId!, room).subscribe(data1=> {
+        this.chatService.sendTetOtherRooms(this.userId!);
+        const subs1:Subscription = this.chatService.getOtherRooms().subscribe(data=> {
+          // REMOVE ROOM JOINED FROM THE OTHER ROOMS LIST AND ADD IT TO THE ROOMS CONVERSATIONS LIST
+          const newRooms:Room[] = this.chatService.roomsSource.value.filter(item=> item.id != data1.id)
+          newRooms.push(data1)
+          
+          // CHECK IF ROOM TYPE HAS BEEN CHANGED BEFORE CLICKING ON JOIN BUTTON
+          const actualRoom:Room = data.filter(item=> item.id === room.id)[0]
+          if (actualRoom) {
+            if (actualRoom.type === RoomType.PUBLIC) {
+              this.chatService.roomsSource.next(newRooms)
+              const otherRooms:Room[] = this.chatService.otherRoomSource.value.filter(item=>item.id != room.id)
+              this.chatService.otherRoomSource.next(otherRooms)
+            }
+            else {
+              const actualRooms:Room[] = this.chatService.roomsSource.value.filter(item=> item.id !== actualRoom.id)
+              console.log("SAAD");
+              
+              this.chatService.updateRooms(actualRooms)
+            }
+          }
+        })
       })
       this.subscriptions.push(subs1)
     }
