@@ -40,7 +40,10 @@ export class DirectComponent implements OnInit, OnDestroy {
 
     // GET THE NUMBER OF MESSAGES WHICH ARE NOT HAVE READ BY YOU WITH THE SENDER ID
     const subs1:Subscription = this.chatService.getNewMessage().subscribe(data1=>{
+      // IF I USER SEND OR RECEIVE A MESSAGE FROM AN USER NOT A FRIEND
       this.getActualConvers(data1)
+      this.sortConversations(data1)
+
       // CLEAR CHAT NOTIFICATION
       this.chatService.chatNotifSource.next(0);
 
@@ -53,7 +56,6 @@ export class DirectComponent implements OnInit, OnDestroy {
     this.subscriptions.push(subs1)
 
     const subs3:Subscription = chatService.string$.subscribe(data=>{
-      // this.sortConversations(data)------------------------------------------------------------------
       // GET THE NEW UNREAD MESSAGE AND ADD IT IN readSymbolSource WITH FALSE READ SIGNAL
       let item = {senderId:data.senderId!, receiverId:data.receiverId!, read:false}
       let newArray:{senderId:number, receiverId:number, read:boolean}[] = chatService.readSymbolSource.getValue()
@@ -213,31 +215,25 @@ export class DirectComponent implements OnInit, OnDestroy {
   }
 
   sortConversations(message:Message) {
-    let topUser:IUserDataShort = {}
+    let newList:IUserDataShort[] = []
     if (message.senderId === this.userId) {
-      this.users.forEach(user=> {
-        if (user.id === message.senderId) {
-          topUser = user
-          console.log(topUser);
-        }
+      const user:IUserDataShort = this.users.filter(item=> item.id === message.receiverId)[0];
+      newList.push(user);
+      this.users.forEach(item=> {
+        if (item.id !== message.receiverId)
+          newList.push(item)
       })
-      this.users = this.users.filter(user=> user.id !== message.receiverId)
+      this.chatService.usersSource.next(newList)
     }
     else {
-      this.users.forEach(user=> {
-        if (user.id === message.receiverId) {
-          topUser = user
-          console.log(topUser);
-        }
+      const user:IUserDataShort = this.users.filter(item=> item.id === message.senderId)[0];
+      newList.push(user);
+      this.users.forEach(item=> {
+        if (item.id !== message.senderId)
+          newList.push(item)
       })
-      this.users = this.users.filter(user=> user.id !== message.senderId)
+      this.chatService.usersSource.next(newList)
     }
-    let sortedUsers:IUserDataShort[] = []
-    sortedUsers.push(topUser);
-    sortedUsers = sortedUsers.concat(this.users)
-    this.chatService.updateUsers(sortedUsers)
-    // console.log(topUser);
-    
   }
 
   getAllConversations() {
@@ -249,8 +245,38 @@ export class DirectComponent implements OnInit, OnDestroy {
         actualUsers = actualUsers.filter(user=> user.id !== item.id)
         actualUsers.push(item);
       })
-      this.users = actualUsers
-      this.chatService.updateUsers(actualUsers);
+
+      let sortedUsers:IUserDataShort[] = []
+      this.lastMessages.sort((a:Message, b:Message)=> b.id! - a.id!)
+      this.lastMessages.forEach(message=> {
+        if (message.senderId === this.userId) {
+          let user:IUserDataShort = actualUsers.filter(item=> item.id === message.receiverId)[0]
+          if (user && user.id != this.userId)
+            sortedUsers.push(user);
+        }
+        else {
+          let user:IUserDataShort = actualUsers.filter(item=> item.id === message.senderId)[0]
+          if (user && user.id != this.userId)
+            sortedUsers.push(user);
+        }
+      })
+      
+      if (sortedUsers.length === actualUsers.length) {
+        this.users = sortedUsers
+        this.chatService.updateUsers(sortedUsers);
+      }
+      else {
+        if (sortedUsers.length) {
+          sortedUsers.forEach(user=> actualUsers = actualUsers.filter(item=> item.id !== user.id && item.id !== this.userId))
+          this.users = sortedUsers
+          this.users = this.users.concat(actualUsers)
+          this.chatService.updateUsers(this.users);
+        }
+        else {
+          this.users = actualUsers
+          this.chatService.updateUsers(actualUsers);
+        }
+      }
     })
   }
 

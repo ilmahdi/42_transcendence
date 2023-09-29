@@ -69,7 +69,7 @@ export class AddMemberComponent implements OnInit, OnDestroy {
       this.newAdminsId = this.newAdminsId.filter(id=> id !== member.user.id)
   }
 
-  addMembers() {
+  async addMembers() {
     let newUsers:number[] = []
     this.users.forEach(user=>{
       if (user.click) {
@@ -81,6 +81,9 @@ export class AddMemberComponent implements OnInit, OnDestroy {
     this.room.usersId = this.room.usersId?.concat(newUsers);
     this.room.adminId = this.room.adminId?.concat(this.newAdminsId);
     this.chatService.updateRoom(this.room, false);
+    newUsers.forEach(id=> {
+      this.chatService.sendToGetRooms(id)
+    })
     this.chatService.displayComponents(false, true, false, true, false, false, false)
   }
 

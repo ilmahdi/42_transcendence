@@ -1,9 +1,8 @@
 import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
-import { Subscription, take } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ChatService } from '../../../services/chat.service';
 import { Room } from 'src/app/models/room.model';
 import { Message } from 'src/app/models/message.model';
-import * as _ from 'lodash';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -24,7 +23,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
 
   rooms:Room[] = []
   color:any = {color:'', name:''}
-  lastMessages: any[] = [];
+  lastMessages: Message[] = [];
   selectedRoom?:Room
 
   constructor(private authService:AuthService, private chatService:ChatService) {
@@ -34,6 +33,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
     window.addEventListener('resize', this.onResize.bind(this));
 
     const subs1:Subscription = this.chatService.getRoomMessage().subscribe(data=>{
+      this.sortConversations(data);
       chatService.chatNotifSource.next(0)
       this.chatService.updateRoomLastMessage(data);
     })
@@ -75,12 +75,34 @@ export class RoomsComponent implements OnInit, OnDestroy {
 
     this.chatService.sendToGetRoomLastMessage(this.userId!)
     const subs4:Subscription = this.chatService.getRoomLastMessage().subscribe(data=> {
+      this.chatService.chatNotifSource.next(0)
       data.sort((a:Message, b:Message)=>a.id! - b.id!)
       data.forEach(data=> {
         this.lastMessages = this.lastMessages.filter(item => !(item.roomId === data.roomId));
         this.lastMessages.push(data)
-        this.lastMessages = _.sortBy(this.lastMessages, 'date');
       })
+
+      // SORT ROOMS CONVERSATIONS BY THE LAST MESSAGE
+      let sortedUsers:Room[] = [];
+      this.lastMessages.sort((a:Message, b:Message)=> b.id! - a.id!)
+      this.lastMessages.forEach(message=> {
+        let room:Room = this.rooms.filter(item=> item.id === message.roomId)[0]
+        if (room)
+          sortedUsers.push(room);
+      })
+      
+      if (sortedUsers.length === this.rooms.length) {
+        this.rooms = sortedUsers
+        this.chatService.updateRooms(sortedUsers);
+      }
+      else {
+        if (sortedUsers.length) {
+          sortedUsers.forEach(room=> this.rooms = this.rooms.filter(item=> item.id !== room.id))
+          let top:Room[] = sortedUsers
+          this.rooms = top.concat(this.rooms)
+        }
+        this.chatService.updateRooms(this.rooms);
+      }
     })
     this.subscriptions.push(subs4)
   }
@@ -100,7 +122,19 @@ export class RoomsComponent implements OnInit, OnDestroy {
     }
     else
       this.color = {color:'', name:''}
+    this.chatService.sendToGetRoomMembers(room);
     this.conversData.emit(room);
+  }
+
+  sortConversations(message:Message) {
+    let newList:Room[] = []
+    const room:Room = this.rooms.filter(item=> item.id === message.roomId)[0];
+    newList.push(room);
+    this.rooms.forEach(item=> {
+      if (item.id !== message.roomId)
+        newList.push(item)
+    })
+    this.chatService.roomsSource.next(newList)
   }
 
   ngOnDestroy(): void {

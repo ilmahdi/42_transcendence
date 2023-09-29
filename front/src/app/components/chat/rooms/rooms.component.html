@@ -16,7 +16,7 @@
         <div style="display: flex;width: 50%;">
             <div *ngFor="let item of lastMessages" >
                 <div *ngIf="item">
-                    <p *ngIf="item && item.roomId === room.id" class="date">{{editeDateFormat(item.date)}}</p>
+                    <p *ngIf="item && item.roomId === room.id" class="date">{{editeDateFormat(item.date!)}}</p>
                 </div>
             </div>
 
