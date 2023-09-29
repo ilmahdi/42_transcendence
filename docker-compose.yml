@@ -8,50 +8,35 @@ services:
       image: postgres:latest
       env_file:
         - ./docker/postgres.env
-      volumes:
-        - /Users/Hp/Desktop/Nouveau dossier (2)/New folder
       ports:
         - 5432:5432
       restart: unless-stopped
 
   # server:
-  #     build:
-  #       context: ./docker
-  #       dockerfile: ./server.dockerfile
+  #     build: ./server
   #     ports:
   #       - 3000:3000
-  #     volumes:
-  #       - server_data:/app
-  #     # env_file:
-  #     #   - ./docker/server.env
+  #     env_file:
+  #       - ./server/.env
   #     depends_on:
   #       - postgres
   #     restart: unless-stopped
 
   # client:
-  #     build:
-  #       context: ./docker
-  #       dockerfile: ./client.dockerfile
+  #     build: ./front
   #     ports:
-  #       - 8080:8080
-  #     volumes:
-  #       - client_data:/app
-  #     env_file:
-  #       - ./docker/client.env
+  #       - 4200:4200
   #     depends_on:
   #       - server
   #     restart: unless-stopped
+  #     volumes: 
+  #       - ./front:./app
+  #       - /app/node_modules
 
-
-    # server_data:
-    #     driver: local
-    #     driver_opts:
-    #         o: "bind"
-    #         type: "none"
-    #         device: "/Users/eabdelha/Desktop/web/ft_transcendence/server"
-    # client_data:
-    #     driver: local
-    #     driver_opts:
-    #         o: "bind"
-    #         type: "none"
-    #         device: "./client"
+# volumes:
+#     postgres_data:
+#         driver: local
+#         driver_opts:
+#             o: "bind"
+#             type: "none"
+#             device: "/goinfre/eabdelha/docker/Volumes"
