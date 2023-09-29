@@ -5,38 +5,51 @@ networks:
         name: ft_transcendence
 services:
   postgres:
-      image: postgres:latest
+      image: postgres
       env_file:
         - ./docker/postgres.env
       ports:
         - 5432:5432
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
       restart: unless-stopped
 
-  # server:
-  #     build: ./server
-  #     ports:
-  #       - 3000:3000
-  #     env_file:
-  #       - ./server/.env
-  #     depends_on:
-  #       - postgres
-  #     restart: unless-stopped
+  server:
+      build: ./server
+      ports:
+        - 3000:3000
+      env_file:
+        - ./server/.env
+      depends_on:
+        - postgres
+      restart: unless-stopped
 
-  # client:
-  #     build: ./front
-  #     ports:
-  #       - 4200:4200
-  #     depends_on:
-  #       - server
-  #     restart: unless-stopped
-  #     volumes: 
-  #       - ./front:./app
-  #       - /app/node_modules
+  client:
+      build: ./front
+      ports:
+        - 4200:4200
+      depends_on:
+        - server
+        - postgres
+      restart: unless-stopped
 
-# volumes:
-#     postgres_data:
-#         driver: local
-#         driver_opts:
-#             o: "bind"
-#             type: "none"
-#             device: "/goinfre/eabdelha/docker/Volumes"
+volumes:
+    postgres_data:
+        driver: local
+        driver_opts:
+            o: "bind"
+            type: "none"
+            device: "/goinfre/eabdelha/docker/Volumes/db"
+    
+    front_data:
+        driver: local
+        driver_opts:
+            o: "bind"
+            type: "none"
+            device: "/goinfre/eabdelha/home/42_transcendence/front"
+    server_data:
+        driver: local
+        driver_opts:
+            o: "bind"
+            type: "none"
+            device: "/goinfre/eabdelha/home/42_transcendence/server"

@@ -1,15 +1,19 @@
-FROM node:20-alpine3.16
+FROM node:18
 
 WORKDIR /app
 
-COPY package*.json  ./
+COPY package.json ./
 
-
+RUN npm cache clean --force
+RUN rm -rf dist
 RUN npm install
-RUN npm install -g @angular/cli
+RUN npm i -g @angular/cli
 
 COPY . .
 
+RUN ng build 
+
 EXPOSE 4200
 
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+CMD ["ng", "serve", "--configuration", "production", "--host", "0.0.0.0"]
+

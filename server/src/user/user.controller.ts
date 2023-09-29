@@ -25,7 +25,7 @@ export class UserController {
     @UseGuards(JwtGuard)
     getMyData(@Req() req :Request) : any {
         return req.user;
-        
+
     }
 
     @Get("short")
