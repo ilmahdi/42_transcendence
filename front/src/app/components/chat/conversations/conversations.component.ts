@@ -101,6 +101,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     const subs4:Subscription = this.chatService.getRoomMessage().subscribe(data=>{
       this.roomMessage.push(data)
       this.lateRoomMessage = this.chatService.calculatTimeBetweenMessages(this.roomMessage);
+      this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
     })
     this.subsciptions.push(subs4)
 
@@ -132,7 +133,11 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     let date = new Date()
     
     const msg = {senderId, receiverId, message, date}
-    if (!message) return;
+    if (msg.message)
+      if (!message.trimStart())
+        return;
+    else
+      return;
 
     const subs:Subscription = this.chatService.getUsers().subscribe(friends=>{
       friends.forEach(friend=>{
@@ -154,8 +159,12 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
       date:new Date(), 
       readed:false,
       roomId:this.roomConvers[0].id,
-      mutes:this.roomConvers[0].mutes}   
-    if (!msg.message) return;
+      mutes:this.roomConvers[0].mutes}
+    if (msg.message)
+      if (!msg.message.trimStart())
+        return;
+    else
+      return;
     this.chatService.sendToGetRoomMembers(this.roomConvers[0])
     const subs1:Subscription = this.chatService.getRoomMembers().pipe(take(1)).subscribe(data=> {
       let found:boolean = false

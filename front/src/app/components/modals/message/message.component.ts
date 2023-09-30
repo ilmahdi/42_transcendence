@@ -27,6 +27,7 @@ export class MessageComponent {
     this.closeMeEvent.emit();
   }
   send() {
-    this.confirmEvent.emit(this.message);
+    if (this.message.trimStart())
+      this.confirmEvent.emit(this.message);
   }
 }
