@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Put, Query, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Patch, Post, Put, Query, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Message } from './utils/models/message.interface';
 import { MessageBody } from '@nestjs/websockets';
 import { Observable, from, of } from 'rxjs';
@@ -27,40 +27,26 @@ export const storage = {
 export class ChatController {
     constructor(private privateChatService:PrivateChatService, private roomChatService:RoomChatService) {}
 
-  @Post('messages')
-  async messages(@Body() msg:Message) {
-      this.privateChatService.saveMessage(msg)
-      // await this.chatService.trigger('chat', 'message', msg);
-      return [];
-  }
-
-  @Get('getMessages')
-  getMessages() {
-    return this.privateChatService.getMessages()
-  }
-
-  @Post('getConversation')
-  getConversation(@Body() data:any) {
-    return this.privateChatService.getConversation(data.senderId, data.receiverId);
-  }
-
-  @Post('notReaded')
-  notReaded(@Body() id:number) {
-    return this.privateChatService.getUnreadMessageCountsBySenderId(id)
-  }
-
   @Get('search')
   async searchConversation(@Query('query') query:string) {
-    const users = await this.privateChatService.searchConversation(query);
-    return users;
+    try {
+      const users = await this.privateChatService.searchConversation(query);
+      return users;
+    } catch {
+      throw new HttpException('Error searching', HttpStatus.BAD_REQUEST)
+    }
   }
 
   ////////////////////////////////////////// ROMMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
   @Post('createRoom')
   async createRoom(@Body() room:Room) {
-    const newRoom:Room = await this.roomChatService.createRoom(room);
-    return newRoom
+    try {
+      const newRoom:Room = await this.roomChatService.createRoom(room);
+      return newRoom
+    } catch {
+      throw new HttpException('can not create room', HttpStatus.NOT_ACCEPTABLE);
+    }
   }
 
   @Get('searchRoom')

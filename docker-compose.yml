@@ -5,7 +5,6 @@ networks:
         name: ft_transcendence
 services:
   postgres:
-      init: true
       image: postgres
       env_file:
         - ./docker/postgres.env
@@ -15,26 +14,24 @@ services:
         - postgres_data:/var/lib/postgresql/data
       restart: on-failure
 
-  server:
-      init: true
-      build: ./server
-      ports:
-        - 3000:3000
-      env_file:
-        - ./server/.env
-      depends_on:
-        - postgres
-      restart: on-failure
+  # server:
+  #     build: ./server
+  #     ports:
+  #       - 3000:3000
+  #     env_file:
+  #       - ./server/.env
+  #     depends_on:
+  #       - postgres
+  #     restart: on-failure
 
-  client:
-      init: true
-      build: ./front
-      ports:
-        - 4200:4200
-      depends_on:
-        - server
-        - postgres
-      restart: on-failure
+  # client:
+  #     build: ./front
+  #     ports:
+  #       - 4200:4200
+  #     depends_on:
+  #       - server
+  #       - postgres
+  #     restart: on-failure
 
 volumes:
     postgres_data:

@@ -99,6 +99,7 @@ export class UserService {
     }
 
     async findFiendList(userId :number) {
+
         try {
             
             const user = await this.prismaService.userAccount.findUnique({

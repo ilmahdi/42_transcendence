@@ -9,7 +9,11 @@ import { RoomChatService } from './utils/services/roomChat.service';
 import { ConnectionGateway } from 'src/common/gateways/connection.gateway';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-@WebSocketGateway({cors: {origin: 'http://localhost:4200'}})
+@WebSocketGateway({
+  cors: {
+      origin: [process.env.FONTEND_URL],
+  }
+})
 export class ChatGateway{
   @WebSocketServer() server: Server
 
@@ -28,10 +32,12 @@ export class ChatGateway{
 
   @SubscribeMessage('privateMessage')
   async handlePrivateMessage(client: Socket, data: any) {
-    const message = await this.privateChatService.saveMessage(data.message)
-    if (!message.sent)
-      return;
-    const senders = this.connectionGateway.connectedUsersById[data.message.senderId]
+    try {
+      const message = await this.privateChatService.saveMessage(data.message)
+      
+      if (!message.sent)
+        return;
+      const senders = this.connectionGateway.connectedUsersById[data.message.senderId]
       if (senders)
         senders.forEach(id=>{
           this.server.to(id).emit('recMessage', message.message);
@@ -41,6 +47,9 @@ export class ChatGateway{
         reciver.forEach(id=>{
           this.server.to(id).emit('recMessage', message.message);
         })
+    } catch (error) {
+        this.server.to(client.id).emit('errorEvent', { message: 'Error while sending private message.' });
+    }
   }
 
 
@@ -98,11 +107,15 @@ export class ChatGateway{
 
   @SubscribeMessage('getRooms')
   async getRooms(client:Socket, id:number) {
-    const data = await this.roomChatService.getRooms(id)
-    const sockIds = this.connectionGateway.connectedUsersById[id]
-    sockIds.forEach(id=> {
-      this.server.to(id).emit('recRooms', data);
-    })
+    try {
+      const data = await this.roomChatService.getRooms(id)
+      const sockIds = this.connectionGateway.connectedUsersById[id]
+      sockIds.forEach(id=> {
+        this.server.to(id).emit('recRooms', data);
+      })
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: 'Error while getting rooms.' });
+    }
   }
 
   @SubscribeMessage('getRoomById')
@@ -112,31 +125,35 @@ export class ChatGateway{
 
   @SubscribeMessage('roomMessage')
   async roomMessage(client:Socket, data:{senderId:number, room:Room, message:Message}) {
-    const isSaved:boolean = await this.roomChatService.saveMessage(data);
-    if (!isSaved)
-      return
-    let usersId:(number[]) = data.room.usersId;
-    
-    usersId.forEach(async id=> {
-      // CHECK IF THERE IS SOMEONE IN THE ROOM HAS BLOCKED YOU TO SKIP HIM
-      let isBlocked:boolean = false
-      if (id !== data.senderId)
-        isBlocked = await this.roomChatService.getBlacklist(data.senderId, id);
-      if (!isBlocked) {
-        this.userService.getUserById(id).subscribe(async user=>{
+    try {
+      const isSaved:boolean = await this.roomChatService.saveMessage(data);
+      if (!isSaved)
+        return
+      let usersId:(number[]) = data.room.usersId;
+      
+      usersId.forEach(async id=> {
+        // CHECK IF THERE IS SOMEONE IN THE ROOM HAS BLOCKED YOU TO SKIP HIM
+        let isBlocked:boolean = false
+        if (id !== data.senderId)
+          isBlocked = await this.roomChatService.getBlacklist(data.senderId, id);
+        if (!isBlocked) {
+          this.userService.getUserById(id).subscribe(async user=>{
 
-          // CHECK IF THE USER IS ACTUALLY EXIST IN THE ROOM BEFORE GETING THE MESSAGE
-          let actualRoom:Room = await this.prismaService.room.findFirst({
-            where: {id :data.room.id}
-          })
-          if (actualRoom.usersId.includes(id)) {
-            this.connectionGateway.connectedUsersById[user.id].forEach(id=>{
-              this.server.to(id).emit('recRoomMessage', data.message);
+            // CHECK IF THE USER IS ACTUALLY EXIST IN THE ROOM BEFORE GETING THE MESSAGE
+            let actualRoom:Room = await this.prismaService.room.findFirst({
+              where: {id :data.room.id}
             })
-          }
-        })
-      }
-    })
+            if (actualRoom.usersId.includes(id)) {
+              this.connectionGateway.connectedUsersById[user.id].forEach(id=>{
+                this.server.to(id).emit('recRoomMessage', data.message);
+              })
+            }
+          })
+        }
+      })
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: 'Error while sending room message.' });
+    }
   }
 
   @SubscribeMessage('roomConversation')
@@ -147,11 +164,15 @@ export class ChatGateway{
 
   @SubscribeMessage('getRoomLastMessage')
   async getRoomLastMessage(client:Socket, id:number) {
-    const data = await this.roomChatService.getMessagesByUserId(id)
-      if (!data.length)
-        client.emit('recRoomLastMessage', [{id:0, senderId:id, receiverId:id, message:"Welcome", date:new Date(), roomId:1}])
-      else
-        client.emit('recRoomLastMessage', data)
+    try {
+      const data = await this.roomChatService.getMessagesByUserId(id)
+        if (!data.length)
+          client.emit('recRoomLastMessage', [{id:0, senderId:id, receiverId:id, message:"Welcome", date:new Date(), roomId:1}])
+        else
+          client.emit('recRoomLastMessage', data)
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: 'Error while getting last message.' });
+    }
   }
 
   @SubscribeMessage('getOtherRooms')

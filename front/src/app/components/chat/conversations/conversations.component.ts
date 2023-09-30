@@ -133,10 +133,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     let date = new Date()
     
     const msg = {senderId, receiverId, message, date}
-    if (msg.message)
-      if (!message.trimStart())
-        return;
-    else
+    if (!msg.message || !msg.message.trimStart())
       return;
 
     const subs:Subscription = this.chatService.getUsers().subscribe(friends=>{

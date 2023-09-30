@@ -4,11 +4,8 @@
 
 export const environment = {
   production: false,
-  baseApiUrl: 'http://localhost:3000/api',
-  apiUrl: 'http://localhost:3000',
-  apiUrlAuth: 'http://localhost:3000/api/auth/login/42/',
-  uploadUrl: 'http://localhost:3000/api/user/avatar/',
-  endpointHost:'http://localhost:3000/'
+  apiUrl: 'http://10.13.9.4:3000',
+  uploadUrl: 'http://10.13.9.4:3000/api/user/avatar/',
 };
 
 /*

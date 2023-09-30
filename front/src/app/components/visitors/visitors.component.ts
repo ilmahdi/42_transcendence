@@ -20,7 +20,7 @@ export class VisitorsComponent implements OnInit {
     private authService: AuthService,
   ) { }
 
-  private apiUrlAuth :string = environment.apiUrlAuth;
+  private apiUrlAuth :string = environment.apiUrl + "/api/auth/login/42/";
   public firstLogin :boolean = false;
 
   public isTwoFaEnabled :boolean = false;

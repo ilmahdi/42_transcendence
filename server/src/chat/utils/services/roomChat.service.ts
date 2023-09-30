@@ -95,8 +95,7 @@ export class RoomChatService {
         },
       });
     } catch (error) {
-      // Handle errors (e.g., database connection errors)
-      throw new Error('Could not retrieve messages');
+      throw new Error('Could not create room');
     }
   }
 
