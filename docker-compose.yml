@@ -5,6 +5,7 @@ networks:
         name: ft_transcendence
 services:
   postgres:
+      init: true
       image: postgres
       env_file:
         - ./docker/postgres.env
@@ -12,9 +13,10 @@ services:
         - 5432:5432
       volumes:
         - postgres_data:/var/lib/postgresql/data
-      restart: unless-stopped
+      restart: on-failure
 
   server:
+      init: true
       build: ./server
       ports:
         - 3000:3000
@@ -22,34 +24,17 @@ services:
         - ./server/.env
       depends_on:
         - postgres
-      restart: unless-stopped
+      restart: on-failure
 
   client:
+      init: true
       build: ./front
       ports:
         - 4200:4200
       depends_on:
         - server
         - postgres
-      restart: unless-stopped
+      restart: on-failure
 
 volumes:
     postgres_data:
-        driver: local
-        driver_opts:
-            o: "bind"
-            type: "none"
-            device: "/goinfre/eabdelha/docker/Volumes/db"
-    
-    front_data:
-        driver: local
-        driver_opts:
-            o: "bind"
-            type: "none"
-            device: "/goinfre/eabdelha/home/42_transcendence/front"
-    server_data:
-        driver: local
-        driver_opts:
-            o: "bind"
-            type: "none"
-            device: "/goinfre/eabdelha/home/42_transcendence/server"
