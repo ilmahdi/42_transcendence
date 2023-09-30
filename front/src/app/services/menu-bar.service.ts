@@ -51,11 +51,11 @@ export class MenuBarService {
   }
   deleteNotifications(notifications :number[]) {
 
-    return this.http.patch<any>(`${this.apiUrl}/api/user/notify/deletes`, notifications ,this.getHeaders());
+    return this.http.patch<any>(`${this.apiUrl}/api/user/notify/deletes`, {notificationIds: notifications} ,this.getHeaders());
   }
   updateSeenNotifications(notifications :number[]) {
 
-    return this.http.patch<any>(`${this.apiUrl}/api/user/notify/update-seen`, notifications ,this.getHeaders());
+    return this.http.patch<any>(`${this.apiUrl}/api/user/notify/update-seen`, {notificationIds: notifications} ,this.getHeaders());
   }
 
   

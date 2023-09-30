@@ -48,8 +48,16 @@ export class UserService {
                 username,
             },
         })
-        // if (!user)
-        //     throw new HttpException('User not found', HttpStatus.CONFLICT);
+        return user;
+    }
+    async findUserByUsernameSafe(username: string) {
+        const user = await this.prismaService.userAccount.findUnique({
+            where: {
+                username,
+            },
+        })
+        if (!user)
+            throw new HttpException('User not found', HttpStatus.CONFLICT);
         return user;
     }
     async findManyUsers(query: string) {

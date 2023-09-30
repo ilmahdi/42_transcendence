@@ -512,6 +512,10 @@ export class GameComponent implements AfterViewInit {
 
   ngOnDestroy(): void {
 
+    if (!this.gameService.isOnePlayer) {
+      this.emitStoreGame();
+    }
+
     this.socket.emit("broadcastOnline", this.gameService.playerId1);
     cancelAnimationFrame(this.animationFrameId);
     this.gameService.setInGameMode(false);

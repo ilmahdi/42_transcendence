@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { NotifyService } from './notify.service';
 import { JwtGuard } from 'src/auth/utils/guards/jwt.guard';
-import { NotificationCreateDto } from './utils/dtos/create-notification.dto';
+import { NotificationCreateDto, NotificationsArrayDto } from './utils/dtos/create-notification.dto';
 
 @Controller('user/notify')
 export class NotifyController {
@@ -41,17 +41,17 @@ export class NotifyController {
   }
   @UseGuards(JwtGuard)
   @Patch('deletes')
-  async deleteNotifications(@Body() notificationIds: number[]){
+  async deleteNotifications(@Body() notificationsArrayDto: NotificationsArrayDto){
 
-    const deletedNotifications = await this.notifyService.deleteNotifications(notificationIds);
+    const deletedNotifications = await this.notifyService.deleteNotifications(notificationsArrayDto.notificationIds);
 
     return deletedNotifications;
   }
   @UseGuards(JwtGuard)
   @Patch('update-seen')
-  async updateSeenNotifications(@Body() notificationIds: number[]){
+  async updateSeenNotifications(@Body() notificationsArrayDto: NotificationsArrayDto){
 
-    const updatedNotifications = await this.notifyService.updateSeenNotifications(notificationIds);
+    const updatedNotifications = await this.notifyService.updateSeenNotifications(notificationsArrayDto.notificationIds);
 
     return updatedNotifications;
   }

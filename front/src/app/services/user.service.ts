@@ -77,7 +77,7 @@ export class UserService {
   changeFriendshipStatus (frinedship_id :number, friendshipStatus :string) : Observable<any> {
     return this.http.post<any>(
           `${this.apiUrl}/api/user/friends/change/${frinedship_id}`, 
-          {friendshipStatus} ,this.getHeaders(),
+          {friendship_status: friendshipStatus} ,this.getHeaders(),
       );
   }
 
