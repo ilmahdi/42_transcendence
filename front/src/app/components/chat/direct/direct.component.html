@@ -1,6 +1,7 @@
 <div class="convers">
     <div *ngFor="let f of users" class="conver" (click)="openConversation(f, true)" [style.backgroundColor]="(color.name === f.username)? color.color : ''">
-        <img [src]="f.avatar" alt="avatar" id="img">
+        <img [src]="f.avatar" alt="avatar" id="img"
+        onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''">
         <div style="width: 30%;margin-left: 2px;">
             <p id="name">{{f.username}}</p>
 

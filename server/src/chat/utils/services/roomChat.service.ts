@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Room } from '../models/room.interface';
 import { Observable, forkJoin, from, map, switchMap } from 'rxjs';
 import { Message } from '../models/message.interface';
@@ -33,11 +33,9 @@ export class RoomChatService {
       if (item.userId === data.message.senderId) {
         const then: Date = new Date(item.updatedAt);
         const now: Date = new Date();
-        console.log(then, '          ', now);
 
         const timeDifference = now.getTime() - then.getTime();
 
-        console.log(timeDifference, '        ', item.during * 60000);
         if (timeDifference < item.during * 60000) {
           out = true;
           break;
@@ -45,6 +43,8 @@ export class RoomChatService {
       }
     }
 
+    console.log(out);
+    
     if (out) {
       return false;
     }
@@ -82,6 +82,8 @@ export class RoomChatService {
   async createRoom(room: Room) {
     try {
       if (room.password) room.password = await this.hashPassword(room.password);
+      // if (!room.imagePath)
+      //   return
       return await this.prismaService.room.create({
         data: {
           id: room.id,
@@ -335,25 +337,29 @@ export class RoomChatService {
   async getRoomMembers(
     room: Room,
   ): Promise<{ user: UserModel; type: string }[]> {
-    const updatedRoom = await this.prismaService.room.findFirst({
-      where: { id: room.id },
-    });
+    try {
+      const updatedRoom = await this.prismaService.room.findFirst({
+        where: { id: room.id },
+      });
 
-    const userIds = updatedRoom.usersId;
-    const adminIds = updatedRoom.adminId;
+      const userIds = updatedRoom.usersId;
+      const adminIds = updatedRoom.adminId;
 
-    const usersWithTypes: Observable<{ user: UserModel; type: string }>[] = [];
+      const usersWithTypes: Observable<{ user: UserModel; type: string }>[] = [];
 
-    userIds.forEach(async (id) => {
-      const userType = adminIds.includes(id) ? 'admin' : 'user';
-      const userObservable = this.userService
-        .getUserById(id)
-        .pipe(map((user) => ({ user, type: userType })));
-      usersWithTypes.push(userObservable);
-    });
+      userIds.forEach(async (id) => {
+        const userType = adminIds.includes(id) ? 'admin' : 'user';
+        const userObservable = this.userService
+          .getUserById(id)
+          .pipe(map((user) => ({ user, type: userType })));
+        usersWithTypes.push(userObservable);
+      });
 
-    const result = await forkJoin(usersWithTypes).toPromise();
-    return result;
+      const result = await forkJoin(usersWithTypes).toPromise();
+      return result;
+    } catch (error) {
+      throw Error(error)
+    }
   }
 
   async changeRoomType(data: {room:Room, withPasswd:boolean}) {

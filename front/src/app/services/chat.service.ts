@@ -152,8 +152,10 @@ export class ChatService {
   }
 
   updateUsers(users:IUserDataShort[]) {
-    users = users.filter(item=> item.id !== this.userId)
-    this.usersSource.next(users);
+    if (users.length > 0) {
+      users = users.filter(item=> item.id !== this.userId)
+      this.usersSource.next(users);
+    }
   }
 
   roomFormular(statue:boolean) {

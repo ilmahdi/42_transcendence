@@ -78,6 +78,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     this.subsciptions.push(subs1)
 
     const subs2:Subscription = this.chatService.getNewMessage().subscribe(data=>{
+      
       this.messages.push(data)
 
       // CHECK IF THE NEW MESSAGE IS SENT AFTER 10 MINUTES AFTER THE LAST MESSAGE
@@ -89,7 +90,8 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     const subs:Subscription = this.chatService.getRoomConversation().subscribe((data) => {
       data.sort((a:Message, b:Message)=>a.id! - b.id!)
       this.chatService.updateRoomConversation(data);
-      this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
+      if (this.roomConvers[0])
+        this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
     })
     const subs3:Subscription = this.chatService.roomConversation$.subscribe(data=>{
       this.roomMessage = data
@@ -99,15 +101,21 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     this.subsciptions.push(subs3)
 
     const subs4:Subscription = this.chatService.getRoomMessage().subscribe(data=>{
-      this.roomMessage.push(data)
-      this.lateRoomMessage = this.chatService.calculatTimeBetweenMessages(this.roomMessage);
-      this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
+      if (data.roomId === this.roomConvers[0].id) {
+        if (this.roomConvers[0])
+          this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
+        this.roomMessage.push(data)
+        this.lateRoomMessage = this.chatService.calculatTimeBetweenMessages(this.roomMessage);
+      }
     })
     this.subsciptions.push(subs4)
 
     if (this.roomConvers.length) {
-      this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
+
+      if (this.roomConvers[0])
+        this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
       this.chatService.getRoomMembers().subscribe(data=>{
+        // -------------------------------------------------------- \\
         this.users = []
         data.forEach(member=>this.users.push(member.user));
       })
@@ -157,12 +165,11 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
       readed:false,
       roomId:this.roomConvers[0].id,
       mutes:this.roomConvers[0].mutes}
-    if (msg.message)
-      if (!msg.message.trimStart())
+      if (!msg.message || !msg.message.trimStart())
         return;
-    else
-      return;
-    this.chatService.sendToGetRoomMembers(this.roomConvers[0])
+  
+    if (this.roomConvers[0])
+      this.chatService.sendToGetRoomMembers(this.roomConvers[0])
     const subs1:Subscription = this.chatService.getRoomMembers().pipe(take(1)).subscribe(data=> {
       let found:boolean = false
       data.forEach(item=>{

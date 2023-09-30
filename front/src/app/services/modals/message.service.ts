@@ -35,8 +35,6 @@ export class MessageService {
     this.componentRef.instance.confirmEvent.subscribe((data:string) => {
       const message:Message = {senderId:this.loggedInUserId, receiverId:receiver?.id, message:data, roomId:-1, date:new Date()}
       this.chatService.sendNewMessage(message, receiver)
-      console.log(message);
-      
       this.send()
     });
     this.componentSubscriber = new Subject<string>();

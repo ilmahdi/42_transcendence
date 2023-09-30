@@ -18,6 +18,7 @@
         </form>
         <p id="name">{{room.name}}</p>
         <p id="type" *ngIf="!(protectSelect && room === roomWaitForPassword)">{{room.type}}</p>
-        <img [src]="room.imagePath">
+        <img [src]="room.imagePath"
+        onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''">
     </div>
 </div>
