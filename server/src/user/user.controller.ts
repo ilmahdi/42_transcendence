@@ -9,7 +9,7 @@ import { Request, Response } from "express";
 import * as fs from 'fs';
 import { UpdateUserDto } from "./utils/dtos/update-user.dto";
 import { CreateUserDto } from "./utils/dtos/create-user.dto";
-import { FrinedshipDto } from "./utils/dtos/friendship.dto";
+import { FrinedshipDto, FrinedshipStatusDto } from "./utils/dtos/friendship.dto";
 import { log } from "console";
 import { FriendshipStatus } from "@prisma/client";
 
@@ -25,7 +25,7 @@ export class UserController {
     @UseGuards(JwtGuard)
     getMyData(@Req() req :Request) : any {
         return req.user;
-        
+
     }
 
     @Get("short")
@@ -102,9 +102,12 @@ export class UserController {
     
     @UseGuards(JwtGuard)
     @Get("data/:username")
-    getUser(@Param('username') username: string) : any {
+    async getUser(@Param('username') username: string) {
         
-        return this.userService.findUserByUsername(username);
+        const user = await this.userService.findUserByUsernameSafe(username);
+
+       
+        return user;
         
     }
 
@@ -168,9 +171,9 @@ export class UserController {
     @Post('friends/change/:friendshipId')
     async changeFriend(
       @Param('friendshipId') friendshipId: number, 
-      @Body("friendshipStatus") friendshipStatus: FriendshipStatus) {
+      @Body() FrinedshipStatusDto: FrinedshipStatusDto) {
       
-      const friendship = await this.userService.changeFriendshipStatus(friendshipId, friendshipStatus);
+      const friendship = await this.userService.changeFriendshipStatus(friendshipId, FrinedshipStatusDto.friendship_status);
       return friendship;
       
     }

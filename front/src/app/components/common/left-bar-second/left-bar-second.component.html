@@ -1,3 +1,5 @@
+<div #confirmModal></div>
+
 <div class="overlay" (click)="toggleLeftBar()"></div>
 
 <ul class="left-bar">
@@ -14,19 +16,13 @@
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/home.svg#icon-home"></use>
             </svg>
-            <span class="lb-sec-item-text"> Home </span>
+            <span class="lb-sec-item-text"> Play </span>
         </li>
-        <li class="lb-sec-item" routerLink="/profile" (click)="toggleLeftBar()">
+        <li class="lb-sec-item" [routerLink]="['/profile', username]"  (click)="toggleLeftBar()">
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/profile.svg#icon-profile"></use>
             </svg>
             <span class="lb-sec-item-text"> Profile </span>
-        </li>
-        <li class="lb-sec-item" routerLink="/game" (click)="toggleLeftBar()">
-            <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="./assets/icons/play.svg#icon-play"></use>
-            </svg>
-            <span class="lb-sec-item-text"> Play </span>
         </li>
         <li class="lb-sec-item" routerLink="/chat" (click)="toggleLeftBar()">
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
@@ -49,13 +45,13 @@
     </div>
     <div class="lb-sec-all lb-sec-three">
         
-        <li class="lb-sec-item" routerLink="/setting" (click)="toggleLeftBar()">
+        <li class="lb-sec-item" routerLink="/settings" (click)="toggleLeftBar()">
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/setting.svg#icon-setting"></use>
             </svg>
             <span class="lb-sec-item-text"> Settings </span>
         </li>
-        <li class="lb-sec-item" routerLink="/signout" (click)="toggleLeftBar()">
+        <li class="lb-sec-item" (click)="openConfirmModal()">
             <svg class="lb-sec-item-icon" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="./assets/icons/signout.svg#icon-signout"></use>
             </svg>

@@ -213,17 +213,31 @@ export class GameGateway {
   handleStoreGame(client: Socket, userIds :{ player1Id: string, player2Id: string }) {
     try {
       const game = this.gameService.games[this.getGameId(userIds.player1Id, userIds.player2Id)]
-      if (game && game.isGameEnded) {
+      if (game) {
         if (!game.isGameStored) {
           game.isGameStored = true;
+
+          let score1 :number;
+          let score2 :number;
+
+          if (game.isGameEnded) {
+
+            score1 = game.paddles[this.connectionGateway.inGameUsersById[userIds.player1Id]].score;
+            score2 = game.paddles[this.connectionGateway.inGameUsersById[userIds.player2Id]].score;
+          }
+          else {
+            score1 = 0;
+            score2 = 3;
+          }
+
           this.gameService.storeGame({ 
             player1: {
               id: userIds.player1Id,
-              score: game.paddles[this.connectionGateway.inGameUsersById[userIds.player1Id]].score
+              score: score1,
             }, 
             player2: {
               id: userIds.player2Id,
-              score: game.paddles[this.connectionGateway.inGameUsersById[userIds.player2Id]].score
+              score: score2,
             },
             start_time: game.start_time,
           }).catch(() => {

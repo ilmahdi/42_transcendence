@@ -1,12 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { WebSocketServer } from '@nestjs/websockets';
-import { error } from 'console';
 import { PrismaService } from 'nestjs-prisma';
-import { Server, Socket } from 'socket.io';
-import { IHistory, IPlayer } from 'src/temporarius/utils/interfaces/history.interface';
-import { NotifyService } from 'src/user/notify/notify.service';
+import { Server } from 'socket.io';
 import { NotificationCreateDto } from 'src/user/notify/utils/dtos/create-notification.dto';
 import { UserService } from 'src/user/user.service';
+import { IHistory, IPlayer } from './utils/interfaces/history.interface';
+import { NotifyService } from 'src/user/notify/notify.service';
 
 @Injectable()
 export class GameService {

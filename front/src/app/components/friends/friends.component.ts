@@ -59,8 +59,6 @@ export class FriendsComponent implements OnInit {
 
   async handlePlayClick(index :number) {
 
-    console.log(index)
-
     try {
       const mapId = await firstValueFrom(this.confirmService.open(this.entry, CustomizeGameComponent));
       

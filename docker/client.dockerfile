@@ -1,11 +1,14 @@
-FROM node:20-alpine3.16
+FROM node:14
 
-# RUN npm install -g npm
+COPY package*.json  ./
 
-WORKDIR /app
 
-# RUN npm i -g @nestjs/cli
+RUN npm install
 
-# EXPOSE 8080
+COPY . .
 
-ENTRYPOINT npm install --silent && npm run start:dev
+RUN ng build
+
+EXPOSE 4200
+
+CMD ["ng", "serve", "--host", "0.0.0.0"]

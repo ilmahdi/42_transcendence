@@ -1,12 +1,11 @@
 import { Body, Controller, Get, NotFoundException, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { TwoFaService } from './two-fa.service';
 import { JwtGuard } from '../utils/guards/jwt.guard';
+import { TowFaDto } from '../utils/dtos/two-fa.dto';
 
 @Controller('auth/twofa')
 export class TwoFaController {
   constructor(private readonly twoFaService: TwoFaService) {}
-
-
 
 
 
@@ -21,18 +20,18 @@ export class TwoFaController {
 
   @Post('enable/:userId')
   @UseGuards(JwtGuard)
-  async enableTwoFa(@Param('userId') userId: number, @Body('userToken') userToken: string): Promise<any> {
+  async enableTwoFa(@Param('userId') userId: number, @Body() towFaDto: TowFaDto): Promise<any> {
 
-      const enabled = await this.twoFaService.enableTwoFa(userId, userToken);
+      const enabled = await this.twoFaService.enableTwoFa(userId, towFaDto.userToken);
       return enabled;
     
   }
   
   @Post('validate/:userId')
   @UseGuards(JwtGuard)
-  async validateTwoFa(@Param('userId') userId: number, @Body('userToken') userToken: string): Promise<any> {
+  async validateTwoFa(@Param('userId') userId: number, @Body() towFaDto: TowFaDto): Promise<any> {
     
-    const validated = await this.twoFaService.validateTwoFa(userId, userToken);
+    const validated = await this.twoFaService.validateTwoFa(userId, towFaDto.userToken);
     return validated;
     
   }
