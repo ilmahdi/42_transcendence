@@ -89,8 +89,6 @@ export class OtherRoomsComponent implements OnInit, OnDestroy{
             }
             else {
               const actualRooms:Room[] = this.chatService.roomsSource.value.filter(item=> item.id !== actualRoom.id)
-              console.log("SAAD");
-              
               this.chatService.updateRooms(actualRooms)
             }
           }

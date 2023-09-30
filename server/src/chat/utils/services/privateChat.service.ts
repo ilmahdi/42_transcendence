@@ -41,7 +41,7 @@ export class PrivateChatService {
           readed: false,
           roomId: message.roomId,
         },
-        // include: {sender: true, receiver: true}
+        include: {sender: true, receiver: true}
       });
 
       return { sent: true, message: msg };

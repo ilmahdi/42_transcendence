@@ -126,6 +126,10 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
         });
     }
 
+    if (!image) {
+      image = ''
+    }
+
     let room = {adminId:adminsId, name:this.room.value.name, usersId:usersId, imagePath:image};
     if (usersId.length > 1 && this.room.value.name) {
       this.roomFormular = room;

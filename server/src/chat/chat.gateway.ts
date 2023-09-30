@@ -183,8 +183,12 @@ export class ChatGateway{
 
   @SubscribeMessage('getRoomMembers')
   async getRoomMembers(client:Socket, room:Room) {
-    const data = await this.roomChatService.getRoomMembers(room)
-    client.emit('recRoomMembers', data)
+    try {
+      const data = await this.roomChatService.getRoomMembers(room)
+      client.emit('recRoomMembers', data)
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: 'Error while getting last message.' });
+    }
   }
 
   @SubscribeMessage('updateRoom')

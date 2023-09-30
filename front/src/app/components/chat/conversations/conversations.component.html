@@ -7,7 +7,8 @@
         <div class="header">
             <div style="width: 90%;display: flex;">
                 <div class="fa fa-angle-double-left" (click)="getConversEvent()"></div>
-                <img [src]="userEmitted[0].avatar" alt="avatar" (click)="openProfile(userEmitted[0])" style="cursor: pointer;">
+                <img [src]="userEmitted[0].avatar" alt="avatar" (click)="openProfile(userEmitted[0])" style="cursor: pointer;"
+                onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''">
                 <span id="conv">Conversation with <span style="font-weight: bolder;">{{userEmitted[0].username}}</span></span>
             </div>
             <svg class="play" xmlns="http://www.w3.org/2000/svg" (click)="handlePlayClick()">
@@ -50,7 +51,8 @@
         <div class="header">
             <div style="width: 90%;display: flex;">
                 <div class="fa fa-angle-double-left" (click)="getConversEvent()"></div>
-                <img [src]="roomConvers[0].imagePath" alt="avatar">
+                <img [src]="roomConvers[0].imagePath" alt="avatar"
+                onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''">
                 <span id="conv">Conversation in <span style="font-weight: bolder;">{{roomConvers[0].name}}</span></span>
             </div>
             <div class="options" (click)="openOptions()">
@@ -71,7 +73,8 @@
                     <div *ngFor="let user of users">
                         <div class="username" *ngIf="userId !== message.senderId && user.id !== userId && user.id === message.senderId">{{user.username}}</div>
                         <div class="senderImg" *ngIf="userId !== message.senderId && user.id !== userId && user.id === message.senderId">
-                            <img [src]="user.avatar" alt="avatar" (click)="openProfile(user)" style="cursor: pointer;">
+                            <img [src]="user.avatar" alt="avatar" (click)="openProfile(user)" style="cursor: pointer;"
+                            onerror="this.src='./assets/imgs/blank_profile.png'; this.style.display=''">
                         </div>
                     </div>
                     <div *ngIf="message.senderId !== userId" class="receivedMessage" style="left:50px;margin-top: -10px;">
