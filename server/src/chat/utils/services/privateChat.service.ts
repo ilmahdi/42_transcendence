@@ -47,6 +47,7 @@ export class PrivateChatService {
       return { sent: true, message: msg };
     } catch {
 
+
        throw new BadRequestException('Could not retrieve messages');
     }
   }
