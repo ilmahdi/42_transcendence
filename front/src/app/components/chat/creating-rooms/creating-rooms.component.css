@@ -21,15 +21,15 @@
     position: relative;
     text-align: center;
     margin-top: 30px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    color: white;
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-text-color);
 }
 
 #addFriends {
     position: relative;
     text-align: center;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    color: white;
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-text-color);
 }
 
 #roomName {
@@ -40,7 +40,7 @@
     text-indent: 20px;
     border-radius: 10px;
     background-color: #584747;
-    color: #9D8686;
+    color: var(--primary-text-color);
 }
 
 .people {
@@ -76,7 +76,8 @@
 
 #name {
     flex-grow: 1;
-    color: #DEC8C8;
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-text-color);
     margin-top: 14px;
     margin-left: 4%;
 }
@@ -88,7 +89,8 @@
     border-radius: 50px;
     transition: 0.5s;
     margin-top: 10px;
-    color: white;
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-text-color);
     float: right;
     margin-right: 10px;
 }
@@ -198,18 +200,27 @@
 #title {
     position: relative;
     top: 25px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    color: white;
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-text-color);
     text-align: center;
+    font-size: 19px;
+}
+
+.types {
+    display: flex;
+    height: 550px;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-text-color);
 }
 
 .publicButton {
+    display: flex; justify-content: center;align-items: center;
     position: relative;
-    height: 35px;
-    width: 90px;
-    left: 41%;
+    height: 45px;
+    width: 120px;
     background-color: #201717;
-    color: white;
     border-radius: 7px;
     cursor: pointer;
     text-align: center;
@@ -221,29 +232,30 @@
 }
 
 .public {
-    position: relative;
+    display: flex;
+    flex-direction: column;
     top: 50px;
-    height: 150px;
+    height: 250px;
     width: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 #publicDescription {
     position: relative;
     top: 10px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    color: white;
     text-align: center;
     margin-left: 7px;
     margin-right: 7px;
 }
 
 .privateButton {
+    display: flex; justify-content: center;align-items: center;
     position: relative;
-    height: 35px;
-    width: 90px;
-    left: 41%;
+    height: 45px;
+    width: 120px;
     background-color: #201717;
-    color: white;
     border-radius: 7px;
     cursor: pointer;
     text-align: center;
@@ -255,29 +267,30 @@
 }
 
 .private {
-    position: relative;
+    display: flex;
+    flex-direction: column;
     top: 50px;
-    height: 150px;
+    height: 250px;
     width: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 #privateDescription {
     position: relative;
     top: 10px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    color: white;
     text-align: center;
     margin-left: 7px;
     margin-right: 7px;
 }
 
 .protectedButton {
+    display: flex; justify-content: center;
     position: relative;
-    height: 35px;
-    width: 90px;
-    left: 41%;
+    height: 45px;
+    width: 120px;
     background-color: #201717;
-    color: white;
     border-radius: 7px;
     cursor: pointer;
     text-align: center;
@@ -289,33 +302,31 @@
 }
 
 .protected {
-    position: relative;
+    display: flex;
+    flex-direction: column;
     top: 50px;
     height: 250px;
     width: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 #protectedDescription {
     position: relative;
     top: 10px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    color: white;
     text-align: center;
-    margin-left: 7px;
-    margin-right: 7px;
 }
 
 #password {
     position: relative;
     width: 200px;
     height: 30px;
-    left: 30%;
     border: none;
     outline: none;
     text-indent: 20px;
     border-radius: 10px;
     background-color: #584747;
-    color: #9D8686;
+    color: var(--primary-text-color);
 }
 
 

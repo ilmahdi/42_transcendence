@@ -59,8 +59,8 @@ export class ChatController {
 
   @Post('createRoom')
   async createRoom(@Body() room:Room) {
-    await this.roomChatService.createRoom(room);
-    return room
+    const newRoom:Room = await this.roomChatService.createRoom(room);
+    return newRoom
   }
 
   @Get('searchRoom')
@@ -79,12 +79,6 @@ export class ChatController {
   async joinProtectedRoom(@Body() data:{id:number, room:Room, password:string}) {
     return await this.roomChatService.joinProtected(data.id, data.room, data.password)
   }
-
-  // @Post('updateRoom')
-  // updateRoom(@Body() room:Room) {
-  //   this.roomChatService.changeRoomType(room);
-  //   return room
-  // }
 
   @Get("allUsers")
   getAllUsers() {

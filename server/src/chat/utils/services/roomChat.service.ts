@@ -5,7 +5,7 @@ import { Message } from '../models/message.interface';
 import * as bcrypt from 'bcrypt';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Mute, RoomType } from '@prisma/client';
+import { FriendshipStatus, Mute, RoomType } from '@prisma/client';
 import { UserModel } from 'src/user/utils/interfaces/user.model';
 
 @Injectable()
@@ -80,26 +80,31 @@ export class RoomChatService {
   }
 
   async createRoom(room: Room) {
-    if (room.password) room.password = await this.hashPassword(room.password);
-    return await this.prismaService.room.create({
-      data: {
-        id: room.id,
-        adminId: room.adminId,
-        usersId: room.usersId,
-        name: room.name,
-        password: room.password,
-        type: room.type,
-        imagePath: room.imagePath,
-        mutes: { create: [] },
-      },
-    });
+    try {
+      if (room.password) room.password = await this.hashPassword(room.password);
+      return await this.prismaService.room.create({
+        data: {
+          id: room.id,
+          adminId: room.adminId,
+          usersId: room.usersId,
+          name: room.name,
+          password: room.password,
+          type: room.type,
+          imagePath: room.imagePath,
+          mutes: { create: [] },
+        },
+      });
+    } catch (error) {
+      // Handle errors (e.g., database connection errors)
+      throw new Error('Could not retrieve messages');
+    }
   }
 
   getRoomById(id: number) {
     let room = this.prismaService.room.findFirst({
       where: { id: id },
       include: {
-        mutes: true, // Include the associated mutes
+        mutes: true,
       },
     });
     return from(room);
@@ -136,17 +141,17 @@ export class RoomChatService {
     }
   }
 
-  async getRoomConversation(roomId: number): Promise<Message[]> {
-    if (roomId !== -1) {
+  async getRoomConversation(data:{room:Room, id:number}): Promise<Message[]> {
+    if (data.room.id !== -1) {
       try {
         const messages = await this.prismaService.message.findMany({
           where: {
-            roomId,
+            roomId: data.room.id,
           },
         });
 
         const room = await this.prismaService.room.findFirst({
-          where: { id: roomId }
+          where: { id: data.room.id }
         })
 
         // GET JUST THE MESSAGES OF ACTUAL ROOM MEMBERS
@@ -155,45 +160,34 @@ export class RoomChatService {
           if (room.usersId.includes(msg.senderId))
             actuallMsgs.push(msg)
         })
+
+        const user = await this.prismaService.userAccount.findFirst({
+          where: {id: data.id},
+          include: {friendship_from: true, friendship_to: true}
+        })
+
+        let blackList:number[] = []
+        user.friendship_from.forEach(item=> {
+          if (item.friendship_status === FriendshipStatus.BLOCKED && item.friend_id !== data.id)
+            blackList.push(item.friend_id)
+        })
+        user.friendship_to.forEach(item=> {
+          if (item.friendship_status === FriendshipStatus.BLOCKED && item.friend_id !== data.id) {
+            blackList = blackList.filter(id=> id != item.friend_id)
+            blackList.push(item.friend_id)
+          }
+        })
         
+        blackList.forEach(id=> {
+          actuallMsgs = actuallMsgs.filter(msg=> msg.senderId != id)
+        })
+
         return actuallMsgs;
       } catch (error) {
-        // Handle errors (e.g., database connection errors)
         throw new Error('Could not retrieve messages');
       }
     } else {
       return null;
-    }
-  }
-
-  async getRoomLastMessage(id: number): Promise<Message[]> {
-    try {
-      // Find rooms where the user with 'id' is an admin or user
-      const rooms = await this.prismaService.room.findMany({
-        where: {
-          OR: [
-            { adminId: { hasSome: [id] } }, // Check if 'id' is an admin
-            { usersId: { hasSome: [id] } }, // Check if 'id' is a user
-          ],
-        },
-      });
-
-      // Find messages sent or received by the user with 'id'
-      const messages = await this.prismaService.message.findMany({
-        where: {
-          OR: [{ senderId: id }, { receiverId: id }],
-        },
-      });
-
-      // Filter messages with a valid 'roomId' (not -1)
-      const filteredMessages = messages.filter(
-        (message) => message.roomId !== -1,
-      );
-
-      return filteredMessages;
-    } catch (error) {
-      // Handle errors (e.g., database connection errors)
-      throw new Error('Could not retrieve messages');
     }
   }
 
@@ -219,7 +213,7 @@ export class RoomChatService {
       }
 
       // Find messages with matching 'roomId' in the list of roomIds
-      const messages = await this.prismaService.message.findMany({
+      let messages = await this.prismaService.message.findMany({
         where: {
           roomId: {
             in: roomIds,
@@ -227,9 +221,30 @@ export class RoomChatService {
         },
       });
 
+      // Filter the messages from the blocked users
+      const user = await this.prismaService.userAccount.findFirst({
+        where: {id: userId},
+        include: {friendship_from: true, friendship_to: true}
+      })
+
+      let blackList:number[] = []
+      user.friendship_from.forEach(item=> {
+        if (item.friendship_status === FriendshipStatus.BLOCKED && item.friend_id !== userId)
+          blackList.push(item.friend_id)
+      })
+      user.friendship_to.forEach(item=> {
+        if (item.friendship_status === FriendshipStatus.BLOCKED && item.friend_id !== userId) {
+          blackList = blackList.filter(id=> id != item.friend_id)
+          blackList.push(item.friend_id)
+        }
+      })
+      
+      blackList.forEach(id=> {
+        messages = messages.filter(msg=> msg.senderId != id)
+      })
+
       return messages;
     } catch (error) {
-      // Handle errors (e.g., database connection errors)
       throw new Error('Could not retrieve messages');
     }
   }
@@ -396,5 +411,28 @@ export class RoomChatService {
         blackList: data.room.blackList,
       },
     });
+  }
+
+  async getBlacklist(sender:number, receiver:number) {
+    const user = await this.prismaService.userAccount.findFirst({
+      where: {id: receiver},
+      include: {friendship_from: true, friendship_to: true}
+    })
+
+    let blackList:number[] = []
+    user.friendship_from.forEach(item=> {
+      if (item.friendship_status === FriendshipStatus.BLOCKED)
+        blackList.push(item.friend_id)
+    })
+    user.friendship_to.forEach(item=> {
+      if (item.friendship_status === FriendshipStatus.BLOCKED) {
+        blackList = blackList.filter(id=> id != item.friend_id)
+        blackList.push(item.friend_id)
+      }
+    })
+
+    if (blackList.includes(sender))
+      return true
+    return false
   }
 }

@@ -5,7 +5,7 @@
   <div class="confirm-modal">
     <h2 class="cm-title">{{ title }}</h2>
     <p class="cm-body">{{ body }}</p>
-    <input type="text" placeholder="Message..." [(ngModel)]="message">
+    <input type="text" placeholder="Message..." [(ngModel)]="message" (keyup.enter)="send()">
     <div class="cm-btns">
       <div class="cm-indent"></div>
       <button class="cm-btn b1" (click)="closeMe()">close</button>

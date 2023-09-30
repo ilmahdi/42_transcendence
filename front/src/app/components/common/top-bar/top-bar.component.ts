@@ -134,6 +134,10 @@ export class TopBarComponent implements OnInit {
     this.getNotifications();
   }
 
+  onClickChat() {
+    this.chatService.chatNotifSource.next(0)
+  }
+
 
 
   // private functions

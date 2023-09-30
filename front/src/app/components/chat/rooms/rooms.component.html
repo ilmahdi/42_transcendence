@@ -4,11 +4,11 @@
     <div *ngFor="let room of rooms" class="room" (click)="openRoom(room)" [style.backgroundColor]="(color.name === room.name)? color.color : ''">
         <img [src]="room.imagePath" alt="avatar" id="image">
         <div style="width: 30%;margin-left: 2px;">
-        <p id="roomName">{{room.name}}</p>
+            <p id="roomName">{{room.name}}</p>
 
             <div *ngFor="let item of lastMessages" >
                 <div *ngIf="item" class="message">
-                    <p *ngIf="item && item.roomId === room.id">{{item.message}}</p>
+                    <p *ngIf="item && item.roomId === room.id" >{{item.message}}</p>
                 </div>
             </div>
         </div>
@@ -16,15 +16,13 @@
         <div style="display: flex;width: 50%;">
             <div *ngFor="let item of lastMessages" >
                 <div *ngIf="item">
-                    <p *ngIf="item && item.roomId === room.id" class="date">{{editeDateFormat(item.date)}}</p>
+                    <p *ngIf="item && item.roomId === room.id" class="date">{{editeDateFormat(item.date!)}}</p>
                 </div>
             </div>
 
-            <!-- <div *ngFor="let item of notReaded">
-                <div class="notReaded" *ngIf="room.id === item.roomId && item.senderId !== userId">
-                    <p style="left: 5px;position: relative;bottom: 2px;">{{item.unreadCount}}</p>
-                </div>
-            </div> -->
+            <div *ngFor="let item of lastMessages">
+                <span *ngIf="item.senderId === userId && item.roomId === room.id" class="fa fa-check-circle-o"></span>
+            </div>
         </div>
     </div>
 </div>

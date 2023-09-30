@@ -133,7 +133,7 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
       this.roomFormularTitles[1].error = false
       this.roomFormularTitles[0].error = false
       this.chatService.backToRoomFormularSource.next(false);
-      this.resetRoomFormular()
+      // this.resetRoomFormular()
     }
     else {
       if (usersId.length <= 1)
@@ -150,6 +150,7 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
   resetRoomFormular() {
     this.room.reset()
     this.users.forEach(item=>item.added = false)
+    this.selectedImage = ''
   }
 
   onType(type:string) {
@@ -187,10 +188,23 @@ export class CreatingRoomsComponent implements OnInit, OnDestroy {
       let room:Room;
       let type = this.types.filter(type=> type.select === true)
 
-      
-
-      room = {adminId:this.roomFormular!.adminId, name:this.roomFormular!.name, usersId:this.roomFormular!.usersId, type:type[0].type, password:this.room.value.password, imagePath:this.roomFormular!.imagePath};
-      const subs:Subscription = this.chatService.createRoom(room).subscribe();
+      room = {adminId:this.roomFormular!.adminId,
+        name:this.roomFormular!.name,
+        usersId:this.roomFormular!.usersId,
+        type:type[0].type,
+        password:this.room.value.password,
+        imagePath:this.roomFormular!.imagePath
+      };
+      const subs:Subscription = this.chatService.createRoom(room).subscribe(data=> {
+        let rooms:Room[] = this.chatService.roomsSource.value;
+        rooms.push(data);
+        this.chatService.roomsSource.next(rooms)
+        this.resetRoomFormular()
+        data.usersId?.forEach(id=> {
+          if (id !== this.userId)
+            this.chatService.sendToGetRooms(id)
+        })
+      });
       this.subscriptions.push(subs)
       this.types[0].select = false
       this.types[1].select = false

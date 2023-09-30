@@ -19,7 +19,7 @@ export class PrivateChatService {
       })
       let blocked:boolean = false;
       friends.forEach(friend=> {
-        if (friend.id === message.senderId) {
+        if (friend.friend_id === message.senderId || friend.friend_id === message.receiverId) {
           blocked = true;
           return;
         }
@@ -56,11 +56,33 @@ export class PrivateChatService {
               { senderId: receiverId, receiverId: senderId },
             ],
           },
+          include: {sender: true, receiver:true}
         });
   
-        // Filter messages with a valid 'roomId' (not -1)
-        const filteredMessages = messages.filter((message) => message.roomId === -1);
-  
+        // Filter messages with a valid 'roomId' (not -1) 
+        let filteredMessages = messages.filter((message) => message.roomId === -1);
+
+        // Get the status between the sender and receiver of the messages
+        const user = await this.prismaService.userAccount.findFirst({
+          where: {id: receiverId},
+          include: {friendship_from: true, friendship_to: true}
+        })
+
+        let blockedId:number = -1;
+        user.friendship_from.forEach(data=>{
+          if ((data.friend_id === senderId || data.friend_id === receiverId) && data.friendship_status === FriendshipStatus.BLOCKED)
+            if (data.friend_id != senderId)
+              blockedId = data.friend_id
+        })
+        user.friendship_to.forEach(data=>{
+          if ((data.friend_id === senderId || data.friend_id === receiverId) && data.friendship_status === FriendshipStatus.BLOCKED)
+            if (data.friend_id != senderId)
+              blockedId = data.friend_id
+        })
+        
+        // Filter the messages which are from a blocked user
+        filteredMessages = filteredMessages.filter(msg=> msg.senderId !== blockedId)
+
         return filteredMessages;
       } catch (error) {
         // Handle errors (e.g., database connection errors)

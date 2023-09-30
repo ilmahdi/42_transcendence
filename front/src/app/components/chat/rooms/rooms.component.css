@@ -1,10 +1,37 @@
+p {
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+    color: var(--primary-text-color);
+}
+
 .list {
     display: flex;
     flex-direction: column;
     width: 290px;
     background-color: #231C1C;
     border-radius: 0px 0px 15px 15px;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-color: #5e6147 var(--second-background-color);
+    scrollbar-width: 0.4rem;
+}
+
+::placeholder {
+    color: #9D8686;
+    opacity: 1; /* Firefox */
+}
+
+.list::-webkit-scrollbar
+ {
+    width: 0.4rem;
+    background-color: var(--second-background-color);
+}
+.list::-webkit-scrollbar-thumb  {
+    border-radius: 0.4rem;
+    background-color: #5e6147;
+}
+.list::-webkit-scrollbar-thumb:hover  {
+    background-color: #555;
 }
 
 .roomSearch {
@@ -29,12 +56,11 @@
 
 .room {
     display: flex;
-    /* position: absolute; */
     height: 66px;
     width: 92%;
     background-color: #201717;
-    margin-top: 10px;
     margin-left: 4%;
+    margin-top: 10px;
     border-radius: 10px 10px 10px 10px;
     cursor: pointer;
     transition: 0.3s;
@@ -71,11 +97,17 @@
 .message {
     color: #ABABAB;
     font-size: small;
-    margin-top: -10px;
+    margin-top: -5px;
     margin-left: 10px;
     max-width: 100px;
     max-height: 20px;
     overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+}
+
+.fa-check-circle-o {
+    color: white;
+    margin-top: 37px;
 }
 
 .notReaded {

@@ -40,9 +40,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
     gap: 0.8rem;
     margin-left: 40px;
+    font-family: 'Poppins', sans-serif;
+    color: var(--primary-text-color);
+    font-size: 17px;
 }
 
 .line {

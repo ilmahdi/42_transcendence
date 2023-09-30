@@ -7,6 +7,7 @@ import { Room } from '../models/room.model';
 import { CustomSocket } from '../utils/socket/socket.module';
 import { AuthService } from './auth.service';
 import { IUserDataShort } from '../utils/interfaces/user-data.interface';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -105,7 +106,14 @@ export class ChatService {
     })
   }
 
-  displayComponents(formular:boolean, conversation:boolean, otherRooms:boolean, backto:boolean, convers:boolean, options:boolean, addMember:boolean) {
+  displayComponents(formular:boolean,
+      conversation:boolean,
+      otherRooms:boolean,
+      backto:boolean,
+      convers:boolean,
+      options:boolean,
+      addMember:boolean
+    ) {
     this.roomFormular(formular)
     this.displayConversationSource.next(conversation);
     this.displayOtherRoomsSource.next(otherRooms);
@@ -121,14 +129,17 @@ export class ChatService {
     while (messages.length > i + 1){
       const t1 = new Date(messages[i + 1].date!).getMinutes()
       const t2 = new Date(messages[i].date!).getMinutes()
-      if (t1 - t2 >= 1) {
+      if (t1 - t2 >= 15) {
         const options: Intl.DateTimeFormatOptions = {
           day: '2-digit',   // Two-digit day
           month: '2-digit', // Two-digit month
           year: 'numeric'   // Full year
         };
         const formattedDate: string = new Date(messages[i + 1].date!).toLocaleDateString('en-GB', options);
-        let date = {late:true, time:`${formattedDate}, ${new Date(messages[i + 1].date!).getHours()}:${new Date(messages[i + 1].date!).getMinutes()}`, msg:messages[i + 1]}
+        let date = {late:true,
+          time:`${formattedDate}, ${new Date(messages[i + 1].date!).getHours()}:${new Date(messages[i + 1].date!).getMinutes()}`,
+          msg:messages[i + 1]
+        }
         lateMessage.push(date)
       }
       ++i;
@@ -230,8 +241,9 @@ export class ChatService {
     return this.socket.fromEvent<Message>('recRoomMessage');
   }
 
-  sendToGetRoomConversation(room:Room) {
-    this.socket.emit('roomConversation', room);
+  sendToGetRoomConversation(room:Room, id:number) {
+    const data = {room:room, id:id}
+    this.socket.emit('roomConversation', data);
   }
 
   getRoomConversation() {
@@ -303,7 +315,7 @@ export class ChatService {
   };
 
   getUsers(): Observable<IUserDataShort[]> {
-    return this.http.get<IUserDataShort[]>('http://localhost:3000/api/chat/allUsers', this.httpOptions).pipe(take(1));
+    return this.http.get<IUserDataShort[]>(environment.endpointHost + 'api/chat/allUsers', this.httpOptions).pipe(take(1));
   }
 
   updateRead(message:Message) {
@@ -311,29 +323,29 @@ export class ChatService {
   }
 
   createRoom(room:Room): Observable<Room> {
-    return this.http.post('http://localhost:3000/api/chat/createRoom', room);
+    return this.http.post(environment.endpointHost + 'api/chat/createRoom', room);
   }
 
   uploadImage(image:FormData) {
-    return this.http.post('http://localhost:3000/api/chat/upload', image);
+    return this.http.post(environment.endpointHost +  'api/chat/upload', image);
   }
 
   searchConvers(name:string) {
-    return this.http.get<User[]>('http://localhost:3000/api/chat/search?query=' + name)
+    return this.http.get<User[]>(environment.endpointHost + 'api/chat/search?query=' + name)
   }
 
   searchRooms(name:string) {
-    return this.http.get<Room[]>('http://localhost:3000/api/chat/searchRoom?query=' + name)
+    return this.http.get<Room[]>(environment.endpointHost + 'api/chat/searchRoom?query=' + name)
   }
 
   joinRoom(id:number, room:Room) {
     const data = {id:id, room:room}
-    return this.http.post<Room>('http://localhost:3000/api/chat/joinRoom', data)
+    return this.http.post<Room>(environment.endpointHost + 'api/chat/joinRoom', data)
   }
 
   joinProtected(id:number, room:Room, password:string) {
     const data = {id:id, room:room, password:password}
-    return this.http.post<boolean>('http://localhost:3000/api/chat/joinProtected', data)
+    return this.http.post<boolean>(environment.endpointHost + 'api/chat/joinProtected', data)
   }
 
   sendToGetRoomMembers(room:Room) {

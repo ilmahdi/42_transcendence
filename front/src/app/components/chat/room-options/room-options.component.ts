@@ -99,6 +99,8 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.newAdminsId.push(member.user.id!)
     else
       this.newAdminsId = this.newAdminsId.filter(id=> id !== member.user.id)
+    this.blackList = this.blackList.filter(id=> id !== member.user.id)
+    this.removedId = this.removedId.filter(id=> id !== member.user.id)
   }
 
   removeMember(member:{user:IUserDataShort,
@@ -114,10 +116,14 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
     member.removed = !member.removed
     member.admin = false
     member.ban = false
+    member.mute = false
+    member.muteDuration = 0
     if (member.removed)
       this.removedId.push(member.user.id!)
     else
       this.removedId = this.removedId.filter(id=> id !== member.user.id)
+    this.blackList = this.blackList.filter(id=> id !== member.user.id)
+    this.newAdminsId = this.newAdminsId.filter(id=> id !== member.user.id)
   }
 
   muting(member:{user:IUserDataShort,
@@ -132,6 +138,9 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
     member.mute = !member.mute
     member.muteDuration = 0;
     member.ban = false;
+    this.blackList = this.blackList.filter(id=> id !== member.user.id)
+    this.removedId = this.removedId.filter(id=> id !== member.user.id)
+    this.newAdminsId = this.newAdminsId.filter(id=> id !== member.user.id)
   }
 
   clickOnInput(member:{user:IUserDataShort,
@@ -147,6 +156,9 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
     member.removed = false
     member.admin = false
     member.ban = false
+    this.blackList = this.blackList.filter(id=> id !== member.user.id)
+    this.removedId = this.removedId.filter(id=> id !== member.user.id)
+    this.newAdminsId = this.newAdminsId.filter(id=> id !== member.user.id)
   }
 
   banUser(member:{user:IUserDataShort,
@@ -170,6 +182,7 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
       this.blackList = this.blackList.filter(id=> id !== member.user.id)
       this.removedId = this.removedId.filter(id=> id !== member.user.id)
     }
+    this.newAdminsId = this.newAdminsId.filter(id=> id !== member.user.id)
   }
 
   saveRoom() {
