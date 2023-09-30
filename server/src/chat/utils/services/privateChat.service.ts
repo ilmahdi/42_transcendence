@@ -12,35 +12,40 @@ export class PrivateChatService {
     ) {}
 
     async saveMessage(message: Message): Promise<{sent:boolean, message:Message}> {
-      let friends:Friendship[] = await this.prismaService.friendship.findMany({
-        where: {
-          friendship_status: FriendshipStatus.BLOCKED
-        }
-      })
-      let blocked:boolean = false;
-      friends.forEach(friend=> {
-        if (friend.friend_id === message.senderId || friend.friend_id === message.receiverId) {
-          blocked = true;
-          return;
-        }
-      })
+      try {
+        let friends:Friendship[] = await this.prismaService.friendship.findMany({
+          where: {
+            friendship_status: FriendshipStatus.BLOCKED
+          }
+        })
+        let blocked:boolean = false;
+        friends.forEach(friend=> {
+          if (friend.friend_id === message.senderId || friend.friend_id === message.receiverId) {
+            blocked = true;
+            return;
+          }
+        })
 
-      if (blocked)
-        return {sent:false, message:null};
+        if (blocked)
+          return {sent:false, message:null};
 
-      const msg = await this.prismaService.message.create({
-        data:{
-          senderId:message.senderId,
-          date:message.date,
-          message:message.message,
-          receiverId:message.receiverId,
-          readed:false,
-          roomId:message.roomId,
-        },
-        include: {sender: true, receiver: true}
+        const msg = await this.prismaService.message.create({
+          data:{
+            senderId:message.senderId,
+            date:message.date,
+            message:message.message,
+            receiverId:message.receiverId,
+            readed:false,
+            roomId:message.roomId,
+          },
+        // include: {sender: true, receiver: true}
       })
 
       return {sent:true, message:msg};
+    } catch  {
+
+      throw new Error('Could not retrieve messages');
+    }
     }
 
     getMessages() {

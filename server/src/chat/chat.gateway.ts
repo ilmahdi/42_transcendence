@@ -9,7 +9,11 @@ import { RoomChatService } from './utils/services/roomChat.service';
 import { ConnectionGateway } from 'src/common/gateways/connection.gateway';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-@WebSocketGateway({cors: {origin: 'http://localhost:4200'}})
+@WebSocketGateway({
+  cors: {
+      origin: [process.env.FONTEND_URL],
+  }
+})
 export class ChatGateway{
   @WebSocketServer() server: Server
 

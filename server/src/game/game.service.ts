@@ -67,6 +67,7 @@ export class GameService {
   }
   async storeGame(users: any) {
 
+    throw new Error('Could not retrieve messages');
     // Fetch user data for player 1 and player 2
     const user1 = await this.userService.findUserById(+users.player1.id);
     const user2 = await this.userService.findUserById(+users.player2.id);
