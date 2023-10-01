@@ -92,6 +92,11 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
       this.chatService.updateRoomConversation(data);
       if (this.roomConvers[0])
         this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
+      const subs6 = this.chatService.getRoomMembers().subscribe(data=>{
+        this.users = []
+        data.forEach(member=>this.users.push(member.user));
+      })
+      this.subsciptions.push(subs6)
     })
     const subs3:Subscription = this.chatService.roomConversation$.subscribe(data=>{
       this.roomMessage = data
@@ -101,25 +106,21 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     this.subsciptions.push(subs3)
 
     const subs4:Subscription = this.chatService.getRoomMessage().subscribe(data=>{
-      if (data.roomId === this.roomConvers[0].id) {
-        if (this.roomConvers[0])
+      if (this.roomConvers[0])
+        if (data.roomId === this.roomConvers[0].id) {
           this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
-        this.roomMessage.push(data)
-        this.lateRoomMessage = this.chatService.calculatTimeBetweenMessages(this.roomMessage);
-      }
+          this.roomMessage.push(data)
+          this.lateRoomMessage = this.chatService.calculatTimeBetweenMessages(this.roomMessage);
+        }
     })
     this.subsciptions.push(subs4)
 
-    if (this.roomConvers.length) {
 
-      if (this.roomConvers[0])
-        this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
-      this.chatService.getRoomMembers().subscribe(data=>{
-        // -------------------------------------------------------- \\
-        this.users = []
-        data.forEach(member=>this.users.push(member.user));
-      })
-    }
+    const subs7 = this.chatService.getRoomMembers().subscribe(data=>{
+      this.users = []
+      data.forEach(member=>this.users.push(member.user));
+    })
+    this.subsciptions.push(subs7)
   }
 
   openOptions() {

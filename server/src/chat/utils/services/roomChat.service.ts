@@ -42,8 +42,6 @@ export class RoomChatService {
         }
       }
     }
-
-    console.log(out);
     
     if (out) {
       return false;
@@ -135,7 +133,7 @@ export class RoomChatService {
           mutes: true, // Include the associated mutes
         },
       });
-
+      
       return rooms;
     } catch (error) {
       throw new Error('Could not retrieve rooms');
