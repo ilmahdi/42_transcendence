@@ -24,100 +24,127 @@ export class GameGateway {
 
   @SubscribeMessage('broadcastPlaying')
   broadcastPlaying(client: Socket, userId: string) {
+    try {
+      
+      const userSocketIds = this.connectionGateway.userUserListeners[userId];
+      
+      if (userSocketIds) {
+        userSocketIds.forEach((socketId) => {
+          
+          this.server.to(socketId).emit('playing', userId);
+        });
+      }
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "broadcastPlaying error" });
 
-    const userSocketIds = this.connectionGateway.userUserListeners[userId];
-
-    if (userSocketIds) {
-      userSocketIds.forEach((socketId) => {
-
-        this.server.to(socketId).emit('playing', userId);
-      });
     }
   }
   
   @SubscribeMessage('requestOpponentId')
   handleRequestOpponentId(client: Socket, userId :string) {
     
-    if (!this.connectionGateway.inGameUsersById[userId] || !this.connectionGateway.connectedUsersById[userId]) {
+    try {
+      if (!this.connectionGateway.inGameUsersById[userId] || !this.connectionGateway.connectedUsersById[userId]) {
 
-      this.connectionGateway.inGameUsersById[userId] = client.id;
-      this.addToQueue(userId);
+        this.connectionGateway.inGameUsersById[userId] = client.id;
+        this.addToQueue(userId);
+      }
+      else 
+        this.server.to(client.id).emit('failRequestOpponentId');
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "requestOpponentId error" });
     }
-    else 
-      this.server.to(client.id).emit('failRequestOpponentId');
-
   }
   @SubscribeMessage('inviteOpponentId')
   handleInviteOpponentId(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
     
-    if (!this.connectionGateway.inGameUsersById[userIds.player1Id] && !this.connectionGateway.inGameUsersById[userIds.player2Id]) {
-      
-      const socketId = this.connectionGateway.connectedUsersById[userIds.player2Id];
-      
-      this.gameService.sendGameInviteNotif({
-        from_id: +userIds.player1Id,
-        to_id: +userIds.player2Id,
-        type: "GAME_INVITE",
-      })
-      this.connectionGateway.inGameUsersById[userIds.player1Id] = client.id;
-      this.server.to(client.id).emit('waitInviteOpponentId', userIds.player2Id);
-      this.server.to(socketId).emit('notifyFriendRequest', { notify: 1 });
-    }
-    else 
-      this.server.to(client.id).emit('failInviteOpponentId');
+    try {
+      if (!this.connectionGateway.inGameUsersById[userIds.player1Id] && !this.connectionGateway.inGameUsersById[userIds.player2Id]) {
+        
+        const socketId = this.connectionGateway.connectedUsersById[userIds.player2Id];
+        
+        this.gameService.sendGameInviteNotif({
+          from_id: +userIds.player1Id,
+          to_id: +userIds.player2Id,
+          type: "GAME_INVITE",
+        })
+        this.connectionGateway.inGameUsersById[userIds.player1Id] = client.id;
+        this.server.to(client.id).emit('waitInviteOpponentId', userIds.player2Id);
+        this.server.to(socketId).emit('notifyFriendRequest', { notify: 1 });
+      }
+      else 
+        this.server.to(client.id).emit('failInviteOpponentId');
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "inviteOpponentId error" });
 
+    }
   }
   @SubscribeMessage('acceptGameInvite')
   handleAcceptGameInvite(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
     
-    if (!this.connectionGateway.inGameUsersById[userIds.player1Id]
-      && this.connectionGateway.inGameUsersById[userIds.player2Id]) {
+    try {
+      if (!this.connectionGateway.inGameUsersById[userIds.player1Id]
+        && this.connectionGateway.inGameUsersById[userIds.player2Id]) {
 
-      this.connectionGateway.inGameUsersById[userIds.player1Id] = client.id;
+        this.connectionGateway.inGameUsersById[userIds.player1Id] = client.id;
 
-      const socketId1 = client.id;
-      const socketId2 = this.connectionGateway.inGameUsersById[userIds.player2Id];
+        const socketId1 = client.id;
+        const socketId2 = this.connectionGateway.inGameUsersById[userIds.player2Id];
 
 
-      
-      this.gameService.createGame(this.server, this.getGameId(userIds.player1Id, userIds.player2Id), socketId2, socketId1);
-      
-      this.server.to(socketId1).emit('successGameInvite');
-      this.server.to(socketId2).emit('successGameInvite');
+        
+        this.gameService.createGame(this.server, this.getGameId(userIds.player1Id, userIds.player2Id), socketId2, socketId1);
+        
+        this.server.to(socketId1).emit('successGameInvite');
+        this.server.to(socketId2).emit('successGameInvite');
+      }
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "acceptGameInvite error" });
+
     }
   }
   @SubscribeMessage('cancelGameInvite')
   handleCancelGameInvite(client: Socket, userIds :{ player1Id: string, player2Id: string}) {
 
-    const socketId1 = this.connectionGateway.inGameUsersById[userIds.player1Id];
-    const socketId2 = this.connectionGateway.connectedUsersById[userIds.player2Id];
+    try {
+      const socketId1 = this.connectionGateway.inGameUsersById[userIds.player1Id];
+      const socketId2 = this.connectionGateway.connectedUsersById[userIds.player2Id];
 
-    if (socketId1) {
+      if (socketId1) {
 
-      if (socketId1 !== client.id) {
+        if (socketId1 !== client.id) {
 
-        this.server.to(socketId1).emit('cancelGameInvite'); 
+          this.server.to(socketId1).emit('cancelGameInvite'); 
 
+        }
+        else
+          this.server.to(socketId2).emit('unNotifyFriendRequest', { notify: -1 });
+
+
+        this.gameService.deleteGameInviteNotif({
+          from_id: +userIds.player1Id,
+        })
+
+        delete this.connectionGateway.inGameUsersById[userIds.player1Id];
       }
-      else
-        this.server.to(socketId2).emit('unNotifyFriendRequest', { notify: -1 });
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "cancelGameInvite error" });
 
-
-      this.gameService.deleteGameInviteNotif({
-        from_id: +userIds.player1Id,
-      })
-
-      delete this.connectionGateway.inGameUsersById[userIds.player1Id];
     }
   }
   @SubscribeMessage('leaveMatchmaking')
   handleLeaveMatchmaking(client: Socket, userId :string) {
 
-    if (this.connectionGateway.inGameUsersById[userId]) {
+    try {
+      if (this.connectionGateway.inGameUsersById[userId]) {
 
-      delete this.connectionGateway.inGameUsersById[userId];
-      this.connectionGateway.broadcastOnline(client, userId)
-      this.waitingPlayers = this.waitingPlayers.filter(item => item != userId);
+        delete this.connectionGateway.inGameUsersById[userId];
+        this.connectionGateway.broadcastOnline(client, userId)
+        this.waitingPlayers = this.waitingPlayers.filter(item => item != userId);
+      }
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "leaveMatchmaking error" });
+
     }
   }
 
@@ -157,28 +184,38 @@ export class GameGateway {
   @SubscribeMessage('startGame')
   handleStartGame(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
     
-    this.gameService.startGameLoop(this.getGameId(userIds.player1Id, userIds.player2Id));
+    try {
+      this.gameService.startGameLoop(this.getGameId(userIds.player1Id, userIds.player2Id));
 
-    this.server.to(this.connectionGateway.inGameUsersById[userIds.player2Id]).emit('startGame');
+      this.server.to(this.connectionGateway.inGameUsersById[userIds.player2Id]).emit('startGame');
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "startGame error" });
+
+    }
   }
 
   @SubscribeMessage('endGame')
   handleEndGame(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
     
-    this.gameService.endGame(this.getGameId(userIds.player1Id, userIds.player2Id));
+    try {
+      this.gameService.endGame(this.getGameId(userIds.player1Id, userIds.player2Id));
 
-    this.server.to(this.connectionGateway.inGameUsersById[userIds.player1Id]).emit('endGame');
-    this.server.to(this.connectionGateway.inGameUsersById[userIds.player2Id]).emit('endGame');
+      this.server.to(this.connectionGateway.inGameUsersById[userIds.player1Id]).emit('endGame');
+      this.server.to(this.connectionGateway.inGameUsersById[userIds.player2Id]).emit('endGame');
 
-    if (this.connectionGateway.inGameUsersById[userIds.player1Id]) {
+      if (this.connectionGateway.inGameUsersById[userIds.player1Id]) {
 
-      delete this.connectionGateway.inGameUsersById[userIds.player1Id];
-      this.connectionGateway.broadcastOnline(client, userIds.player1Id)
-    }
-    if (this.connectionGateway.inGameUsersById[userIds.player2Id]) {
+        delete this.connectionGateway.inGameUsersById[userIds.player1Id];
+        this.connectionGateway.broadcastOnline(client, userIds.player1Id)
+      }
+      if (this.connectionGateway.inGameUsersById[userIds.player2Id]) {
 
-      delete this.connectionGateway.inGameUsersById[userIds.player2Id];
-      this.connectionGateway.broadcastOnline(client, userIds.player2Id)
+        delete this.connectionGateway.inGameUsersById[userIds.player2Id];
+        this.connectionGateway.broadcastOnline(client, userIds.player2Id)
+      }
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "endGame error" });
+
     }
 
   }
@@ -187,18 +224,27 @@ export class GameGateway {
   @SubscribeMessage('paddleMove')
   handlePaddleMove(client: Socket, data :{userIds :{ player1Id: string, player2Id: string,}, paddle: {y :number} }) {
     
-    const game = this.gameService.games[this.getGameId(data.userIds.player1Id, data.userIds.player2Id)]
-    if (game) {
-      game.paddles[client.id].y = data.paddle.y;
+    try {
+      const game = this.gameService.games[this.getGameId(data.userIds.player1Id, data.userIds.player2Id)]
+      if (game) {
+        game.paddles[client.id].y = data.paddle.y;
 
-      this.server.to(this.connectionGateway.inGameUsersById[data.userIds.player2Id]).emit('paddleMove', data.paddle);
+        this.server.to(this.connectionGateway.inGameUsersById[data.userIds.player2Id]).emit('paddleMove', data.paddle);
+      }
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "paddleMove error" });
+
     }
   }
 
   @SubscribeMessage('rematchGame')
   handleRematchGame(client: Socket, userIds :{ player1Id: string, player2Id: string,}) {
 
-    this.server.to(this.connectionGateway.inGameUsersById[userIds.player2Id]).emit('rematchGame');
+    try {
+      this.server.to(this.connectionGateway.inGameUsersById[userIds.player2Id]).emit('rematchGame');
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "rematchGame error" });
+    }
   }
 
   getGameId(player1: string, player2: string) {

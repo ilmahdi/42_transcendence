@@ -1,6 +1,7 @@
 import { OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { TokenService } from '../services/token.service';
+import { error } from 'console';
 
 
 
@@ -26,77 +27,104 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
 
   handleConnection(client: Socket) {
 
-    const decodedToken = this.tokenService.verifyToken(client.handshake.headers.authorization)
-    if (!decodedToken)
-    {
-      console.log("Error: invalid token!");
-      return client.disconnect();
+    try {
+      const decodedToken = this.tokenService.verifyToken(client.handshake.headers.authorization)
+      if (!decodedToken)
+      {
+        console.log("Error: invalid token!");
+        return client.disconnect();
+      }
+      const socketId = client.id;
+      
+      this.connectedUsersBySocket[socketId] = decodedToken.sub;
+      
+      if (!this.connectedUsersById[decodedToken.sub]) {
+        this.connectedUsersById[decodedToken.sub] = [];
+      }
+      this.connectedUsersById[decodedToken.sub].push(socketId);
+      
+      console.log(`User ${decodedToken.username} connected with socket ID ${socketId}`);
+
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "handleConnection error" });
+
     }
-    const socketId = client.id;
-    
-    this.connectedUsersBySocket[socketId] = decodedToken.sub;
-    
-    if (!this.connectedUsersById[decodedToken.sub]) {
-      this.connectedUsersById[decodedToken.sub] = [];
-    }
-    this.connectedUsersById[decodedToken.sub].push(socketId);
-    
-    console.log(`User ${decodedToken.username} connected with socket ID ${socketId}`);
-    // console.log(this.connectedUsersById)
-    // console.log(this.connectedUsersBySocket)
+
   }
   
   handleDisconnect(client: Socket) {
     
-    const socketId = client.id;
-    const userId = this.connectedUsersBySocket[socketId];
-    
-    if (userId) {
-      delete this.connectedUsersBySocket[socketId];
-      console.log(`User ${userId} disconnected from socket ID ${socketId}`);
-    }
+    try {
+
+      const socketId = client.id;
+      const userId = this.connectedUsersBySocket[socketId];
+      
+      if (userId) {
+        delete this.connectedUsersBySocket[socketId];
+        console.log(`User ${userId} disconnected from socket ID ${socketId}`);
+      }
 
     
-    if (this.removeItemFromArray(this.connectedUsersById, client.id))
-    this.broadcastOffline(userId)
-  
-  this.removeItemFromArray(this.userUserListeners, client.id)
+      if (this.removeItemFromArray(this.connectedUsersById, client.id))
+      this.broadcastOffline(userId)
     
+      this.removeItemFromArray(this.userUserListeners, client.id)
+    
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "handleConnection error" });
+
+    }
 
   }
 
 
   @SubscribeMessage('watchConnection')
   watchConnection(client: Socket, userId: string) {
+    try {
     
-    if (!this.userUserListeners[userId])
-      this.userUserListeners[userId] = [];
-    this.userUserListeners[userId].push(client.id);
+      if (!this.userUserListeners[userId])
+        this.userUserListeners[userId] = [];
+      this.userUserListeners[userId].push(client.id);
+
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "handleConnection error" });
+
+    }
 
   }
 
   @SubscribeMessage('watchConnectionMany')
   watchConnectionMany(client: Socket, userIds: string[]) {
+    try {
     
-    for (const userId of userIds) {
-      if (!this.userUserListeners[userId]) {
-          this.userUserListeners[userId] = [];
+      for (const userId of userIds) {
+        if (!this.userUserListeners[userId]) {
+            this.userUserListeners[userId] = [];
+        }
+        this.userUserListeners[userId].push(client.id);
       }
-      this.userUserListeners[userId].push(client.id);
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "handleConnection error" });
+
     }
 
   }
 
   @SubscribeMessage('broadcastOnline')
   broadcastOnline(client: Socket, userId: string) {
+    try {
 
-    const userSocketIds = this.userUserListeners[userId];
+      const userSocketIds = this.userUserListeners[userId];
 
-    if (userSocketIds) {
-      userSocketIds.forEach((socketId) => {
+      if (userSocketIds) {
+        userSocketIds.forEach((socketId) => {
 
-        this.server.to(socketId).emit('online', userId);
-      });
+          this.server.to(socketId).emit('online', userId);
+        });
+      }
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "handleConnection error" });
+
     }
   }
 

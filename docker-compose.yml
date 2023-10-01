@@ -19,7 +19,7 @@ services:
   #     ports:
   #       - 3000:3000
   #     env_file:
-  #       - ./server/.env
+  #       - ./docker/server.env
   #     depends_on:
   #       - postgres
   #     restart: on-failure

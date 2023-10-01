@@ -92,6 +92,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
       this.chatService.updateRoomConversation(data);
       if (this.roomConvers[0])
         this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
+
       const subs6 = this.chatService.getRoomMembers().subscribe(data=>{
         this.users = []
         data.forEach(member=>this.users.push(member.user));
@@ -106,6 +107,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
     this.subsciptions.push(subs3)
 
     const subs4:Subscription = this.chatService.getRoomMessage().subscribe(data=>{
+
       if (this.roomConvers[0])
         if (data.roomId === this.roomConvers[0].id) {
           this.chatService.sendToGetRoomMembers(this.roomConvers[0]);
@@ -121,6 +123,7 @@ export class ConversationsComponent implements OnInit, OnDestroy, AfterViewCheck
       data.forEach(member=>this.users.push(member.user));
     })
     this.subsciptions.push(subs7)
+
   }
 
   openOptions() {
