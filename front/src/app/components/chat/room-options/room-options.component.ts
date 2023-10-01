@@ -221,9 +221,10 @@ export class RoomOptionsComponent implements OnInit, OnDestroy{
   }
 
   back() {
-    this.chatService.displayComponents(false, true, false, true, false, false, false)
     const subs:Subscription = this.chatService.roomOptions$.subscribe(data=>{
       this.room = data
+      this.chatService.sendToGetRoomMembers(data);
+      this.chatService.displayComponents(false, true, false, true, false, false, false)
     })
     this.subscriptions.push(subs)
   }

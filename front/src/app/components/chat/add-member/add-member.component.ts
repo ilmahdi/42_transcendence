@@ -75,6 +75,7 @@ export class AddMemberComponent implements OnInit, OnDestroy {
       if (user.click) {
         newUsers.push(user.user.id!);
         this.room.blackList = this.room.blackList!.filter(id=>id != user.user.id!)
+        this.room.mutes = this.room.mutes?.filter(item=> item.userId !== user.user.id)
       }
     })
     this.chatService.sendToGetRoomMembers(this.room);

@@ -124,6 +124,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
     else
       this.color = {color:'', name:''}
     this.chatService.sendToGetRoomMembers(room);
+    this.chatService.sendToGetRoomConversation(room, this.userId!)
     this.conversData.emit(room);
   }
 
