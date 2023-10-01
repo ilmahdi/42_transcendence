@@ -15,7 +15,6 @@ import { ConnectionGateway } from 'src/common/gateways/connection.gateway';
 
 export class UserGateway  {
   constructor(
-    private readonly userService: UserService,
     private readonly connectionGateway :ConnectionGateway,
   ) {}
 
@@ -23,38 +22,51 @@ export class UserGateway  {
   server: Server
 
  
-
   @SubscribeMessage('notifyFriendRequest')
   notifyUser(client: Socket, userId: string) {
+    try {
+      const userSocketIds = this.connectionGateway.connectedUsersById[userId];
+      if (userSocketIds) {
+        userSocketIds.forEach((socketId) => {
 
-    const userSocketIds = this.connectionGateway.connectedUsersById[userId];
-    if (userSocketIds) {
-      userSocketIds.forEach((socketId) => {
+          this.server.to(socketId).emit('notifyFriendRequest', { notify: 1 });
+        });
+      }
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "notifyFriendRequest error" });
 
-        this.server.to(socketId).emit('notifyFriendRequest', { notify: 1 });
-      });
     }
   }
   @SubscribeMessage('unNotifyFriendRequest')
   unNotifyUser(client: Socket, userId: string) {
 
-    const userSocketIds = this.connectionGateway.connectedUsersById[userId];
-    if (userSocketIds) {
-      userSocketIds.forEach((socketId) => {
+    try {
+      const userSocketIds = this.connectionGateway.connectedUsersById[userId];
+      if (userSocketIds) {
+        userSocketIds.forEach((socketId) => {
 
-        this.server.to(socketId).emit('unNotifyFriendRequest', { notify: -1 });
-      });
+          this.server.to(socketId).emit('unNotifyFriendRequest', { notify: -1 });
+        });
+      }
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "unNotifyFriendRequest error" });
+
     }
   }
   @SubscribeMessage('refreshUser')
   refreshUser(client: Socket, userId: string) {
 
-    const userSocketIds = this.connectionGateway.connectedUsersById[userId];
-    if (userSocketIds) {
-      userSocketIds.forEach((socketId) => {
+    try {
+      const userSocketIds = this.connectionGateway.connectedUsersById[userId];
+      if (userSocketIds) {
+        userSocketIds.forEach((socketId) => {
 
-        this.server.to(socketId).emit('refreshUser');
-      });
+          this.server.to(socketId).emit('refreshUser');
+        });
+      }
+    } catch (error) {
+      this.server.to(client.id).emit('errorEvent', { message: "refreshUser error" });
+
     }
   }
  

@@ -162,7 +162,7 @@ export class NotifyService {
           return deletedNotification;
         }
       } catch (error) {
-          console.log('Failed to delete notification!');
+        throw new HttpException('Failed to delete notification', HttpStatus.CONFLICT);
       }
     }
 
